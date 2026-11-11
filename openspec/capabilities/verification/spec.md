@@ -59195,3 +59195,18 @@ unchanged adversarial and strict row validators, Ruff, strict mypy, explicit-pat
 spec coverage and measured owned statement coverage SHALL precede publication.
 #### SCENARIO-VERIFY-8999-REPLAY
 Rehashing a changed summary or changing retained authority SHALL fail cold replay.
+
+### REQ-VERIFY-9000: Invocation authority remains attributable
+Qualification SHALL retain the rejected original and its two CRITICAL flags.
+Unchanged validators SHALL accept explicitly cited history and reject genuine
+current contradictions. Ledger counts, request/response hashes and output tokens
+SHALL be independently authenticated without loading a model.
+#### SCENARIO-VERIFY-9000-CUSTODY
+Real private CLI controls and E2E-018/021 SHALL qualify custody. Missing ledgers,
+changed retained bytes and rehashed aggregate tampering SHALL fail closed.
+
+Implementation status for REQ-VERIFY-9000: The unchanged verifier is called on
+original, normalized and private positive/negative candidates. Historical load
+request/response hashes, token usage, owner/clocks and raw requests are checked
+without model loading. Private CLI replay and statement coverage qualify custody;
+full-suite failures remain visible and zero readiness.

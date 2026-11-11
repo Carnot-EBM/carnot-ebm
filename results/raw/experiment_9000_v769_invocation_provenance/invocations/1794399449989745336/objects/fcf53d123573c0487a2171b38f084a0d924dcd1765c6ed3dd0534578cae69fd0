@@ -1,0 +1,37 @@
+{
+  "ledger_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "passed": false,
+  "report": {
+    "artifact": "/tmp/carnot-9000-controls-uvevne1z/contradictory_current/raw/experiment_9000_v769_invocation_provenance/control_candidate.json",
+    "exp_id": 9000,
+    "flag_count": 2,
+    "flags": [
+      {
+        "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='aggregation_from_upstream_artifacts', live_evidence_count=1, negative_evidence_count=5. The duration check fails closed until the invocation scope agrees.",
+        "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+        "severity": "critical"
+      },
+      {
+        "detail": "inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['model_invoked']). Contradictory.",
+        "kind": "SUBSTRATE_CLASS_MISMATCH",
+        "severity": "critical"
+      }
+    ],
+    "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+    "honest_verdict": "complete_null_invocation_fixture",
+    "loaded": true,
+    "max_severity": 2,
+    "title": "Private invocation contract fixture"
+  }
+}

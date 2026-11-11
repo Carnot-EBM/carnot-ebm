@@ -17,6 +17,10 @@ from carnot.reporting import graph_source_methods_8931 as methods
 from carnot.reporting import bfs_error_pilot_8918 as pilot
 from carnot.reporting import pilot_label_audit_8932 as audit
 from carnot.reporting.current_work_receipt import canonical_hash
+from carnot.reporting.invocation_provenance_9000 import (
+    serialize_authentication,
+    serialize_invocation,
+)
 from carnot.reporting.v756_branch_qualification import verify_measured
 from scripts.experiment_template import ExperimentTemplate as ExperimentTemplate
 
@@ -287,6 +291,7 @@ def build(
     )
     counts = runtime["counts"]
     raw = Path(work["raw"])
+    invocation = serialize_invocation(counts, runtime.get("ledger", []), raw)
     value = dict(work["template"])
     value.update(
         {k: v for k, v in result.items() if k not in {"detector_view", "label_sidecar"}},
@@ -302,11 +307,7 @@ def build(
         else "model_loading"
         if counts["model_loads_attempted"]
         else "blocked_no_run",
-        inference_substrate_class="model_bounded_generation"
-        if counts["generation_calls_attempted"]
-        else "model_load_no_generation"
-        if counts["model_loads_attempted"]
-        else "blocked_no_run",
+        inference_substrate_class=invocation["inference_substrate_class"],
         execution_venue="host",
         inference_mode="live_gpu" if runtime["live"] else "no_generation",
         minimum_duration_s=10
@@ -322,7 +323,7 @@ def build(
             f".venv/bin/python -u {config.CLI} --cold-replay <primary.json>",
         ],
         MODEL_SPECS=[dict(hf_id=source.SETTINGS["model"], quantization="Q4_K_M", gpu=0)],
-        model_invocation_counts=counts,
+        model_invocation_counts=invocation["model_invocation_counts"],
         numerical_training_calls=0,
         model_invoked=bool(counts["model_loads_attempted"]),
         verifier_is_oracle=True,
@@ -331,7 +332,7 @@ def build(
         duration_s=work["ended"] - work["started"],
         phase_spans=work["phase_spans"] + runtime["phase_spans"],
         preconditions_checked=dict(
-            authentication=work["authentication"],
+            authentication=serialize_authentication(work["authentication"], raw),
             runtime=runtime.get("preconditions_checked", {}),
             arc_suspended=True,
             generator_weights_frozen=True,

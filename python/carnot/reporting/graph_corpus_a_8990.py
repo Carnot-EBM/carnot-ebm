@@ -158,11 +158,6 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
     model = runtime["model_receipt"]
     value.update(
         run_date=RUN_DATE,
-        inference_substrate_class="model_bounded_generation"
-        if counts["generation_calls_attempted"]
-        else "model_load_no_generation"
-        if counts["model_loads_attempted"]
-        else "no_model_load",
         milestone="2026.11.768",
         gate_check_summary=gates,
         MODEL_SPECS=[shared.source.SETTINGS["model"]],

@@ -1,0 +1,66 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9000_v769_invocation_provenance.json",
+  "primary_sha256": "sha256:23c378b4f97507769dc295c8e85df73ce5738f663ca299690371a0e1f3b50b3e",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,sys,tempfile; os.environ.pop('\"'\"'PYTHONPATH'\"'\"',None); os.chdir(tempfile.gettempdir()); os.execv(sys.executable,[sys.executable,'\"'\"'-u'\"'\"',*sys.argv[1:]])' /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9000_v769_invocation_provenance.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,sys,tempfile; os.environ.pop('PYTHONPATH',None); os.chdir(tempfile.gettempdir()); os.execv(sys.executable,[sys.executable,'-u',*sys.argv[1:]])",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9000_v769_invocation_provenance.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json"
+        ],
+        "duration_s": 0.7416870250017382,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9000_v769_invocation_provenance/invocations/1794399548716417610/terminal_validation/00_cold_replay_cli.log",
+        "log_sha256": "sha256:c129090fb245c31cf8cf3938db21510c288cc87c01630cb31296e1839bdf19e7",
+        "name": "cold_replay_cli",
+        "output_tail": "{\"passed\": true, \"replay_passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json"
+        ],
+        "duration_s": 0.8884999439906096,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9000_v769_invocation_provenance/invocations/1794399548716417610/terminal_validation/01_adversarial.log",
+        "log_sha256": "sha256:1f613fe015b30b7af2ef90ff91c2603f37ba33300a2730fc9f0f01192d9214da",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 9000,\n      \"title\": \"Current and historical invocation provenance qualification\",\n      \"honest_verdict\": \"complete_disqualified_invocation_provenance\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9000_v769_invocation_provenance/terminal_candidate.json"
+        ],
+        "duration_s": 0.034834759004297666,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9000_v769_invocation_provenance/invocations/1794399548716417610/terminal_validation/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

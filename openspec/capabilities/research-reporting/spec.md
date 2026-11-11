@@ -112047,3 +112047,35 @@ object mutation, independent-pin rejection, failed validation, stale ARC support
 and cold replay with rehashed aggregate tampering. Real foreign-directory CLI
 checks SHALL remove PYTHONPATH. Publication requires normal-exit receipts and
 100 percent newly owned statements, with no model calls or fabricated science.
+
+### REQ-REPORT-9000-SCOPES: Preserve authority bytes and serialize owned counters
+The shared graph producer SHALL replace embedded upstream protocols with a
+content-addressed reference to their complete original bytes, experiment identity
+and imported field roster. Dependency checks and current runtime evidence SHALL
+remain intact. Historical calls SHALL never become current calls. Exp9000 SHALL
+load no model and publish only an invocation-contract qualification, with zero
+independent generalization. The original Exp8990 primary and validators stay unchanged.
+A completed load with zero generated tokens SHALL use model_load_no_generation;
+a retained generation with positive output tokens SHALL use model_bounded_generation.
+
+#### SCENARIO-REPORT-9000-CONTROLS
+Before qualification, reproduce both original CRITICAL flags in private storage,
+authenticate retained inputs and all invocation ledger rows, and enumerate typed
+positive, negative and cited paths with the unchanged validator. Actual private
+publication CLI controls SHALL cover live fixture, cached current/no model,
+load only, missing ledger and contradictory current evidence. Fixtures grant no
+live claim. Missing external operands block terminally; failed owned validation
+disqualifies. Only all controls and normal-exit validation permit readiness one.
+
+#### SCENARIO-REPORT-9000-REPLAY
+Private CLI success, missing inputs, changed bytes, rehashed summary tampering and
+foreign-directory cold replay SHALL be checked without PYTHONPATH. Retain argv,
+exit, duration, log hashes and actual 100 percent newly owned statement coverage.
+Ops and traceability reconciliation are conductor-owned for this invocation.
+
+Implementation status for REQ-REPORT-9000-SCOPES: Implemented in the shared graph
+serializer, `invocation_provenance_9000.py`, the dated experiment CLI and private
+requirement-linked tests. Primitive evidence includes the unchanged rejection,
+normalized historical candidate, all control exits, byte custody and SQLite
+statement coverage. Mandatory full-suite failure disqualifies readiness. The
+conductor owns ops/status/changelog and traceability reconciliation.
