@@ -111788,3 +111788,37 @@ success, missing-input, tamper and replay checks retain normal exits and logs.
 Implementation status,2026-11-11: Exp8987 producer and private tests implement
 REQ-REPORT-8987-ADMISSION. The dated primary retains the actual validation exits,
 coverage, six fitted states, four development margins and frozen source manifests.
+
+### REQ-REPORT-8988-CAUSAL: Fixed-basis delayed spline methods
+Exp8988 SHALL require only the pinned Exp8987 fitted_states_ready_score=1 and
+required_checks_passed=true, never its collection or development signal gate.
+It SHALL retain five separate initial states: frozen_spline, adaptive_spline,
+bias_only_spline, adaptive_linear and permuted_spline. Three seed probabilities
+form one ensemble. Fixed encoders, scaling, basis, temperature and generator
+SHALL remain unchanged. Each released label gets ensemble binary log-loss plus
+0.01 anchoring excluding intercept, whole-gradient norm clipping at1, and
+AdaGrad with rate0.05, epsilon1e-8 and zero initial accumulator. Bias and linear
+controls use the same causal label budget on their allowed coefficients.
+After sealed predictions8/12/16/20/24/28/32, labels1..4/5..8/.../25..28
+SHALL be consumed once. Four labels remain pending. Each block's candidate
+SHALL pass all64 original guard graphs against its own initial state:
+Brier increase<=0.005 and classification-error increase<=0. Rejection restores
+coefficients and accumulator while acknowledging consumed labels atomically.
+The artifact SHALL retain equations, primitive rows, source/code/config hashes,
+causal and real killed-child recovery evidence, unchanged ten-bound scientific
+criteria, actual validation receipts and100% newly owned statement coverage.
+Methods readiness SHALL be zero after any failed owned check. Fixtures establish
+no scientific benefit, inference speed, FPGA gain or independent generalization.
+#### SCENARIO-REPORT-8988-CAUSAL
+Informative/no-signal, clipping, duplicate feedback, rejected-state, future-label
+sentinel and real child kill/restart controls SHALL qualify mechanics. Query16
+recovery SHALL preserve bit-exact state and all future predictions. A missing
+or tampered input SHALL produce terminal blocked with the actual failed operand.
+Private CLI success/missing/tamper/cold-replay and E2E-018/021 SHALL execute.
+The later17..32 adaptive-minus-frozen Brier upper<=-0.01; bias, linear and
+permuted upper<0; six shared-retention Brier/error bounds at0/16/32 upper<=0.01
+SHALL remain frozen with10000 whole-stream draws and family alpha0.01/10.
+Implementation status,2026-11-11: The Exp8988 producer, fixed-basis worker and
+private controls implement REQ-REPORT-8988-CAUSAL. The primary artifact retains
+actual owned validation, statement coverage, causal and recovery receipts.
+Scientific benefit remains unmeasured under the unchanged ten-bound contract.
