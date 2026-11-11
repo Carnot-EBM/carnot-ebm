@@ -21760,3 +21760,8 @@ code |
 | 2026-11-11 06:12 UTC | Qualify delayed continuous coefficient learning wi | OK | 94 passed, 1 warning in 48.17s |
 | 2026-11-11 06:46 UTC | Audit public RAGognize labels without mistaking ge | OK | 92 passed, 1 warning in 22.09s |
 | 2026-11-11 07:38 UTC | Collect bounded Qwen graph evidence for the convex | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 86 passed, 1 warning in 50.73s |
+| 2026-11-11 07:47 UTC | Authenticate fresh graph roles and truth isolation | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8990-graph-corpus-a.shard_ready_score (actual=0 == expected=1) |
+| 2026-11-11 07:49 UTC | Test convex spline energy value against old and co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8992-corpus-admission) |
+| 2026-11-11 07:49 UTC | Measure delayed continuous spline learning on seal | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8993-spline-calibrated-decisions, exp8992-corpus-admission) |
+| 2026-11-11 07:49 UTC | Independently audit future spline benefit and shar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8994-online-spline-streams) |
+| 2026-11-11 07:49 UTC | Measure complete spline decision costs and support | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8994-online-spline-streams, exp8993-spline-calibrated-decisions) |
