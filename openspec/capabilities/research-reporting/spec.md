@@ -112492,3 +112492,58 @@ Implementation status: Implemented in `scoped_provenance_9014.py`, its dated CLI
 and private tests. The named primary records current qualification and preserves
 failed broader history. Unchanged V767 direct-consumer regressions remain required;
 a current failure keeps both readiness scores zero.
+
+### REQ-REPORT-9026-SCOPED: Account for V770 without promoting missing science
+
+Exp9026 SHALL freeze its owned files, direct consumers, exact commands and receipt
+policy before measurement. It SHALL authenticate all fourteen full task objects
+against the independent V770 digest and retained design and queue bytes. Mutable
+successor documents SHALL NOT serve as historical authority. Each primary or exact
+scheduler alternate SHALL retain its hash. Absent primaries remain `missing_file`.
+Scheduler log events SHALL NOT create producer verdicts. Reconciliation readiness
+one means complete accounting with passing current checks, even when external
+science is terminal blocked. Failed current checks disqualify and zero readiness.
+
+Seven graph bounds, ten causal bounds, four human-disagreement bounds, complete
+costs and optional ARC support SHALL retain separate units, denominators and frozen
+thresholds. Unavailable measurements are unmeasured, not scientific nulls. Graph
+truth is a cheap oracle and cannot close the independent-verifier target. Human
+claims retain source-group, label-authority and public-pretraining limits. The
+original Exp8990 and V769 disqualifications SHALL remain unchanged. Count Exp8990's
+512 historical generation calls once through its cited ledger; current calls are
+zero, with empty MODEL_SPECS, model_specs and trained_head_specs.
+
+#### SCENARIO-REPORT-9026-RECEIPTS
+
+Private requirement-linked tests SHALL precede implementation. Actual foreign CLI
+children SHALL accept matching current receipts and reject missing, stale, failed,
+timed-out, changed-log and changed-command receipts. Current normal exits, exact
+scope and code hashes, and reopened SQLite statement data SHALL determine readiness.
+New statements require 100 percent coverage with zero exclusions. Failed V769 full
+suite receipts and their logs SHALL remain hashed under separate repository health.
+They SHALL NOT become current scoped acceptance or passing repository health.
+
+#### SCENARIO-REPORT-9026-REPLAY
+
+Private E2E-018/021, E2E-020 learning restart, missing-input, changed-authority,
+rehash-tamper and cold replay checks SHALL run outside the checkout without
+PYTHONPATH. Independent replay SHALL reconstruct slots, bounds, counts and claims
+from retained primitives. Unchanged adversarial and strict row validators SHALL
+gate atomic primary publication. Historical FoVer G1–G4 and publication scope
+remain separate from V770 science. No network, model, queue or external publication
+is required. Measurement stops by 3300 seconds, with 1200 seconds reserved for
+checks within the 4800-second hard cap.
+
+Implementation status: Planned; tests and retained execution evidence follow.
+
+Implementation status for REQ-REPORT-9026-SCOPED and
+SCENARIO-REPORT-9026-RECEIPTS/REPLAY, 2026-11-11: Implemented in
+`python/carnot/reporting/v770_capstone.py`, the dated Exp9026 CLI and
+`tests/python/test_v770_capstone_9026.py`. Execution qualification is determined
+by the frozen normal-exit receipts and reopened statement data in
+`results/experiment_9026_v770_capstone.json` and its raw evidence directory.
+The private tests cover receipt refusal, exact authority, missing inputs,
+source and aggregate tampering, foreign CLI replay, publication and deadlines.
+Accounting readiness grants no graph, human-label, learning or deployment benefit.
+Original failed health remains failed. Ops and traceability reconciliation is
+delegated to the conductor under the explicit task instruction.
