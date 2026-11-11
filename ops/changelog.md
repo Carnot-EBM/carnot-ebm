@@ -23595,3 +23595,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-11: Bind fourteen tasks and preserve V769 failures and frozen scientific methods (⚠️ Research Finding) — honest_verdict=complete_null_v770_branch_contract; results/experiment_9013_v770_branch_contract.json
 - 2026-11-11: Qualify producer provenance with separate scoped checks and repository health (⚠️ Research Finding) — honest_verdict=complete_disqualified_scoped_provenance; results/experiment_9014_v770_scoped_provenance_qualification.json
 - 2026-11-11: Qualify Mu-SHROOM groups and original human disagreement labels (⚠️ Blocked) — honest_verdict=complete_blocked_source_resolution_access; results/experiment_9015_v770_human_disagreement_source.json
+- 2026-11-11: Reconcile fourteen outcomes and separate graph and independent-label claims (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9026_v770_capstone.json
