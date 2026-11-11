@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-11 UTC — Operational retrospective for milestone 2026.11.770
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.770`: updated `results/operational_retro_2026_11_770.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 4 completed experiments (all 4 compute-bound, 0 synthesis-only) across 17.8 wall-time minutes (18 minutes / 0.3 hours, averaging 4 minutes per experiment).
+- The 4 completed experiments (all `compute_bound: true`) were: `Qualify producer provenance with separate scoped checks and repository health` (8.29 minutes / 8min), `Reconcile fourteen outcomes and separate graph and independent-label claims` (7.01 minutes / 7min), `Bind fourteen tasks and preserve V769 failures and frozen scientific methods` (2.48 minutes / 2min), and `Qualify Mu-SHROOM groups and original human disagreement labels` (0.0 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or process telemetry); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.
+- Suggested improvements: parallelize and cache separate scoped producer-provenance and repository-health checks in the 8.29-minute (8min) task without engaging `DualGPURunner`, cache and share fourteen-task binding and outcome-reconciliation state across the 7.01-minute (7min) and 2.48-minute (2min) tasks, persist direct per-experiment timestamps to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability during compute-bound runs.
+
 ## 2026-11-11 UTC — Exp9015 output-local validation
 
 - Resolve default validation scope and receipts beneath the selected output;

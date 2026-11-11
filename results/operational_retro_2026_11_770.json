@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.770",
+  "generated_at": "2026-11-11T21:36:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 17.8,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify producer provenance with separate scoped checks and repository health",
+      "duration_minutes": 8.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and separate graph and independent-label claims",
+      "duration_minutes": 7.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and preserve V769 failures and frozen scientific methods",
+      "duration_minutes": 2.48,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify Mu-SHROOM groups and original human disagreement labels",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.770 completed 4 compute-bound experiments (0 synthesis-only) in 17.8 wall-time minutes (18 minutes / 0.3 hours, averaging 4 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 4 completed tasks (all compute_bound: true) were 'Qualify producer provenance with separate scoped checks and repository health' (8.29 minutes / 8min), 'Reconcile fourteen outcomes and separate graph and independent-label claims' (7.01 minutes / 7min), 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.48 minutes / 2min), and 'Qualify Mu-SHROOM groups and original human disagreement labels' (0.0 minutes / 0min). Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 4 completed experiments were compute-bound (0 synthesis-only) across 17.8 wall-time minutes (18 minutes / 0.3 hours, averaging 4 minutes per experiment), led by 'Qualify producer provenance with separate scoped checks and repository health' at 8.29 minutes (8min) and 'Reconcile fourteen outcomes and separate graph and independent-label claims' at 7.01 minutes (7min).",
+    "'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' required 2.48 minutes (2min), whereas 'Qualify Mu-SHROOM groups and original human disagreement labels' completed in 0.0 minutes (0min).",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Parallelize and cache separate scoped producer-provenance and repository-health checks in 'Qualify producer provenance with separate scoped checks and repository health' (8.29 minutes / 8min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Pre-index and share fourteen-task artifacts between 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.48 minutes / 2min) and 'Reconcile fourteen outcomes and separate graph and independent-label claims' (7.01 minutes / 7min) to reduce the 4-minute per-experiment average.",
+    "Maintain lightweight group and label qualification as demonstrated in 'Qualify Mu-SHROOM groups and original human disagreement labels' (0.0 minutes / 0min).",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize and cache separate scoped producer-provenance checks and repository-health verification in 'Qualify producer provenance with separate scoped checks and repository health' (8.29 minutes / 8min) without applying DualGPURunner to single-model execution.",
+    "Cache and reuse shared fourteen-task binding and outcome-reconciliation state across 'Reconcile fourteen outcomes and separate graph and independent-label claims' (7.01 minutes / 7min) and 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.48 minutes / 2min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.770 completed 4 compute-bound experiments (0 synthesis-only) in 17.8 wall-time minutes (18 minutes / 0.3 hours, averaging 4 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Parallelizing and caching scoped provenance and repository-health checks in the 8.29-minute (8min) task, sharing fourteen-task binding and reconciliation state across the 7.01-minute (7min) and 2.48-minute (2min) tasks, and persisting direct experiment timestamps will improve execution efficiency and observability in the next milestone."
+}

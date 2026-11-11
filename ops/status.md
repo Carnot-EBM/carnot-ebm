@@ -1,5 +1,9 @@
 # Carnot — Operational Status
 
+## 2026-11-11 UTC — Milestone 2026.11.770 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_770.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 4 completed compute-bound experiments (0 synthesis-only) across 17.8 wall-time minutes (18 minutes / 0.3 hours, averaging 4 minutes per experiment): qualifying producer provenance with separate scoped checks and repository health (8.29 min / 8min), reconciling fourteen outcomes and separating graph and independent-label claims (7.01 min / 7min), binding fourteen tasks and preserving V769 failures and frozen scientific methods (2.48 min / 2min), and qualifying Mu-SHROOM groups and original human disagreement labels (0.0 min / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: parallelize and cache separate scoped producer-provenance and repository-health checks in the 8.29-minute (8min) task, cache and share fourteen-task binding and outcome-reconciliation state across the 7.01-minute (7min) and 2.48-minute (2min) tasks, persist direct experiment timestamps, and restore GPU monitor availability.
+
 ## 2026-11-11 UTC — Exp9015 validation custody repair
 
 Default scope and receipt lookup now follows the requested output directory.
