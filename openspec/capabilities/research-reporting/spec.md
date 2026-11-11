@@ -112028,3 +112028,22 @@ Readiness SHALL remain separate from scientific benefit and unavailable inputs.
 Owned tests SHALL cover successful custody, missing inputs, altered evidence and
 cold replay; applicable numerical/causal controls SHALL use the registered bounds.
 Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-8999-AUTHORITY: Separate current custody from frozen science
+Exp8999 SHALL bind all fourteen full V769 objects, visible order Exp8999..9012,
+exact gates and YAML. Before activation compare staged with staged; afterward
+compare actual active bytes. Retain byte-hashed V768 archived design, queue and
+primaries, including rejected Exp8990. Never use a mutable successor as history.
+Contract readiness SHALL be independent of frozen graph, online and ARC gates.
+Authenticate Exp8987 states, its four passed exposed-development criteria and
+1024 original graph roles (128 calibration,128 test,768 online); authenticate
+Exp8988's five-arm and ten-bound protocol without fitting or rerunning admission.
+Only thirty new uncensored ARC episodes across three families with both arms
+in each held family may set ARC readiness. Read the live ledger once per run.
+
+#### SCENARIO-REPORT-8999-CUSTODY
+Private tests SHALL exercise active/staged success, missing operands, every full
+object mutation, independent-pin rejection, failed validation, stale ARC support
+and cold replay with rehashed aggregate tampering. Real foreign-directory CLI
+checks SHALL remove PYTHONPATH. Publication requires normal-exit receipts and
+100 percent newly owned statements, with no model calls or fabricated science.

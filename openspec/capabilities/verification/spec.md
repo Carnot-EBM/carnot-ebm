@@ -59186,3 +59186,12 @@ Exposed V765/V766 labels and cheap BFS truth cannot establish oracle-distinct be
 #### SCENARIO-VERIFY-8986-INVARIANCE
 Private tests inject every forbidden field and permute nodes, edges and names.
 Feature and head predictions SHALL remain exactly equal under these permutations.
+
+### REQ-VERIFY-8999: Frozen branch custody and terminal qualification
+V769 administrative publication SHALL reconstruct rows from retained byte-hashed
+authorities. Missing external authority is terminal blocked with exact operands;
+failed owned checks disqualify all readiness. Private E2E-018/021 custody tests,
+unchanged adversarial and strict row validators, Ruff, strict mypy, explicit-path
+spec coverage and measured owned statement coverage SHALL precede publication.
+#### SCENARIO-VERIFY-8999-REPLAY
+Rehashing a changed summary or changing retained authority SHALL fail cold replay.
