@@ -21783,3 +21783,4 @@ code |
 | 2026-11-11 14:08 UTC | Audit future spline benefit and simultaneous share | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9007-online-spline-streams) |
 | 2026-11-11 14:08 UTC | Measure complete spline service costs and actual a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9006-spline-calibrated-decisions, exp9007-online-spline-streams) |
 | 2026-11-11 14:16 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8999-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
+| 2026-11-11 14:59 UTC | Reconcile fourteen outcomes and separate graph and | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 86 passed, 1 warning in 56.94s |
