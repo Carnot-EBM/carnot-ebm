@@ -112390,3 +112390,35 @@ unchanged terminal validators and foreign-directory replay before publication.
 The plan-time V768 archive end and observed V769 scheduling archive are recorded
 separately; the original three disqualified primaries remain unchanged.
 
+
+### REQ-REPORT-9014-SCOPED: Qualify existing serialization under a new frozen consumer scope
+
+Exp9014 SHALL reuse the Exp9000 serializer and its five original controls. It SHALL
+freeze owned files, direct consumers, original test identities, exact commands and
+normal-exit receipt policy before measurement. It SHALL authenticate complete
+historical bytes and failed V769 health logs. Exp9000, its tests and its CHECKS
+set SHALL remain unchanged. Current model counters SHALL be zero. Fixtures grant
+no live science credit. A scoped positive grants custody only, never verifier
+benefit or repository health. Missing external operands SHALL be terminal blocked.
+
+#### SCENARIO-REPORT-9014-RECEIPTS
+
+Actual private CLI children SHALL accept current matching receipts and reject
+missing, stale, failed, timed-out, altered-log and altered-command receipts.
+Every required current receipt SHALL exit normally and match frozen code and
+commands. Reopened SQLite data SHALL show 100 percent newly owned statements
+with zero exclusions. Historical health stays failed and separately authenticated.
+
+#### SCENARIO-REPORT-9014-REPLAY
+
+Private foreign-directory publication, missing inputs, changed authority,
+rehashed tampering and cold replay SHALL run without PYTHONPATH. Unchanged
+adversarial and strict row validators SHALL gate primary_publication. Private
+E2E-018/021 and the E2E-020 learning restart SHALL pass. Primitive rows SHALL
+recompute each denominator and readiness gate. Measurement stops by 3300 seconds;
+1200 seconds remain reserved for validation within the 4800-second hard cap.
+
+Implementation status: Implemented in `scoped_provenance_9014.py`, its dated CLI
+and private tests. The named primary records current qualification and preserves
+failed broader history. Unchanged V767 direct-consumer regressions remain required;
+a current failure keeps both readiness scores zero.
