@@ -23566,3 +23566,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-11: Bind fourteen tasks and preserve frozen V768 scientific authority (⚠️ Research Finding) — honest_verdict=complete_null_v769_branch_contract; results/experiment_8999_v769_branch_contract.json
 - 2026-11-11: Qualify current and historical invocation scopes before source work (⚠️ Research Finding) — honest_verdict=complete_disqualified_invocation_provenance; results/experiment_9000_v769_invocation_provenance.json
 - 2026-11-11: Qualify original human annotations and unseen natural source groups (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_9001_v769_human_source_authority.json
+- 2026-11-11: Reconcile fourteen outcomes and separate graph and independent-label claims (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_9012_v769_capstone.json
