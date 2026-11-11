@@ -112226,6 +112226,73 @@ Implementation status: Planned.
 
 ### REQ-REPORT-9015-V770: Qualify Mu-SHROOM groups and original human disagreement labels
 
+#### SCENARIO-REPORT-9015-LOCAL-VALIDATION
+
+Default validation scope and receipts SHALL resolve beneath the selected output
+directory at `raw/experiment_9015_v770_human_disagreement_source/`. A private
+output without local validation SHALL remain disqualified even when passing
+checkout receipts exist. Explicit `--scope` and `--receipts` paths SHALL retain
+precedence. Foreign-directory publication and cold replay SHALL preserve this
+boundary without changing the original missing-input or tamper assertions.
+
+Implementation status for SCENARIO-REPORT-9015-LOCAL-VALIDATION, 2026-11-11:
+Implemented in `human_disagreement_runner_9015.py`. Three private regressions
+cover absent local validation, local scope/receipts and explicit overrides
+against passing checkout receipts. The original missing-input, tamper and
+foreign-directory CLI assertions remain unchanged. The repaired 116-test subset
+passes; source, runner and direct CLI cover all 300 statements with no exclusions.
+
+Frozen source contract, 2026-11-11: Pin the author Helsinki-NLP/mu-shroom
+release, CC-BY-4.0 receipt and original annotation policy. Retain raw records
+from official validation and test in all fourteen documented languages. Exclude
+train_unlabeled and automatic labels. Bound all retrieval to256 MiB and600s.
+Inventory prior Carnot exposures before reading labels. Merge repeated prompts,
+author topic IDs, normalized source hashes and shared reference Wikidata IDs
+transitively. Unresolved reference identities are ineligible. Exposed CAL/TEST
+groups cannot enter new roles. Freeze one response per group using salt
+v770-human-v1, then160 FIT/40 CAL validation groups and200 TEST groups by ID
+hash, before reducing labels. Require every slot and class floors5/5 in FIT/CAL,
+20/20 in TEST. Never replace a chosen response after reading labels.
+For each response require three distinct original annotators. y_soft is the
+fraction marking any nonempty unsupported span; y_hard is y_soft>=0.5.
+Validate original Unicode offsets, preserve original spans, ties, uncertainty
+and disagreement. Character-majority unions do not define response majority.
+No LLM loads or calls occur. Source qualification grants no detector benefit,
+span leaderboard claim or independent generalization. An external failure is
+complete_blocked_<observed check>; only unfinished owned work is partial.
+
+#### SCENARIO-REPORT-9015-GROUPS
+Private tests cover transitive multilingual grouping, unresolved reference IDs,
+prior exposures, deterministic label-blind roles, fixed400 slots, shortages,
+duplicate records and unchanged class floors. Fixtures never qualify a source.
+
+#### SCENARIO-REPORT-9015-LABELS
+Private tests distinguish response-level majority from character majorities,
+validate offsets, reject duplicate/missing annotators and preserve ties and
+uncertain sensitivity rows. Unavailable raw judgments block rather than impute.
+
+#### SCENARIO-REPORT-9015-CUSTODY
+Freeze current scoped commands before measurement. Require normal exits,
+authenticated logs,100 percent newly owned statements and zero exclusions.
+Missing, stale, failed and timeout receipts reject. Private foreign-directory
+CLI, missing input, tamper, cold replay and E2E-018/021 run without PYTHONPATH;
+E2E-020 covers learning restart. Retain V769 failed full-suite logs by hash
+separately with repository_health_passed=false; original results stay
+disqualified. Unchanged adversarial and strict row validators gate
+primary_publication. The conductor owns ops/changelog/status/traceability
+reconciliation. No queue activation or external publication occurs.
+
+Implementation observation, 2026-11-11: The source module and direct CLI pin
+author revision3f99df059b001c174b4443e2c41840a5ff1320d7. Retained parquet
+contains499 official validation responses and1902 official test responses,
+covering all fourteen release languages. Required Wikipedia identity retrieval
+terminated on an observed HTTP429. Partial-language metadata cannot admit a
+cohort. All400 intended roles remain censored and label reduction is deferred;
+original annotator bytes remain in the pinned parquet. Frozen validation
+receipts, original failed V769 health logs and rejected current validation
+attempts remain distinct. No model loads, detector results or external
+publication occur. The result records current scoped validation acceptance.
+
 The planned `exp9015-human-disagreement-source` SHALL execute its exact frozen V770 prompt and publish
 `results/experiment_9015_v770_human_disagreement_source.json`. It SHALL preserve prior verdicts, per-unit rows,
 closed verdict classes, source hashes and explicit gate operands.
@@ -112235,7 +112302,10 @@ closed verdict classes, source hashes and explicit gate operands.
 Before implementation, private tests SHALL cover qualified input, missing input,
 changed authority, failed current validation and cold replay for this task.
 Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
-Implementation status: Planned.
+Implementation status: Implemented in `human_disagreement_source_9015.py`,
+`human_disagreement_runner_9015.py`, the direct Exp9015 CLI and its spec-linked
+private tests. Source qualification remains blocked by the retained HTTP 429;
+the validation custody repair grants no new scientific readiness.
 
 ### REQ-REPORT-9016-V770: Authenticate retained shard A without new generation or revised labels
 

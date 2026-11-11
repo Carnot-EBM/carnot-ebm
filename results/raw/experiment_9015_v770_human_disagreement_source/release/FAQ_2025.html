@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- font links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shroom/assets/css/banner.css">
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Mu-SHROOM 2025 - FAQ | shroom</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Mu-SHROOM 2025 - FAQ" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://helsinki-nlp.github.io/shroom/2025/FAQ_2025.html" />
+<meta property="og:url" content="https://helsinki-nlp.github.io/shroom/2025/FAQ_2025.html" />
+<meta property="og:site_name" content="shroom" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mu-SHROOM 2025 - FAQ" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"Mu-SHROOM 2025 - FAQ","url":"https://helsinki-nlp.github.io/shroom/2025/FAQ_2025.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/shroom/assets/css/style.css?v=3b4b55dcc9d6e131e23eb3c2f7e3e2539c440760">
+  <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/shroom/favicon.ico" -->
+<script src='https://code.jquery.com/jquery-4.0.0.min.js'></script>
+<!-- test -->
+
+<!--New images on load -->
+<script>
+$(document).ready(function() {
+    var images = ["blue-vers.png", "brown-vers.png", "green-vers.png", "purple-vers.png"];
+    $('img#logo2026').attr("src", "assets/img/shroom-visions-" + images[Math.floor(Math.random() * images.length)]);
+});
+</script>
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+   <section class="main-content">
+     <h1 id="mu-shroom-2025---faq"><strong>Mu-SHROOM 2025 - FAQ</strong></h1>
+
+<p>We would like to thank Malvina Nissim and the students of the “Shared Task” course of the Master Information Science and the Erasmus Mundus Programme Language and Communication Technologies, University of Groningen, whose interest and careful scrutiny inspired the creation of this FAQ.</p>
+
+<h2 id="task">TASK</h2>
+
+<p><strong>Q: What is this year’s hallucination detection task?</strong><br />
+A: The Mu-SHROOM 2025 shared task challenges participants to predict the span(s) of text in LLM outputs that correspond to hallucinations. Outputs are provided in multiple (ten) languages. To fulfill the task, we provide a participant’s kit, development sets, and unlabeled training sets [ADD LINKS], with the test set being released on [add date]. The test set will mirror the validation set but without the labels, which participants will need to predict. Participants will be ranked using hard labels, and ties will be broken with soft labels.</p>
+
+<p><strong>Q: What resources can be used to participate in the task?</strong><br />
+A: You are free to use any resources at hand. We encourage creative solutions. We also strongly encourage using open (non-commercial) systems that can help enhance the state-of-the-art for the whole community.</p>
+
+<p><strong>Q: Do we need to participate in all of the ten available languages?</strong><br />
+A: No. You can participate in a single language or as many as you wish. Each language will have its leaderboard.</p>
+
+<p><strong>Q: What definition of hallucination are we working with?</strong><br />
+A: To answer this question, we refer you to the definition provided to the annotators that marked the spans of hallucinations in model outputs:<br />
+<strong>Hallucination</strong>: content that contains or describes facts that are not supported by the provided reference. In other words: hallucinations are cases where the answer text is more specific than it should be, given the information available in the provided context.</p>
+
+<p><strong>Q: Will the MuSHROOM dataset include any metadata beyond the prompt, given that this year’s dataset lacks an explicit semantic reference from which to infer the points of hallucination in the outputs?</strong><br />
+A: No. Echoing some comments from last year’s edition, we want the task to be reflective of real-world applications around detecting the factuality of LLM outputs. One of these challenges is to find a valid semantic reference or trusted source for the claim — we don’t expect such information to be readily available, and thus part and parcel of hallucination detection as a task involves finding out the relevant reference.</p>
+
+<p><strong>Q: What are the main differences with last year’s iteration of the shared task?</strong><br />
+A: This shared task builds upon our previous iteration, SHROOM, with a few key changes:</p>
+<ul>
+  <li>This year, we are not focusing on English only but on 10 languages: Arabic (Modern standard), Chinese (Mandarin), English, Finnish, French, German, Hindi, Italian, Spanish, and Swedish, along with three surprise test languages.</li>
+  <li>Last year, we focused on task-specific language models, whereas now we are focusing on LLM outputs.</li>
+  <li>This year, participants will have to predict where the hallucination occurs, as opposed to last year’s binary classification task.</li>
+</ul>
+
+<p><strong>Q: Last year there were two subtasks (model-aware and model-agnostic), is this the case this year?</strong><br />
+A: No, instead of focusing on model-agnostic and model-aware tracks, this year’s task focuses on the multilingual aspect. Therefore, all data-points in this year’s task are model-aware.</p>
+
+<p><strong>Q: Could the approach to one language be (somehow) combined with the approach to another language?</strong><br />
+A: That is up to you. In general, we would invite creative approaches to solve the task. It is clear to us that some of the languages would benefit from the transfer of knowledge across languages.</p>
+
+<p><strong>Q: What are the advantages and disadvantages of detecting hallucinated spans compared to binary classification for hallucination detection, which was used in last year’s task?</strong><br />
+A: Detecting hallucinated spans allows for a more fine-grained understanding of where hallucinations occur and how severe they are, which last year’s binary classification at the utterance level could not provide. While binary classification is simpler to implement and evaluate, its contributions are limited if we aim to develop tools and metrics for detecting hallucinations.</p>
+
+<h2 id="data">DATA</h2>
+
+<p><strong>Q: Why do you use soft and hard labels?</strong><br />
+A: In short, because they are complementary:</p>
+<ul>
+  <li><strong>Hard labels</strong> ∈ {0,1} (binary): A label of 1 is assigned when the corresponding span contains a hallucination. We determine hard labels using majority voting among the annotators.</li>
+  <li><strong>Soft labels</strong> ∈ [0,1] (continuous): The confidence-based judgments of the annotators. Calculated as the proportion of annotators who marked the span as part of a hallucination out of the total number of annotators.</li>
+</ul>
+
+<p><strong>Q: Do all the data entries contain hallucinations?</strong><br />
+A: The data contains some instances where no hallucinations happen. Our datapoint creation process includes prompting 2-3 models with several sampling configurations. This would increase the chances of having at least one output with hallucinated content per prompt. However, this procedure did not render hallucinations for some of the prompts. In the post-evaluation phase, we will release metadata that includes the clarifications provided by the annotators.</p>
+
+<p><strong>Q: How many annotators participated in the annotation process?</strong><br />
+A: A minimum of 3 persons annotated each datapoint. For English and Chinese, we had up to 12 annotators go through the dataset; 4 for German, and 3 in all other languages.</p>
+
+<p><strong>Q: Will you provide information on which annotator made each annotation?</strong><br />
+A: Yes, during the post-evaluation phase, we will release anonymized data indicating which annotations were made by each annotator. We anticipate that this will enhance transparency and facilitate detailed analysis of the annotation process, but also serve as a valuable resource for examining annotator consistency, inter-annotator agreement and disagreement, and other relevant factors.</p>
+
+<p><strong>Q: Why do you provide model ID in the dev/test/train sets?</strong><br />
+A: The IDs of the models used to produce each output are provided for those interested in replicability and further model analysis (e.g., inspecting logits or activations), though participants can opt for model-agnostic approaches. Any methodology can be used, and creativity in developing novel hallucination mitigation techniques is highly encouraged.</p>
+
+<p><strong>Q: What were the annotation guidelines for the annotated datasets?</strong><br />
+A: We will release the full annotations guidelines document in the post-evaluation phase. They roughly read as:</p>
+<ul>
+  <li>Carefully read the answer text.</li>
+  <li>Highlight each span of text in the answer text that is not supported by the provided context (i.e., contains an overgeneration or hallucination).</li>
+  <li>Your annotations should include only the minimum number of characters in the text that should be edited/deleted to provide a correct answer (in the case of Chinese, these will be “character components”).</li>
+  <li>You are encouraged to annotate conservatively and focus on content words rather than function words. This is not a strict guideline, and you should rely on your best judgments.</li>
+  <li>If the answer text does not contain a hallucination, write “NO HALLUCINATION” in the comment box.</li>
+  <li>If you are unsure about how to annotate an example, write “UNSURE” in the comment box. Please only use this option as a last resort.</li>
+  <li>Ensure that you double-check your annotations. From the “See previous annotations” link, you can edit or delete previous annotations.</li>
+</ul>
+
+<p><strong>Q: How do the annotators decide where a hallucination span starts and where it ends?</strong><br />
+A: The annotators were expressly instructed to select the minimal span so that without it, the output would not contain hallucinations. In other words, if the selected span were omitted, the hallucination would be removed.</p>
+
+<p><strong>Q: Is the annotation performed in stages? (e.g., (1) there is a hallucination; (2) which part signals it?)</strong><br />
+A: No. It was done in a single stage.</p>
+
+<p><strong>Q: Could there be discontinuous portions of a hallucination?</strong><br />
+A: Yes, there are discontinuous spans in the annotated data.</p>
+
+<p><strong>Q: Were the prompts for different languages on the same topics?</strong><br />
+A: Yes, there is some overlap in the topics, though not in the prompts. We decided to have a topic overlap to produce analyses.</p>
+
+<h2 id="modelling--evaluation">MODELLING &amp; EVALUATION</h2>
+
+<p><strong>Q: What is the expected output format with the provided data?</strong><br />
+A: You need to submit a JSONL, similar to the input data. To make sure things flow smoothly, we will release a format checking script. In more detail: the test files will have the same structure as the validation files but without the <code class="language-plaintext highlighter-rouge">soft_labels</code> and <code class="language-plaintext highlighter-rouge">hard_labels</code> keys. Participants will be expected to fill in at least the <code class="language-plaintext highlighter-rouge">soft_labels</code> keys and otherwise conserve the format of the input files.</p>
+
+<p><strong>Q: What approach do you think the unlabeled training data would be the best to use for?</strong><br />
+A: That is up to you. Last year’s participants made use of it by labeling subsets of that data.</p>
+
+<p><strong>Q: How are the predicted spans of hallucination going to be evaluated?</strong><br />
+A: For hard labels, we use intersection-over-union (IoU) and for soft labels, we use the Spearman correlation between predicted and reference soft labels. Take a look at the scorer to see its workings (<a href="https://helsinki-nlp.github.io/shroom/scorer.py">https://helsinki-nlp.github.io/shroom/scorer.py</a>).<br />
+You can run the scorer with predictions using:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 scorer.py mushroom.en-val.v1.jsonl my-predictions-for-en.jsonl scores.txt
+</code></pre></div></div>
+
+<h2 id="general">GENERAL</h2>
+
+<p><strong>Q: Is there something we need to know or particularly pay attention to regarding submission and the submission platform?</strong><br />
+A: Some general recommendations:</p>
+<ul>
+  <li>Follow the deadlines; we cannot make exceptions after the deadline.</li>
+  <li>Register to the platform well in advance.</li>
+  <li>Try not to make your submissions 5 min before the deadline.</li>
+  <li>Follow the discussion on our Google group mailing list or the shared task Slack. We are sure you can profit from other people’s questions.</li>
+</ul>
+
+<p><strong>Q: Can I change the name of my team after registering on the submission website?</strong><br />
+A: Yes, we can manually update that information. Please reach out via the Google group mailing list or the shared task Slack to inform us.</p>
+
+<p><strong>Q: There are two model names listed that rely on GGUF-files (TheBloke/Mistral-7B-Instruct-v0.2-GGUF and TheBloke/SauerkrautLM-7B-v1-GGUF): Which exact gguf model files were used to generate the output?</strong><br />
+A: We used the llama cpp python bindings to run these models. Here are some relevant code snippets:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Mistral:
+</span><span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="kn">from</span> <span class="nn">llama_cpp</span> <span class="kn">import</span> <span class="n">Llama</span>
+
+<span class="n">model_name_or_path</span> <span class="o">=</span> <span class="s">"TheBloke/Mistral-7B-Instruct-v0.2-GGUF"</span>
+<span class="n">model_basename</span> <span class="o">=</span> <span class="s">"mistral-7b-instruct-v0.2.Q6_K.gguf"</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="n">model_name_or_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">model_basename</span><span class="p">)</span>
+
+<span class="n">lcpp_llm</span> <span class="o">=</span> <span class="n">Llama</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+    <span class="c1"># add n_ctx, etc. to fit your specific machine
+</span><span class="p">)</span>
+
+<span class="c1"># SauerkrautLM:
+</span><span class="kn">from</span> <span class="nn">huggingface_hub</span> <span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="kn">from</span> <span class="nn">llama_cpp</span> <span class="kn">import</span> <span class="n">Llama</span>
+
+<span class="n">model_name_or_path</span> <span class="o">=</span> <span class="s">"TheBloke/SauerkrautLM-7B-v1-GGUF"</span>
+<span class="n">model_basename</span> <span class="o">=</span> <span class="s">"sauerkrautlm-7b-v1.Q4_K_M.gguf"</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="n">repo_id</span><span class="o">=</span><span class="n">model_name_or_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">model_basename</span><span class="p">)</span>
+
+<span class="n">lcpp_llm</span> <span class="o">=</span> <span class="n">Llama</span><span class="p">(</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+    <span class="c1"># add n_ctx, etc. to fit your specific machine
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+   </section>
+</html>

@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-11-11 UTC — Exp9015 output-local validation
+
+- Resolve default validation scope and receipts beneath the selected output;
+  retain explicit overrides. Missing private validation stays disqualified even
+  when checkout qualification passes.
+- Preserve the original failing test and all other original test/helper bodies.
+  Add three custody regressions; the repaired subset passes 116 tests and all
+  ten repair-gate checks pass. Conductor bytes remain unchanged.
+- Pass 88 direct-consumer and E2E-018/020/021 tests, including actual hard exits
+  and restart replay. The run's mutation warning covers this repair's concurrent
+  edits to traceability, changelog and status; their marker was archived after
+  verifying authorship and preserving the intended documentation changes.
+- Measure 100% statement coverage across the source, runner and direct CLI
+  (300/300, zero exclusions). Scoped lint, formatting, strict typing and spec
+  tracing pass. Global spec tracing retains 1,142 unrelated missing references;
+  architecture freshness remains stale. No full-suite or external source rerun
+  is claimed.
+
 ## 2026-11-11 UTC — Operational retrospective for milestone 2026.11.769
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.769`: updated `results/operational_retro_2026_11_769.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 4 completed experiments (all 4 compute-bound, 0 synthesis-only) across 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment).

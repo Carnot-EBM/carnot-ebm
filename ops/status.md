@@ -1,5 +1,22 @@
 # Carnot — Operational Status
 
+## 2026-11-11 UTC — Exp9015 validation custody repair
+
+Default scope and receipt lookup now follows the requested output directory.
+Private CLI runs cannot inherit passing checkout validation; explicit `--scope`
+and `--receipts` overrides still win. Three added regressions fail against the
+original runner and pass with the fix. All 18 pre-existing test/helper function
+ASTs and `scripts/research_conductor.py` bytes remain unchanged.
+
+All 214 selected tests pass: the repaired 116-test subset, 88 direct-consumer
+and E2E-018/020/021 tests, and ten repair-gate checks. Combined
+unit and real CLI child coverage measures 300/300 owned statements with zero
+exclusions. Scoped Ruff, formatting, strict mypy and spec tracing pass. Global
+spec tracing still reports 1,142 unrelated tests without requirement references.
+Repository reconciliation also retains the stale architecture-document date.
+The whole repository suite and external source retrieval were not repeated;
+the retained source HTTP 429 remains an external block.
+
 ## 2026-11-11 UTC — Milestone 2026.11.769 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_769.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 4 completed compute-bound experiments (0 synthesis-only) across 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment): qualifying current and historical invocation scopes before source work (11.26 min / 11min), binding fourteen tasks and preserving frozen V768 scientific authority (2.21 min / 2min), qualifying original human annotations and unseen natural source groups (0.04 min / 0min), and reconciling fourteen outcomes and separating graph and independent-label claims (0.01 min / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: parallelize and cache current and historical invocation-scope qualification checks in the 11.26-minute (11min) task, cache fourteen-task binding and frozen V768 scientific-authority checks in the 2.21-minute (2min) task, persist direct experiment timestamps, and restore GPU monitor availability.

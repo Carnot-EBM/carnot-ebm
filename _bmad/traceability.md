@@ -4870,7 +4870,7 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 |---|---|---|---|
 | REQ-REPORT-9013-V770; SCENARIO-REPORT-9013-V770 | `exp9013-branch-contract` | `results/experiment_9013_v770_branch_contract.json` | Planned |
 | REQ-REPORT-9014-V770; SCENARIO-REPORT-9014-V770 | `exp9014-scoped-provenance-qualification` | `results/experiment_9014_v770_scoped_provenance_qualification.json` | Planned |
-| REQ-REPORT-9015-V770; SCENARIO-REPORT-9015-V770 | `exp9015-human-disagreement-source` | `results/experiment_9015_v770_human_disagreement_source.json` | Planned |
+| REQ-REPORT-9015-V770; SCENARIO-REPORT-9015-V770; SCENARIO-REPORT-9015-LOCAL-VALIDATION | `exp9015-human-disagreement-source` | `results/experiment_9015_v770_human_disagreement_source.json` | Implemented; source blocked by retained HTTP 429. Output-local validation custody repaired; 35 owned tests, 300/300 statements, zero exclusions. |
 | REQ-REPORT-9016-V770; SCENARIO-REPORT-9016-V770 | `exp9016-retained-shard-a` | `results/experiment_9016_v770_retained_shard_a.json` | Planned |
 | REQ-REPORT-9017-V770; SCENARIO-REPORT-9017-V770 | `exp9017-graph-corpus-b` | `results/experiment_9017_v770_graph_corpus_b.json` | Planned |
 | REQ-REPORT-9018-V770; SCENARIO-REPORT-9018-V770 | `exp9018-corpus-admission` | `results/experiment_9018_v770_corpus_admission.json` | Planned |
