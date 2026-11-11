@@ -4843,3 +4843,22 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-REPORT-8996; SCENARIO-REPORT-8996-V768 | `exp8996-complete-spline-cost` | `results/experiment_8996_v768_complete_spline_cost.json` | Planned |
 | REQ-REPORT-8997; SCENARIO-REPORT-8997-V768 | `exp8997-arc-transfer-evidence` | `results/experiment_8997_v768_arc_transfer_evidence.json` | Planned |
 | REQ-REPORT-8998; SCENARIO-REPORT-8998-V768 | `exp8998-capstone` | `results/experiment_8998_v768_capstone.json` | Planned |
+
+## V769 planned traceability — 2026-11-11
+
+| Requirement and scenario | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8999; SCENARIO-REPORT-8999-V769 | `exp8999-branch-contract` | `results/experiment_8999_v769_branch_contract.json` | Planned |
+| REQ-REPORT-9000; SCENARIO-REPORT-9000-V769 | `exp9000-invocation-provenance` | `results/experiment_9000_v769_invocation_provenance.json` | Planned |
+| REQ-REPORT-9001; SCENARIO-REPORT-9001-V769 | `exp9001-human-source-authority` | `results/experiment_9001_v769_human_source_authority.json` | Planned |
+| REQ-REPORT-9002; SCENARIO-REPORT-9002-V769 | `exp9002-retained-shard-a` | `results/experiment_9002_v769_retained_shard_a.json` | Planned |
+| REQ-REPORT-9003; SCENARIO-REPORT-9003-V769 | `exp9003-graph-corpus-b` | `results/experiment_9003_v769_graph_corpus_b.json` | Planned |
+| REQ-REPORT-9004; SCENARIO-REPORT-9004-V769 | `exp9004-corpus-admission` | `results/experiment_9004_v769_corpus_admission.json` | Planned |
+| REQ-REPORT-9005; SCENARIO-REPORT-9005-V769 | `exp9005-natural-pilot-methods` | `results/experiment_9005_v769_natural_pilot_methods.json` | Planned |
+| REQ-REPORT-9006; SCENARIO-REPORT-9006-V769 | `exp9006-spline-calibrated-decisions` | `results/experiment_9006_v769_spline_calibrated_decisions.json` | Planned |
+| REQ-REPORT-9007; SCENARIO-REPORT-9007-V769 | `exp9007-online-spline-streams` | `results/experiment_9007_v769_online_spline_streams.json` | Planned |
+| REQ-REPORT-9008; SCENARIO-REPORT-9008-V769 | `exp9008-natural-energy-pilot` | `results/experiment_9008_v769_natural_energy_pilot.json` | Planned |
+| REQ-REPORT-9009; SCENARIO-REPORT-9009-V769 | `exp9009-online-benefit-audit` | `results/experiment_9009_v769_online_benefit_audit.json` | Planned |
+| REQ-REPORT-9010; SCENARIO-REPORT-9010-V769 | `exp9010-complete-spline-cost` | `results/experiment_9010_v769_complete_spline_cost.json` | Planned |
+| REQ-REPORT-9011; SCENARIO-REPORT-9011-V769 | `exp9011-arc-transfer-evidence` | `results/experiment_9011_v769_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-9012; SCENARIO-REPORT-9012-V769 | `exp9012-capstone` | `results/experiment_9012_v769_capstone.json` | Planned |

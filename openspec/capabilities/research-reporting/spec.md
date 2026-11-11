@@ -111895,3 +111895,136 @@ Implementation status,2026-11-11: The Exp8988 producer, fixed-basis worker and
 private controls implement REQ-REPORT-8988-CAUSAL. The primary artifact retains
 actual owned validation, statement coverage, causal and recovery receipts.
 Scientific benefit remains unmeasured under the unchanged ten-bound contract.
+
+## V769 planned research contract — 2026-11-11
+
+Status: Planned only; no new runtime behavior or science is established.
+All fourteen tasks require explicit substrate, verdict_class, per-unit rows,
+exact failed-gate operands, immutable authority and normal-exit owned checks.
+The full prospective protocol and thresholds are in the V769 roadmap.
+
+### REQ-REPORT-8999: Bind fourteen tasks and preserve frozen V768 scientific authority
+The planned `exp8999-branch-contract` SHALL follow its frozen V769 protocol and publish
+`results/experiment_8999_v769_branch_contract.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-8999-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9000: Qualify current and historical invocation scopes before source work
+The planned `exp9000-invocation-provenance` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9000_v769_invocation_provenance.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9000-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9001: Qualify original human annotations and unseen natural source groups
+The planned `exp9001-human-source-authority` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9001_v769_human_source_authority.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9001-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9002: Authenticate retained shard A without new generation or revised labels
+The planned `exp9002-retained-shard-a` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9002_v769_retained_shard_a.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9002-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9003: Complete the frozen bounded Qwen source with shard B
+The planned `exp9003-graph-corpus-b` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9003_v769_graph_corpus_b.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9003-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9004: Join authenticated shards under the original graph role contract
+The planned `exp9004-corpus-admission` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9004_v769_corpus_admission.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9004-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9005: Freeze a human-label pilot with shared Qwen features and matched heads
+The planned `exp9005-natural-pilot-methods` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9005_v769_natural_pilot_methods.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9005-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9006: Test frozen spline decisions against all registered graph controls
+The planned `exp9006-spline-calibrated-decisions` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9006_v769_spline_calibrated_decisions.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9006-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9007: Measure continuous coefficient learning on sealed future response streams
+The planned `exp9007-online-spline-streams` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9007_v769_online_spline_streams.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9007-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9008: Measure matched energy decisions against independent human labels
+The planned `exp9008-natural-energy-pilot` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9008_v769_natural_energy_pilot.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9008-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9009: Audit future spline benefit and simultaneous shared-panel retention
+The planned `exp9009-online-benefit-audit` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9009_v769_online_benefit_audit.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9009-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9010: Measure complete spline service costs and actual acceleration limits
+The planned `exp9010-complete-spline-cost` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9010_v769_complete_spline_cost.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9010-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9011: Assess held-family supervisor transfer only from new live outcomes
+The planned `exp9011-arc-transfer-evidence` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9011_v769_arc_transfer_evidence.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9011-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.
+
+### REQ-REPORT-9012: Reconcile fourteen outcomes and separate graph and independent-label claims
+The planned `exp9012-capstone` SHALL follow its frozen V769 protocol and publish
+`results/experiment_9012_v769_capstone.json` with authentic primitive evidence.
+Readiness SHALL remain separate from scientific benefit and unavailable inputs.
+#### SCENARIO-REPORT-9012-V769
+Owned tests SHALL cover successful custody, missing inputs, altered evidence and
+cold replay; applicable numerical/causal controls SHALL use the registered bounds.
+Implementation status: Planned; execution and validation remain future work.

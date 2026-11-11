@@ -1067,3 +1067,25 @@ closed without changed authorization. ARC analysis requires new supported live
 receipts. The unconditional capstone preserves absent science as terminal blocked.
 Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Proposed queue: `research-roadmap-next.yaml`; active V767 is unchanged.
+
+## V769 planned evidence and learning boundary — 2026-11-11
+
+V769 stages fourteen tasks, Exp8999–Exp9012; no runtime change is implemented.
+Preserve V768's admitted convex spline and delayed AdaGrad methods. Correct the
+shared producer's current-versus-cited invocation serialization, then audit
+retained A observations independently and collect only the missing B identities.
+The rejected Exp8990 primary remains unchanged. All seven detector bounds and
+ten learning bounds remain; online temperature stays 1 under the qualified
+objective, separate from offline temperature calibration. Complete service cost
+includes encoding, dense guards, durable updates and recovery.
+
+The independent natural branch audits original human RAGTruth labels, source
+exposure and 600 fixed groups. It freezes a no-generation Qwen representation
+pilot and matched spline/linear/lexical controls before execution. This is a
+conditional source-relative test, not an automatic extension of graph evidence
+or a claim that human annotations are infallible. Qwen weights remain frozen.
+ARC analysis requires newly supported live outcomes. Hardware scope is unchanged.
+
+Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed execution: `research-roadmap-next.yaml`. The overview's October 11
+reconciliation date is historical; this addition records planning only.

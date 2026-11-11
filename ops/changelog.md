@@ -23546,3 +23546,20 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-11: Audit public RAGognize labels without mistaking generated annotations for independent truth (⚠️ Research Finding) — honest_verdict=complete_null_machine_annotation_only; results/experiment_8989_v768_natural_annotation_authority.json
 - 2026-11-11: Collect bounded Qwen graph evidence for the convex test in shard A (⚠️ Research Finding) — honest_verdict=complete_disqualified_graph_corpus_a; results/experiment_8990_v768_graph_corpus_a.json
 - 2026-11-11: Reconcile fourteen outcomes and decide exact spline and evidence continuations (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_science_unavailable; results/experiment_8998_v768_capstone.json
+
+## 2026-11-11 — Plan milestone 2026.11.769
+
+- Recorded the requested primary/secondary research scan before design, including
+  SHAM-Bench's source-group warning, original human-label releases and access limits.
+- Preserved V768 design/queue bytes and staged fourteen matching task objects,
+  Exp8999–Exp9012, across four phases in the full design and execution proposal.
+- Diagnosed the exact nested provenance contradiction from Exp8990's retained
+  evidence; proposed a producer fix and independent raw-data audit while keeping
+  the original disqualification immutable. No validator change is proposed.
+- Kept the admitted convex method, seven detector bounds and ten causal-learning
+  bounds. Added an independent source-relative natural pilot with four bounds.
+- Added planned requirements, traceability and architecture boundaries. Prompts
+  require flushed progress, bounded writes, exact gates, per-unit rows, complete
+  rerun metadata, verdict classes and accurate model substrates.
+- Planning checks are in progress. No experiment, activation, push or external
+  publication occurred; active roadmap, conductor and exclusion manifest are intact.

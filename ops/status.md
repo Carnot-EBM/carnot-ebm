@@ -19164,3 +19164,24 @@ Requirements and traceability are Planned. Research was recorded before design.
 Planning validation is in progress. No model, experiment, board operation, push
 or publication occurred. The active queue, conductor and exclusion manifest
 remain unchanged. Independent natural-language verification remains an open gap.
+
+## V769 research plan staged — 2026-11-11
+
+The next milestone is 2026.11.769: exactly fourteen tasks, Exp8999–Exp9012,
+across four phases. Full V768 design and queue bytes are preserved in dated
+change-proposal archives. Current queue and conductor remain unchanged.
+
+V768 admitted the convex spline on exposed development data and qualified
+causal update mechanics. Its 512-response A producer was disqualified because
+nested upstream zero-call counters contradicted current live counters. Held-out
+science remains unavailable. RAGognize did not establish human label authority.
+
+V769 qualifies producer provenance, independently audits retained A rows,
+collects the missing B shard and runs the unchanged seven-bound detector and
+ten-bound continuous-learning studies. An independent original-human-source
+branch freezes a 600-group matched-head pilot. Complete costs and an optional
+new-evidence-gated ARC analysis preserve their original claim limits.
+
+The literature scan preceded design. Planned requirements and traceability are
+aligned. Planning validation is in progress. No experiment, model load, hardware
+change, queue activation, external publication or push occurred during planning.

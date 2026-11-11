@@ -11,10 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
+| CLAIM_SUPPORTED | 2 |
 | NO_CLAIM | 5 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8971_v767_branch_contract.json
+## experiment_8986_v768_spline_basis_methods.json
 
 **NO_CLAIM**
 
@@ -25,59 +26,27 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An authority mismatch or failed required check accepted as ready would contradict administrative readiness. There is no comparative scientific benefit claim to falsify.
+There is no comparative value claim to refute. The limited mechanics readiness assertion would fail if a fitted head were nonfinite, its actual gradient exceeded 1e-6, or derivative, invariance, or summary-recomputation checks failed.
 
 ## WAS THAT CHECKED
-Yes, within the administrative scope: displayed task rows match, seven authority mutation controls report passing, and owned validation receipts pass. Scientific generalization is explicitly assigned zero support; optional ARC evidence is marked unready.
+Yes, for mechanics: all six fitted heads report finite values and gradients below the threshold; fixture, invariance, and summary checks pass.
+
+Scientific benefit remains explicitly unmeasured. The linear comparator is present, but development results are not claimed as generalization. Elided rows were not independently checked.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_null_v767_branch_contract`
-- `exposure_scope`: `Administrative custody and method ingestion only; no new scientific benefit, natural-text or hidden-game generalization.`
-- `metric`: `ordered_task_contract_match`; `matched`: `true`
-- `independent_generalization_score`: `0`
-- `administrative_only`: `true`
-
-## RECOMMENDATION
-KEEP
-
-Review limited to supplied text; no rerun or inspection of elided rows. The global test suite timed out.
-
-## experiment_8972_v767_encoder_head_diagnosis.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The exposed-development encoder/head diagnosis does not establish an energy-method benefit.
-
-## WHAT WOULD REFUTE IT
-Energy outperforming prevalence and the confidence and relational logistic comparators, with all five original paired-bound criteria passing, would contradict the reported failure to demonstrate benefit.
-
-## WAS THAT CHECKED
-Yes. The original bound rows and paired intervals retain all five failed comparisons, including serious cheap baselines. Scientific benefit is separated from diagnostic readiness, so successful execution does not become a positive scientific verdict.
-
-The verifier is not the correctness oracle. Label exposure is acknowledged, and independent generalization receives zero credit. The visible prediction rows are completed; the failed comparison flags represent retained outcomes, not invalid rows silently excluded.
-
-## EVIDENCE
-- `honest_verdict`: `complete_null_exposed_encoder_head_diagnosis`
+- `claim_scope`: `fixed-basis numerical mechanics only; no new scientific benefit; graph truth has a cheap BFS evaluator`
+- `honest_verdict`: `complete_null_convex_spline_mechanics_frozen`
 - `verdict_class`: `null`
-- `benefit_passed`: `false`
-- `brier_vs_prevalence`: `one_sided_bound`: `-0.005943697107204875`
-- `brier_vs_relational_logistic`: `estimate`: `-0.009519397017716952`; `one_sided_bound`: `-0.018690732577001417`
-- `verifier_is_oracle`: `false`
-- `exposure_scope`: `all_V765_V766_graph_labels_exposed_development_only`
+- `gradient_inf`: `9.585669368272233e-07`
+- `metric`: `finite_difference_and_convexity`; `passed`: `true`
+- `exposure_scope`: `all V765/V766 labels are exposed development; original256 fit and64 guard graphs only`
+- `status`: `frozen_unmeasured_until_fresh_calibration_and_test`
 - `independent_generalization_score`: `0`
-- `methodology_note`: `Original five failed bounds retain their interpretation.`
 
 ## RECOMMENDATION
 KEEP
 
-Elided rows were not audited; this verdict supports the reported failure to demonstrate benefit, not proof that no benefit exists.
-
-## experiment_8973_v767_shared_feature_methods.json
+## experiment_8987_v768_spline_development_admission.json
 
 **CLAIM_SUPPORTED**
 
@@ -85,30 +54,30 @@ Elided rows were not audited; this verdict supports the reported failure to demo
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The shared-feature Gibbs classifier failed development admission on 64 exposed guard graphs.
+The spline meets fixed development-feasibility gates on exposed guard graphs, permitting fresh collection without establishing independent scientific benefit.
 
 ## WHAT WOULD REFUTE IT
-Those graphs satisfying all three admission requirements: AUROC ≥ 0.65, Brier improvement over prevalence ≥ 0.005, and Brier excess over shared-feature logistic regression ≤ 0.01.
+Guard AUROC below 0.65, Brier improvement over fit prevalence below 0.005, or Brier exceeding either shared logistic or converged linear by more than 0.01 would defeat admission; nonfinite or unconverged fitted states would defeat numerical readiness.
 
 ## WAS THAT CHECKED
-Yes. The three development-admission rows explicitly compare measured values with those thresholds; all fail. Predictions are scored against candidate error labels, so passing was not guaranteed by construction.
+Yes. The four development_admission_rows report passing measurements against those thresholds. Predictions come from coefficients fitted on 256 graphs; admission uses error labels on 64 exposed guard graphs. Optimizing the fit objective does not guarantee passing those guard metrics.
 
-The cheap serious rival—shared-feature logistic regression—beats Gibbs on Brier score; even prevalence beats Gibbs. This supports the reported admission failure. The verifier is not the correctness oracle, and the scores are explicitly exposed-development measurements, without a positive generalization claim.
+The cheapest serious comparator—an equally optimized linear head using the same frozen features—is present and loses on development Brier, rather than tying. All six fitted heads report convergence. The displayed scoring rows are completed, with zero exclusions and failures reported; no scoring-validity or wrong-key contradiction is shown.
 
-The displayed scoring rows are completed, and the admission fields cited exist. Review is limited to the supplied, partly elided artifact; fresh confirmation was not measured.
+Exposure is explicitly acknowledged, and the verdict records no independent benefit. The non-oracle pre-pass raises no circularity finding. Review is limited to the supplied artifact; fresh generalization remains untested.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_development_admission_failed`; `verdict_class`: `null`.
-- `shared_energy_auroc`: `value` = `0.3502604166666667`, `threshold` = `0.65`, `passed` = `false`.
-- `brier_improvement_over_fit_prevalence`: `value` = `-0.012695407226601063`, `threshold` = `0.005`, `passed` = `false`.
-- `brier_excess_over_shared_logistic`: `value` = `0.020722842744012537`, `threshold` = `0.01`, `passed` = `false`.
-- `arm_brier`: `shared_energy` = `0.20094308789066356`, `shared_logistic` = `0.18022024514665103`, `prevalence` = `0.1882476806640625`.
-- `scope`: `exposed_development_only`; `independent_count`: `64`; `verifier_is_oracle`: `false`; `fresh_collection_permitted`: `false`.
+- `honest_verdict`: `complete_null_development_admitted`
+- `claim_scope`: `Exposed development feasibility only; no independent generalization, no oracle-distinct verifier win.`
+- `spline_auroc`: `value`: `1.0`; `threshold`: `0.65`
+- `brier_improvement_over_fit_prevalence`: `value`: `0.16027175302639896`; `threshold`: `0.005`
+- `arm_brier`: `spline`: `0.027975927637663548`; `converged_linear`: `0.06362832483145615`; `shared_logistic`: `0.18022024514665103`
+- `independent_generalization_score`: `0`; `excluded_count`: `0`; `failed_count`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8974_feature_online_methods.json
+## experiment_8988_v768_online_spline_methods.json
 
 **NO_CLAIM**
 
@@ -119,23 +88,93 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or learning outcome is asserted, so there is no scientific claim to falsify.
+No comparative benefit claim is made. The limited mechanics qualification would fail if feedback affected predictions before release, labels were consumed twice, rejected proposals changed committed state, or restart changed state or predictions.
 
 ## WAS THAT CHECKED
-Only the prerequisite gate was checked: readiness had to equal 1, but was 0. The artifact records a block before method evaluation.
+Yes, for mechanics: causal and duplicate-feedback fixtures passed; rejected promotion rows show matching before/after hashes; an actual SIGKILL/restart reproduced state and predictions exactly.
+
+Scientific benefit remains explicitly unmeasured. Frozen, bias-only and adaptive-linear comparators are specified, but the displayed first-query ties establish no comparative outcome. Failed promotion decisions represent exercised rejection paths, not invalid scored rows.
+
+Review was limited to the supplied excerpt; elided rows and checks were not independently inspected.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
+- `claim_scope`: `Delayed fixed-basis coefficient mechanics only; no scientific benefit or oracle-distinct verifier win.`
+- `honest_verdict`: `complete_null_online_spline_methods_qualified`
+- `verdict_class`: `null`
+- `causal_fixture_rows`: `causal_sentinel`, `duplicate_feedback`, `rejected_state`; `passed`: `true`
+- `condition`: `real_sigkill_query16`; `state_bit_exact`: `true`; `prediction_bit_exact`: `true`
+- `evaluation_status`: `frozen_unmeasured; later real streams required`
+- `scientific_evidence_fixture_only`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8989_v768_natural_annotation_authority.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The inspected public release documents machine annotations without documented independent human labeling.
+
+## WHAT WOULD REFUTE IT
+An item-level record establishing independent human labeling or adjudication in the inspected release would contradict the reported zero-human-evidence finding.
+
+## WAS THAT CHECKED
+Yes. The full-release annotation-origin and adjudication audit reports zero documented independent human decisions, and the independent-label gate fails. This supports the scoped null.
+
+No verifier advantage or held-out generalization is claimed, so no rival comparison is needed. The 50 alignment failures are explicitly retained as inspected responses; their inclusion does not contradict the annotation-provenance finding.
+
+## EVIDENCE
+
+- `honest_verdict`: `complete_null_machine_annotation_only`
+- `claim_scope`: `Public release/pipeline audit only; no verifier benefit or independent factuality evaluation.`
+- `scope`: `full_release`
+- `origin`: `machine_annotation_or_deterministic_projection`; `independent_human_decision`: `false`
+- `documented_independent_human_decisions`: `0`
+- `human_review_evidence`: `not_documented_in_inspected_release`
+- `adjudication_evidence`: `no_independent_human_adjudication_documented`
+- `independent_label_ready_score`: `0`
+- `completed_count`: `Response variants inspected, including invalid offset observations; no evidence is discarded.`
+
+## RECOMMENDATION
+KEEP
+
+Not rerun; the conclusion concerns documentation in the inspected release, not whether human review ever occurred elsewhere.
+
+## experiment_8990_v768_graph_corpus_a.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_8992_corpus_admission.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no substantive claim to falsify: this artifact records blocked admission, not successful authentication or comparative value.
+
+## WAS THAT CHECKED
+Yes, admission prerequisites were checked. One readiness score was 0 instead of 1; the other upstream artifact was missing. Both gates failed, and execution stopped before evaluation. Authentication and truth isolation remain untested.
+
+## EVIDENCE
 - `status`: `blocked`
 - `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `shared_methods_ready_score`
-- `expected`: `1`; `actual`: `0`; `passed`: `false`
+- `blocked_reason`: `actual=0 == expected=1`
+- `reason`: `upstream artifact not found for task id 'exp8991-graph-corpus-b'`
 - `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8975_v767_natural_label_eligibility.json
+## experiment_8997_arc_transfer_evidence.json
 
 **NO_CLAIM**
 
@@ -146,26 +185,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. The reported eligibility blockage would be contradicted by documented authorization and all 800 valid source-text/label joins.
+Not applicable: this artifact records a blocked prerequisite and makes no claim that supervisor transfer succeeds or adds value.
 
 ## WAS THAT CHECKED
-Yes, for eligibility: the access search and gate checks report missing authorization and zero joins. All 800 slots are censored, with zero completed pairs. No model was invoked; the artifact makes no performance, generalization, or verifier-value claim requiring a rival baseline.
+The prerequisite was checked in `gates_evaluated`: readiness was 0 against a required 1. Transfer was not assessed; this receipt supports no transfer conclusion.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_blocked_source_access`
-- `verdict_class`: `blocked`
-- `completed_count`: `0`
-- `censored_count`: `800`
-- `model_invoked`: `false`
-- `No model fitting, ranking, energy benefit or no-cheap-oracle claim is measured.`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `artifact_field`: `arc_new_outcomes_ready_score`
+- `expected`: `1`
+- `actual`: `0`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-Not rerun; review is limited to the supplied artifact and establishes no model benefit.
-
-## experiment_8976_graph_corpus_a.json
+## experiment_8998_v768_capstone.json
 
 **NO_CLAIM**
 
@@ -176,68 +214,21 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable. This artifact records a blocked prerequisite gate and makes no claim about method performance or added value.
+There is no comparative scientific headline to falsify. An omitted task or a failed producer counted as qualified scientific evidence would contradict the administrative reconciliation.
 
 ## WAS THAT CHECKED
-No performance claim was tested. The prerequisite gate was checked and failed: observed 0 versus required 1. Execution stopped at the recorded pre-gate layer.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `shared_methods_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8983_arc_transfer_evidence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable. This artifact records a blocked prerequisite gate and makes no claim about transfer performance.
-
-## WAS THAT CHECKED
-The readiness gate was checked and failed: expected 1, observed 0. No transfer-performance evaluation is reported.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `arc_new_outcomes_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8984_v767_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The fixed shared-feature Gibbs head failed its exposed-development admission criteria.
-
-## WHAT WOULD REFUTE IT
-Passing all three admission gates: AUROC ≥0.65, Brier improvement over fitted prevalence ≥0.005, and Brier excess over shared logistic ≤0.01.
-
-## WAS THAT CHECKED
-Yes—in branch_outcomes.shared_feature.admission_rows. All three gates failed. Serious cheap comparators were present: both fitted prevalence and shared-feature logistic achieved lower Brier loss than the energy head.
-
-This supports the bounded negative result. Development exposure is explicit, no positive verifier-value claim depends on the oracle, and failed gates remain failures in the headline.
+Partly. Visible producer-validation and qualification failures are retained, and downstream scientific comparisons remain unmeasured. Development results are explicitly exposed, and no independent verifier value is asserted. These failures support the blocked disposition rather than contradicting it.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_external_science_and_source_access`
+- `claim_scope`: `Fourteen administrative outcomes and exposed development reductions; no qualified fresh detector, online benefit or independent verifier claim.`
+- `honest_verdict`: `complete_blocked_upstream_science_unavailable`
+- `scientific_benefit`: `false`
+- `check`: `producer_validation`; `observed`: `false`; `passed`: `false`
+- `status`: `unmeasured`
 - `scope`: `exposed_development_only`
-- `shared_energy_auroc`; `value`: `0.3502604166666667`; `threshold`: `0.65`; `passed`: `false`
-- `energy_brier`: `0.20094308789066356`
-- `logistic_brier`: `0.18022024514665103`
-- `prevalence_brier`: `0.1882476806640625`
-- `broader_hypothesis_retired`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-Not checked: upstream artifacts or elided rows. This conclusion covers only the reported development result.
+Unchecked: elided rows and upstream artifacts. Risk: administrative readiness establishes no fresh scientific benefit.

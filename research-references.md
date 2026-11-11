@@ -56165,3 +56165,92 @@ precedence over older roadmap expectations.
 - **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
   describes a constraint enforcement layer. The inspected page provides no
   reproducible new model, public weights or executable evaluation protocol.
+
+## 2026-11-11 — V769 planning scan, before experiment design
+
+All eight requested topics and six secondary channels were checked. Sources
+below distinguish new leads from rechecked methods. External results are not
+Carnot measurements. The completed V768 artifacts govern continuation choices.
+
+### Promising findings and bounded uses
+
+- **New lead:** [SHAM-Bench, 2610.27370v1](https://arxiv.org/html/2610.27370v1),
+  October 19, 2026, combines human span annotations across tasks. Its source
+  contexts have different origins; some were retrieved by a model. The inspected
+  paper did not expose a usable dataset/code URL despite its release statement.
+  Use the paper to motivate source-group splits and annotation-origin checks;
+  do not depend on a promised SHAM release or pool different label criteria.
+- **Reachable constituent:** the original [RAGTruth author release](https://github.com/ParticleMedia/RAGTruth)
+  documents manual annotations, source IDs, original prompts, response splits,
+  quality flags and `implicit_true`. This is a 2024 resource reconsidered through
+  the 2026 benchmark, not a newly released corpus. Audit original human judgments
+  independently of RAGTruth++ revisions and Carnot's prior exposed subsets.
+  A natural-source pilot must isolate original contexts, hold out complete source
+  groups, preserve uncertainty and exclude exact-oracle structured records.
+  Compare a small spline energy with equally fitted linear and lexical controls.
+- **Reachable smaller constituent:** [FaithBench author release](https://github.com/vectara/FaithBench)
+  links its NAACL 2025 paper and manual annotation files. Its repeated summaries
+  share source passages. It is useful for a later external challenge, but cannot
+  silently replace a large independent-group requirement with response count.
+- **Rechecked:** [Online KAN, 2602.02056](https://arxiv.org/abs/2602.02056),
+  February 2026, motivates local spline coefficient updates and fixed-precision
+  hardware paths. V768 already qualified fixed-basis AdaGrad mechanics. Test
+  future decisions using the unchanged protocol before designing another learner.
+- **Rechecked:** [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987),
+  April 2026, separates calibration retention from accuracy. Preserve both
+  retention metrics and future Brier improvement; its conformal claims do not
+  transfer automatically to Carnot's delayed-feedback setting.
+- **Rechecked:** [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977),
+  November 6, 2026, uses energy gradients and exploration-based training for
+  recurrent reasoning. It remains a foundation-model lead. It supplies no reason
+  to reopen unchanged local generator failures or train the mandated 27B model.
+
+### Primary topic coverage
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | EBR above; [structured latent trajectories, 2603.28248](https://arxiv.org/abs/2603.28248), March 2026 | Decreasing learned energy is not a correctness proof; preserve matched controls. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), December 2025; [PAL, 2503.19466](https://arxiv.org/abs/2503.19466), March 2025 | Formal feasibility assumes specified constraints; it cannot supply missing natural-language truth. |
+| Ising in ML | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752), May 2026 | Parameter learning and efficient faithful sampling are different requirements. No new sampler is needed for a binary spline classifier. |
+| Hallucination detection/mitigation | SHAM-Bench and original constituent releases above | Audit original human annotations and source overlap before fitting. |
+| KAN | Online KAN above | Carry the qualified local coefficient method into a causal test. |
+| Energy-guided decoding | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731), July 2025 | Visual-object method; no unsupported transfer to text or change to the graph generator. |
+| Hardware sampling | [Continuous-state probabilistic computer, 2610.31339](https://arxiv.org/abs/2610.31339), October 22, 2026 | Small core-solving comparisons do not establish whole-service speed or local board support. |
+| Continual/online constraints | Continual Calibration and Online KAN above | Keep prediction-before-feedback, immutable guards, strong online controls and restart tests. |
+
+### Secondary-source receipts and limits
+
+- **OpenReview:** searched recent ICLR/ICML/NeurIPS EBM submissions. The indexed
+  [VFScale PDF](https://openreview.net/pdf?id=8ta0xgtsJK) describes energy-based
+  diffusion search; its [forum](https://openreview.net/forum?id=8ta0xgtsJK)
+  returned browser verification. No new acceptance decision was verified.
+- **Semantic Scholar:** the public [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=10&fields=title,year,externalIds,url)
+  returned ten records and `next=10`, including EBR, followed to its author paper.
+  The [ARM–EBM endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=10&fields=title,year,externalIds,url)
+  returned HTTP 429. This is a partial citation scan, not an exhaustive review.
+- **Hugging Face papers:** [HalluGuard](https://huggingface.co/papers/2601.18753)
+  and [HalluScoring 2026](https://huggingface.co/papers/2609.38355) were discovery
+  leads; no generated page summary is used as methodological authority. The
+  SHAM-Bench paper URL was inaccessible through the browser tool.
+- **GitHub trending:** [daily trending](https://github.com/trending) returned
+  navigation without a usable relevant ranking. RAGTruth and FaithBench are
+  inspected author releases; neither is claimed to be a new trending repo.
+- **Extropic:** [Writing](https://extropic.ai/writing) returned a shell.
+  [Hardware](https://extropic.ai/hardware) advertises Z1 Stick/Card early access
+  in 2027 and links [From One to One Billion](https://extropic.ai/writing/from-one-to-one-billion).
+  These vendor plans do not change Carnot's lack of authenticated TSU access.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes an energy-based constraint decision layer. No executable new
+  architecture, weights or reproducible evaluation was provided on that page.
+
+### Local evidence driving the next questions
+
+V768's exposed guard Brier is 0.0279759276 for the spline and 0.0636283248
+for the converged linear control. The development gate passed; held-out benefit
+is unmeasured. Exp8990 retained 512 completed generation calls but nested
+Exp8987's zero-call protocol beneath `preconditions_checked.authentication`.
+The unchanged validator read both as current provenance and disqualified it.
+Qualification must preserve the original rejection, authenticate primitive rows,
+and separate cited historical work from current work. It must not weaken the
+validator or claim cached rows were generated again. RAGognize remains machine-
+annotation-only under Exp8989. New human-source eligibility is a separate question.
