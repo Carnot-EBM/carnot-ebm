@@ -1,0 +1,112 @@
+PRIVATE /tmp/carnot-8986-coverage-sop44gmz
+[exp7303-validation] before_subprocess owned_unit_child elapsed_s=0.000 unit=1/9
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=15.001
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=30.002
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=45.002
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=60.003
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=75.004
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=90.004
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=105.005
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=120.005
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=135.006
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=150.006
+[exp7303-validation:owned_unit_child] .....F                                                                   [100%]
+[exp7303-validation:owned_unit_child] =================================== FAILURES ===================================
+[exp7303-validation:owned_unit_child] _______________________ test_replay_and_invalid_rosters ________________________
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child] work = {'duration_s': 4.0385856259963475, 'evidence': {'checks': [{'artifact_field': 'sha256', 'check': 'input_bytes', 'expec...old for each view', 'duration_s': 0.10542309199809097, ...}], ...}, 'global_test_debt': {}, 'owned_failure': None, ...}
+[exp7303-validation:owned_unit_child] tmp_path = PosixPath('/tmp/carnot-8986-coverage-sop44gmz/pytest/test_replay_and_invalid_roster0')
+[exp7303-validation:owned_unit_child] monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6c16934a70>
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child]     def test_replay_and_invalid_rosters(work, tmp_path, monkeypatch):
+[exp7303-validation:owned_unit_child]         """SCENARIO-REPORT-8986-CUSTODY: independent reduction binds fit roles and features."""
+[exp7303-validation:owned_unit_child]         raw = Path(work["raw"])
+[exp7303-validation:owned_unit_child] >       assert d.evaluate(work["evidence"], raw, replay=True) == work["result"]
+[exp7303-validation:owned_unit_child]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child] tests/python/test_spline_basis_methods_8986.py:202:
+[exp7303-validation:owned_unit_child] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+[exp7303-validation:owned_unit_child] python/carnot/reporting/spline_basis_methods_8986.py:347: in evaluate
+[exp7303-validation:owned_unit_child]     seal(raw / "reduction.json", result, replay)
+[exp7303-validation:owned_unit_child] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child] path = PosixPath('/tmp/carnot-8986-coverage-sop44gmz/pytest/8986-work0/reduction.json')
+[exp7303-validation:owned_unit_child] value = {'basis_fixture_rows': [{'gradient_error': 1.036124762376911e-10, 'hessian_min_eigenvalue': 0.0020425927828875905, 'in...b05142b21c311', 'seed': 73, 'sha256': 'sha256:e34cab6770fad70aa518429b448298390348e3cd1c205ae3418dd7eea5d61ae1'}], ...}
+[exp7303-validation:owned_unit_child] replay = True
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child]     def seal(path: Path, value: Json, replay: bool) -> None:
+[exp7303-validation:owned_unit_child]         """Replay compares immutable primitive bytes rather than overwriting changed evidence."""
+[exp7303-validation:owned_unit_child]         if replay:
+[exp7303-validation:owned_unit_child]             if json.loads(path.read_text()) != value:
+[exp7303-validation:owned_unit_child] >               raise ValueError(f"primitive_drift:{path.name}")
+[exp7303-validation:owned_unit_child] E               ValueError: primitive_drift:reduction.json
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child] python/carnot/reporting/encoder_head_diagnosis_8972.py:261: ValueError
+[exp7303-validation:owned_unit_child] ----------------------------- Captured stdout call -----------------------------
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_cached_benchmark completed=0 pending=6
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_71_spline completed=0 pending=6
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_71_spline completed=1 pending=5
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_71_converged_linear completed=1 pending=5
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_71_converged_linear completed=2 pending=4
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_72_spline completed=2 pending=4
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_72_spline completed=3 pending=3
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_72_converged_linear completed=3 pending=3
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_72_converged_linear completed=4 pending=2
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_73_spline completed=4 pending=2
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_73_spline completed=5 pending=1
+[exp7303-validation:owned_unit_child] [exp8986] phase=before_fit_73_converged_linear completed=5 pending=1
+[exp7303-validation:owned_unit_child] [exp8986] phase=after_fit_73_converged_linear completed=6 pending=0
+[exp7303-validation:owned_unit_child] =============================== warnings summary ===============================
+[exp7303-validation:owned_unit_child] tests/python/test_spline_basis_methods_8986.py::test_natural_freeze_and_exact_permutation
+[exp7303-validation:owned_unit_child]   /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+[exp7303-validation:owned_unit_child]     if hasattr(ast, "Num"):
+[exp7303-validation:owned_unit_child] 
+[exp7303-validation:owned_unit_child] -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[exp7303-validation:owned_unit_child] =========================== short test summary info ============================
+[exp7303-validation:owned_unit_child] FAILED tests/python/test_spline_basis_methods_8986.py::test_replay_and_invalid_rosters
+[exp7303-validation:owned_unit_child] 1 failed, 5 passed, 1 warning in 97.65s (0:01:37)
+[exp7303-validation] subprocess_outstanding owned_unit_child elapsed_s=165.007
+[exp7303-validation] after_subprocess owned_unit_child elapsed_s=165.859 exit=1 unit=1/9
+[exp7303-validation] before_subprocess coverage_combine elapsed_s=0.000 unit=2/9
+[exp7303-validation:coverage_combine] Combined 10 files, skipped 2
+[exp7303-validation] after_subprocess coverage_combine elapsed_s=0.063 exit=0 unit=2/9
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=3/9
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-8986-coverage-sop44gmz/coverage.json
+[exp7303-validation:coverage_json] Coverage failure: total of 95 is less than fail-under=100
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.107 exit=2 unit=3/9
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=4/9
+[exp7303-validation:ruff_check] All checks passed!
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.011 exit=0 unit=4/9
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=5/9
+[exp7303-validation:ruff_format] 5 files already formatted
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.010 exit=0 unit=5/9
+[exp7303-validation] before_subprocess strict_mypy elapsed_s=0.000 unit=6/9
+[exp7303-validation:strict_mypy] Success: no issues found in 4 source files
+[exp7303-validation] after_subprocess strict_mypy elapsed_s=0.098 exit=0 unit=6/9
+[exp7303-validation] before_subprocess spec_coverage elapsed_s=0.000 unit=7/9
+[exp7303-validation:spec_coverage] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec_coverage elapsed_s=0.025 exit=0 unit=7/9
+[exp7303-validation] before_subprocess e2e018 elapsed_s=0.000 unit=8/9
+[exp7303-validation] subprocess_outstanding e2e018 elapsed_s=15.001
+[exp7303-validation] subprocess_outstanding e2e018 elapsed_s=30.002
+[exp7303-validation] subprocess_outstanding e2e018 elapsed_s=45.002
+[exp7303-validation:e2e018] ..................                                                       [100%]
+[exp7303-validation:e2e018] 18 passed in 10.70s
+[exp7303-validation] after_subprocess e2e018 elapsed_s=53.738 exit=0 unit=8/9
+[exp7303-validation] before_subprocess e2e021 elapsed_s=0.000 unit=9/9
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=15.001
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=30.002
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=45.002
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=60.003
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=75.003
+[exp7303-validation] subprocess_outstanding e2e021 elapsed_s=90.003
+[exp7303-validation:e2e021] .......                                                                  [100%]
+[exp7303-validation:e2e021] =============================== warnings summary ===============================
+[exp7303-validation:e2e021] python/carnot/extraction/coace_extractor.py:122
+[exp7303-validation:e2e021]   /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+[exp7303-validation:e2e021]     if hasattr(ast, "Num"):
+[exp7303-validation:e2e021] 
+[exp7303-validation:e2e021] -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[exp7303-validation:e2e021] 7 passed, 1 warning in 45.77s
+[exp7303-validation] after_subprocess e2e021 elapsed_s=92.316 exit=0 unit=9/9
+RESULTS [('owned_unit_child', 1, False), ('coverage_combine', 0, True), ('coverage_json', 2, False), ('ruff_check', 0, True), ('ruff_format', 0, True), ('strict_mypy', 0, True), ('spec_coverage', 0, True), ('e2e018', 0, True), ('e2e021', 0, True)]

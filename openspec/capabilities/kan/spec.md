@@ -3817,3 +3817,17 @@ slots as cost .5 escalations. Export a feature-only API and byte-bound checkpoin
 Independent basis and objective derivatives agree. Exact-budget constructed
 controls decrease loss and change an action before natural fitting. Prediction
 rejects identity and label injection. Sigmoid34 exactly re-expresses spline34.
+
+## REQ-KAN-8986: Fixed convex additive spline coefficients
+Use fit-only per-coordinate min/max on27 frozen features, mapped to[-1,1].
+Clip later coordinates and map constant coordinates to zero. Keep all columns.
+Cubic clamped knots[-1,-1,-1,-1,-.5,0,.5,1,1,1,1] yield seven basis columns
+per coordinate, with217 spline and28 linear parameters including intercept.
+Fit population log loss plus .01 times non-intercept squared norm divided by2.
+Both heads use zero start, unbounded L-BFGS-B, maxiter500, gtol1e-6, ftol1e-12.
+Finite values and actual gradient infinity norm<=1e-6 are required for convergence.
+E(correct)=0; E(error)=-z; p_error=sigmoid(z). No search or sign flip is allowed.
+
+### SCENARIO-KAN-8986-NUMERIC
+Tests cover endpoints, partition of unity, constants, duplicates, finite differences,
+Hessian PSD, label orientation and refusal of false optimizer convergence.

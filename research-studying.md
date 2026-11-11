@@ -6784,3 +6784,14 @@ Equations, implementation needs and failure modes appear in
 retained under the Exp8972 raw directory. Use frozen-feature controls and separate
 gradient paths. No generator, JEPA, solver or hardware result is reproduced.
 The four methods motivate a diagnosis; they do not establish local energy benefit.
+
+## 2026-11-11 — V768 Exp8986 method readings
+
+Read the primary methods for online spline KAN2602.02056v4 (section3.1 and
+AppendixB.3), KAC2503.21076v1 (sections3.2–3.4), Continual Calibration2604.23987v1
+(sections3,5–6) and CCHD2606.08158v1 (sections2.1–2.2).
+Retained HTML, retrieval receipts, equations, conditions and non-adopted parts
+are in `results/raw/experiment_8986_v768_spline_basis_methods/methods/`.
+The adaptation fixes spline features and optimizes only convex coefficients.
+It uses an equally optimized linear control and exact graph permutations.
+This is not KAC RBF training, an FPGA reproduction or a conformal guarantee.

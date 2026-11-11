@@ -1,0 +1,59 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_replay_and_invalid_rosters ________________________
+
+work = {'duration_s': 3.6242938450013753, 'evidence': {'checks': [{'artifact_field': 'sha256', 'check': 'input_bytes', 'expec...old for each view', 'duration_s': 0.10542309199809097, ...}], ...}, 'global_test_debt': {}, 'owned_failure': None, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261111T033951-238820-06783e2f/test_replay_and_invalid_roster0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f77f8ac1790>
+
+    def test_replay_and_invalid_rosters(work, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8986-CUSTODY: independent reduction binds fit roles and features."""
+        raw = Path(work["raw"])
+>       assert d.evaluate(work["evidence"], raw, replay=True) == work["result"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_spline_basis_methods_8986.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/spline_basis_methods_8986.py:347: in evaluate
+    seal(raw / "reduction.json", result, replay)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261111T033951-238820-06783e2f/8986-work0/reduction.json')
+value = {'basis_fixture_rows': [{'gradient_error': 1.036124762376911e-10, 'hessian_min_eigenvalue': 0.0020425927828875905, 'in...b05142b21c311', 'seed': 73, 'sha256': 'sha256:e34cab6770fad70aa518429b448298390348e3cd1c205ae3418dd7eea5d61ae1'}], ...}
+replay = True
+
+    def seal(path: Path, value: Json, replay: bool) -> None:
+        """Replay compares immutable primitive bytes rather than overwriting changed evidence."""
+        if replay:
+            if json.loads(path.read_text()) != value:
+>               raise ValueError(f"primitive_drift:{path.name}")
+E               ValueError: primitive_drift:reduction.json
+
+python/carnot/reporting/encoder_head_diagnosis_8972.py:261: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8986] phase=before_cached_benchmark completed=0 pending=6
+[exp8986] phase=before_fit_71_spline completed=0 pending=6
+[exp8986] phase=after_fit_71_spline completed=1 pending=5
+[exp8986] phase=before_fit_71_converged_linear completed=1 pending=5
+[exp8986] phase=after_fit_71_converged_linear completed=2 pending=4
+[exp8986] phase=before_fit_72_spline completed=2 pending=4
+[exp8986] phase=after_fit_72_spline completed=3 pending=3
+[exp8986] phase=before_fit_72_converged_linear completed=3 pending=3
+[exp8986] phase=after_fit_72_converged_linear completed=4 pending=2
+[exp8986] phase=before_fit_73_spline completed=4 pending=2
+[exp8986] phase=after_fit_73_spline completed=5 pending=1
+[exp8986] phase=before_fit_73_converged_linear completed=5 pending=1
+[exp8986] phase=after_fit_73_converged_linear completed=6 pending=0
+=============================== warnings summary ===============================
+tests/python/test_spline_basis_methods_8986.py::test_natural_freeze_and_exact_permutation
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['research-studying.md']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_spline_basis_methods_8986.py::test_replay_and_invalid_rosters
+1 failed, 5 passed, 2 warnings in 36.32s

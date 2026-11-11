@@ -59175,3 +59175,14 @@ Tests SHALL reject changed authorities, missing fields, duplicate/lost updates,
 negative spans, stale states, rehashed aggregate drift and failed validation.
 Real private subprocess and foreign-directory replay SHALL execute without
 PYTHONPATH. Tests SHALL preserve timeout output and incomplete window counts.
+
+### REQ-VERIFY-8986: Oracle denial and exact graph permutation mechanics
+Frozen encoders SHALL accept only anonymous graph structure, node markers and the
+original confidence features. Deny labels, BFS, distances, IDs, membership and metadata.
+Order-independent neighbor and pool sums SHALL preserve exact outputs under node
+permutation and relabeling. Compare with retained historical27-feature bytes within1e-12.
+Exposed V765/V766 labels and cheap BFS truth cannot establish oracle-distinct benefit.
+
+#### SCENARIO-VERIFY-8986-INVARIANCE
+Private tests inject every forbidden field and permute nodes, edges and names.
+Feature and head predictions SHALL remain exactly equal under these permutations.

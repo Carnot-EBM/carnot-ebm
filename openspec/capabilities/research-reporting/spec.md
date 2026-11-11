@@ -111740,3 +111740,24 @@ per-unit evidence, progress requirements and closed verdict class.
 #### SCENARIO-REPORT-8998-V768
 Complete accounting records absent science as terminal blocked and keeps FoVer publication scope unchanged.
 **Implementation status:** Planned.
+
+### REQ-REPORT-8986-FROZEN: Convex cached spline protocol and checked publication
+Exp8986 SHALL pin Exp8972 diagnostic readiness and Exp8973 historical bytes before fitting.
+Exp8973 shared readiness zero is retained context, not a required gate for this changed method.
+Freeze v768-spline-protocol.json before natural fitting. Retain three logistic encoders,
+256 fit and64 exposed guard graphs, numerical states, clipping and per-graph probabilities.
+No LLM is loaded. Mechanics readiness is independent of the later development signal gate.
+Seven future paired graph bounds use family alpha .05 and10000 draws; old five thresholds stay fixed.
+External absence blocks with exact operands; owned check failures disqualify and zero readiness.
+
+#### SCENARIO-REPORT-8986-CUSTODY
+Private success, missing input, changed hashes, typed gates, cold replay and rehashed
+aggregate or primitive tampering SHALL be checked. The real CLI runs outside the checkout
+without PYTHONPATH. Normal-exit scoped checks and100-percent new unit plus child statements
+precede primary_publication. Fixtures establish no scientific credit.
+
+Implementation status update, 2026-11-11, REQ-REPORT-8986:
+The numerical module, retained-evidence producer and direct CLI are implemented.
+The primary artifact records normal-exit validation, measured new statement
+coverage, immutable replay operands and the terminal mechanics qualification.
+Scientific admission and seven-bound benefit evaluation remain later work.
