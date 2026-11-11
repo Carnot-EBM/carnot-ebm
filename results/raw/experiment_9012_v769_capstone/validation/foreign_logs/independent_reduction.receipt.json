@@ -1,0 +1,28 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import json; from pathlib import Path\np=Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/experiment_9012_v769_capstone.json'); v=json.loads(p.read_bytes()); s=v['v769_science_summary']\nassert [x['experiment_id'] for x in v['slot_rows']]==list(range(8999,9013))\nassert len(v['rows'])==v['completed_count']==v['intended_count']==14\nfor k,n in [('graph_detector_bounds',7),('causal_learning_bounds',10),('natural_label_bounds',4)]:\n assert len(s[k])==n and all(x['status']=='unmeasured' and x['denominator']==0 for x in s[k])\ng=json.loads(Path('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9001_v769_human_source_authority.json').read_bytes())['source_group_rows']\nassert len(g)==s['natural_source_audit']['source_group_count']==1823\nassert sum(not x['exposed_source_ids'] for x in g)==s['natural_source_audit']['unseen_source_group_count']==0\nh=json.loads(Path('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8990_v768_graph_corpus_a.json').read_bytes()); rows=h['invocation_ledger']\nassert len({x['call_id'] for x in rows})==len(rows)\nassert sum(x['operation']=='generation' and x['status']=='completed' for x in rows)==s['historical_generation_calls_counted_once']==512\nassert h['verdict_class']=='disqualified' and h['flagged_adversarial'] is True\nassert all(x==0 for x in v['model_invocation_counts'].values())\nassert v['independent_generalization_score']==0 and not s['scientific_benefit']\nassert v['paper_ready']==all(v[x]['pass'] for x in ['G1','G2','G3','G4'])\nprint('independent reduction:14 slots,7 graph,10 causal,4 natural,1823 exposed groups,512 historical calls; PASS',flush=True)\n"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json; from pathlib import Path\np=Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/experiment_9012_v769_capstone.json'\"'\"'); v=json.loads(p.read_bytes()); s=v['\"'\"'v769_science_summary'\"'\"']\nassert [x['\"'\"'experiment_id'\"'\"'] for x in v['\"'\"'slot_rows'\"'\"']]==list(range(8999,9013))\nassert len(v['\"'\"'rows'\"'\"'])==v['\"'\"'completed_count'\"'\"']==v['\"'\"'intended_count'\"'\"']==14\nfor k,n in [('\"'\"'graph_detector_bounds'\"'\"',7),('\"'\"'causal_learning_bounds'\"'\"',10),('\"'\"'natural_label_bounds'\"'\"',4)]:\n assert len(s[k])==n and all(x['\"'\"'status'\"'\"']=='\"'\"'unmeasured'\"'\"' and x['\"'\"'denominator'\"'\"']==0 for x in s[k])\ng=json.loads(Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9001_v769_human_source_authority.json'\"'\"').read_bytes())['\"'\"'source_group_rows'\"'\"']\nassert len(g)==s['\"'\"'natural_source_audit'\"'\"']['\"'\"'source_group_count'\"'\"']==1823\nassert sum(not x['\"'\"'exposed_source_ids'\"'\"'] for x in g)==s['\"'\"'natural_source_audit'\"'\"']['\"'\"'unseen_source_group_count'\"'\"']==0\nh=json.loads(Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8990_v768_graph_corpus_a.json'\"'\"').read_bytes()); rows=h['\"'\"'invocation_ledger'\"'\"']\nassert len({x['\"'\"'call_id'\"'\"'] for x in rows})==len(rows)\nassert sum(x['\"'\"'operation'\"'\"']=='\"'\"'generation'\"'\"' and x['\"'\"'status'\"'\"']=='\"'\"'completed'\"'\"' for x in rows)==s['\"'\"'historical_generation_calls_counted_once'\"'\"']==512\nassert h['\"'\"'verdict_class'\"'\"']=='\"'\"'disqualified'\"'\"' and h['\"'\"'flagged_adversarial'\"'\"'] is True\nassert all(x==0 for x in v['\"'\"'model_invocation_counts'\"'\"'].values())\nassert v['\"'\"'independent_generalization_score'\"'\"']==0 and not s['\"'\"'scientific_benefit'\"'\"']\nassert v['\"'\"'paper_ready'\"'\"']==all(v[x]['\"'\"'pass'\"'\"'] for x in ['\"'\"'G1'\"'\"','\"'\"'G2'\"'\"','\"'\"'G3'\"'\"','\"'\"'G4'\"'\"'])\nprint('\"'\"'independent reduction:14 slots,7 graph,10 causal,4 natural,1823 exposed groups,512 historical calls; PASS'\"'\"',flush=True)\n'",
+  "deadline_s": 60,
+  "duration_s": 0.314861104,
+  "ended_monotonic_ns": 81365865890610,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_logs/independent_reduction.stdout",
+  "log_sha256": "sha256:dd37dec10ca22ae6b17b5442e820722395855292684c722afa1b0fe4673619d2",
+  "name": "independent_reduction",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 81365551029506,
+  "started_wall_ns": 1794407849030795689,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_logs/independent_reduction.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_logs/independent_reduction.stdout",
+  "stdout_sha256": "sha256:dd37dec10ca22ae6b17b5442e820722395855292684c722afa1b0fe4673619d2",
+  "timed_out": false
+}

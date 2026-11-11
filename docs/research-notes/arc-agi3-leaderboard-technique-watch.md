@@ -687,3 +687,13 @@ Measurements were not independently reproduced; complete-submission source-readi
 
 Results were not independently reproduced; complete submissions were not audited for source exploitation.
 
+## 2026-11-11 14:36 UTC -- NEW
+
+Newly located details from **Grigoriy Zatravkin & co’s released solution**:
+
+- **(b), general-purpose attention profiling.** Logs the sparse-attention indexer’s selected tokens and labels their origin. In one 118K-token request, earlier reasoning received **51.9%** of selections and tool outputs **25.0%**; images received **5.6%**, despite occupying **12.5%** of the prompt. This is a single-request measurement, not a general performance result. **POSSIBLE CARNOT LEVER:** Profile which verifier evidence the generator actually consults before changing compaction. [Details, §11](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md#11-what-the-model-reads-attention-picks-as-a-free-profiler)
+
+- **(b), general-purpose observation caching.** Previously, rebuilding historical board images caused approximately **12.7 seconds of client delay per turn** late in games. Rendering each board once and caching it removed that delay and kept historical image bytes identical, supporting inference-session reuse. [Details, §6](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md#6-scheduling-for-agent-traffic)
+
+Neither mechanism requires game-source access or per-game rules. Results were not independently reproduced; complete-submission exploit status remains unaudited.
+

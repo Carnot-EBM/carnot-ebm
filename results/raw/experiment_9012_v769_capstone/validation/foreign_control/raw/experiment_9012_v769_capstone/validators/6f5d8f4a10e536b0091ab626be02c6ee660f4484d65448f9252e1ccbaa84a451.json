@@ -1,0 +1,66 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/experiment_9012_v769_capstone.json",
+  "primary_sha256": "sha256:6f5d8f4a10e536b0091ab626be02c6ee660f4484d65448f9252e1ccbaa84a451",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_9012_v769_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_9012_v769_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 6.491447427004459,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/invocations/81320764660366/terminal_checks/00_cold_replay.log",
+        "log_sha256": "sha256:3e0ee13624b6844699a1f7694ff2e26fff8b53f4d13f65d6979a5cd91b586df7",
+        "name": "cold_replay",
+        "output_tail": "[exp9012] phase=imports_before completed=0 pending=1\n[exp9012] phase=start_no_model_load completed=0 pending=0\n{\"passed\": true, \"replay_passed\": true, \"slots\": 14}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 1.6853415470104665,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/invocations/81320764660366/terminal_checks/01_adversarial.log",
+        "log_sha256": "sha256:03b0d7322006f9326dc8f21e2fe6db2b46e4ed0ef8f0340a0cd7989868ce67af",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 9012,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_upstream_science_unavailable\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.0444094389968086,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9012_v769_capstone/validation/foreign_control/raw/experiment_9012_v769_capstone/invocations/81320764660366/terminal_checks/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

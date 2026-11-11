@@ -1,0 +1,87 @@
+{
+  "argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--rcfile",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/coverage.ini",
+      "--data-file",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/.coverage",
+      "-m",
+      "pytest",
+      "--noconftest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "tests/python/test_v769_capstone_9012.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/reporting/v769_capstone.py",
+      "scripts/experiments/experiment_9012_v769_capstone.py",
+      "tests/python/test_v769_capstone_9012.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/v769_capstone.py",
+      "scripts/experiments/experiment_9012_v769_capstone.py",
+      "tests/python/test_v769_capstone_9012.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--config-file",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/mypy.ini",
+      "python/carnot/reporting/v769_capstone.py",
+      "scripts/experiments/experiment_9012_v769_capstone.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_v769_capstone_9012.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "pytest",
+      "--noconftest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "tests/python/test_restricted_decision_audit_8210.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "-c",
+      "from pathlib import Path; import json; from carnot.reporting.v756_branch_qualification import measured; from carnot.reporting import v769_capstone as m; r=Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation'); v=measured(list(r.glob('.coverage.*')),m.OWNED,r/'combined'); (r/'coverage_summary.json').write_text(json.dumps(v,indent=2)); print(json.dumps(v),flush=True); assert v['complete'],v"
+    ]
+  ],
+  "code_hashes": {
+    "python/carnot/reporting/v769_capstone.py": "sha256:dfe643e2715b7cb31d7c043fe05d4b9f9f0f5a874bb8fdae54a83802af206c04",
+    "scripts/experiments/experiment_9012_v769_capstone.py": "sha256:79b369c02f6c49eb36b86c74e743bccddf7e63fad357c702cc4abbecc4cd9376",
+    "tests/python/test_v769_capstone_9012.py": "sha256:fcbe84125b942a9dc88ea73c6eca90e4774df06c0e0acc28852d8ad7e6a61e20"
+  },
+  "config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/coverage.ini",
+      "sha256": "sha256:2de3acdef79acd7d31609ace4aca30c439dd85a8fd362a604625b5b03f92ecc2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9012_v769_capstone/validation/mypy.ini",
+      "sha256": "sha256:78e2c9ea58a99a1a00129a267b827a4b959af88e20683abde436288fac7f2e2a"
+    }
+  ]
+}

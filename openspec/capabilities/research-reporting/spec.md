@@ -112021,13 +112021,52 @@ cold replay; applicable numerical/causal controls SHALL use the registered bound
 Implementation status: Planned; execution and validation remain future work.
 
 ### REQ-REPORT-9012: Reconcile fourteen outcomes and separate graph and independent-label claims
-The planned `exp9012-capstone` SHALL follow its frozen V769 protocol and publish
+The `exp9012-capstone` SHALL follow its frozen V769 protocol and publish
 `results/experiment_9012_v769_capstone.json` with authentic primitive evidence.
 Readiness SHALL remain separate from scientific benefit and unavailable inputs.
 #### SCENARIO-REPORT-9012-V769
 Owned tests SHALL cover successful custody, missing inputs, altered evidence and
 cold replay; applicable numerical/causal controls SHALL use the registered bounds.
-Implementation status: Planned; execution and validation remain future work.
+Implementation status: Implemented in `python/carnot/reporting/v769_capstone.py`,
+the Exp9012 direct CLI and five private requirement-linked tests. All five tests,
+25 private E2E-018/021 cases, Ruff check/format, strict mypy and explicit spec
+coverage pass. All231 newly owned statements have measured100 percent coverage
+with zero exclusions. Actual foreign-directory publication, replay, missing-input
+rejection, rehashed tamper rejection and an independent reduction pass, with argv,
+normal exits, durations and log hashes retained under the capstone raw directory.
+Fourteen slots are accounted for; seven graph, ten causal and four natural-label
+bounds remain unmeasured. Original Exp8990 stays disqualified and its512 calls
+are counted once from513 distinct original invocation rows. The rejected human
+audit retains1823 exposed source groups and zero unseen groups. The mandatory
+84356-test suite reports failures/errors and times out at its900-second bound
+(932.251 seconds including worker shutdown), exit-15. Production readiness is
+disqualified and zero; this is not a scientific null or unfinished accounting.
+Ops/status/changelog and BMAD traceability reconciliation remain conductor-owned.
+
+### REQ-REPORT-9012-ACCOUNTING: Preserve each scheduled outcome and scientific scope
+The capstone SHALL authenticate the frozen Exp8999 full-object contract and
+account for Exp8999..9012 in order, including itself. An exact alternate scheduler
+receipt SHALL retain the absent primary as missing_file. A log-only skip has no
+producer verdict. Rejected inputs SHALL remain retained. Original Exp8990 stays
+disqualified and its512 historical calls are counted once through a cited source.
+Seven graph bounds, ten causal-learning bounds and four natural-label bounds
+SHALL retain their frozen thresholds and independent denominators. Missing rows
+are unmeasured, never a scientific null. Human authority, document grouping,
+prior exposure and possible pretrained-model contamination limit natural claims.
+Graph oracle evidence cannot close the no-cheap-oracle target. Complete owned
+accounting over missing external science is blocked with readiness1; failed owned
+checks disqualify and zero readiness. Historical FoVer G1..G4 remain separate.
+
+#### SCENARIO-REPORT-9012-CUSTODY
+Private tests SHALL cover14-slot accounting, exact alternate receipts, missing
+primaries, changed hashes, full-object authority mutation, unchanged-scope
+retirement using actual prior verdicts, and rehashed aggregate tampering. Real
+CLI children outside the checkout without PYTHONPATH SHALL exercise refusal,
+success and cold replay. Publication requires measured100 percent newly owned
+statements, normal-exit owned checks, private E2E-018/021 and unchanged scanners.
+Run the mandatory full Python suite once and retain any failure as repository
+health and failed required validation. Ops and traceability updates for this
+invocation are conductor-owned under the user's final stop instruction.
 
 ### REQ-REPORT-8999-AUTHORITY: Separate current custody from frozen science
 Exp8999 SHALL bind all fourteen full V769 objects, visible order Exp8999..9012,
