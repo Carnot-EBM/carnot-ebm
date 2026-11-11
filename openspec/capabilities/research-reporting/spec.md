@@ -111622,7 +111622,20 @@ The experiment SHALL implement the frozen V768 task `exp8985-branch-contract` an
 per-unit evidence, progress requirements and closed verdict class.
 #### SCENARIO-REPORT-8985-V768
 Exact order, changed prompt, changed gate, absent primary and scheduler skip retain distinct outcomes.
-**Implementation status:** Planned.
+The contract SHALL bind all fourteen full objects to an independent digest, the visible
+table and staged or matching activated queue. Every gate SHALL name an earlier producer
+and an identical declared top-level field. Private missing-task, title, prompt, gate,
+deliverable and coordinated-rehash controls SHALL fail closed. Retained V767 design,
+queue, five terminal primaries, alternate scheduler artifacts, missing primaries and
+archive lag SHALL remain explicit. ARC support SHALL use only authenticated evidence
+newer than Exp8720 and the V767 frontier: thirty uncensored episodes, three families,
+and both arms within every held family. Empty optional support SHALL emit one cheap
+skip without blocking administrative readiness. Owned normal-exit checks and measured
+100-percent unit plus child statement coverage SHALL precede checked publication.
+Missing required bytes SHALL block; failed owned validation SHALL disqualify and zero
+readiness. Cold replay SHALL reject rehashed aggregate or primitive tampering. No model,
+game, device probe, queue activation or external publication is authorized.
+**Implementation status:** Implemented; readiness requires retained normal-exit validation and measured owned coverage.
 
 ### REQ-REPORT-8986: Freeze a convex spline energy head and an equally optimized linear control
 The experiment SHALL implement the frozen V768 task `exp8986-spline-basis-methods` and produce
