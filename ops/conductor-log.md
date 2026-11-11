@@ -21765,3 +21765,4 @@ code |
 | 2026-11-11 07:49 UTC | Measure delayed continuous spline learning on seal | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8993-spline-calibrated-decisions, exp8992-corpus-admission) |
 | 2026-11-11 07:49 UTC | Independently audit future spline benefit and shar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8994-online-spline-streams) |
 | 2026-11-11 07:49 UTC | Measure complete spline decision costs and support | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8994-online-spline-streams, exp8993-spline-calibrated-decisions) |
+| 2026-11-11 07:55 UTC | Assess held-family supervisor transfer only after  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8985-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
