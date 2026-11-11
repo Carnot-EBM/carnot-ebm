@@ -111667,7 +111667,38 @@ The experiment SHALL implement the frozen V768 task `exp8989-natural-annotation-
 per-unit evidence, progress requirements and closed verdict class.
 #### SCENARIO-REPORT-8989-V768
 Machine-generated annotations cannot satisfy independent-human-label eligibility; public source access remains separate.
-**Implementation status:** Planned.
+
+The audit SHALL pin author code and both dataset splits by revision and SHA256.
+It SHALL inspect all released rows when the release fits600 seconds and256MiB.
+Each response SHALL retain its article/question group, exact UTF8 hash, parquet
+row address, machine annotation, character-span alignment and token-start checks.
+Shared articles, questions, references and responses SHALL be checked across splits.
+Golden answers, answerability, annotations and analysis text are label-bearing
+metadata. They SHALL NOT become independent human decisions or inference features.
+No documented human review is missing evidence, not proof that no review occurred.
+
+Independent eligibility requires documented independent human decisions, usable
+original text, authorized use and at least200 independent groups supporting both
+labels. Machine-only released authority SHALL finish as
+`complete_null_machine_annotation_only`, with independent readiness zero.
+Owned failures SHALL disqualify and zero all readiness; missing external bytes
+SHALL finish blocked with the exact failed operand. No LLM is loaded or called.
+
+#### SCENARIO-REPORT-8989-CUSTODY
+Private tests SHALL exercise Unicode and invalid spans, source/response overlap,
+missing inputs, byte tampering, failed validation and rehashed aggregate tampering.
+The actual CLI SHALL run outside the checkout without PYTHONPATH and cold replay
+SHALL independently reduce retained original parquet bytes. New unit and actual
+child statements SHALL have100 percent coverage with no exclusions. Frozen argv,
+normal exits, log hashes, scoped lint/types/spec checks and private E2E-018/021
+SHALL precede atomic checked publication. Global test debt remains separate.
+
+**Implementation status:** Implemented in the annotation audit, runner and direct CLI.
+All230 new unit/child statements are covered with no exclusions;11 owned tests
+and25 private E2E-018/021 cases pass. Scoped Ruff, strict mypy and explicit-path
+spec tracing pass. The full repository suite was attempted once, showed failures
+and reached its300-second bound; its debt remains separate. The primary artifact
+records the final release population, readiness and unchanged scanner receipts.
 
 ### REQ-REPORT-8990: Collect bounded Qwen graph evidence for the convex test in shard A
 The experiment SHALL implement the frozen V768 task `exp8990-graph-corpus-a` and produce

@@ -1,0 +1,27 @@
+import json,hashlib,time
+from collections import Counter,defaultdict
+from pathlib import Path
+import pyarrow.parquet as pq
+root=Path('results/raw/experiment_8989_v768_natural_annotation_authority')
+groups=defaultdict(set);split_counts={};labels=Counter();spans=0;span_bad=0;token_bad=0;units=0;overlap=defaultdict(set);models=Counter()
+print('phase=independent_reduction completed=0 pending=2',flush=True)
+for split in ('train','test'):
+ p=root/'release/dataset/data'/f'{split}-00000-of-00001.parquet'
+ data=pq.read_table(p).to_pylist();split_counts[split]=len(data)
+ for item in data:
+  source=item['details']['user_prompt'];article=source['details']['suitable_article']
+  group=(article['url'],source['article_title'],item['user_prompt']);groups[group].add(split);overlap[article['url']].add(split)
+  for model,response in item['responses'].items():
+   if model=='golden_answer':continue
+   units+=1;models[model]+=1;labels[bool(response['hallucinations'])]+=1
+   text=response['text'];starts=response['details']['token_starts']
+   token_bad+=int(not starts or starts!=sorted(starts) or any(x<0 or x>len(text) for x in starts))
+   for h in response['hallucinations']:
+    spans+=1
+    a,b=h['start'],h['end']
+    span_bad+=int(not isinstance(a,int) or not isinstance(b,int) or not(0<=a<b<=len(text)) or text[a:b]!=h['text'] or not h['valid'])
+ print(f'phase=independent_reduction completed={len(split_counts)} pending={2-len(split_counts)}',flush=True)
+result=dict(split_rows=split_counts,response_variants=units,question_groups=len(groups),label_counts={str(int(k)):v for k,v in labels.items()},span_count=spans,invalid_spans=span_bad,invalid_token_start_responses=token_bad,cross_split_article_count=sum(len(s)>1 for s in overlap.values()),cross_split_question_count=sum(len(s)>1 for s in groups.values()),model_counts=models,method='Independent parquet reader with tuple identities and direct substring checks; does not import the audit reducer.',code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+(root/'independent_summary.json').write_text(json.dumps(result,indent=2)+'\n')
+assert units==sum(models.values())==sum(labels.values())
+print(json.dumps(result),flush=True)

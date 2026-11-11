@@ -1,0 +1,67 @@
+[
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "tests/python/test_natural_annotation_authority_8989.py"
+    ],
+    "deadline": 300,
+    "name": "owned_pytest"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/reporting/natural_annotation_authority_8989.py",
+      "python/carnot/reporting/natural_annotation_runner_8989.py",
+      "scripts/experiments/experiment_8989_v768_natural_annotation_authority.py",
+      "tests/python/test_natural_annotation_authority_8989.py"
+    ],
+    "deadline": 60,
+    "name": "ruff"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/natural_annotation_authority_8989.py",
+      "python/carnot/reporting/natural_annotation_runner_8989.py",
+      "scripts/experiments/experiment_8989_v768_natural_annotation_authority.py",
+      "tests/python/test_natural_annotation_authority_8989.py"
+    ],
+    "deadline": 60,
+    "name": "format"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "--follow-imports=silent",
+      "python/carnot/reporting/natural_annotation_authority_8989.py",
+      "python/carnot/reporting/natural_annotation_runner_8989.py",
+      "scripts/experiments/experiment_8989_v768_natural_annotation_authority.py"
+    ],
+    "deadline": 60,
+    "name": "mypy"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_natural_annotation_authority_8989.py"
+    ],
+    "deadline": 60,
+    "name": "spec"
+  }
+]
