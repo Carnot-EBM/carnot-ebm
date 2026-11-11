@@ -23533,3 +23533,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - Planning validation is in progress. No activation, experiment, model run,
   hardware change, external publication or push occurred.
 - 2026-11-11: Bind fourteen tasks and preserve the completed V767 evidence (⚠️ Research Finding) — honest_verdict=complete_null_v768_branch_contract; results/experiment_8985_v768_branch_contract.json
+- 2026-11-11: Freeze a convex spline energy head and an equally optimized linear control (⚠️ Research Finding) — honest_verdict=complete_null_convex_spline_mechanics_frozen; results/experiment_8986_v768_spline_basis_methods.json
