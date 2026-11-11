@@ -21788,3 +21788,4 @@ code |
 | 2026-11-11 17:13 UTC | Plan milestone 2026.11.770 | OK | 14 tasks proposed |
 | 2026-11-11 17:28 UTC | Milestone 2026.11.770 activated | OK | 14 tasks queued |
 | 2026-11-11 18:10 UTC | Bind fourteen tasks and preserve V769 failures and | OK | 88 passed, 1 warning in 50.93s |
+| 2026-11-11 18:55 UTC | Qualify producer provenance with separate scoped c | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, not a clean success, excluded from headline / capstone. 98 passed, 1 warning in 66.95s (0:01:06) |

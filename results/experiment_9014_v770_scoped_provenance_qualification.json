@@ -603,7 +603,7 @@
     "verifier_is_oracle": "Current counters and normal-exit receipts are separate from complete cited historical bytes; scoped custody grants no scientific benefit or repository health."
   },
   "fixture_only": false,
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "gate_check_summary": [
     {
       "artifact_field": "sha256",
@@ -83802,5 +83802,18 @@
   },
   "validation_scope_ready_score": 0,
   "verdict_class": "disqualified",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial_provenance": {
+    "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-11-11T18:55:32Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9014_v770_scoped_provenance_qualification.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+    }
+  ]
 }
