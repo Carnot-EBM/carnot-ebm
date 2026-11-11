@@ -21751,3 +21751,4 @@ code |
 | 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude age-week 6: OPEN 4 |
 | 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence age-week  |
 | 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8492_v730_publication_cost_model.json age-week 4: OPEN 28 days: CLAIM |
+| 2026-11-11 01:43 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

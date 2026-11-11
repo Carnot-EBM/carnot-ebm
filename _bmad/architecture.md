@@ -1042,3 +1042,28 @@ compared model families. ARC analysis requires new supported live receipts.
 These are planned experiments, not deployed behavior or new scientific results.
 Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Execution proposal: `research-roadmap-next.yaml`; active V766 remains unchanged.
+
+## Planned V768 coefficient and evidence boundaries — 2026-11-10
+
+V768 proposes fourteen tasks, Exp8985–Exp8998. No runtime behavior changes here.
+It replaces the failed hidden graph-energy head with fixed cubic basis functions
+and a convex binary log-loss coefficient fit. The three historical logistic
+encoders remain frozen. A converged linear comparator receives the same fitting
+standard. Collection preserves all previous development criteria and adds the
+optimized-linear comparison. Fresh confirmation retains five prior bounds and
+adds two against that stronger control.
+
+Continuous learning changes only fixed-basis coefficients and AdaGrad state.
+Predictions precede released labels. Historical promotion guards and untouched
+research retention remain separate. Numerical fit readiness can qualify online
+methods even when the offline collection gate fails. Complete service costs
+include graph encoding, dense anchors, guards, durable recovery and shutdown.
+The operation map makes no claim that existing sampler fabric trains splines.
+
+An independent RAGognize audit distinguishes accessible original responses from
+independent label authority. Model-generated golden answers cannot be silently
+promoted to human truth. The prior denied AuthenHallu access attempt remains
+closed without changed authorization. ARC analysis requires new supported live
+receipts. The unconditional capstone preserves absent science as terminal blocked.
+Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed queue: `research-roadmap-next.yaml`; active V767 is unchanged.

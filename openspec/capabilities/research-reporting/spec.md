@@ -111611,3 +111611,119 @@ Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
 **Implementation status:** Implemented; validation receipt isolation repaired 2026-11-10.
+
+## Planned V768 research contract — 2026-11-10
+The staged design and queue specify exactly fourteen tasks, Exp8985–Exp8998.
+No implementation or scientific result is claimed by these planning requirements.
+
+### REQ-REPORT-8985: Bind fourteen tasks and preserve the completed V767 evidence
+The experiment SHALL implement the frozen V768 task `exp8985-branch-contract` and produce
+`results/experiment_8985_v768_branch_contract.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8985-V768
+Exact order, changed prompt, changed gate, absent primary and scheduler skip retain distinct outcomes.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8986: Freeze a convex spline energy head and an equally optimized linear control
+The experiment SHALL implement the frozen V768 task `exp8986-spline-basis-methods` and produce
+`results/experiment_8986_v768_spline_basis_methods.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8986-V768
+Spline endpoints, constant coordinates, finite-difference gradients and convex-objective convergence are checked privately.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8987: Measure the fixed spline development gate before any new Qwen collection
+The experiment SHALL implement the frozen V768 task `exp8987-spline-development-admission` and produce
+`results/experiment_8987_v768_spline_development_admission.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8987-V768
+A signal failure cannot permit collection; converged fitted-state readiness remains separate.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8988: Qualify delayed continuous coefficient learning without waiting for collection admission
+The experiment SHALL implement the frozen V768 task `exp8988-online-spline-methods` and produce
+`results/experiment_8988_v768_online_spline_methods.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8988-V768
+Predictions precede released labels; real child restart preserves coefficients, accumulators and pending acknowledgments.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8989: Audit public RAGognize labels without mistaking generated annotations for independent truth
+The experiment SHALL implement the frozen V768 task `exp8989-natural-annotation-authority` and produce
+`results/experiment_8989_v768_natural_annotation_authority.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8989-V768
+Machine-generated annotations cannot satisfy independent-human-label eligibility; public source access remains separate.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8990: Collect bounded Qwen graph evidence for the convex test in shard A
+The experiment SHALL implement the frozen V768 task `exp8990-graph-corpus-a` and produce
+`results/experiment_8990_v768_graph_corpus_a.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8990-V768
+Missing offload, transport failure and timeout preserve actual first responses and bounded-generation provenance.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8991: Collect bounded Qwen graph evidence for the convex test in shard B
+The experiment SHALL implement the frozen V768 task `exp8991-graph-corpus-b` and produce
+`results/experiment_8991_v768_graph_corpus_b.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8991-V768
+Shard B rejects overlap with shard A and retains the same fixed role and first-response protocol.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8992: Authenticate fresh graph roles and truth isolation for convex evaluation
+The experiment SHALL implement the frozen V768 task `exp8992-corpus-admission` and produce
+`results/experiment_8992_v768_corpus_admission.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8992-V768
+Foreign shards, role swaps, oracle fields and forged truth sidecars cannot qualify a corpus.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8993: Test convex spline energy value against old and converged linear baselines
+The experiment SHALL implement the frozen V768 task `exp8993-spline-calibrated-decisions` and produce
+`results/experiment_8993_v768_spline_calibrated_decisions.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8993-V768
+All seven original-plus-optimized-control bounds and exact graph-invariance checks retain their thresholds.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8994: Measure delayed continuous spline learning on sealed real Qwen response streams
+The experiment SHALL implement the frozen V768 task `exp8994-online-spline-streams` and produce
+`results/experiment_8994_v768_online_spline_streams.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8994-V768
+All five arms produce causal rows; shared retention stays outside updates and promotion.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8995: Independently audit future spline benefit and shared-panel retention
+The experiment SHALL implement the frozen V768 task `exp8995-online-spline-benefit` and produce
+`results/experiment_8995_v768_online_spline_benefit.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8995-V768
+Whole-stream and shared-graph resampling retain ten simultaneous bounds without pseudoreplication.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8996: Measure complete spline decision costs and supported hardware operations
+The experiment SHALL implement the frozen V768 task `exp8996-complete-spline-cost` and produce
+`results/experiment_8996_v768_complete_spline_cost.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8996-V768
+Complete process costs include dense anchoring, guards and durable work; deployment also requires quality.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8997: Assess held-family supervisor transfer only after new live outcomes qualify
+The experiment SHALL implement the frozen V768 task `exp8997-arc-transfer-evidence` and produce
+`results/experiment_8997_v768_arc_transfer_evidence.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8997-V768
+Absent new live outcomes block analysis; observational receipts cannot imply a new hidden-game solve.
+**Implementation status:** Planned.
+
+### REQ-REPORT-8998: Reconcile fourteen outcomes and decide exact spline and evidence continuations
+The experiment SHALL implement the frozen V768 task `exp8998-capstone` and produce
+`results/experiment_8998_v768_capstone.json`. It SHALL preserve its declared gates, substrate,
+per-unit evidence, progress requirements and closed verdict class.
+#### SCENARIO-REPORT-8998-V768
+Complete accounting records absent science as terminal blocked and keeps FoVer publication scope unchanged.
+**Implementation status:** Planned.

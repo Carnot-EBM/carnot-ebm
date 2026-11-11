@@ -56083,3 +56083,85 @@ adapter protocol is closed. No extra graph collection is justified until a
 development-only shared-feature prototype shows useful signal. The cheap BFS
 oracle keeps even a successful graph detector short of the current north star.
 The independent natural-label audit must continue if the graph branch stops.
+## 2026-11-10 — V768 planning scan, before experiment design
+
+The scan checked all requested topics and secondary sources. External results
+remain leads. Rechecked sources are identified below. Local V767 evidence takes
+precedence over older roadmap expectations.
+
+### Methods and evidence worth testing
+
+- **Rechecked, changed use:** [online spline KAN, 2602.02056v4](https://arxiv.org/abs/2602.02056),
+  June 19, 2026 revision, studies local coefficient updates and fixed-point FPGA
+  training. The [KAC paper, 2503.21076](https://arxiv.org/abs/2503.21076), March 2025,
+  studies nonlinear classifier bases; [author code](https://github.com/Ethanhuhuhu/KAC)
+  is available. Carnot's possible use is a fixed spline basis on the already
+  informative graph representation, with convex coefficient fitting. This is a
+  local hypothesis, not a KAC reproduction: KAC uses RBFs and different training.
+  It changes the failed jointly optimized hidden-head mechanism. Measure the
+  converged linear control equally. An additive binary energy is also a logistic
+  spline classifier; its name alone establishes no verification advantage.
+- **Rechecked retention warning:** [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987),
+  April 2026, separates predictive accuracy from calibration reliability.
+  [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), May 2026, studies
+  coefficient importance. Use separate future-benefit and retention measurements.
+  Keep the retired importance-anchoring protocol closed. Fixed-basis adaptive
+  gradients are a different candidate; neither paper supplies its regret bound.
+- **Newly inspected release:** [RAGognizer, 2604.15945](https://arxiv.org/abs/2604.15945),
+  April 17, 2026, links [author code](https://github.com/F4biian/RAGognizer) and
+  the public [RAGognize corpus](https://huggingface.co/datasets/F4biian/RAGognize).
+  The card exposes original context, generated answers and token annotations.
+  It declares a Gemini-generated golden answer. Natural response errors do not
+  imply independent human labels. Audit the annotation pipeline and released
+  evidence before treating this as an alternative to inaccessible AuthenHallu.
+  Keep machine-only annotations as development supervision. Do not regenerate
+  labels or fine-tune the mandated generator. The card lists CC BY-SA 4.0;
+  original source and response-model terms still need separate accounting.
+- **New control lead:** [Constrained Paraphrase Consistency, 2606.08158](https://arxiv.org/abs/2606.08158),
+  June 2026, separates prediction consistency from preservation of the target
+  label. Use exact graph relabelings to test invariance without inventing new
+  semantic labels. Defer natural paraphrase training until label authority exists.
+- **Rechecked alternative:** [Trajel, 2605.24219v2](https://arxiv.org/html/2605.24219v2),
+  May 2026, studies errors inside agent trajectories. The inspected paper did not
+  establish a usable author dataset download. Record the lead; do not build a
+  runtime dependency on a promised release. The [LPHB release](https://doi.org/10.7910/DVN/PCHISZ)
+  still describes 900 responses over 300 questions. A newer metadata version does
+  not make those already exposed questions fresh evidence.
+
+### Topic coverage and decisions
+
+| Topic | Primary source | Implication |
+|---|---|---|
+| EBM reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 6, 2026 | Rechecked new exploration training; no reopening of Carnot's unchanged generator nulls. |
+| Neural constraints | [Certified neural constraint reasoning, 2608.14569](https://arxiv.org/abs/2608.14569) | Separate learned scores from symbolic certification. |
+| Ising in ML | [FPGA–ASIC co-design, 2602.15985v2](https://arxiv.org/abs/2602.15985), September revision | Count orchestration and data movement; optimization is not sampling fidelity. |
+| Hallucinations | RAGognizer and paraphrase-consistency sources above | Inspect label origin and invariance; no automatic-label promotion to independent truth. |
+| KAN | Online KAN, KAC and KAN-CL above | Fixed bases isolate coefficient optimization and give a possible sparse hardware path. |
+| Guided decoding | [Specification-guided generation, 2610.41511](https://arxiv.org/abs/2610.41511), October 30, 2026 | Explicit specifications can constrain outputs; they do not provide missing semantic truth. Defer decoding changes. |
+| Hardware sampling | FPGA–ASIC paper and Extropic below | No new local hardware or service-speed claim. |
+| Continual learning | Continual Calibration and online KAN above | Freeze causal releases, strong online controls and untouched retention. |
+
+### Secondary checks and access limits
+
+- **OpenReview:** searched recent EBM and verifier submissions. Direct
+  [EBT](https://openreview.net/forum?id=ZBj3Qp1bYg) and
+  [ARM–EBM](https://openreview.net/forum?id=997oprE4sh) pages returned browser
+  challenges. Do not infer new review decisions from these responses.
+- **Semantic Scholar:** the public EBT citation endpoint returned HTTP 429.
+  The ARM–EBM endpoint returned ten citing papers on this request, without a
+  next-page marker. Its [distributional EBM lead](https://arxiv.org/abs/2605.18871)
+  stresses frozen encoders and model-identity shortcuts. Citation coverage is
+  limited to this response; EBT coverage remains incomplete.
+- **Hugging Face papers:** [RAGognizer](https://huggingface.co/papers/2604.15945)
+  linked the author release. Its generated summary is discovery only; method
+  conclusions above use the paper and author card.
+- **GitHub:** [monthly trending](https://github.com/trending?since=monthly)
+  returned an older snapshot. No relevant current ranking was established.
+  RAGognizer and KAC came from author links, not a verified trending rank.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/), dated September 4, 2026. Its efficiency
+  figures are vendor projections with operation exclusions. They do not provide
+  local TSU access or a Carnot end-to-end measurement.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint enforcement layer. The inspected page provides no
+  reproducible new model, public weights or executable evaluation protocol.

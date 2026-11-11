@@ -293,3 +293,4 @@ of truth, not this line.)
 | 2026-11-06 | experiment_claim_audit | experiment_8871_v759_size_aware_verifier.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-11-07 | experiment_claim_audit | experiment_4381_biprm_detector_localization_abstention.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-11-07 | experiment_claim_audit | experiment_8897_v761_source_bound_decisions.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-11-11 | qa_layer_authenticity_audit | adversarial_verify.py::_check_terminal_prefix_vs_partial_class | REAL_BUG | OPEN | |

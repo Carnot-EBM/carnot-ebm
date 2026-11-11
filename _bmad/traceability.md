@@ -4824,3 +4824,22 @@ Evidence: `/var/tmp/carnot-8984-fix-xv8g2l/`.
 Global tracing retains 1,142 existing gaps and architecture freshness retains
 2026-10-11. The full repository suite was not repeated. The mutation guard records an unattributed concurrent addition to
 `ops/anomaly-escalations.md`; that ledger and its pending marker are preserved.
+
+## V768 planned traceability — 2026-11-10
+
+| Requirement and scenario | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8985; SCENARIO-REPORT-8985-V768 | `exp8985-branch-contract` | `results/experiment_8985_v768_branch_contract.json` | Planned |
+| REQ-REPORT-8986; SCENARIO-REPORT-8986-V768 | `exp8986-spline-basis-methods` | `results/experiment_8986_v768_spline_basis_methods.json` | Planned |
+| REQ-REPORT-8987; SCENARIO-REPORT-8987-V768 | `exp8987-spline-development-admission` | `results/experiment_8987_v768_spline_development_admission.json` | Planned |
+| REQ-REPORT-8988; SCENARIO-REPORT-8988-V768 | `exp8988-online-spline-methods` | `results/experiment_8988_v768_online_spline_methods.json` | Planned |
+| REQ-REPORT-8989; SCENARIO-REPORT-8989-V768 | `exp8989-natural-annotation-authority` | `results/experiment_8989_v768_natural_annotation_authority.json` | Planned |
+| REQ-REPORT-8990; SCENARIO-REPORT-8990-V768 | `exp8990-graph-corpus-a` | `results/experiment_8990_v768_graph_corpus_a.json` | Planned |
+| REQ-REPORT-8991; SCENARIO-REPORT-8991-V768 | `exp8991-graph-corpus-b` | `results/experiment_8991_v768_graph_corpus_b.json` | Planned |
+| REQ-REPORT-8992; SCENARIO-REPORT-8992-V768 | `exp8992-corpus-admission` | `results/experiment_8992_v768_corpus_admission.json` | Planned |
+| REQ-REPORT-8993; SCENARIO-REPORT-8993-V768 | `exp8993-spline-calibrated-decisions` | `results/experiment_8993_v768_spline_calibrated_decisions.json` | Planned |
+| REQ-REPORT-8994; SCENARIO-REPORT-8994-V768 | `exp8994-online-spline-streams` | `results/experiment_8994_v768_online_spline_streams.json` | Planned |
+| REQ-REPORT-8995; SCENARIO-REPORT-8995-V768 | `exp8995-online-spline-benefit` | `results/experiment_8995_v768_online_spline_benefit.json` | Planned |
+| REQ-REPORT-8996; SCENARIO-REPORT-8996-V768 | `exp8996-complete-spline-cost` | `results/experiment_8996_v768_complete_spline_cost.json` | Planned |
+| REQ-REPORT-8997; SCENARIO-REPORT-8997-V768 | `exp8997-arc-transfer-evidence` | `results/experiment_8997_v768_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-8998; SCENARIO-REPORT-8998-V768 | `exp8998-capstone` | `results/experiment_8998_v768_capstone.json` | Planned |

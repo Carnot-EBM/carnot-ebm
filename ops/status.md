@@ -19141,3 +19141,22 @@ retain their own gates. No new scientific benefit is claimed by this plan.
 The V766 archive lags at V765. Exp8969 has a conductor gate-skip receipt;
 Exp8970 has no primary at planning time. Do not infer a successful capstone.
 Planning validation is in progress. No experiments, activation or push occurred.
+
+## Next milestone staged: 2026.11.768 — 2026-11-10
+
+Exactly fourteen tasks, Exp8985–Exp8998, are planned across four phases in the
+full design and `research-roadmap-next.yaml`. Full V767 authority bytes are
+preserved in dated change-proposal archives. No activation has occurred.
+
+V767's shared-feature Gibbs head failed all three development checks; fresh
+source and downstream science did not run. AuthenHallu joined zero of 800 pairs.
+V768 tests convex fixed-spline coefficients against an equally converged linear
+baseline, delayed conditional AdaGrad learning, and complete service costs.
+It preserves old benefit margins and adds stronger linear-control conditions.
+An independent public RAGognize annotation audit cannot turn machine labels into
+human truth. Optional ARC analysis waits for new supported live receipts.
+
+Requirements and traceability are Planned. Research was recorded before design.
+Planning validation is in progress. No model, experiment, board operation, push
+or publication occurred. The active queue, conductor and exclusion manifest
+remain unchanged. Independent natural-language verification remains an open gap.

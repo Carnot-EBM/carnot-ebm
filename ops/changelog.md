@@ -23516,3 +23516,19 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-10: Freeze identical graph features and a development admission gate before new collection (⚠️ Research Finding) — honest_verdict=complete_null_development_admission_failed; results/experiment_8973_v767_shared_feature_methods.json
 - 2026-11-10: Audit AuthenHallu dialogue access and independent annotation eligibility (⚠️ Blocked) — honest_verdict=complete_blocked_source_access; results/experiment_8975_v767_natural_label_eligibility.json
 - 2026-11-10: Reconcile fourteen outcomes and decide graph and natural-evidence continuations (⚠️ Blocked) — honest_verdict=complete_blocked_external_science_and_source_access; results/experiment_8984_v767_capstone.json
+
+## 2026-11-10 — Plan milestone 2026.11.768
+
+- Recorded the 2025–2026 primary-source scan before task design, including the
+  public RAGognize annotation route, spline methods and secondary-source limits.
+- Preserved full V767 design/queue bytes. Created fourteen matching task objects,
+  Exp8985–Exp8998, across four phases in the design and next-roadmap YAML.
+- Proposed fixed-basis convex fitting and conditional AdaGrad updates. Retained
+  old benefit/retention bounds and added the converged linear detector control.
+- Separated numerical methods, collection admission and benefit gates. Added an
+  independent annotation audit, complete costs and new-evidence-gated ARC work.
+- Added planned requirements, traceability and architecture/ops boundaries. All
+  prompts include numbered flushed progress, bounded writes, exact gate fields,
+  explicit substrates, per-unit rows, verdict classes and full rerun metadata.
+- Planning validation is in progress. No activation, experiment, model run,
+  hardware change, external publication or push occurred.
