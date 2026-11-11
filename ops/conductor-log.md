@@ -21799,3 +21799,4 @@ code |
 | 2026-11-11 20:17 UTC | Audit future spline benefit and simultaneous share | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9021-online-spline-streams) |
 | 2026-11-11 20:17 UTC | Measure energy decisions against independent human | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9019-human-pilot-methods) |
 | 2026-11-11 20:17 UTC | Measure complete spline service costs and actual a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9020-spline-calibrated-decisions, exp9021-online-spline-streams) |
+| 2026-11-11 20:24 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9013-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
