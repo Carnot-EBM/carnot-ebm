@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.768",
+  "generated_at": "2026-11-11T08:45:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 57.9,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Collect bounded Qwen graph evidence for the convex test in shard A",
+      "duration_minutes": 22.4,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure the fixed spline development gate before any new Qwen collection",
+      "duration_minutes": 13.31,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Freeze a convex spline energy head and an equally optimized linear control",
+      "duration_minutes": 11.34,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify delayed continuous coefficient learning without waiting for collection a",
+      "duration_minutes": 8.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and preserve the completed V767 evidence",
+      "duration_minutes": 2.75,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.768 completed 7 compute-bound experiments (0 synthesis-only) in 57.9 wall-time minutes (58 minutes / 1.0 hours, averaging 8 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The top 5 slowest tasks (all compute_bound: true) were 'Collect bounded Qwen graph evidence for the convex test in shard A' (22.4 minutes / 22min), 'Measure the fixed spline development gate before any new Qwen collection' (13.31 minutes / 13min), 'Freeze a convex spline energy head and an equally optimized linear control' (11.34 minutes / 11min), 'Qualify delayed continuous coefficient learning without waiting for collection a' (8.03 minutes / 8min), and 'Bind fourteen tasks and preserve the completed V767 evidence' (2.75 minutes / 3min), with no data available this milestone for the individual task names or durations of the remaining completed experiments. Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 7 completed experiments were compute-bound (0 synthesis-only) across 57.9 wall-time minutes (58 minutes / 1.0 hours, averaging 8 minutes per experiment), led by 'Collect bounded Qwen graph evidence for the convex test in shard A' at 22.4 minutes (22min).",
+    "Convex spline energy head and coefficient qualification tasks accounted for the next three longest durations: 'Measure the fixed spline development gate before any new Qwen collection' (13.31 minutes / 13min), 'Freeze a convex spline energy head and an equally optimized linear control' (11.34 minutes / 11min), and 'Qualify delayed continuous coefficient learning without waiting for collection a' (8.03 minutes / 8min), followed by 'Bind fourteen tasks and preserve the completed V767 evidence' (2.75 minutes / 3min); no data is available this milestone for the names or durations of the remaining completed compute-bound tasks.",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Batch single-GPU Qwen inference requests in 'Collect bounded Qwen graph evidence for the convex test in shard A' (22.4 minutes / 22min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Cache and reuse frozen convex spline energy head states, linear control checkpoints, and fixed spline development gate intermediates across 'Measure the fixed spline development gate before any new Qwen collection' (13.31 minutes / 13min), 'Freeze a convex spline energy head and an equally optimized linear control' (11.34 minutes / 11min), and 'Qualify delayed continuous coefficient learning without waiting for collection a' (8.03 minutes / 8min).",
+    "Parallelize independent contract-binding and evidence-preservation checks in 'Bind fourteen tasks and preserve the completed V767 evidence' (2.75 minutes / 3min) to further lower the 8-minute per-experiment average.",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Optimize single-GPU inference batching for 'Collect bounded Qwen graph evidence for the convex test in shard A' (22.4 minutes / 22min) without applying DualGPURunner to single-model execution.",
+    "Share cached convex spline energy head, linear control, and development gate artifacts across the 13.31-minute (13min), 11.34-minute (11min), and 8.03-minute (8min) spline and coefficient-learning tasks.",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.768 completed 7 compute-bound experiments (0 synthesis-only) in 57.9 wall-time minutes (58 minutes / 1.0 hours, averaging 8 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Batching single-GPU Qwen graph evidence collection in shard A (22.4 minutes / 22min), sharing spline energy head and linear control artifacts across the 13.31-minute (13min), 11.34-minute (11min), and 8.03-minute (8min) tasks, and persisting direct experiment timestamps will improve execution efficiency and observability in the next milestone."
+}
