@@ -59230,3 +59230,13 @@ CLI uses original release bytes with PYTHONPATH removed. Independent summary
 reduction, replay, unchanged scanners,13 owned tests and100 percent of295
 new statements pass. Full-suite timeout/failures remain a disqualifying receipt;
 they cannot be promoted to passing validation or hidden behind external blocking.
+
+### REQ-VERIFY-9013: Current receipt custody preserves failed history
+Exp9013 SHALL reject missing, stale, failed, abnormal-exit or timeout current
+receipts and log/code/scope drift. Cold replay SHALL independently reconstruct
+contract, frozen science, ARC delta and history from retained bytes. It SHALL
+reject rehashed summary changes. Historical failed repository health is never
+current scoped acceptance and remains failed with original logs and verdicts.
+#### SCENARIO-VERIFY-9013-REPLAY
+Private receipt controls and real foreign-directory CLI children SHALL verify
+missing-input blocking, successful replay and tamper refusal without a model.

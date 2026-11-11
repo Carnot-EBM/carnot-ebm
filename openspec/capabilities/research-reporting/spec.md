@@ -112180,6 +112180,26 @@ require a frozen manifest, original direct-consumer tests and rejecting receipt 
 
 ### REQ-REPORT-9013-V770: Bind fourteen tasks and preserve V769 failures and frozen scientific methods
 
+Additional frozen acceptance, 2026-11-11: Compare all fourteen full task objects
+and visible order Exp9013..9026 against an independent task digest. Before
+activation compare staged with staged; after activation compare active bytes.
+Snapshot complete V769 design/queue, V768 methods and cited primaries. Record
+the completion archive lag without rewriting history. Keep contract, graph,
+online and new ARC readiness independent. ARC support uses Exp8999 as baseline
+and requires thirty new uncensored episodes, three families and both held arms.
+No model loads, graph redraw, fitting or repeated development admission occur.
+
+#### SCENARIO-REPORT-9013-SCOPED
+
+Freeze the current owned and direct-consumer validation commands before
+measurement. Current checks must exit normally, match the frozen scope and
+retained log hashes, and measure all newly owned statements with no exclusions.
+Missing, stale, failed and timeout receipts reject readiness. Retain original
+Exp9000/9001/9012 failed global-health logs by hash separately; their primaries
+stay disqualified and repository_health_passed stays false. Private foreign-CWD
+CLI publication, missing inputs, rehashed tampering and cold replay are tested
+without PYTHONPATH. E2E-018/021 verify custody; E2E-020 is frozen for learning.
+
 The planned `exp9013-branch-contract` SHALL execute its exact frozen V770 prompt and publish
 `results/experiment_9013_v770_branch_contract.json`. It SHALL preserve prior verdicts, per-unit rows,
 closed verdict classes, source hashes and explicit gate operands.
@@ -112359,4 +112379,14 @@ Before implementation, private tests SHALL cover qualified input, missing input,
 changed authority, failed current validation and cold replay for this task.
 Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
 Implementation status: Planned.
+
+Implementation status for REQ-REPORT-9013-V770 and SCENARIO-REPORT-9013-SCOPED,
+2026-11-11: Implemented in v770_branch_contract.py, v770_branch_evidence.py and
+the Exp9013 CLI. Seven private tests cover exact active/staged custody, receipt
+refusals, immutable history, independent scientific gates and replay. Measured
+owned statement coverage is 100 percent with zero exclusions. The producer
+freezes its scope before measurement and requires current normal-exit checks,
+unchanged terminal validators and foreign-directory replay before publication.
+The plan-time V768 archive end and observed V769 scheduling archive are recorded
+separately; the original three disqualified primaries remain unchanged.
 

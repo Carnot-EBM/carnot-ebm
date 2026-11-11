@@ -1,0 +1,46 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_validation_receipt_binding ________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-2/test_validation_receipt_bindin0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fded377f140>
+
+    def test_validation_receipt_binding(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-9013-SCOPED: bind the measured coverage report after tracing."""
+        log = tmp_path / "coverage.json"
+        log.write_text("{}")
+        data = tmp_path / ".coverage"
+        data.write_bytes(b"measured bytes after report auto-combination")
+        original = dict(receipts=[dict(reference=c.reference(log))], coverage=dict(data_reference=dict(path=str(data), sha256="stale_before_report")))
+        monkeypatch.setattr(c, "_validate", lambda *args: original)
+        monkeypatch.setattr(
+            c,
+            "run_check",
+            lambda name, argv, raw, *args: dict(
+                log_path=str(log),
+                log_sha256=c.reference(log)["sha256"],
+                scope_sha256=c.canonical_hash(c.scope_manifest()),
+            ),
+        )
+        result = c.validate(tmp_path, None)
+        row = result["receipts"][0]
+        assert row["log_sha256"] == c.reference(log)["sha256"]
+        assert row["scope_sha256"] == c.canonical_hash(c.scope_manifest())
+>       assert result["coverage"]["data_reference"] == c.reference(data)
+E       AssertionError: assert {'path': '/tm...efore_report'} == {'path': '/tm...98d3c381a3e0'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'sha256': 'stale_before_report'} != {'sha256': 'sha256:a47dd350acee072ee56358fe7b073143694152e72e26c538912b98d3c381a3e0'}
+E         Use -v to get more diff
+
+tests/python/test_v770_branch_contract_9013.py:282: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v770_branch_contract_9013.py::test_validation_receipt_binding
+1 failed, 1 warning in 1.93s

@@ -1,0 +1,339 @@
+FFFF.                                                                    [100%]
+=================================== FAILURES ===================================
+________________________________ test_authority ________________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_authority0')
+
+    def test_authority(tmp_path):
+        """REQ-REPORT-9013-V770: both lifecycle modes bind all full objects and order."""
+        root = tree(tmp_path / "root")
+        actual = c.authority(root)
+>       assert actual["ready"] and len(actual["rows"]) == 14
+E       assert (False)
+
+tests/python/test_v770_branch_contract_9013.py:64: AssertionError
+____________________ test_freeze_build_and_receipt_controls ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_freeze_build_and_receipt_0')
+
+    def test_freeze_build_and_receipt_controls(tmp_path):
+        """SCENARIO-REPORT-9013-SCOPED: current receipts reject absent/stale/failure/timeout."""
+        work = c.freeze(tree(tmp_path / "root"), tmp_path / "raw", "20261111")
+        checked = validation(work)
+        value = c.build(work, checked)
+>       assert value["verdict_class"] == "null" and value["contract_ready_score"] == 1
+E       AssertionError: assert ('blocked' == 'null'
+E         
+E         - null
+E         + blocked)
+
+tests/python/test_v770_branch_contract_9013.py:85: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9013] phase=preconditions_before completed=0 pending=14
+[exp9013] phase=preconditions_after completed=1 pending=0
+[exp9013] phase=snapshot completed=1 pending=39
+[exp9013] phase=snapshot completed=2 pending=38
+[exp9013] phase=snapshot completed=3 pending=37
+[exp9013] phase=snapshot completed=4 pending=36
+[exp9013] phase=snapshot completed=5 pending=35
+[exp9013] phase=snapshot completed=6 pending=34
+[exp9013] phase=snapshot completed=7 pending=33
+[exp9013] phase=snapshot completed=8 pending=32
+[exp9013] phase=snapshot completed=9 pending=31
+[exp9013] phase=snapshot completed=10 pending=30
+[exp9013] phase=snapshot completed=11 pending=29
+[exp9013] phase=snapshot completed=12 pending=28
+[exp9013] phase=snapshot completed=13 pending=27
+[exp9013] phase=snapshot completed=14 pending=26
+[exp9013] phase=snapshot completed=15 pending=25
+[exp9013] phase=snapshot completed=16 pending=24
+[exp9013] phase=snapshot completed=17 pending=23
+[exp9013] phase=snapshot completed=18 pending=22
+[exp9013] phase=snapshot completed=19 pending=21
+[exp9013] phase=snapshot completed=20 pending=20
+[exp9013] phase=snapshot completed=21 pending=19
+[exp9013] phase=snapshot completed=22 pending=18
+[exp9013] phase=snapshot completed=23 pending=17
+[exp9013] phase=snapshot completed=24 pending=16
+[exp9013] phase=snapshot completed=25 pending=15
+[exp9013] phase=snapshot completed=26 pending=14
+[exp9013] phase=snapshot completed=27 pending=13
+[exp9013] phase=snapshot completed=28 pending=12
+[exp9013] phase=snapshot completed=29 pending=11
+[exp9013] phase=snapshot completed=30 pending=10
+[exp9013] phase=snapshot completed=31 pending=9
+[exp9013] phase=snapshot completed=32 pending=8
+[exp9013] phase=snapshot completed=33 pending=7
+[exp9013] phase=snapshot completed=34 pending=6
+[exp9013] phase=snapshot completed=35 pending=5
+[exp9013] phase=snapshot completed=36 pending=4
+[exp9013] phase=snapshot completed=37 pending=3
+[exp9013] phase=snapshot completed=38 pending=2
+[exp9013] phase=snapshot completed=39 pending=1
+[exp9013] phase=snapshot completed=40 pending=0
+[exp9013] phase=authority_before completed=0 pending=14
+[exp9013] phase=authority_after completed=14 pending=0
+[exp9013] phase=frozen_science_before completed=0 pending=2
+[exp9013] phase=frozen_science_after completed=2 pending=0
+[exp9013] phase=arc_frontier_before completed=0 pending=1
+[exp9013] phase=arc_frontier_after completed=1 pending=0
+[exp9013] phase=measurement_after completed=14 pending=0
+_____________________________ test_replay_refusals _____________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_replay_refusals0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0150fccfe0>
+
+    def test_replay_refusals(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-9013-REPLAY: independent reductions reject repaired hashes."""
+        work = c.freeze(tree(tmp_path / "root"), tmp_path / "raw", "20261111")
+        checked = validation(work)
+        value = c.build(work, checked)
+        candidate = tmp_path / (c.NAME + ".json")
+        c.atomic_json(candidate, value)
+        assert not c.replay(candidate)["passed"]
+        monkeypatch.setattr(c, "verify_measured", lambda *args: True)
+        assert c.replay(candidate)["passed"]
+        for mode in ["summary", "operand", "code", "contract", "control", "health"]:
+            forged = deepcopy(value)
+            if mode == "summary":
+                forged["contract_ready_score"] = 99
+            elif mode == "operand":
+                forged["raw_shard_hashes"][0]["sha256"] = "sha256:forged"
+            elif mode == "code":
+                forged["code_config_hashes"][0]["source"]["sha256"] = "sha256:forged"
+            else:
+                changed = deepcopy(work)
+                changed.pop("raw_reference")
+                if mode == "contract":
+                    changed["contract"]["ready"] = False
+                if mode == "control":
+                    changed["controls"][0]["passed"] = False
+                if mode == "health":
+                    changed["repository_health"]["passed"] = True
+                path = tmp_path / (mode + ".json")
+                c.atomic_json(path, changed)
+                forged["raw_shard_hashes"][0] = c.reference(path)
+            forged["reproducibility_checksum"] = c.checksum(forged)
+            c.atomic_json(candidate, forged)
+>           assert not c.replay(candidate)["passed"], mode
+E           AssertionError: contract
+E           assert not True
+
+tests/python/test_v770_branch_contract_9013.py:161: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9013] phase=preconditions_before completed=0 pending=14
+[exp9013] phase=preconditions_after completed=1 pending=0
+[exp9013] phase=snapshot completed=1 pending=39
+[exp9013] phase=snapshot completed=2 pending=38
+[exp9013] phase=snapshot completed=3 pending=37
+[exp9013] phase=snapshot completed=4 pending=36
+[exp9013] phase=snapshot completed=5 pending=35
+[exp9013] phase=snapshot completed=6 pending=34
+[exp9013] phase=snapshot completed=7 pending=33
+[exp9013] phase=snapshot completed=8 pending=32
+[exp9013] phase=snapshot completed=9 pending=31
+[exp9013] phase=snapshot completed=10 pending=30
+[exp9013] phase=snapshot completed=11 pending=29
+[exp9013] phase=snapshot completed=12 pending=28
+[exp9013] phase=snapshot completed=13 pending=27
+[exp9013] phase=snapshot completed=14 pending=26
+[exp9013] phase=snapshot completed=15 pending=25
+[exp9013] phase=snapshot completed=16 pending=24
+[exp9013] phase=snapshot completed=17 pending=23
+[exp9013] phase=snapshot completed=18 pending=22
+[exp9013] phase=snapshot completed=19 pending=21
+[exp9013] phase=snapshot completed=20 pending=20
+[exp9013] phase=snapshot completed=21 pending=19
+[exp9013] phase=snapshot completed=22 pending=18
+[exp9013] phase=snapshot completed=23 pending=17
+[exp9013] phase=snapshot completed=24 pending=16
+[exp9013] phase=snapshot completed=25 pending=15
+[exp9013] phase=snapshot completed=26 pending=14
+[exp9013] phase=snapshot completed=27 pending=13
+[exp9013] phase=snapshot completed=28 pending=12
+[exp9013] phase=snapshot completed=29 pending=11
+[exp9013] phase=snapshot completed=30 pending=10
+[exp9013] phase=snapshot completed=31 pending=9
+[exp9013] phase=snapshot completed=32 pending=8
+[exp9013] phase=snapshot completed=33 pending=7
+[exp9013] phase=snapshot completed=34 pending=6
+[exp9013] phase=snapshot completed=35 pending=5
+[exp9013] phase=snapshot completed=36 pending=4
+[exp9013] phase=snapshot completed=37 pending=3
+[exp9013] phase=snapshot completed=38 pending=2
+[exp9013] phase=snapshot completed=39 pending=1
+[exp9013] phase=snapshot completed=40 pending=0
+[exp9013] phase=authority_before completed=0 pending=14
+[exp9013] phase=authority_after completed=14 pending=0
+[exp9013] phase=frozen_science_before completed=0 pending=2
+[exp9013] phase=frozen_science_after completed=2 pending=0
+[exp9013] phase=arc_frontier_before completed=0 pending=1
+[exp9013] phase=arc_frontier_after completed=1 pending=0
+[exp9013] phase=measurement_after completed=14 pending=0
+______________________ test_child_cli_and_runner_binding _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_child_cli_and_runner_bind0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f01b3dec470>
+
+    def test_child_cli_and_runner_binding(tmp_path, monkeypatch):
+        """REQ-VERIFY-9013 / E2E-018/021: real foreign-CWD CLI and bound publication."""
+        config = tmp_path / "coverage.ini"
+        config.write_text(
+            "[run]\ninclude =\n"
+            + "".join(f"    {c.ROOT / p}\n" for p in c.OWNED)
+            + "[report]\nexclude_lines =\n"
+        )
+        for args, expected in [
+            (["--date", "bad"], 2),
+            (["--cold-replay", str(tmp_path / "absent")], 1),
+        ]:
+            print("before private CLI", args, flush=True)
+            child = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "coverage",
+                    "run",
+                    "--rcfile",
+                    str(config),
+                    "--data-file",
+                    str(tmp_path / ".coverage"),
+                    "--parallel-mode",
+                    str(c.ROOT / c.CLI),
+                    *args,
+                ],
+                cwd="/var/tmp",
+                env={k: v for k, v in os.environ.items() if k != "PYTHONPATH"},
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+            print("after private CLI", child.returncode, flush=True)
+            assert child.returncode == expected, child.stdout + child.stderr
+        tracer = Coverage.current()
+        if tracer:
+            for path in tmp_path.glob(".coverage.*"):
+                data = CoverageData(basename=str(path))
+                data.read()
+                tracer.get_data().update(data)
+    
+        def checked(raw, tracer):
+            tracer.stop()
+            tracer.save()
+            return validation(json.loads((raw / "work.json").read_bytes()))
+    
+        monkeypatch.setattr(c, "_validate", checked)
+        monkeypatch.setattr(c.runner, "terminal", lambda candidate, raw: c.replay(candidate))
+        monkeypatch.setattr(c, "verify_measured", lambda *args: True)
+        output = tmp_path / (c.NAME + ".json")
+        root = tree(tmp_path / "root")
+        for args in [
+            ["--date", "20261111", "--root", str(root), "--output", str(output)],
+            ["--cold-replay", str(output)],
+        ]:
+            monkeypatch.setattr(sys, "argv", [c.CLI, *args])
+            with pytest.raises(SystemExit) as error:
+>               runpy.run_path(str(c.ROOT / c.CLI), run_name="__main__")
+
+tests/python/test_v770_branch_contract_9013.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen runpy>:287: in run_path
+    ???
+<frozen runpy>:98: in _run_module_code
+    ???
+<frozen runpy>:88: in _run_code
+    ???
+scripts/experiments/experiment_9013_v770_branch_contract.py:23: in <module>
+    raise SystemExit(runner.main(["--date", "20261111", *sys.argv[1:]]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v755_branch_runner.py:255: in main
+    return run(args.output.absolute(), raw.absolute(), args.root, args.date)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v755_branch_runner.py:207: in run
+    validation = validate(raw, tracer)
+                 ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_child_cli_and_runner_bind0/raw/experiment_9013_v770_branch_contract/invocations/1794418775591577210')
+tracer = <Coverage @0x7f01b3ded340 core=CTracer data_file='/tmp/pytest-of-ianblenke/pytest-0/test_child_cli_and_runner_bind0/raw/experiment_9013_v770_branch_contract/invocations/1794418775591577210/.coverage.parent'>
+
+    def validate(raw: Path, tracer: Any) -> Json:
+        """Reuse bounded scoped checks and actual SQLite statement measurement."""
+        result = _validate(raw, tracer)
+        row = result["receipts"][-1]
+        row.update(
+            scope_sha256=canonical_hash(scope_manifest()),
+>           log_path=row["reference"]["path"],
+                     ^^^^^^^^^^^^^^^^
+            log_sha256=row["reference"]["sha256"],
+        )
+E       KeyError: 'reference'
+
+python/carnot/reporting/v770_branch_contract.py:297: KeyError
+----------------------------- Captured stdout call -----------------------------
+before private CLI ['--date', 'bad']
+after private CLI 2
+before private CLI ['--cold-replay', '/tmp/pytest-of-ianblenke/pytest-0/test_child_cli_and_runner_bind0/absent']
+after private CLI 1
+[exp9013] phase=preconditions_before completed=0 pending=14
+[exp9013] phase=preconditions_after completed=1 pending=0
+[exp9013] phase=snapshot completed=1 pending=39
+[exp9013] phase=snapshot completed=2 pending=38
+[exp9013] phase=snapshot completed=3 pending=37
+[exp9013] phase=snapshot completed=4 pending=36
+[exp9013] phase=snapshot completed=5 pending=35
+[exp9013] phase=snapshot completed=6 pending=34
+[exp9013] phase=snapshot completed=7 pending=33
+[exp9013] phase=snapshot completed=8 pending=32
+[exp9013] phase=snapshot completed=9 pending=31
+[exp9013] phase=snapshot completed=10 pending=30
+[exp9013] phase=snapshot completed=11 pending=29
+[exp9013] phase=snapshot completed=12 pending=28
+[exp9013] phase=snapshot completed=13 pending=27
+[exp9013] phase=snapshot completed=14 pending=26
+[exp9013] phase=snapshot completed=15 pending=25
+[exp9013] phase=snapshot completed=16 pending=24
+[exp9013] phase=snapshot completed=17 pending=23
+[exp9013] phase=snapshot completed=18 pending=22
+[exp9013] phase=snapshot completed=19 pending=21
+[exp9013] phase=snapshot completed=20 pending=20
+[exp9013] phase=snapshot completed=21 pending=19
+[exp9013] phase=snapshot completed=22 pending=18
+[exp9013] phase=snapshot completed=23 pending=17
+[exp9013] phase=snapshot completed=24 pending=16
+[exp9013] phase=snapshot completed=25 pending=15
+[exp9013] phase=snapshot completed=26 pending=14
+[exp9013] phase=snapshot completed=27 pending=13
+[exp9013] phase=snapshot completed=28 pending=12
+[exp9013] phase=snapshot completed=29 pending=11
+[exp9013] phase=snapshot completed=30 pending=10
+[exp9013] phase=snapshot completed=31 pending=9
+[exp9013] phase=snapshot completed=32 pending=8
+[exp9013] phase=snapshot completed=33 pending=7
+[exp9013] phase=snapshot completed=34 pending=6
+[exp9013] phase=snapshot completed=35 pending=5
+[exp9013] phase=snapshot completed=36 pending=4
+[exp9013] phase=snapshot completed=37 pending=3
+[exp9013] phase=snapshot completed=38 pending=2
+[exp9013] phase=snapshot completed=39 pending=1
+[exp9013] phase=snapshot completed=40 pending=0
+[exp9013] phase=authority_before completed=0 pending=14
+[exp9013] phase=authority_after completed=14 pending=0
+[exp9013] phase=frozen_science_before completed=0 pending=2
+[exp9013] phase=frozen_science_after completed=2 pending=0
+[exp9013] phase=arc_frontier_before completed=0 pending=1
+[exp9013] phase=arc_frontier_after completed=1 pending=0
+[exp9013] phase=measurement_after completed=14 pending=0
+[exp9013] phase=validation_before completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v770_branch_contract_9013.py::test_authority - asser...
+FAILED tests/python/test_v770_branch_contract_9013.py::test_freeze_build_and_receipt_controls
+FAILED tests/python/test_v770_branch_contract_9013.py::test_replay_refusals
+FAILED tests/python/test_v770_branch_contract_9013.py::test_child_cli_and_runner_binding
+4 failed, 1 passed, 1 warning in 42.16s
