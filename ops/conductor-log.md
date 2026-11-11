@@ -21723,3 +21723,31 @@ code |
 | 2026-11-10 22:58 UTC | Measure complete shared-feature service costs agai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |
 | 2026-11-10 23:05 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8971-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
 | 2026-11-11 00:02 UTC | Reconcile fourteen outcomes and decide graph and n | OK | 90 passed, 1 warning in 77.67s (0:01:17) |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on arc_ |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on arc_ |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on ve |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on arc_or |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on tracked |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on mutation |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on audit_f |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on run_stop_a |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on in_p |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 11: OPEN 77 da |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declares_terminal_artifact_readiness age-week 10: OPEN 7 |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_stem age-week 10: OPEN 70 days: SILENT_NON_FIRING  |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_small_shared_denominator_rate_pair age-week 10: OPEN  |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_goal_energy_generation_win age-week 7: OPEN 49 da |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_text age-week 7: OPEN 49 days: SILENT_NON_FIRING o |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_field_name_text age-week 7: OPEN 49 days: SILENT_NON_FIR |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_marker age-week 7: OPEN 49 days: SILENT_NON_FIRING o |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_values age-week 7: OPEN 49 days: SILENT_NON_F |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_field_values age-week 7: OPEN 49 days: SILENT_NON_ |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_path_has_marker age-week 7: OPEN 49 days: SILENT_NON_FIR |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nontrivial_lever_run age-week 7: OPEN 49 days: SILEN |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_pool_degenerate_reasons age-week 7: OPEN 49 days: SILENT |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_intrinsic_reward_exploration_win age-week 6: OPEN |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta age-week  |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude age-week 6: OPEN 4 |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence age-week  |
+| 2026-11-11 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8492_v730_publication_cost_model.json age-week 4: OPEN 28 days: CLAIM |

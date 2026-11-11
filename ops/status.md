@@ -1,5 +1,9 @@
 # Carnot — Operational Status
 
+## 2026-11-11 UTC — Milestone 2026.11.767 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_767.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed synthesis-only experiments (0 compute-bound) across 37.8 wall-time minutes (38 minutes / 0.6 hours, averaging 8 minutes per experiment): freezing identical graph features and a development admission gate before new coll (20.07 min / 20min), separating encoder information from head optimization on exposed graph evidence (13.28 min / 13min), binding fourteen tasks and separating administrative readiness from optional ARC evid (4.4 min / 4min), reconciling fourteen outcomes and deciding graph and natural-evidence continuations (0.05 min / 0min), and auditing AuthenHallu dialogue access and independent annotation eligibility (0.0 min / 0min). Because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: cache shared exposed graph evidence and identical graph feature intermediates across the 20.07-minute (20min) and 13.28-minute (13min) synthesis tasks, parallelize checks in the 4.4-minute (4min) task-binding experiment, persist direct per-experiment timestamps, and restore GPU monitor availability.
+
 ## 2026-11-10 UTC — Exp8984 private validation receipt repair
 
 Default validation receipts now resolve under the selected output directory.

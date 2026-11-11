@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-11 UTC — Operational retrospective for milestone 2026.11.767
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.767`: updated `results/operational_retro_2026_11_767.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed experiments (0 compute-bound, 5 synthesis-only) across 37.8 wall-time minutes (38 minutes / 0.6 hours, averaging 8 minutes per experiment).
+- The 5 completed experiments (all `compute_bound: false`) were: `Freeze identical graph features and a development admission gate before new coll` (20.07 minutes / 20min), `Separate encoder information from head optimization on exposed graph evidence` (13.28 minutes / 13min), `Bind fourteen tasks and separate administrative readiness from optional ARC evid` (4.4 minutes / 4min), `Reconcile fourteen outcomes and decide graph and natural-evidence continuations` (0.05 minutes / 0min), and `Audit AuthenHallu dialogue access and independent annotation eligibility` (0.0 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or process telemetry); because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null` and `DualGPURunner` did not apply.
+- Suggested improvements: cache and share exposed graph evidence and identical graph feature intermediates across the 20.07-minute (20min) and 13.28-minute (13min) synthesis tasks, parallelize contract-binding and administrative-readiness checks in the 4.4-minute (4min) task, persist direct per-experiment timestamps to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability for future compute-bound runs.
+
 ## 2026-11-10 UTC — Exp8984 output-local validation receipts
 
 - Fix private capstone CLI runs importing checkout qualification: default receipt

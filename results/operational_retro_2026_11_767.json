@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.767",
+  "generated_at": "2026-11-11T00:15:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 37.8,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Freeze identical graph features and a development admission gate before new coll",
+      "duration_minutes": 20.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Separate encoder information from head optimization on exposed graph evidence",
+      "duration_minutes": 13.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and separate administrative readiness from optional ARC evid",
+      "duration_minutes": 4.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide graph and natural-evidence continuations",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit AuthenHallu dialogue access and independent annotation eligibility",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.767 completed 5 synthesis-only experiments (0 compute-bound) in 37.8 wall-time minutes (38 minutes / 0.6 hours, averaging 8 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). Runtime was concentrated in 'Freeze identical graph features and a development admission gate before new coll' (20.07 minutes / 20min), 'Separate encoder information from head optimization on exposed graph evidence' (13.28 minutes / 13min), and 'Bind fourteen tasks and separate administrative readiness from optional ARC evid' (4.4 minutes / 4min), followed by 'Reconcile fourteen outcomes and decide graph and natural-evidence continuations' (0.05 minutes / 0min) and 'Audit AuthenHallu dialogue access and independent annotation eligibility' (0.0 minutes / 0min). Because 0 compute-bound experiments ran, locked gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU monitor was not available (no data available this milestone for GPU state telemetry).",
+  "bottlenecks_identified": [
+    "All 5 completed experiments (0 compute-bound, 5 synthesis-only) across 37.8 wall-time minutes (38 minutes / 0.6 hours, averaging 8 minutes per experiment) were dominated by two graph-evidence synthesis tasks: 'Freeze identical graph features and a development admission gate before new coll' (20.07 minutes / 20min) and 'Separate encoder information from head optimization on exposed graph evidence' (13.28 minutes / 13min).",
+    "Task-binding synthesis work in 'Bind fourteen tasks and separate administrative readiness from optional ARC evid' required 4.4 minutes (4min), whereas 'Reconcile fourteen outcomes and decide graph and natural-evidence continuations' (0.05 minutes / 0min) and 'Audit AuthenHallu dialogue access and independent annotation eligibility' (0.0 minutes / 0min) completed with negligible wall time; no data is available this milestone for internal sub-step breakdowns within the 5 tasks.",
+    "Live git-log timing lookup found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across all 5 completed experiments, and the GPU monitor was not available (no data available this milestone for GPU state telemetry)."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse exposed graph evidence and identical graph feature fixtures across 'Freeze identical graph features and a development admission gate before new coll' (20.07 minutes / 20min) and 'Separate encoder information from head optimization on exposed graph evidence' (13.28 minutes / 13min) to reduce the 8-minute per-experiment average.",
+    "Parallelize independent contract-binding and administrative-readiness checks in 'Bind fourteen tasks and separate administrative readiness from optional ARC evid' (4.4 minutes / 4min) while keeping 'Reconcile fourteen outcomes and decide graph and natural-evidence continuations' (0.05 minutes / 0min) and 'Audit AuthenHallu dialogue access and independent annotation eligibility' (0.0 minutes / 0min) lightweight.",
+    "Write explicit per-experiment start and completion timestamps into experiment result JSONs to avoid disk-mtime fallback reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability for future milestones with compute-bound tasks while keeping DualGPURunner scoped strictly to compute-bound tasks loading 2+ models in parallel (0 compute-bound tasks ran this milestone)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share cached exposed graph evidence and identical graph feature intermediates between the 20.07-minute (20min) feature-freeze/admission-gate task and the 13.28-minute (13min) encoder/head-separation task.",
+    "Parallelize contract-binding and administrative-readiness verification in the 4.4-minute (4min) fourteen-task binding experiment.",
+    "Persist direct per-experiment start/end timestamps to eliminate disk-mtime fallback (retro_timing_fallback on 0 git-log commits) and restore GPU monitor availability."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.767 executed 5 synthesis-only experiments (0 compute-bound) in 37.8 wall-time minutes (38 minutes / 0.6 hours, averaging 8 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to null, GPU monitor not available (no data available this milestone for GPU telemetry), and DualGPURunner not applicable because 0 compute-bound tasks ran. Caching shared graph features and exposed graph evidence across the 20.07-minute (20min) and 13.28-minute (13min) synthesis tasks, parallelizing checks in the 4.4-minute (4min) task-binding experiment, and recording direct experiment timestamps will reduce synthesis wall time and improve timing observability in the next milestone."
+}
