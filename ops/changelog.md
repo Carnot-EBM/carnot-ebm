@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-11 UTC — Operational retrospective for milestone 2026.11.769
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.769`: updated `results/operational_retro_2026_11_769.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 4 completed experiments (all 4 compute-bound, 0 synthesis-only) across 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment).
+- The 4 completed experiments (all `compute_bound: true`) were: `Qualify current and historical invocation scopes before source work` (11.26 minutes / 11min), `Bind fourteen tasks and preserve frozen V768 scientific authority` (2.21 minutes / 2min), `Qualify original human annotations and unseen natural source groups` (0.04 minutes / 0min), and `Reconcile fourteen outcomes and separate graph and independent-label claims` (0.01 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or process telemetry); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.
+- Suggested improvements: parallelize and cache current and historical invocation-scope qualification checks in the 11.26-minute (11min) task without engaging `DualGPURunner`, cache fourteen-task binding and frozen V768 scientific-authority checks in the 2.21-minute (2min) task, persist direct per-experiment timestamps to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability during compute-bound runs.
+
 ## 2026-11-11 UTC — Operational retrospective for milestone 2026.11.768
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.768`: updated `results/operational_retro_2026_11_768.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed experiments (all 7 compute-bound, 0 synthesis-only) across 57.9 wall-time minutes (58 minutes / 1.0 hours, averaging 8 minutes per experiment).

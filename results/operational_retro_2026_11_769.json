@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.769",
+  "generated_at": "2026-11-11T15:10:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.5,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify current and historical invocation scopes before source work",
+      "duration_minutes": 11.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and preserve frozen V768 scientific authority",
+      "duration_minutes": 2.21,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify original human annotations and unseen natural source groups",
+      "duration_minutes": 0.04,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and separate graph and independent-label claims",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.769 completed 4 compute-bound experiments (0 synthesis-only) in 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 4 completed tasks (all compute_bound: true) were 'Qualify current and historical invocation scopes before source work' (11.26 minutes / 11min), 'Bind fourteen tasks and preserve frozen V768 scientific authority' (2.21 minutes / 2min), 'Qualify original human annotations and unseen natural source groups' (0.04 minutes / 0min), and 'Reconcile fourteen outcomes and separate graph and independent-label claims' (0.01 minutes / 0min). Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 4 completed experiments were compute-bound (0 synthesis-only) across 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment), with 'Qualify current and historical invocation scopes before source work' accounting for 11.26 minutes (11min) of the milestone duration.",
+    "'Bind fourteen tasks and preserve frozen V768 scientific authority' required 2.21 minutes (2min), whereas 'Qualify original human annotations and unseen natural source groups' (0.04 minutes / 0min) and 'Reconcile fourteen outcomes and separate graph and independent-label claims' (0.01 minutes / 0min) finished in under a minute.",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Parallelize and cache current and historical invocation-scope qualification checks in 'Qualify current and historical invocation scopes before source work' (11.26 minutes / 11min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Cache and reuse fourteen-task binding and frozen V768 scientific-authority checks in 'Bind fourteen tasks and preserve frozen V768 scientific authority' (2.21 minutes / 2min) to further lower the 3-minute per-experiment average.",
+    "Maintain lightweight qualification and reconciliation paths as demonstrated in 'Qualify original human annotations and unseen natural source groups' (0.04 minutes / 0min) and 'Reconcile fourteen outcomes and separate graph and independent-label claims' (0.01 minutes / 0min).",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize and cache current and historical invocation-scope checks in 'Qualify current and historical invocation scopes before source work' (11.26 minutes / 11min) without applying DualGPURunner to single-model execution.",
+    "Cache fourteen-task binding and frozen V768 scientific-authority verification in 'Bind fourteen tasks and preserve frozen V768 scientific authority' (2.21 minutes / 2min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.769 completed 4 compute-bound experiments (0 synthesis-only) in 13.5 wall-time minutes (14 minutes / 0.2 hours, averaging 3 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Parallelizing and caching invocation-scope qualification in the 11.26-minute (11min) task, caching V768 authority and fourteen-task binding in the 2.21-minute (2min) task, and persisting direct experiment timestamps will improve execution efficiency and observability in the next milestone."
+}
