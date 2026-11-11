@@ -23532,3 +23532,4 @@ reports. No experiment or model was run; protected files retain their hashes.
   explicit substrates, per-unit rows, verdict classes and full rerun metadata.
 - Planning validation is in progress. No activation, experiment, model run,
   hardware change, external publication or push occurred.
+- 2026-11-11: Bind fourteen tasks and preserve the completed V767 evidence (⚠️ Research Finding) — honest_verdict=complete_null_v768_branch_contract; results/experiment_8985_v768_branch_contract.json
