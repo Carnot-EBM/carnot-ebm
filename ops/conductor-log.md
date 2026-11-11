@@ -21772,3 +21772,4 @@ code |
 | 2026-11-11 11:17 UTC | Milestone 2026.11.769 activated | OK | 14 tasks queued |
 | 2026-11-11 11:51 UTC | Bind fourteen tasks and preserve frozen V768 scien | OK | 87 passed, 1 warning in 27.02s |
 | 2026-11-11 12:49 UTC | Qualify current and historical invocation scopes b | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 57.77s |
+| 2026-11-11 13:36 UTC | Qualify original human annotations and unseen natu | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 24.39s |
