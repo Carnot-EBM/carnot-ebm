@@ -21776,3 +21776,9 @@ code |
 | 2026-11-11 13:47 UTC | Authenticate retained shard A without new generati | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9000-invocation-provenance.provenance_ready_score (actual=0 == expected=1) |
 | 2026-11-11 13:57 UTC | Complete the frozen bounded Qwen source with shard | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9000-invocation-provenance.provenance_ready_score (actual=0 == expected=1) |
 | 2026-11-11 13:59 UTC | Join authenticated shards under the original graph | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9002-retained-shard-a, exp9003-graph-corpus-b) |
+| 2026-11-11 14:06 UTC | Freeze a human-label pilot with shared Qwen featur | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9001-human-source-authority.natural_pilot_ready_score (actual=0 == expected=1) |
+| 2026-11-11 14:08 UTC | Test frozen spline decisions against all registere | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9004-corpus-admission) |
+| 2026-11-11 14:08 UTC | Measure continuous coefficient learning on sealed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9004-corpus-admission, exp9006-spline-calibrated-decisions) |
+| 2026-11-11 14:08 UTC | Measure matched energy decisions against independe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9005-natural-pilot-methods) |
+| 2026-11-11 14:08 UTC | Audit future spline benefit and simultaneous share | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9007-online-spline-streams) |
+| 2026-11-11 14:08 UTC | Measure complete spline service costs and actual a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9006-spline-calibrated-decisions, exp9007-online-spline-streams) |
