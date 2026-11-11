@@ -111761,3 +111761,30 @@ The numerical module, retained-evidence producer and direct CLI are implemented.
 The primary artifact records normal-exit validation, measured new statement
 coverage, immutable replay operands and the terminal mechanics qualification.
 Scientific admission and seven-bound benefit evaluation remain later work.
+
+### REQ-REPORT-8987-ADMISSION: Separate fitted states from development admission
+Exp8987 SHALL authenticate the immutable Exp8986 primary and its typed
+spline_methods_ready_score=1 gate, protocol bytes and historical observations.
+Fit only the registered six convex heads on256 original fit graphs, retain every
+optimizer iteration, and average seed probabilities on64 guard graphs at T=1.
+Require AUROC>=.65, prevalence Brier gain>=.005, and Brier excess<=.01 against
+both historical shared linear and converged linear. Converged integrity-qualified
+states remain ready after signal failure. A signal failure is terminal null and
+retires the unchanged protocol; external absence is terminal blocked.
+Freeze1024 fresh matched-cardinality graphs with historical identity/isomorphism
+exclusion, immutable role/query/state bindings and24 streams of32. Construction
+retains2000 proposals per graph and600 seconds total.128 final-test graphs give
+limited precision, with no power claim. No LLM call or independent benefit claim
+is permitted. Owned unit/child statement coverage must be100 percent, with
+private E2E-018/021, cold replay, strict scanners and atomic primary publication.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+#### SCENARIO-REPORT-8987-READINESS
+Tests independently reduce primitive scores, reject missing/zero/boolean gates,
+failed convergence and rehashed summary or state tampering, and preserve fitted
+readiness when any one signal criterion fails. Private foreign-directory CLI
+success, missing-input, tamper and replay checks retain normal exits and logs.
+
+Implementation status,2026-11-11: Exp8987 producer and private tests implement
+REQ-REPORT-8987-ADMISSION. The dated primary retains the actual validation exits,
+coverage, six fitted states, four development margins and frozen source manifests.

@@ -1,0 +1,64 @@
+{
+  "rows": [
+    {
+      "source_id": "2602.02056v4",
+      "url": "https://arxiv.org/html/2602.02056v4",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8986_v768_spline_basis_methods/methods/2602.02056v4.html",
+      "sha256": "sha256:bc27468dc1f833dea9e43c3eac35f168fa5df5019422eff66809217020dda578",
+      "http_status": 200,
+      "duration_s": 0.17666562300291844,
+      "sections": "3.1, Appendix B.3",
+      "equations": "s_j(x)=sum_k c_jk B_k(x); degree p activates at most p+1 basis coefficients",
+      "adopted": "fixed cubic basis and local support",
+      "conditions": "bounded fixed domain and fixed knots; local coefficient derivatives",
+      "non_adopted": "FPGA fixed-point online training; hardware speed claims",
+      "reading_status": "full_method_sections_read",
+      "claim_scope": "method adaptation only; no imported performance"
+    },
+    {
+      "source_id": "2503.21076v1",
+      "url": "https://arxiv.org/html/2503.21076v1",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8986_v768_spline_basis_methods/methods/2503.21076v1.html",
+      "sha256": "sha256:b607a1fafea53c61ee2ad6c8c1b02ad25d8d4364575657cd308a55a3a86712dc",
+      "http_status": 200,
+      "duration_s": 0.11163097799726529,
+      "sections": "3.2-3.4, equations 2 and 5-7",
+      "equations": "phi(x)=w_b b(x)+w_s sum_i w_i B_i(x); KAC replaces splines with Gaussian RBF exp(-(x-mu)^2/(2*sigma^2))",
+      "adopted": "frozen feature backbone and equal linear control",
+      "conditions": "image class-incremental setting with pretrained backbone differs from graph error prediction",
+      "non_adopted": "RBF basis, KAC training and class expansion; this is not a KAC reproduction",
+      "reading_status": "full_method_sections_read",
+      "claim_scope": "method adaptation only; no imported performance"
+    },
+    {
+      "source_id": "2604.23987v1",
+      "url": "https://arxiv.org/html/2604.23987v1",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8986_v768_spline_basis_methods/methods/2604.23987v1.html",
+      "sha256": "sha256:29d50da773226b552d4cd7db03a1fdca18538aea9dd4fd6adf59b890d3d1d20c",
+      "http_status": 200,
+      "duration_s": 0.1367414850028581,
+      "sections": "3, 5-6",
+      "equations": "s_theta(x,y)=-log f_theta(y|x); C_alpha(x)={y:s_theta(x,y)<=q_alpha}",
+      "adopted": "separate calibration from accuracy; reserve fresh calibration",
+      "conditions": "split-conformal coverage needs exchangeable calibration and test and unchanged score function",
+      "non_adopted": "conformal guarantee, LoRA updates, calibration replay and theorem transfer",
+      "reading_status": "full_method_sections_read",
+      "claim_scope": "method adaptation only; no imported performance"
+    },
+    {
+      "source_id": "2606.08158v1",
+      "url": "https://arxiv.org/html/2606.08158v1",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8986_v768_spline_basis_methods/methods/2606.08158v1.html",
+      "sha256": "sha256:b6450dc38520f2a2f015954db73e181bf037c3106a0c321aa70231348eb3317c",
+      "http_status": 200,
+      "duration_s": 0.10542309199809097,
+      "sections": "2.1-2.2, equations 1-7",
+      "equations": "min CE(y,p); J(p,p_view)<=epsilon1; CE(y,p_view)<=epsilon2; lambda<-max(0,lambda+eta*g)",
+      "adopted": "exact graph relabeling and permutation as label-preserving controls",
+      "conditions": "semantic equivalence and label preservation must hold for each view",
+      "non_adopted": "back-translation, neural paraphrase training and primal-dual optimizer",
+      "reading_status": "full_method_sections_read",
+      "claim_scope": "method adaptation only; no imported performance"
+    }
+  ]
+}

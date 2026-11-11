@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8987_v768_spline_development_admission.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_8987_v768_spline_development_admission.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json"
+      ],
+      "duration_s": 3.7036059520032723,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8987_v768_spline_development_admission/invocations/1794373254603879333/terminal/00_cold_replay.log",
+      "log_sha256": "sha256:5b610e5fe280ec70e59b42c022fbabda6317f88b104d370e49d35f83c62ded07",
+      "name": "cold_replay",
+      "output_tail": "[exp8987] phase=start completed=0 pending=0\n[exp8987] phase=before_cold_replay completed=0 pending=0\n[exp8987] phase=after_cold_replay completed=1 pending=0\n{\"passed\": true, \"replay_passed\": true}\n",
+      "passed": true,
+      "scope": "private_terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json"
+      ],
+      "duration_s": 11.953803618001984,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8987_v768_spline_development_admission/invocations/1794373254603879333/terminal/01_adversarial.log",
+      "log_sha256": "sha256:6212ee091393b50ca50a67b6bb903500604b8415db45620f6a57b1633be4e296",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8987,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_development_admitted\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "private_terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8987_v768_spline_development_admission/terminal_candidate.json"
+      ],
+      "duration_s": 0.13662642399867764,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8987_v768_spline_development_admission/invocations/1794373254603879333/terminal/02_strict_rows.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "private_terminal",
+      "timed_out": false
+    }
+  ]
+}

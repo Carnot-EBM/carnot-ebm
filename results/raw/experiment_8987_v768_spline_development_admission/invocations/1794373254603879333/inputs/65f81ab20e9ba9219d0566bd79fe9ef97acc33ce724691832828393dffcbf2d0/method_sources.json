@@ -1,0 +1,52 @@
+{
+  "rows": [
+    {
+      "decision": "Use frozen-feature control; do not claim MPC implementation",
+      "equation": "MPC=-log P(lossyWL_L suffices for f)",
+      "failure_modes": "Finite width, oversquashing and inaccessible distant evidence",
+      "implementation_requirements": "Graph-family and lossy-message model; task-specific analysis",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2509.01254v2.html",
+      "read_date": "20261110",
+      "sha256": "sha256:5e3eafac1a70d63e7a43c32af3a02bc4d871b81fd0cd6cd38df4bb2c56ff5b3e",
+      "status": "ingested_primary_method",
+      "title": "Message Passing Complexity",
+      "url": "https://arxiv.org/html/2509.01254v2"
+    },
+    {
+      "decision": "Ingest interface separation; no solver or paper reproduction",
+      "equation": "L=KL(p_star||softmax(-E/T))+lambda_cal L_cal+lambda_inf L_inf",
+      "failure_modes": "Solver cost; correctness relative to explicit constraints, not semantic truth",
+      "implementation_requirements": "Affine or exactly linearizable readout, ReLU head, bounded MIP formulation",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2610.33930.html",
+      "read_date": "20261110",
+      "sha256": "sha256:c586a1966f7958447e3289a38e4187b8d0733f46cb87c0ebd9701244af5f9d63",
+      "status": "ingested_primary_method",
+      "title": "EnerGNN",
+      "url": "https://arxiv.org/html/2610.33930"
+    },
+    {
+      "decision": "Ingest only; retired energy-as-generator scope stays closed",
+      "equation": "z_next=Pi_M(RMS(z)+sigma xi-alpha grad_z E_theta(z;x))",
+      "failure_modes": "Learned energy minima need not be correct; extra training and inference cost",
+      "implementation_requirements": "Trajectory supervision, random descent, second derivatives and state-based exploration",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08977.html",
+      "read_date": "20261110",
+      "sha256": "sha256:ebd26ee5b9a263f6c85b6cd8c39f96967954c5a8808b4a7f9856555cb56c29e3",
+      "status": "ingested_primary_method",
+      "title": "Energy-Based Reasoners",
+      "url": "https://arxiv.org/html/2611.08977"
+    },
+    {
+      "decision": "Ingest frozen evaluation and gradient routing only; no JEPA training",
+      "equation": "q_next=q-alpha clip_tau(grad_q E_phi(C,q)); L_enc=gamma softplus((E_bar(C,S)-stopgrad(E_bar(C,T)))/gamma)",
+      "failure_modes": "Visual labels, gradient routing and physical solver cost do not transfer",
+      "implementation_requirements": "EMA target encoder, denoising displacement, separate energy and encoder gradient paths",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08989.html",
+      "read_date": "20261110",
+      "sha256": "sha256:d5586fb2c492667f9b535e10083aba2fca8e8f03155e3975691bea7b8c706dfd",
+      "status": "ingested_primary_method",
+      "title": "LEF-JEPA",
+      "url": "https://arxiv.org/html/2611.08989"
+    }
+  ]
+}
