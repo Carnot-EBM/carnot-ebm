@@ -111792,7 +111792,27 @@ The experiment SHALL implement the frozen V768 task `exp8998-capstone` and produ
 per-unit evidence, progress requirements and closed verdict class.
 #### SCENARIO-REPORT-8998-V768
 Complete accounting records absent science as terminal blocked and keeps FoVer publication scope unchanged.
-**Implementation status:** Planned.
+**Implementation status:** Implemented in `python/carnot/reporting/v768_capstone.py`, the Exp8998 CLI and private requirement-linked unit/child tests. Measured validation and terminal publication receipts are retained under `results/raw/experiment_8998_v768_capstone/`. Ops/status/traceability reconciliation is delegated to the conductor as requested.
+
+#### SCENARIO-REPORT-8998-CUSTODY
+Exp8998 SHALL bind fourteen ordered full task objects to the authenticated Exp8985
+primary and its independent task digest, without reading mutable vNEXT headings.
+Retain each observed primary, exact alternate scheduler receipt, conductor line,
+primitive row shard and source/code/config hash. Missing shard B and ambiguous
+shared-title conductor lines SHALL remain missing, never invented deliverables.
+Differentiate missing_file, missing_field, observed_zero and scientific null.
+Recompute exposed development metrics and natural annotation counts from retained
+rows. Emit seven detector and ten learning operands even when unmeasured; never
+replace unavailable observations with method fixtures or historical results.
+Keep administrative, method, observational and scientific readiness separate.
+Byte-authenticated V767 retirement applies only to its old Gibbs head; the changed
+convex spline passes or fails its own fixed gate. Failed upstream owned validation
+blocks dependent science, while failed Exp8998 validation disqualifies accounting.
+Each failure SHALL state exact reopening evidence. Historical FoVer G1–G4 remains
+separate. Unit and real child statements SHALL have 100 percent measured coverage,
+with frozen normal-exit validation commands, private E2E-018/021 custody checks,
+outside-checkout CLI replay and rehashed-tamper refusal before primary publication.
+No model load, successor activation, exclusion edit or external publication occurs.
 
 ### REQ-REPORT-8986-FROZEN: Convex cached spline protocol and checked publication
 Exp8986 SHALL pin Exp8972 diagnostic readiness and Exp8973 historical bytes before fitting.

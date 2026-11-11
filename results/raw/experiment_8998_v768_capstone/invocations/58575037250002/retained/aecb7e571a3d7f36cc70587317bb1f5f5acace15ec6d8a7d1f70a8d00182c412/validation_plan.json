@@ -1,0 +1,131 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8986-checks-tclv83rg/coverage.ini",
+        "--data-file=/tmp/carnot-8986-checks-tclv83rg/.coverage",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8986-checks-tclv83rg/pytest",
+        "tests/python/test_spline_basis_methods_8986.py"
+      ],
+      "name": "owned_unit_child",
+      "scope": "owned",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8986-checks-tclv83rg/.coverage",
+        "/tmp/carnot-8986-checks-tclv83rg"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8986-checks-tclv83rg/coverage.ini",
+        "--data-file=/tmp/carnot-8986-checks-tclv83rg/.coverage",
+        "-o",
+        "/tmp/carnot-8986-checks-tclv83rg/coverage.json",
+        "--fail-under=100"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/autoresearch/spline_basis_8986.py",
+        "python/carnot/reporting/spline_basis_methods_8986.py",
+        "python/carnot/reporting/spline_basis_runner_8986.py",
+        "scripts/experiments/experiment_8986_v768_spline_basis_methods.py",
+        "tests/python/test_spline_basis_methods_8986.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/autoresearch/spline_basis_8986.py",
+        "python/carnot/reporting/spline_basis_methods_8986.py",
+        "python/carnot/reporting/spline_basis_runner_8986.py",
+        "scripts/experiments/experiment_8986_v768_spline_basis_methods.py",
+        "tests/python/test_spline_basis_methods_8986.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot-8986-checks-tclv83rg/mypy.ini",
+        "python/carnot/autoresearch/spline_basis_8986.py",
+        "python/carnot/reporting/spline_basis_methods_8986.py",
+        "python/carnot/reporting/spline_basis_runner_8986.py",
+        "scripts/experiments/experiment_8986_v768_spline_basis_methods.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_spline_basis_methods_8986.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8986-checks-tclv83rg/e2e018",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "name": "e2e018",
+      "scope": "private_e2e",
+      "timeout_s": 240
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8986-checks-tclv83rg/e2e021",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "name": "e2e021",
+      "scope": "private_e2e",
+      "timeout_s": 240
+    }
+  ]
+}

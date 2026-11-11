@@ -1,0 +1,77 @@
+...F.                                                                    [100%]
+=================================== FAILURES ===================================
+_______________________ test_owned_receipts_and_primary ________________________
+
+work = {'code': [{'original_path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v768_capstone.py', 'p...fact_field': 'required_checks_passed', 'check': 'producer_validation', 'expected': True, 'observed': False, ...}], ...}
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f656e6d1130>
+
+    def test_owned_receipts_and_primary(work, tmp_path, monkeypatch):
+        """REQ-REPORT-8998: receipt checks precede primary replacement, including failures."""
+        observed = deepcopy(work)
+        observed["raw"] = str(tmp_path / "owned")
+        Path(observed["raw"]).mkdir()
+        monkeypatch.setattr(m, "collect", lambda *a: deepcopy(observed))
+        validation = dict(passed=True, coverage=dict(complete=True), receipts=[dict(passed=False)])
+        receipt = tmp_path / "receipts.json"
+        output = tmp_path / (m.NAME + ".json")
+        args = ["--output", str(output), "--receipts", str(receipt)]
+        monkeypatch.setattr(m.authority.prior, "verify_measured", lambda *a: True)
+        atomic_json(receipt, validation)
+        assert m.main(args) == 1
+        log = tmp_path / "validation.log"
+        log.write_text("real private validation boundary\n")
+        row = dict(
+            name="private_control",
+            passed=True,
+            exit_code=0,
+            log_path=str(log),
+            log_sha256=m.sha256_file(log),
+            command_argv=["private_control"],
+        )
+        plan = tmp_path / "argv.json"
+        atomic_json(plan, dict(argv=[["different"]]))
+        validation.update(receipts=[row], plan_reference=m.reference(plan))
+        atomic_json(receipt, validation)
+        assert m.main(args) == 1
+        monkeypatch.setattr(m, "CHECKS", {"private_control"})
+        atomic_json(
+            plan,
+            dict(
+                argv=[row["command_argv"]],
+                code_hashes={p: m.sha256_file(m.ROOT / p) for p in [*m.OWNED, m.TEST]},
+            ),
+        )
+        validation["plan_reference"] = m.reference(plan)
+        atomic_json(receipt, validation)
+        monkeypatch.setattr(m, "terminal", lambda *a: dict(passed=False))
+        assert m.main(args) == 1
+        monkeypatch.setattr(m, "terminal", lambda *a: dict(passed=True, receipts=[]))
+>       assert m.main(args) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f658a9914e0>(['--output', '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/experiment_8998_v768_capstone.json', '--receipts', '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/receipts.json'])
+E        +    where <function main at 0x7f658a9914e0> = m.main
+
+tests/python/test_v768_capstone_8998.py:138: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8998] phase=start completed=0 pending=0
+{"passed": false, "reason": "owned_receipts"}
+[exp8998] phase=start completed=0 pending=0
+{"passed": false, "reason": "frozen_validation_argv"}
+[exp8998] phase=start completed=0 pending=0
+[exp8998] phase=reductions_before completed=0 pending=14
+[exp8998] phase=reductions_after completed=14 pending=0
+{"passed": false, "reason": "[Errno 2] No such file or directory: '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/owned/work.json'"}
+[exp8998] phase=start completed=0 pending=0
+[exp8998] phase=reductions_before completed=0 pending=14
+[exp8998] phase=reductions_after completed=14 pending=0
+{"passed": false, "reason": "[Errno 2] No such file or directory: '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/owned/work.json'"}
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v768_capstone_8998.py::test_owned_receipts_and_primary
+1 failed, 4 passed, 1 warning in 127.08s (0:02:07)

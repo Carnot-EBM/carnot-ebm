@@ -1,0 +1,66 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8998_v768_capstone.json",
+  "primary_sha256": "sha256:81688e87354e6d7fd97496776cf084a24362e44516a6f76d969f1b07f8b1c61a",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8998_v768_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8998_v768_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 3.80004968400317,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8998_v768_capstone/invocations/58575037250002/terminal_checks/00_cold_replay.log",
+        "log_sha256": "sha256:dd9b7767dd1cc8b2aeaffdfa1bd927ce295372307fa3bc4dd78dc8e8d02eae21",
+        "name": "cold_replay",
+        "output_tail": "[exp8998] phase=imports_before completed=0 pending=1\n[exp8998] phase=start completed=0 pending=0\n{\"passed\": true, \"replay_passed\": true, \"slots\": 14}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.18258761199831497,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8998_v768_capstone/invocations/58575037250002/terminal_checks/01_adversarial.log",
+        "log_sha256": "sha256:172f750331bbab41ad13b500ca3ef3003d0655ac293ab9a8dc9549e45963d927",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8998,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_upstream_science_unavailable\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.02315059299871791,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8998_v768_capstone/invocations/58575037250002/terminal_checks/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

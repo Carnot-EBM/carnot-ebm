@@ -1,0 +1,255 @@
+{
+  "coverage": {
+    "complete": false,
+    "data_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage",
+      "sha256": "sha256:c1528a0ce562a949abe6ffd64e003f68630e2599b79bc7c5d267d1669437b7da"
+    },
+    "files": [
+      {
+        "excluded": [],
+        "missing": [
+          643,
+          644,
+          645,
+          646,
+          647,
+          648,
+          649,
+          650,
+          651
+        ],
+        "path": "python/carnot/reporting/v768_capstone.py",
+        "statements": 213
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "scripts/experiments/experiment_8998_v768_capstone.py",
+        "statements": 7
+      }
+    ],
+    "percent": 95.9090909090909,
+    "report_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/coverage.json",
+      "sha256": "sha256:c57f81031f3dd5f8f05fa3767b4c926196edbd6b5156586fb9b194d9c87e8ecc"
+    }
+  },
+  "passed": false,
+  "plan_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/frozen_validation_argv.json",
+    "sha256": "sha256:324b58767265df01d5526bcca14fb91c58d1c6f5ffb2f44d577a49841b810f4d"
+  },
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini --data-file /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage -m pytest --noconftest -n 0 -o addopts= --no-cov -q tests/python/test_v768_capstone_8998.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini",
+        "--data-file",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage",
+        "-m",
+        "pytest",
+        "--noconftest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v768_capstone_8998.py"
+      ],
+      "duration_s": 128.63751889600098,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/00_owned_unit_child.log",
+      "log_sha256": "sha256:b552782a5e900a91c30571c073385d3e124c576a97ce9d8a1380543fdd8b4c12",
+      "name": "owned_unit_child",
+      "normal_exit": false,
+      "output_tail": "mar0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f656e6d1130>\n\n    def test_owned_receipts_and_primary(work, tmp_path, monkeypatch):\n        \"\"\"REQ-REPORT-8998: receipt checks precede primary replacement, including failures.\"\"\"\n        observed = deepcopy(work)\n        observed[\"raw\"] = str(tmp_path / \"owned\")\n        Path(observed[\"raw\"]).mkdir()\n        monkeypatch.setattr(m, \"collect\", lambda *a: deepcopy(observed))\n        validation = dict(passed=True, coverage=dict(complete=True), receipts=[dict(passed=False)])\n        receipt = tmp_path / \"receipts.json\"\n        output = tmp_path / (m.NAME + \".json\")\n        args = [\"--output\", str(output), \"--receipts\", str(receipt)]\n        monkeypatch.setattr(m.authority.prior, \"verify_measured\", lambda *a: True)\n        atomic_json(receipt, validation)\n        assert m.main(args) == 1\n        log = tmp_path / \"validation.log\"\n        log.write_text(\"real private validation boundary\\n\")\n        row = dict(\n            name=\"private_control\",\n            passed=True,\n            exit_code=0,\n            log_path=str(log),\n            log_sha256=m.sha256_file(log),\n            command_argv=[\"private_control\"],\n        )\n        plan = tmp_path / \"argv.json\"\n        atomic_json(plan, dict(argv=[[\"different\"]]))\n        validation.update(receipts=[row], plan_reference=m.reference(plan))\n        atomic_json(receipt, validation)\n        assert m.main(args) == 1\n        monkeypatch.setattr(m, \"CHECKS\", {\"private_control\"})\n        atomic_json(\n            plan,\n            dict(\n                argv=[row[\"command_argv\"]],\n                code_hashes={p: m.sha256_file(m.ROOT / p) for p in [*m.OWNED, m.TEST]},\n            ),\n        )\n        validation[\"plan_reference\"] = m.reference(plan)\n        atomic_json(receipt, validation)\n        monkeypatch.setattr(m, \"terminal\", lambda *a: dict(passed=False))\n        assert m.main(args) == 1\n        monkeypatch.setattr(m, \"terminal\", lambda *a: dict(passed=True, receipts=[]))\n>       assert m.main(args) == 0\nE       AssertionError: assert 1 == 0\nE        +  where 1 = <function main at 0x7f658a9914e0>(['--output', '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/experiment_8998_v768_capstone.json', '--receipts', '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/receipts.json'])\nE        +    where <function main at 0x7f658a9914e0> = m.main\n\ntests/python/test_v768_capstone_8998.py:138: AssertionError\n----------------------------- Captured stdout call -----------------------------\n[exp8998] phase=start completed=0 pending=0\n{\"passed\": false, \"reason\": \"owned_receipts\"}\n[exp8998] phase=start completed=0 pending=0\n{\"passed\": false, \"reason\": \"frozen_validation_argv\"}\n[exp8998] phase=start completed=0 pending=0\n[exp8998] phase=reductions_before completed=0 pending=14\n[exp8998] phase=reductions_after completed=14 pending=0\n{\"passed\": false, \"reason\": \"[Errno 2] No such file or directory: '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/owned/work.json'\"}\n[exp8998] phase=start completed=0 pending=0\n[exp8998] phase=reductions_before completed=0 pending=14\n[exp8998] phase=reductions_after completed=14 pending=0\n{\"passed\": false, \"reason\": \"[Errno 2] No such file or directory: '/tmp/pytest-of-ianblenke/pytest-2/test_owned_receipts_and_primar0/owned/work.json'\"}\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/python/test_v768_capstone_8998.py::test_owned_receipts_and_primary\n1 failed, 4 passed, 1 warning in 127.08s (0:02:07)\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v768_capstone.py scripts/experiments/experiment_8998_v768_capstone.py tests/python/test_v768_capstone_8998.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v768_capstone.py",
+        "scripts/experiments/experiment_8998_v768_capstone.py",
+        "tests/python/test_v768_capstone_8998.py"
+      ],
+      "duration_s": 0.012244547004229389,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/01_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v768_capstone.py scripts/experiments/experiment_8998_v768_capstone.py tests/python/test_v768_capstone_8998.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v768_capstone.py",
+        "scripts/experiments/experiment_8998_v768_capstone.py",
+        "tests/python/test_v768_capstone_8998.py"
+      ],
+      "duration_s": 0.01045096899906639,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/02_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/reporting/v768_capstone.py scripts/experiments/experiment_8998_v768_capstone.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v768_capstone.py",
+        "scripts/experiments/experiment_8998_v768_capstone.py"
+      ],
+      "duration_s": 0.09773119400051655,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/03_strict_mypy.log",
+      "log_sha256": "sha256:a848646a0d83ccfa15aabcf4cf144a397ed425f6880d658336305b283bcbb54a",
+      "name": "strict_mypy",
+      "normal_exit": true,
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_v768_capstone_8998.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v768_capstone_8998.py"
+      ],
+      "duration_s": 0.021612932003336027,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/04_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest --noconftest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py tests/python/test_restricted_decision_audit_8210.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--noconftest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "duration_s": 49.377801797003485,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/05_e2e018_021.log",
+      "log_sha256": "sha256:6c575b4407a4b288d49f7b88f140c8ea7dbcaa2b8668baacb33c9c7f7dcab70e",
+      "name": "e2e018_021",
+      "normal_exit": true,
+      "output_tail": ".........................                                                [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n25 passed, 1 warning in 48.12s\n",
+      "passed": true,
+      "scope": "private_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage combine --rcfile /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini --data-file /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage --keep /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini",
+        "--data-file",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage",
+        "--keep",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage"
+      ],
+      "duration_s": 0.05797164099931251,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/06_coverage_combine.log",
+      "log_sha256": "sha256:1f508cdc23baaf8a1ac757c80c521533ba2b208ebdac4e6c4e8cdf841e5c7897",
+      "name": "coverage_combine",
+      "normal_exit": true,
+      "output_tail": "Combined 6 files, skipped 5\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage json --rcfile /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini --data-file /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage --fail-under=100 -o /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/coverage.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage.ini",
+        "--data-file",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/.coverage",
+        "--fail-under=100",
+        "-o",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/coverage.json"
+      ],
+      "duration_s": 0.07979300499573583,
+      "exit_code": 2,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/58170325130469/logs/07_coverage_report.log",
+      "log_sha256": "sha256:873c9ff3b205a42f96e9a7ac4354c463c312c8c988f6cf80bd63506ed146be51",
+      "name": "coverage_report",
+      "normal_exit": false,
+      "output_tail": "Combined 6 files, skipped 5\nWrote JSON report to /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8998_v768_capstone/qualification/58170325130469/coverage/coverage.json\nCoverage failure: total of 96 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ],
+  "repository_health": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "duration_s": 327.86708025199914,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_8998_v768_capstone/qualification/repository_health/00_full_python_suite.log",
+      "log_sha256": "sha256:d523a662ba5bc0e2899a2f2a8d901a31cd7cec68bae330a6b8c3095cd22b6bd8",
+      "name": "full_python_suite",
+      "normal_exit": false,
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [84312 items]\n\n........................................................................ [  0%]\n........................................................................ [  0%]\nF............F.......................................................... [  0%]\n...F.............F................F..................F..........F....F.. [  0%]\n...F......F............................................................. [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n..................FF.................................................... [  1%]\n............................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140120857932480, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139638843858800, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140201959242640, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140251254893040, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "scope": "repository_health",
+      "timed_out": true
+    }
+  ]
+}
