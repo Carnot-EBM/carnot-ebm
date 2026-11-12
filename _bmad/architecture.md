@@ -1110,3 +1110,25 @@ ARC analysis requires new supported live outcomes and remains opportunistic.
 Design and full task contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Execution proposal: `research-roadmap-next.yaml`. V770 design/queue bytes are
 preserved separately; the active queue and conductor are unchanged.
+
+## V772 planned evidence boundary — 2026-11-12
+
+The proposed milestone has thirteen tasks, Exp9041–Exp9053. Exp9028 already
+qualified historical provenance; no further repair is proposed. Exp9030's
+published TEST outcomes and Exp9031's already-observed B identities require a
+new graph evaluation population. Preserve the admitted spline/linear states,
+construct disjoint source identities and separate detector views from truth.
+Both static and continuous-learning predictions seal before final TEST reduction.
+The original seven detector and ten learning bounds remain fixed.
+
+Natural-label work is two independent feasibility studies: classify retained
+missing-identity responses and check original annotator/criterion authority.
+Neither relaxes source closure or authorizes the deferred embedding pilot.
+The online path retains delayed feedback, immutable retention, rollback and exact
+resume. Complete service cost precedes any hardware recommendation. ARC analysis
+requires new supported live outcomes. Qwen weights and public defaults remain fixed.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`. Full V771 design/queue bytes are
+preserved separately. This reconciles the planned boundary only; the overview's
+October 11 date is not a new verification of the whole runtime architecture.

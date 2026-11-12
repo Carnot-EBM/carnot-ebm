@@ -3831,3 +3831,20 @@ E(correct)=0; E(error)=-z; p_error=sigmoid(z). No search or sign flip is allowed
 ### SCENARIO-KAN-8986-NUMERIC
 Tests cover endpoints, partition of unity, constants, duplicates, finite differences,
 Hessian PSD, label orientation and refusal of false optimizer convergence.
+
+## V772 fixed spline evaluation — Planned, 2026-11-12
+
+### REQ-KAN-V772-FROZEN: Preserve the admitted coefficient mechanism
+
+Fresh-data evaluation SHALL reuse the admitted Exp8987 spline basis, encoder,
+coefficients and converged matched linear control. Only registered CAL temperature
+selection and Exp8988 causal coefficient updates may adapt. Qwen weights, spline
+knots and original acceptance bounds SHALL remain fixed. Sparse-update operation
+counts SHALL NOT imply complete service or FPGA acceleration.
+
+#### SCENARIO-KAN-V772-FROZEN
+
+Changing a frozen coefficient/basis hash before collection SHALL block. Online
+guard rejection SHALL restore coefficients and AdaGrad accumulator together.
+Cost comparison SHALL include anchors, guards, durable storage and recovery for
+each arm's actual work. Implementation status: Planned, Exp9042/9048–Exp9051.

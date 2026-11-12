@@ -59263,3 +59263,41 @@ or archive summaries. The direct CLI runs outside the checkout without
 PYTHONPATH. Coverage measures all182 new statements with zero missing statements
 or exclusions; primary publication additionally requires unchanged scanners and
 fresh-process replay. No scientific fit or model load is repeated.
+
+## V772 prospective evidence and learning — Planned, 2026-11-12
+
+### REQ-VERIFY-V772-SEAL: Fresh graph evidence before truth reduction
+
+The V772 source SHALL contain 1024 prospectively committed graph identities,
+128 CAL/128 TEST/768 online, disjoint by topology and start/target from retained
+matching histories. Historical A/B observations SHALL remain exposed or unknown.
+No post-response replacement SHALL occur. Early artifacts/logs SHALL withhold
+TEST outputs, confidence and label-backed outcomes. A fixed admission evaluator
+may check unchanged support requirements using separate protected receipts.
+Static and online retention predictions SHALL both seal before final TEST truth
+reduction. Original fitted states and seven detector bounds SHALL remain fixed.
+
+#### SCENARIO-VERIFY-V772-SEAL
+
+A previous topology with renamed nodes, changed fitted state, duplicate first
+response, nested outcome leak or unauthorized TEST read SHALL reject. Missing
+support SHALL block the fixed cohort without resampling. Both prediction seal
+hashes SHALL precede the first final-evaluator TEST access. Planned; no runtime
+implementation is asserted by this section.
+
+### REQ-VERIFY-V772-LEARNING: Future benefit and simultaneous retention
+
+The five-arm Exp8988 protocol SHALL run on 24 fresh disjoint 32-query streams
+with its original objective, temperature one, guard, feedback schedule and atomic
+rollback. Labels 29–32 SHALL remain pending through scientific scoring. The ten
+original bounds SHALL remain unchanged. Shared TEST identities SHALL be resampled
+once per bootstrap draw across all histories and arms. Decision coverage changes
+are descriptive and SHALL NOT replace a failed benefit or retention bound.
+
+#### SCENARIO-VERIFY-V772-LEARNING
+
+Private future-label and retention-label access SHALL fail. A real interruption
+at query 16 SHALL resume to the uninterrupted coefficients, accumulator and
+feedback acknowledgments. The audit SHALL reconstruct 3840 online and 46080
+retention prediction rows without treating them as independent samples.
+Implementation status: Planned; tasks Exp9049/9050, with Exp9051 full service cost.

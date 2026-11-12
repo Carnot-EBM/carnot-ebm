@@ -112936,3 +112936,192 @@ adversarial and row scanners, private E2E-018/021 and100 percent new statements
 with zero exclusions SHALL qualify current scoped acceptance. Historical failed
 repository health SHALL remain separate. External non-exposure failure is a
 complete blocked result, never partial and never replacement generation.
+
+
+## V772 planned research contract — 2026-11-12
+
+Status: Planned. This section specifies future experiments; no implementation or
+scientific outcome is claimed by planning. Exact authority is the V772 design
+and research-roadmap-next.yaml, thirteen tasks Exp9041–Exp9053.
+
+### REQ-REPORT-9041-V772: Bind thirteen tasks and preserve completed V771 evidence
+
+Task `exp9041-branch-contract` SHALL produce `results/experiment_9041_v772_branch_contract.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9041-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9042-V772: Freeze fresh graph identities and prediction-before-truth custody
+
+Task `exp9042-fresh-seal-methods` SHALL produce `results/experiment_9042_v772_fresh_seal_methods.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9042-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9043-V772: Explain every unresolved natural-source identity from retained responses
+
+Task `exp9043-identity-obstruction-audit` SHALL produce `results/experiment_9043_v772_identity_obstruction_audit.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9043-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9044-V772: Test original human-annotation availability before another natural pilot
+
+Task `exp9044-annotation-feasibility` SHALL produce `results/experiment_9044_v772_annotation_feasibility.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9044-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9045-V772: Collect fresh bounded Qwen graph shard A
+
+Task `exp9045-fresh-corpus-a` SHALL produce `results/experiment_9045_v772_fresh_corpus_a.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9045-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9046-V772: Collect fresh bounded Qwen graph shard B
+
+Task `exp9046-fresh-corpus-b` SHALL produce `results/experiment_9046_v772_fresh_corpus_b.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9046-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9047-V772: Admit fresh graph rows without releasing TEST outcomes
+
+Task `exp9047-sealed-corpus-admission` SHALL produce `results/experiment_9047_v772_sealed_corpus_admission.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9047-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9048-V772: Freeze calibrated decisions on fresh graphs before TEST truth is opened
+
+Task `exp9048-sealed-calibrated-decisions` SHALL produce `results/experiment_9048_v772_sealed_calibrated_decisions.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9048-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9049-V772: Measure continuous spline adaptation with sealed future and retention predictions
+
+Task `exp9049-sealed-online-streams` SHALL produce `results/experiment_9049_v772_sealed_online_streams.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9049-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9050-V772: Independently reduce all fixed detector and continuous-learning bounds
+
+Task `exp9050-joint-benefit-audit` SHALL produce `results/experiment_9050_v772_joint_benefit_audit.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9050-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9051-V772: Measure complete spline service cost and hardware feasibility
+
+Task `exp9051-complete-service-cost` SHALL produce `results/experiment_9051_v772_complete_service_cost.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9051-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9052-V772: Assess held-family supervisor transfer only from newly supported live outcomes
+
+Task `exp9052-arc-transfer-evidence` SHALL produce `results/experiment_9052_v772_arc_transfer_evidence.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9052-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+### REQ-REPORT-9053-V772: Reconcile thirteen outcomes and decide exact continuation boundaries
+
+Task `exp9053-capstone` SHALL produce `results/experiment_9053_v772_capstone.json`
+under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
+per-unit evidence, exact gate operands, current invocation scope and verdict_class.
+Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
+
+#### SCENARIO-REPORT-9053-V772
+
+Private missing-input, changed-authority and rehashed-tamper controls SHALL
+reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
+missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
+unchanged. New code SHALL require tests before implementation. Status: Planned.

@@ -23634,3 +23634,22 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-12: Authenticate retained shard A without new generation or revised labels (⚠️ Blocked) — honest_verdict=complete_blocked_nonexposure_audit; results/experiment_9030_v771_retained_shard_a.json
 - 2026-11-12: Complete the frozen bounded Qwen source with shard B (⚠️ Blocked) — honest_verdict=complete_blocked_changed_input; results/experiment_9031_v771_graph_corpus_b.json
 - 2026-11-12: Reconcile fourteen outcomes and separate graph and independent-label claims (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9040_v771_capstone.json
+
+## 2026-11-12 — Plan milestone 2026.11.772
+
+- Recorded the requested arXiv/secondary-source scan before design. EBT citation
+  lookup was rate-limited; ARM-EBM returned ten citing records. Trending freshness
+  and vendor/architecture limits remain explicit.
+- Preserved full V771 design/queue bytes and staged thirteen matching tasks,
+  Exp9041–Exp9053, across four phases.
+- Reused qualified provenance and spline methods; replaced exposed A and observed
+  B reuse with a prospectively disjoint graph roster and prediction-before-truth
+  custody. Preserved all seven detector and ten causal-learning bounds.
+- Split natural-source feasibility into retained identity-cause diagnosis and
+  original annotator/criterion inspection. Neither weakens the deferred pilot.
+- Added planned requirements, traceability and architecture/ops boundaries.
+  Every prompt contains bounded-write/progress rules, exact gates, per-unit rows,
+  verdict classes and full rerun-retirement entries. Qwen tasks declare bounded
+  generation and the mandated model. No Luna task is proposed.
+- Planning checks are in progress. No activation, model run, hardware change,
+  external publication or push occurred. Protected runtime files are unchanged.

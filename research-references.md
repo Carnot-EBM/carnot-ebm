@@ -56443,3 +56443,108 @@ requests, pace them and honor Retry-After before any labels are reduced. Follow
 [MediaWiki API etiquette](https://www.mediawiki.org/wiki/API:Etiquette). Preserve
 all original failures and unresolved identities; no smaller cohort, changed
 language subset or unknown-as-unseen shortcut is justified.
+
+## 2026-11-12 — V772 planning scan, recorded before experiment design
+
+The scan covers the eight requested arXiv topics and six secondary channels.
+External claims below are not Carnot results. Existing references are revisited
+where they change the next experimental decision; no citation count is a quality gate.
+
+### Findings that affect the plan
+
+- [The Labeling Problem in Hallucination Detection Benchmarks, 2610.08026](https://arxiv.org/abs/2610.08026)
+  (6 October 2026; arXiv lists acceptance to NeurIPS 2026 Evaluations & Datasets)
+  separates reference faithfulness from factual correctness and measures disagreement
+  on 900 human-labeled pairs. Application: audit the original Mu-SHROOM annotation
+  criterion and availability of individual judgments before funding an embedding
+  pilot. An aggregate span union cannot establish three independent annotators.
+  This is a source-feasibility experiment, not a relabeling or new benchmark claim.
+- [Mu-SHROOM, 2504.11975](https://arxiv.org/abs/2504.11975), April 2025,
+  and the [author dataset](https://huggingface.co/datasets/Helsinki-NLP/mu-shroom)
+  remain the proposed natural source. The [Hugging Face paper page](https://huggingface.co/papers/2504.11975)
+  was accessible today. Its generated summary is not annotation authority.
+  Preserve original split, source-group and annotator requirements. Do not use
+  missing Wikidata IDs as evidence of either no overlap or a transient HTTP failure.
+- [MediaWiki Pageprops](https://www.mediawiki.org/wiki/API:Pageprops) describes
+  page properties. Local Exp9029 requested wikibase_item and treats its absence
+  as unresolved. Its retained evidence has two unresolved release groups and
+  213 historical identities after successful network progress. Application:
+  classify the actual retained response bytes (missing page, absent property,
+  redirect, parser omission) before another network run. A local page ID alone
+  cannot establish cross-language nonoverlap. Do not relax the closure gate.
+- [Ultrafast On-Chip Online Learning via Spline Locality in KANs,
+  2602.02056v4](https://arxiv.org/abs/2602.02056), revised 19 June 2026,
+  supports the local-coefficient learning hypothesis. Test the already-qualified
+  delayed AdaGrad mechanism on genuinely fresh Qwen errors; measure guard, anchor
+  and durable-storage costs alongside sparse updates. Paper FPGA timings do not
+  apply to Carnot's existing sampler bitstream.
+- [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987), April 2026,
+  reports uncertainty degradation that can precede accuracy degradation. Retain
+  separate Brier/error retention bounds and report fixed-threshold decision coverage
+  over time. Do not transfer its task-buffer conformal guarantees to our experiment.
+- [The Hallucination Signal Is a Mean Shift, 2608.28930v2](https://arxiv.org/abs/2608.28930),
+  revised 3 October 2026, motivates strong simple controls under identical features.
+  Its paired-example result is not a guarantee on natural responses. Keep the
+  converged linear control in both static and online spline comparisons.
+
+### Other primary research checked
+
+- EBM reasoning: [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977)
+  (6 November 2026) learns energies over recurrent latent states. It is relevant
+  to the long-term architecture, but does not solve natural label authority.
+  No retired generator line is reopened by this reference.
+- Neural constraints: [A Probabilistic Neuro-symbolic Layer for Algebraic
+  Constraint Satisfaction, 2503.19466](https://arxiv.org/abs/2503.19466)
+  (March 2025) uses symbolic integration for constrained distributions.
+  Keep for an algebraic feasibility bottleneck; it is not independent factual truth.
+- Ising ML: [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170)
+  (June 2026) studies sampled neural inference and accuracy/cost tradeoffs.
+- FPGA sampling: [Generalized Probabilistic Approximate Optimization Algorithm,
+  2507.07420](https://arxiv.org/abs/2507.07420) (July 2025) includes FPGA annealing;
+  [Probabilistic Computers for Neural Quantum States, 2512.24558](https://arxiv.org/abs/2512.24558)
+  (December 2025) couples sparse Boltzmann models to FPGA sampling. Neither is
+  evidence of spline-head or complete-service acceleration on our boards.
+- Energy-guided generation: [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484),
+  revised May 2026, describes Monte Carlo energy-guided inference and lists ICML
+  acceptance. Steering remains deferred until a qualified local signal earns it.
+- ARM-EBM citation follow-up: [Distributional Energy-Based Models,
+  2605.18871](https://arxiv.org/abs/2605.18871) (May 2026) separates learned scores
+  from analytical penalties and reports a model-identity shortcut. Preserve that
+  distinction in interpretation; do not reopen retired external-text reranking.
+
+### Secondary channels and coverage limits
+
+- OpenReview: [EBT at ICLR 2026](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  confirms the input/candidate compatibility training paper. This is background,
+  not an independent replication or a new Carnot result.
+- Semantic Scholar: bounded Graph API requests for citations to `ARXIV:2507.02092`
+  and `ARXIV:2512.15605`, limit 20. EBT returned HTTP429. ARM-EBM returned ten
+  citing records with no next page in the response, including 2605.18871 (checked
+  above), 2610.02887, 2609.35362 and 2605.11011. Index coverage remains incomplete;
+  an API response is not proof of an exhaustive literature survey. No rate-limit
+  bypass or repeated request was used.
+- Hugging Face papers: Mu-SHROOM page and the author dataset card were accessible.
+  Human provenance comes from original annotation records, not the platform summary.
+- GitHub: [monthly trending](https://github.com/trending?since=monthly) was accessible
+  but the browser reported a two-month-old crawl. No present-day popularity claim
+  is made. Author repositories linked by EBT, ETS and the probe paper are leads;
+  no dependency installation is proposed.
+- Extropic: [writing index](https://extropic.ai/writing) yielded little text;
+  [Torx, Thermalizers and Z1](https://extropic.ai/writing/from-one-to-one-billion)
+  and [software](https://extropic.ai/software) describe a stochastic programming
+  stack and future Z1 support. These are vendor reports, not evidence of local
+  access, latency, supported spline updates or procurement need.
+- Logical Intelligence: [Kona](https://logicalintelligence.com/kona) and the
+  [reasoning article](https://logicalintelligence.com/blog/energy-based-models-for-reasoning)
+  describe constraint evaluation and partial-trace energies. The checked pages do
+  not provide a reproducible architecture/weights specification. Do not infer one.
+
+### Local evidence that changes the next experiments
+
+Exp9028 qualified historical provenance. Exp9030 found all64 retained A TEST
+outcomes already public; absence of later primaries cannot prove nonexposure.
+Exp9031 found512 already-completed B identities. A fresh graph roster and prediction
+sealing must replace another retained-A or missing-B attempt. Preserve the original
+seven detector and ten learning bounds. The human branch needs two bounded
+feasibility answers before another multi-task gated pilot: why identities lack
+closure, and whether original individual judgments meet the proposed criterion.

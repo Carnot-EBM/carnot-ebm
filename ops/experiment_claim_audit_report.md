@@ -11,10 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 7 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| NO_CLAIM | 8 |
 
-## experiment_9013_v770_branch_contract.json
+## experiment_9028_v771_historical_provenance_qualification.json
 
 **NO_CLAIM**
 
@@ -25,63 +24,113 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific claim. The administrative custody assertion would fail if task contracts disagreed, frozen bytes changed, corrupted authority passed validation, or historical disqualifications were erased.
+There is no comparative scientific claim. The scoped custody assertion would fail if missing or stale receipts, altered authority inputs, or contradictory invocation records were accepted as valid.
 
 ## WAS THAT CHECKED
-Yes, administrative checks are reported through task comparisons, expected-versus-observed hashes, authority mutation controls, and preserved historical verdicts. Shown checks pass. Scientific bounds remain explicitly unmeasured, and exposed development results are not presented as independent generalization.
-
-The excerpt elides some checks and underlying control outcomes; those details remain unverified.
+Yes, for the displayed controls: valid inputs exit successfully; missing/stale receipts, altered authority, and contradictory invocation records are rejected with the expected exit codes. Nested receipt failures are expected negative-control outcomes. These checks establish receipt behavior without claiming verifier benefit or generalization.
 
 ## EVIDENCE
 
-- `claim_scope`: `Administrative custody only; no scientific benefit or independent generalization claim.`
-- `honest_verdict`: `complete_null_v770_branch_contract`
-- `metric`: `ordered_task_contract_match`; `matched`: `true`
-- `authority_mutation_rows`; `mutation`: `rehash`; `passed`: `true`
-- `scope`: `exposed_development_only`
-- `status`: `frozen_unmeasured_until_fresh_calibration_and_test`
+- `claim_scope`: `Current scoped provenance custody with immutable historical test inputs; no repository health or verifier benefit claim.`
+- `current_receipt_mutation_rows`: `valid` has `expected_exit` = `0`, `observed_exit` = `0`; `missing` and `stale` each have `expected_exit` = `1`, `observed_exit` = `1`.
+- `historical_authority_rows`: `authority_rehash` has `expected_exit` = `1`, `observed_exit` = `1`.
+- `mutation_rows`: `contradictory_current` has `expected_exit` = `1`, `observed_exit` = `1`.
+- `honest_verdict`: `complete_positive_historical_provenance`.
+
+## RECOMMENDATION
+KEEP
+
+Not checked: elided rows or external files; omitted evidence remains unassessed.
+
+## experiment_9029_v771_source_identity_resolution.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative claim to falsify. The reported identity-closure blockage would be contradicted by complete release and historical identity resolution with all readiness gates passing.
+
+## WAS THAT CHECKED
+Yes, for readiness. The closure checks report 2 unresolved release identities and 213 historical identities against requirements of zero. Readiness fails, all 795 rows are censored, and no positive result is claimed. Comparator and generalization controls are unnecessary for this metadata receipt.
+
+## EVIDENCE
+- `claim_scope`: `Public source identities and prior exposure joins only. No label, training, factual verification or detector claim.`
+- `honest_verdict`: `complete_blocked_release_identity_closure`
+- `release_identity_closure`: `expected` = `0`, `observed` = `2`
+- `historical_identity_closure`: `expected` = `0`, `observed` = `213`
+- `source_identity_ready_score`: `0`
+- `censored_count`: `795`; `completed_count`: `0`
+
+## RECOMMENDATION
+KEEP
+
+Elided rows and external artifacts were not inspected; this assessment covers only the supplied text.
+
+## experiment_9030_v771_retained_shard_a.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative claim is asserted. The custody audit would fail if retained bytes disagreed with recorded hashes, historical receipts failed authentication, or recomputed parser/BFS totals disagreed with retained rows.
+
+## WAS THAT CHECKED
+Yes, for custody: the displayed authority-hash comparison matches, the receipt audit passes, and summary recomputation is reported. Non-exposure certification actually fails, and the artifact remains blocked. Oracle labels are explicitly denied evidentiary value for detector benefit or generalization; no rival comparison is needed for this custody-only scope.
+
+## EVIDENCE
+- `title`: `Retained shard A custody audit`
+- `claim_scope`: `Historical source custody only. BFS labels are circular oracle evidence; no detector benefit or independent generalization.`
+- `honest_verdict`: `complete_blocked_nonexposure_audit`
+- `nonexposure_audit`: `passed`: `false`; `published_test_outcomes`: `64`
 - `independent_generalization_score`: `0`
-- `repository_health_passed`: `false`
-- `original_verdict_class`: `disqualified`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9014_v770_scoped_provenance_qualification.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_9015_v770_human_disagreement_source.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative claim is asserted. A claim of source readiness would be refuted by failed required source access or unresolved source identities.
-
-## WAS THAT CHECKED
-Yes. The source-access check failed with HTTP 429, exposure integrity failed, and both readiness gates failed. The artifact records a blocked qualification rather than a positive result.
-
-## EVIDENCE
-- `claim_scope`: `Original human disagreement source qualification only; no detector result, factual oracle or span leaderboard claim.`
-- `honest_verdict`: `complete_blocked_source_resolution_access`
+- `shard_ready_score`: `0`
 - `verdict_class`: `blocked`
-- `access_error`: `HTTP Error 429: Too Many Requests`
+
+## RECOMMENDATION
+KEEP
+
+Not rerun; elided rows and external receipts were not independently checked. Custody evidence establishes no detector benefit.
+
+## experiment_9031_v771_graph_corpus_b.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative efficacy claim to falsify. A completed current-run response or model invocation would contradict the narrower blocked-execution receipt.
+
+## WAS THAT CHECKED
+Yes, execution accounting reports no model invocation, zero completed responses, and 512 censored responses. The changed-input gate failed after finding 512 previously completed identities against an expected zero. No performance test occurred; oracle circularity supports no value claim here.
+
+## EVIDENCE
+- `claim_scope`: `First-response B source custody only; BFS oracle admission is circular. No detector benefit or independent generalization.`
+- `honest_verdict`: `complete_blocked_changed_input`
+- `model_invoked`: `false`
 - `completed_count`: `0`
-- `independent_label_ready_score`: `0`
-- `natural_pilot_ready_score`: `0`
+- `censored_count`: `512`
+- `prior_B_inventory`: `previous_completed_B_identities`, `expected`: `0`, `observed`: `512`, `passed`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-Unchecked: external files and elided rows. This receipt establishes no detector benefit.
+Unchecked: elided content and external artifacts. This receipt establishes no model performance.
 
-## experiment_9016_retained_shard_a.json
+## experiment_9032_corpus_admission.json
 
 **NO_CLAIM**
 
@@ -92,18 +141,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is a blocked-gate receipt, not an authentication result. Both recorded gates passing would contradict its reported blockage.
+Not applicable: this is a blocked admission receipt, with no experimental success or comparative value claim.
 
 ## WAS THAT CHECKED
-Yes. In `gates_evaluated`, the provenance gate fails with actual 0 versus expected 1; the authority gate passes. The receipt consistently reports blockage. Authentication itself remains untested.
+The prerequisite gates were checked: both required a score of 1, observed 0, and failed. The artifact records blocking before the experiment, so it provides no experimental claim to test.
 
 ## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `provenance_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
+`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"expected": 1`, `"actual": 0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9017_graph_corpus_b.json
+## experiment_9033_human_label_methods.json
 
 **NO_CLAIM**
 
@@ -114,20 +163,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no experimental claim to falsify. The title describes intended work; the artifact records a blocked prerequisite.
+Not applicable: this artifact records a blocked prerequisite gate, without claiming successful label qualification or comparative method value.
 
 ## WAS THAT CHECKED
-Yes—the provenance gate was evaluated and failed: actual 0 versus expected 1. This supports the blocking diagnosis.
+The prerequisite gate was checked and failed: readiness was 0 against a required 1. Execution stopped before the experiment; method performance was not tested.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `provenance_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `source_identity_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-Upstream artifacts were not inspected; this receipt provides no evidence of experimental performance.
-
-## experiment_9019_human_pilot_methods.json
+## experiment_9039_arc_transfer_evidence.json
 
 **NO_CLAIM**
 
@@ -138,20 +185,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked prerequisite receipt, with no comparative or performance claim.
+Not applicable: this artifact records a blocked prerequisite check, without claiming successful transfer or comparative value.
 
 ## WAS THAT CHECKED
-The readiness gate was checked: observed 0 versus required 1, so execution was blocked. No method comparison was evaluated.
+The readiness gate was checked and failed: observed 0 versus required 1. Transfer performance was not evaluated; this receipt provides no evidence for or against transfer.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `natural_pilot_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `passed`: `false`.
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `arc_new_outcomes_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-Upstream data was not checked; this receipt supports no inference about probe performance.
-
-## experiment_9025_arc_transfer_evidence.json
+## experiment_9040_v771_capstone.json
 
 **NO_CLAIM**
 
@@ -162,43 +213,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this artifact reports a blocked prerequisite gate, without asserting a transfer result or comparative benefit.
+No comparative scientific claim is made. An intended task missing from the accounting would refute the administrative completeness statement.
 
 ## WAS THAT CHECKED
-The readiness gate was checked and failed: observed 0, required 1. Transfer performance was not assessed here; the receipt supports no conclusion about transfer.
-
-## EVIDENCE
-`blocked_gate_check_v1`; `blocked`; `blocked_gate_check_failed`; `arc_new_outcomes_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9026_v770_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative scientific claim to falsify. An omitted or duplicated task, or a failed qualification presented as scientific success, would contradict the administrative accounting.
-
-## WAS THAT CHECKED
-Partly. Visible contract rows check accounting, and a failed provenance gate produces quarantine and a blocked verdict. The unqualified slot counts as accounted, not as scientific success. Oracle status creates no circular value claim here; no generalization or superiority is asserted, so a rival baseline is unnecessary.
+Yes, for the visible administrative rows: contract matches and slot accounting are recorded, and failed identity checks remain blocked. Oracle correctness is not presented as added scientific value.
 
 ## EVIDENCE
 - `claim_scope`: `Fourteen administrative outcomes; graph, independent human annotation, causal learning and deployment claims are separate and unmeasured.`
 - `honest_verdict`: `complete_blocked_declared_gate`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `artifact_field`: `provenance_ready_score`; `expected`: `1`; `observed`: `0`; `passed`: `false`
-- `disposition`: `quarantined_primary`; `qualified`: `false`; `accounted`: `true`
-- `activation_authorized`: `false`
-- `publication_scope`: `Historical FoVer G1-G4 only; no V770 science certification or external publication.`
+- `graph_claim`: `BFS is a cheap oracle. A graph benefit would be circular_positive and cannot close the no-cheap-oracle target.`
 
 ## RECOMMENDATION
 KEEP
 
-Elided rows and upstream artifacts were not checked; full accounting remains unverified from this excerpt.
+Unchecked: elided rows; complete administrative accounting cannot be independently assessed from this excerpt.

@@ -4902,3 +4902,28 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-REPORT-9038-V771; SCENARIO-REPORT-9038-V771 | `exp9038-complete-spline-cost` | `results/experiment_9038_v771_complete_spline_cost.json` | Planned |
 | REQ-REPORT-9039-V771; SCENARIO-REPORT-9039-V771 | `exp9039-arc-transfer-evidence` | `results/experiment_9039_v771_arc_transfer_evidence.json` | Planned |
 | REQ-REPORT-9040-V771; SCENARIO-REPORT-9040-V771 | `exp9040-capstone` | `results/experiment_9040_v771_capstone.json` | Planned |
+
+
+## V772 planned traceability — 2026-11-12
+
+| Requirement and scenario | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-9041-V772; SCENARIO-REPORT-9041-V772 | `exp9041-branch-contract` | `results/experiment_9041_v772_branch_contract.json` | Planned |
+| REQ-REPORT-9042-V772; SCENARIO-REPORT-9042-V772 | `exp9042-fresh-seal-methods` | `results/experiment_9042_v772_fresh_seal_methods.json` | Planned |
+| REQ-REPORT-9043-V772; SCENARIO-REPORT-9043-V772 | `exp9043-identity-obstruction-audit` | `results/experiment_9043_v772_identity_obstruction_audit.json` | Planned |
+| REQ-REPORT-9044-V772; SCENARIO-REPORT-9044-V772 | `exp9044-annotation-feasibility` | `results/experiment_9044_v772_annotation_feasibility.json` | Planned |
+| REQ-REPORT-9045-V772; SCENARIO-REPORT-9045-V772 | `exp9045-fresh-corpus-a` | `results/experiment_9045_v772_fresh_corpus_a.json` | Planned |
+| REQ-REPORT-9046-V772; SCENARIO-REPORT-9046-V772 | `exp9046-fresh-corpus-b` | `results/experiment_9046_v772_fresh_corpus_b.json` | Planned |
+| REQ-REPORT-9047-V772; SCENARIO-REPORT-9047-V772 | `exp9047-sealed-corpus-admission` | `results/experiment_9047_v772_sealed_corpus_admission.json` | Planned |
+| REQ-REPORT-9048-V772; SCENARIO-REPORT-9048-V772 | `exp9048-sealed-calibrated-decisions` | `results/experiment_9048_v772_sealed_calibrated_decisions.json` | Planned |
+| REQ-REPORT-9049-V772; SCENARIO-REPORT-9049-V772 | `exp9049-sealed-online-streams` | `results/experiment_9049_v772_sealed_online_streams.json` | Planned |
+| REQ-REPORT-9050-V772; SCENARIO-REPORT-9050-V772 | `exp9050-joint-benefit-audit` | `results/experiment_9050_v772_joint_benefit_audit.json` | Planned |
+| REQ-REPORT-9051-V772; SCENARIO-REPORT-9051-V772 | `exp9051-complete-service-cost` | `results/experiment_9051_v772_complete_service_cost.json` | Planned |
+| REQ-REPORT-9052-V772; SCENARIO-REPORT-9052-V772 | `exp9052-arc-transfer-evidence` | `results/experiment_9052_v772_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-9053-V772; SCENARIO-REPORT-9053-V772 | `exp9053-capstone` | `results/experiment_9053_v772_capstone.json` | Planned |
+
+| Requirement and scenario | Tasks | Deliverable scope | Status |
+|---|---|---|---|
+| REQ-VERIFY-V772-SEAL; SCENARIO-VERIFY-V772-SEAL | Exp9042, Exp9045–Exp9050 | Fresh source and prediction-before-truth evidence | Planned |
+| REQ-VERIFY-V772-LEARNING; SCENARIO-VERIFY-V772-LEARNING | Exp9049–Exp9051 | Future benefit, shared retention and full cost | Planned |
+| REQ-KAN-V772-FROZEN; SCENARIO-KAN-V772-FROZEN | Exp9042, Exp9048–Exp9051 | Frozen spline states and registered adaptation | Planned |
