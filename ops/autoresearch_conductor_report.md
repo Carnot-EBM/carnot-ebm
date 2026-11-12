@@ -1,25 +1,27 @@
 # Autoresearch conductor round
 
-- started: 2026-11-12T21:42:31.238499+00:00
+- started: 2026-11-12T22:28:47.718577+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
 - iterations: 5
-- accepted: 1
-- rejected: 4
+- accepted: 0
+- rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 8209
-- breaker_historical_tail_at_start: 10
+- breaker_invocation_start_position: 8214
+- breaker_historical_tail_at_start: 4
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 4
+- breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
-- fallback_iterations: none
+- fallback_iterations: [2]
 
 
 ## Generator failure reasons
-- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f154dee2fc0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
 - ---: Energy regression on: verifier_auroc
-- Optimization Procedure: Energy regression on: verifier_auroc
-- By constraining the search space to the valid simplex $w_{\text{entity}} + w_{\text{falsifiability}} = 1.0$ ($w \ge 0$), extracting the underlying component signals, establishing the baseline orientation from `Probe(0.5, 0.5)`, and ranking candidate weight pairs using Stratified 5-Fold Cross-Validation with an L2 regularization penalty toward $(0.5, 0.5)$, we find the optimal trade-off that generalizes reliably to the held-out set without rank-overfitting or energy regression.: Energy regression on: verifier_auroc
+- Implementation: Energy regression on: verifier_auroc
+- agy_call_failed: agy exit 0: jetski: no output produced — a tool required the "read_file" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. read_file(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
+- Hypothesis: searching signed probe weights can improve AUROC, while regularized NCE with validation-based checkpoint selection can improve separation and calibration. This searches 805 weight pairs, tunes the fixed Gibbs model, then retrains on all supplied training rows.: Energy regression on: calibrated_decision
+- we can maximize out-of-distribution AUROC and reduce verification energy on held-out evaluation steps.: Energy regression on: verifier_auroc
+- Implementation: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.
