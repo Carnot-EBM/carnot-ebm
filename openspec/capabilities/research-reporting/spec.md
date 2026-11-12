@@ -112951,12 +112951,40 @@ under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
 per-unit evidence, exact gate operands, current invocation scope and verdict_class.
 Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
 
+Exp9041 SHALL compare all thirteen complete objects in visible order against
+the independently pinned V772 digest. Before activation it SHALL compare the
+staged queue twice; after activation it SHALL use actual active bytes. It SHALL
+retain the preserved V771 design, queue and original task digest, Exp9028 passed
+provenance, Exp9030 exposed TEST history, Exp9031 prior completed B inventory,
+Exp9029 failed identity closure and Exp9040 blocked scientific accounting.
+Frozen Exp8987 states and four development checks and the Exp8988 five-arm
+protocol SHALL qualify frozen_methods_ready_score separately from administrative
+contract_ready_score. Historical graph roles SHALL confer no fresh TEST status.
+One saved ARC ledger comparison against Exp9027 SHALL require thirty new
+uncensored episodes, three families and both arms for arc_new_outcomes_ready_score.
+Zero optional support SHALL leave administrative and frozen-method readiness
+independent. Original scientific nulls and failed repository health SHALL persist.
+
 #### SCENARIO-REPORT-9041-V772
 
 Private missing-input, changed-authority and rehashed-tamper controls SHALL
 reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
 missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
 unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+Private lifecycle and receipt controls SHALL reject full-object, independent
+digest, historical verdict, archive-lag and primitive-summary tampering. Missing
+files, missing fields and observed zero SHALL remain distinct gate operands.
+Normal-exit scoped pytest, direct consumers, private E2E-018/021, strict mypy,
+Ruff, explicit-path spec coverage and measured100 percent owned statements with
+zero exclusions SHALL gate publication. Real foreign-directory CLI children
+without PYTHONPATH SHALL accept valid replay and reject rehashed tampering.
+
+Implementation,2026-11-12: `v772_branch_contract.py`,
+`v772_branch_evidence.py` and the Exp9041 standalone CLI retain thirteen exact
+objects, six original V771 outcomes, frozen methods and per-unit historical
+exposure. `tests/python/test_v772_branch_contract_9041.py` supplies private
+lifecycle, missing-input, receipt, archive and rehashed-tamper controls.
 
 ### REQ-REPORT-9042-V772: Freeze fresh graph identities and prediction-before-truth custody
 

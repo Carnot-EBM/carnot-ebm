@@ -59266,6 +59266,21 @@ fresh-process replay. No scientific fit or model load is repeated.
 
 ## V772 prospective evidence and learning — Planned, 2026-11-12
 
+### REQ-VERIFY-9041: V772 administrative evidence replay
+
+The branch contract SHALL reconstruct all readiness, history, exposure and ARC
+summaries from immutable primitive bytes and frozen validation scope. Current
+owned or direct-consumer failures SHALL disqualify and zero readiness. Retained
+failed broad-suite health SHALL remain failed separately. No model SHALL load.
+
+#### SCENARIO-VERIFY-9041-REPLAY
+
+Private missing-input and altered-authority runs SHALL retain terminal blocked
+operands. Rehashed readiness, history and archive changes SHALL fail replay.
+Valid private CLI execution and cold replay SHALL use actual child processes
+outside the checkout without PYTHONPATH. Newly owned statements SHALL have no
+missing or excluded lines in combined unit, parent and CLI coverage.
+
 ### REQ-VERIFY-V772-SEAL: Fresh graph evidence before truth reduction
 
 The V772 source SHALL contain 1024 prospectively committed graph identities,
