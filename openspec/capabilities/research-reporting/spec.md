@@ -112656,6 +112656,39 @@ remain fixed. Implementation status: Planned.
 
 Task `exp9029-source-identity-resolution` SHALL deliver `results/experiment_9029_v771_source_identity_resolution.json` under its frozen V771 protocol. Exp9015 retained a German Wikipedia HTTP429 and incomplete cross-language exposure joins. Labels were deferred. Separate metadata acquisition from label reduction, reuse successful receipts, and resume only unresolved identities with respectful bounded requests.
 
+#### SCENARIO-REPORT-9029-RESUME
+
+Authenticate the pinned Exp9015 primary, release manifest, author revision,
+public metadata columns, exposure inventory and original HTTP bodies before
+reuse. Deduplicate host/title identities across all fourteen languages and
+historical URLs. Chinese `/zh-cn/` view URLs and `/wiki/` URLs for the same
+title SHALL share one identity. Retain request hashes, title normalization,
+redirects and Wikidata IDs. Atomically checkpoint each successful batch. A changed cache or
+authority must fail closed. Do not open annotations or load a model.
+
+#### SCENARIO-REPORT-9029-BOUNDS
+
+Use one outstanding request, at most fifty titles, an identifying User-Agent,
+maxlag=5, one-second spacing and a thirty-second timeout. Honor numeric and
+HTTP-date Retry-After with exponential backoff, at most three attempts, a
+six-hundred-second total deadline and 256 MiB total bytes. Retain failures and
+stop after a terminal block; never switch hosts to evade it. Private recorded
+responses must cover resume, tamper, redirects, duplicates, timeout and budgets.
+
+#### SCENARIO-REPORT-9029-CLOSURE
+
+Reuse the existing document grouping parser on public identity keys. Any
+actual prior item or source overlap is excluded. Planning prose alone is not
+an exposed row. Unknown historical exposure and unresolved identities cannot
+be unseen. Readiness is one only when release and historical joins both close.
+Publish a separate metadata manifest for Exp9033, including exact blockers.
+Cold replay must rebuild identical components from retained bytes without a
+network request and reject rehashed aggregate or authority changes. Frozen
+owned/direct-consumer checks, zero-exclusion statement coverage, private
+E2E-018/021, lint, types, explicit spec coverage and unchanged scanners qualify
+publication. Failed historical health stays separate. No label or verifier
+benefit is claimed.
+
 #### SCENARIO-REPORT-9029-V771
 
 The task SHALL retain per-unit rows, exact upstream gate operands, measured
@@ -112663,7 +112696,10 @@ substrate, verdict_class and original failed evidence. Missing external inputs
 SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
 Private tests and real CLI replay SHALL preserve assertions and reject changed
 authority. All scientific controls and original support/effect thresholds SHALL
-remain fixed. Implementation status: Planned.
+remain fixed. Implementation status: Implemented in the metadata resolver,
+publication runner and private spec-linked tests. The source result must remain
+blocked until both identity and exposure closure authenticate; failed historical
+health is retained separately from current scoped acceptance.
 
 ### REQ-REPORT-9030-V771: Authenticate retained shard A without new generation or revised labels
 
