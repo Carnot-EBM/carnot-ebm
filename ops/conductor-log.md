@@ -21897,3 +21897,4 @@ code |
 | 2026-11-12 12:25 UTC | Measure complete spline service cost and hardware | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9050-joint-benefit-audit, exp9050-joint-benefit-audit) |
 | 2026-11-12 12:32 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9041-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
 | 2026-11-12 13:23 UTC | Reconcile thirteen outcomes and decide exact conti | OK | 98 passed, 1 warning in 104.76s (0:01:44) |
+| 2026-11-12 15:02 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

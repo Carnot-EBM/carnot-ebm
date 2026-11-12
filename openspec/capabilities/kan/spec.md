@@ -3855,3 +3855,19 @@ Changing a frozen coefficient/basis hash before collection SHALL block. Online
 guard rejection SHALL restore coefficients and AdaGrad accumulator together.
 Cost comparison SHALL include anchors, guards, durable storage and recovery for
 each arm's actual work. Implementation status: Planned, Exp9042/9048–Exp9051.
+
+## V773 proposed spline comparisons — 2026-11-12
+
+### REQ-KAN-V773-MATCHED
+
+The graph study SHALL preserve the admitted V768 fitted states, encoder, basis,
+knots and registered update protocol. Basis-overlap diagnostics SHALL not change
+that protocol. The separate human pilot SHALL compare fixed cubic spline energy
+against converged linear logistic and prevalence controls on identical Qwen
+features, using FIT-only scaling and CAL-only temperature selection. Both fitted
+heads SHALL meet the frozen convergence criterion. Status: Planned.
+
+#### SCENARIO-KAN-V773-MATCHED
+
+Changed graph fits, changed knots, divergent human-head optimization, unequal
+features, TEST-tuned parameters and unmeasured hardware claims SHALL fail checks.

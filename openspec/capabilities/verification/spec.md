@@ -59324,3 +59324,47 @@ at query 16 SHALL resume to the uninterrupted coefficients, accumulator and
 feedback acknowledgments. The audit SHALL reconstruct 3840 online and 46080
 retention prediction rows without treating them as independent samples.
 Implementation status: Planned; tasks Exp9049/9050, with Exp9051 full service cost.
+
+## V773 proposed evidence boundaries — 2026-11-12
+
+### REQ-VERIFY-V773-PROSPECTIVE
+
+Exp9055 SHALL preserve the original 414-object prospective graph prefix, seed
+expression, selection predicate, historical overlap checks and role assignment.
+It SHALL stop at 1024 accepted graphs, 100000 total proposals or 300 construction
+seconds. Exp9058–Exp9063 SHALL preserve all seven original detector and ten original
+learning bounds. Both prediction seals SHALL precede TEST truth access. Status: Planned.
+
+#### SCENARIO-VERIFY-V773-PROSPECTIVE
+
+Cap-crossing, exact resume, altered prefix, later exposure, nested truth leaks and
+missing prediction arms SHALL be checked before production collection. Failed
+fixed-cohort support SHALL not trigger replacement or a smaller evaluation.
+
+### REQ-VERIFY-V773-HUMAN
+
+Exp9056/9057/9064 SHALL use separately qualified MDH source authority, original
+human factual-error judgments, 400 independent source groups and the four frozen
+matched-head bounds. Grouped predictions SHALL be sealed before TEST labels open.
+The experiment SHALL distinguish archived generator answers from current Qwen
+embedding work. Missing authority SHALL block; source-relative support or safety
+labels SHALL not substitute for the factual-error target. Status: Planned.
+
+#### SCENARIO-VERIFY-V773-HUMAN
+
+Duplicate annotators, automated labels, unknown exposure, wrong criterion, missing
+source groups, forbidden metadata and silent truncation SHALL fail qualification.
+Bootstrap draws SHALL preserve all responses and arms within independent groups.
+
+### REQ-VERIFY-V773-LEARNING
+
+Exp9062 SHALL use only released feedback for five unchanged arms on 24 streams.
+It SHALL preserve the original guard, pending-label schedule, optimizer and real
+kill/resume requirement. Exp9063 SHALL apply all ten simultaneous bounds; Exp9065
+SHALL include guards, anchors, persistence and recovery in service cost. Status: Planned.
+
+#### SCENARIO-VERIFY-V773-LEARNING
+
+Early label reads, state drift after kill/resume, lost pending feedback, omitted
+retention arms and overhead-subtracted speedups SHALL fail. Numerical readiness
+SHALL remain separate from scientific benefit and deployment recommendation.

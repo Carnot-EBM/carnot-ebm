@@ -884,3 +884,15 @@ Undated changes excluded. Benchmark scores above are separate from Kaggle compet
 
 Live Kaggle pages were unreadable; indexed discussions were checked and may omit recent posts.
 
+## 2026-11-12 14:15 UTC -- NEW
+
+- **Milestone #2 winners:** Daniel Franzen **27.9% ($25K)**; Lord Han Solo **23.8% ($7.5K)**; Lohit Siriki **22.5% ($5K)**. All three released their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [announcement mirror](https://site.twstalker.com/arcprize).
+
+- **Public competition leaderboard:** Yi-Chia Chen @ Fields Model leads with **75.56**, followed by Tufa Labs **70.24** and NVARC3 **60.95**, in the November 12 snapshot. [Standings mirror](https://arc.markbarney.net/kaggle-leaderboard).
+
+- **Claude Fable 5.2:** Official semi-private scores are **81.2% Standard (XHigh)**—the highest Standard score currently listed—and **97.7% Provider Adapter (High)**. The evaluated XHigh checkpoint differs from released tuning. [Official results](https://arcprize.org/results/anthropic-claude-fable-5-2).
+
+- **September 3 — GPT-6 Astra:** ARC Prize announced **62.7% Standard (Max)** and **99.9% Provider Adapter (High)** on the semi-private set. [Official blog](https://arcprize.org/blog/astra).
+
+Live Kaggle verification remained unavailable; indexed discussions and mirrors may miss recent updates.
+

@@ -56548,3 +56548,95 @@ sealing must replace another retained-A or missing-B attempt. Preserve the origi
 seven detector and ten learning bounds. The human branch needs two bounded
 feasibility answers before another multi-task gated pilot: why identities lack
 closure, and whether original individual judgments meet the proposed criterion.
+
+## 2026-11-12 — V773 planning scan: usable human labels and finite source construction
+
+This scan precedes the V773 design. Dates below distinguish first publication
+from revisions. External results are hypotheses and methods, not Carnot evidence.
+
+### Findings to use
+
+- **New release lead: MDH-Bench.** Nagappan et al.,
+  [Scientific Reports, 15 October 2026](https://www.nature.com/articles/s41598-026-76014-w),
+  describes 400 prompts and three human annotators. The linked
+  [author release](https://huggingface.co/datasets/Prism-BMSCE/mdh-bench_multi-domain-hallucination-benchmark)
+  exposes four response workbooks plus configuration files. The Hub API returned
+  revision `7a1ea413106baa9943bb87a6db38dcf262c5a9ae`, last modified March 9.
+  Its viewer's 28 text rows are configurations, not the claimed response corpus.
+  Inspect original workbook schemas, judgments, grouping, provenance and licenses
+  before proposing detector evidence. The card declares MIT; article rights differ.
+  The manuscript's October results must be reconciled with the March release.
+  No workbook response or annotation values were inspected during this scan.
+  A new source can support a separate factual-error study only if original human
+  judgments and disjoint groups survive qualification. It does not repair Mu-SHROOM.
+- **Rechecked label criterion:** [The Labeling Problem, 2610.08026](https://arxiv.org/abs/2610.08026),
+  October 6, separates factual correctness from reference faithfulness. Its author
+  [LPHB release](https://github.com/jova486/LPHB) is already exposed in Carnot.
+  The newer Dataverse version is not evidence of new independent examples.
+  Apply the criterion distinction to MDH-Bench; never derive a factual label from
+  lexical reference disagreement or a composite safety score.
+- **Rechecked sparse adaptation:** [Online spline KAN, 2602.02056v4](https://arxiv.org/abs/2602.02056),
+  June 19 revision, supports local coefficient updates and fixed-point study.
+  Use the admitted spline learner on prospective streams. Measure full update,
+  guard, storage and recovery cost; the paper's FPGA latency is not our latency.
+- **Rechecked continual calibration:** [2604.23987](https://arxiv.org/abs/2604.23987),
+  April 27, motivates separate calibration and error retention. Keep the original
+  ten joint bounds and add descriptive coverage trajectories; no new guarantee
+  follows from task-buffer conformal theory in a different setting.
+- **New follow-up:** [Locally gated KANs](https://doi.org/10.1016/j.neucom.2026.134392),
+  October 28, studies residual coefficient sharing and interference. Record basis
+  overlap and guard rejection as diagnostics in the existing online comparison.
+  Do not introduce a new gate architecture before the frozen baseline is measured.
+
+### Requested arXiv topics and decisions
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 6 | Latent energy descent is a future architecture lead; it does not supply independent natural labels. |
+| Neural constraints | [Probabilistic algebraic layer, 2503.19466](https://arxiv.org/abs/2503.19466), March 2025; [UAI proceedings](https://proceedings.mlr.press/v286/kurscheidt25a.html) | Retain for constrained distributions, not a new oracle-distinct claim. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), June 30 | Track accuracy/autocorrelation cost; image-domain results do not validate our deployment. |
+| Hallucinations | MDH-Bench and Labeling Problem above; [HalluTruthQA, 2607.20219v3](https://arxiv.org/abs/2607.20219), October 3 revision | HalluTruthQA was already inspected by Exp8585; do not reset exposure. Qualify MDH independently. |
+| KAN | Online spline KAN above; [Multilevel Training, 2603.04827](https://arxiv.org/abs/2603.04827), March 5 | Keep frozen knots and fits for the pending confirmation; refinement is deferred. |
+| Energy-guided generation | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484), January 29 | Preserve as a later use of a qualified energy signal; no steering experiment yet. |
+| Hardware sampling | [PAOA, 2507.07420v3](https://arxiv.org/abs/2507.07420), December 2025 revision | FPGA sampling is relevant to native Ising workloads, not evidence of spline-update support. |
+| Continual constraints | Continual Calibration and local spline updates above | Test delayed feedback, future losses, retention and complete service cost. |
+
+### Secondary channels and limits
+
+- **OpenReview:** the [ICLR 2026 EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  was indexed; the forum served a browser challenge. No claim about uninspected reviews.
+- **Semantic Scholar:** browser API opens failed. One normal Graph API request per
+  reference succeeded via Python: EBT returned 20 citations with a next page;
+  ARM-EBM returned ten without a next page. Coverage is partial, not exhaustive.
+  EBT leads include 2611.08977 and 2611.02546. ARM-EBM includes
+  [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871), which separates
+  learned scores from analytical constraints and reports a model-identity shortcut.
+  Only primary papers support method claims; citation counts are not quality gates.
+- **Hugging Face papers:** [Mu-SHROOM](https://huggingface.co/papers/2504.11975)
+  was accessible; 2610.08026 failed retrieval. Original author data supplies authority.
+- **GitHub trending:** [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) returned two-month-old
+  snapshots. No current trending EBM/KAN repository was established. No dependency
+  is added from popularity alone.
+- **Extropic:** [writing](https://extropic.ai/writing) remains sparse;
+  [Torx, thermalizers and Z1](https://extropic.ai/writing/from-one-to-one-billion)
+  describes the vendor's summer 2026 stack and early-access simulator. It does not
+  establish local TSU access or supported spline operations.
+- **Logical Intelligence:** [Kona](https://logicalintelligence.com/kona) and its
+  [January reasoning article](https://logicalintelligence.com/blog/energy-based-models-for-reasoning)
+  describe constraint evaluation and partial-trace scoring. No reproducible public
+  architecture update was established in the inspected pages.
+
+### Local evidence that changes the plan
+
+Exp9042's retained 20,000 proposal rows contain 19,586 cardinality rejections,
+414 acceptances and zero isomorphism collisions. Successive 5,000-proposal blocks
+accepted 112, 102, 107 and 93 graphs. Construction took 27.78 seconds. This supports
+an under-budgeted rejection sampler, not exhausted graph diversity. A fixed bounded
+continuation can preserve the 414-graph prefix and unchanged selection predicate.
+The estimate is not a guarantee of reaching 1,024; no model outcomes may select it.
+
+Exp9043 found 206 missing pages and nine existing pages without QIDs. Repeating
+those requests cannot establish identity closure. Exp9053 also found 1,006 annotation
+participation mismatches in Exp9044's older receipt. Preserve that failed authority
+and the later code repair separately. Neither source can authorize the old pilot.

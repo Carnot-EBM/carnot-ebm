@@ -4929,3 +4929,30 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-VERIFY-V772-SEAL; SCENARIO-VERIFY-V772-SEAL | Exp9042, Exp9045–Exp9050 | Fresh source and prediction-before-truth evidence | Planned |
 | REQ-VERIFY-V772-LEARNING; SCENARIO-VERIFY-V772-LEARNING | Exp9049–Exp9051 | Future benefit, shared retention and full cost | Planned |
 | REQ-KAN-V772-FROZEN; SCENARIO-KAN-V772-FROZEN | Exp9042, Exp9048–Exp9051 | Frozen spline states and registered adaptation | Planned |
+
+
+## V773 planned traceability — 2026-11-12
+
+| Requirement and scenario | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-9054-V773; SCENARIO-REPORT-9054-V773 | `exp9054-branch-contract` | `results/experiment_9054_v773_branch_contract.json` | Planned |
+| REQ-REPORT-9055-V773; SCENARIO-REPORT-9055-V773 | `exp9055-prospective-roster` | `results/experiment_9055_v773_prospective_roster.json` | Planned |
+| REQ-REPORT-9056-V773; SCENARIO-REPORT-9056-V773 | `exp9056-human-release-authority` | `results/experiment_9056_v773_human_release_authority.json` | Planned |
+| REQ-REPORT-9057-V773; SCENARIO-REPORT-9057-V773 | `exp9057-human-probe-methods` | `results/experiment_9057_v773_human_probe_methods.json` | Planned |
+| REQ-REPORT-9058-V773; SCENARIO-REPORT-9058-V773 | `exp9058-fresh-corpus-a` | `results/experiment_9058_v773_fresh_corpus_a.json` | Planned |
+| REQ-REPORT-9059-V773; SCENARIO-REPORT-9059-V773 | `exp9059-fresh-corpus-b` | `results/experiment_9059_v773_fresh_corpus_b.json` | Planned |
+| REQ-REPORT-9060-V773; SCENARIO-REPORT-9060-V773 | `exp9060-sealed-corpus-admission` | `results/experiment_9060_v773_sealed_corpus_admission.json` | Planned |
+| REQ-REPORT-9061-V773; SCENARIO-REPORT-9061-V773 | `exp9061-sealed-calibrated-decisions` | `results/experiment_9061_v773_sealed_calibrated_decisions.json` | Planned |
+| REQ-REPORT-9062-V773; SCENARIO-REPORT-9062-V773 | `exp9062-sealed-online-streams` | `results/experiment_9062_v773_sealed_online_streams.json` | Planned |
+| REQ-REPORT-9063-V773; SCENARIO-REPORT-9063-V773 | `exp9063-joint-benefit-audit` | `results/experiment_9063_v773_joint_benefit_audit.json` | Planned |
+| REQ-REPORT-9064-V773; SCENARIO-REPORT-9064-V773 | `exp9064-human-energy-pilot` | `results/experiment_9064_v773_human_energy_pilot.json` | Planned |
+| REQ-REPORT-9065-V773; SCENARIO-REPORT-9065-V773 | `exp9065-complete-service-cost` | `results/experiment_9065_v773_complete_service_cost.json` | Planned |
+| REQ-REPORT-9066-V773; SCENARIO-REPORT-9066-V773 | `exp9066-arc-transfer-evidence` | `results/experiment_9066_v773_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-9067-V773; SCENARIO-REPORT-9067-V773 | `exp9067-capstone` | `results/experiment_9067_v773_capstone.json` | Planned |
+
+| Requirement and scenario | Tasks | Scope | Status |
+|---|---|---|---|
+| REQ-VERIFY-V773-PROSPECTIVE; SCENARIO-VERIFY-V773-PROSPECTIVE | Exp9055, Exp9058–Exp9063 | Exact graph continuation and sealed unchanged bounds | Planned |
+| REQ-VERIFY-V773-HUMAN; SCENARIO-VERIFY-V773-HUMAN | Exp9056, Exp9057, Exp9064 | Independent MDH authority and matched factual-error pilot | Planned |
+| REQ-VERIFY-V773-LEARNING; SCENARIO-VERIFY-V773-LEARNING | Exp9062–Exp9065 | Delayed adaptation, retention and complete service cost | Planned |
+| REQ-KAN-V773-MATCHED; SCENARIO-KAN-V773-MATCHED | Exp9057, Exp9061–Exp9065 | Frozen graph states and separate matched human heads | Planned |

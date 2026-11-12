@@ -1132,3 +1132,25 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Execution proposal: `research-roadmap-next.yaml`. Full V771 design/queue bytes are
 preserved separately. This reconciles the planned boundary only; the overview's
 October 11 date is not a new verification of the whole runtime architecture.
+
+## V773 planned evidence boundary — 2026-11-12
+
+V773 stages fourteen tasks, Exp9054–Exp9067. Planning changes no runtime behavior.
+The complete V772 design and queue are preserved before replacing vNEXT.
+
+The graph source continues the same 414-object prefix after the measured rejection
+sampler exhausted 20000 proposals. A fixed 100000-total/300-second limit preserves
+population, roles and original seven/ten bounds. Collection cannot run before all
+1024 identities and absence of responses qualify. Static and online producers seal
+predictions separately; the independent reducer opens TEST truth only after both.
+
+A separate MDH source branch authenticates original human factual-error labels,
+release dates, 400 independent groups and exposure. It then freezes matched small
+heads before Qwen embedding work. Archived responses are not current Qwen generation.
+Graph success remains circular; only qualified human evidence may support a scoped
+oracle-distinct result. Failed old Mu-SHROOM authority remains unchanged.
+
+Continuous learning keeps the admitted five-arm delayed-update protocol. Full cost
+includes guards, anchors, durable storage and recovery. No new board operation,
+bitstream, generator training, product default or external publication is proposed.
+ARC remains a structured new-outcome-gated slot; capstone accounting is unconditional.

@@ -697,3 +697,15 @@ Newly located details from **Grigoriy Zatravkin & co’s released solution**:
 
 Neither mechanism requires game-source access or per-game rules. Results were not independently reproduced; complete-submission exploit status remains unaudited.
 
+## 2026-11-12 14:36 UTC -- NEW
+
+Newly located details from **Tufa Labs’ final release**:
+
+- **(b), general-purpose partial-model exploration.** A world model can raise `Unknown` for an unobserved transition. If search finds no win, it can return a path to that unknown transition. Execution permits the probe, then stops the batch for observation. No game-source access or target-game hardcoding is required. **POSSIBLE CARNOT LEVER:** Plan toward explicitly declared gaps in the model; Carnot’s current planner skips model exceptions. [Harness specification](https://tufalabs.github.io/arc-writeups/supplementary/harness_arc3/harness_arc3.html), [planner code](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/src/seal/planner.py).
+
+- **(b), general-purpose quantization-aware speculative drafting.** Tufa trains its MTP drafter while emulating the deployed FP8 or INT4 attention-cache quantization, using straight-through gradients and a frozen target model. Its ARC3 comparison reports **1.81→2.00 accepted tokens per three-token draft**—one short B200 run per head, with different MoE backends, so this does not establish an equivalent throughput gain. The mechanism requires neither source access nor per-game rules. **POSSIBLE CARNOT LEVER:** Match draft training to Carnot’s actual serving precision to reduce the mismatch between training and deployment. [Training and measurement details](https://tufalabs.github.io/arc-writeups/supplementary/throughput_and_serving/throughput_and_serving.html).
+
+- **(b), general-purpose RL transfer experiment.** PPO with a learned state critic and rank-16 LoRA trained Qwen3.8-27B on 25 public games. On **43 training-disjoint generated games**, four paired seeds yielded **9.4%→22.1%**, with a **+12.7-point** gain and 95% interval **[8.27, 17.5]**. This experiment uses observation-based gameplay rather than source-reading or fixed game policies. It was separate from the final submission; transfer to unseen official games was not evaluated. [Research results](https://tufalabs.github.io/arc-writeups/supplementary/rl_training/rl_training.html).
+
+Measurements were not independently reproduced; complete-submission exploit status remains unaudited.
+

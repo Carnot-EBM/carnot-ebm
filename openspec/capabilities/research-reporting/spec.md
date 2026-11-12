@@ -113294,3 +113294,177 @@ Private missing-input, changed-authority and rehashed-tamper controls SHALL
 reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
 missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
 unchanged. New code SHALL require tests before implementation. Status: Planned.
+
+
+## V773 planned evidence and learning requirements — 2026-11-12
+
+Status: Planned only. The full design and fourteen-task execution queue define
+all sample counts, authority boundaries and acceptance gates. No result is claimed.
+
+### REQ-REPORT-9054-V773: Bind fourteen tasks and preserve V772 failures and frozen methods
+
+Task `exp9054-branch-contract` SHALL produce `results/experiment_9054_v773_branch_contract.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9054-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9055-V773: Complete the deterministic graph roster without changing its population
+
+Task `exp9055-prospective-roster` SHALL produce `results/experiment_9055_v773_prospective_roster.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9055-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9056-V773: Qualify MDH original human judgments and unseen prompt groups
+
+Task `exp9056-human-release-authority` SHALL produce `results/experiment_9056_v773_human_release_authority.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9056-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9057-V773: Freeze matched energy and linear probes for the human factual-error pilot
+
+Task `exp9057-human-probe-methods` SHALL produce `results/experiment_9057_v773_human_probe_methods.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9057-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9058-V773: Collect the completed prospective Qwen graph shard A
+
+Task `exp9058-fresh-corpus-a` SHALL produce `results/experiment_9058_v773_fresh_corpus_a.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9058-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9059-V773: Collect the completed prospective Qwen graph shard B
+
+Task `exp9059-fresh-corpus-b` SHALL produce `results/experiment_9059_v773_fresh_corpus_b.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9059-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9060-V773: Admit the full graph corpus without exposing TEST outcomes
+
+Task `exp9060-sealed-corpus-admission` SHALL produce `results/experiment_9060_v773_sealed_corpus_admission.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9060-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9061-V773: Seal calibrated graph decisions under the original seven-bound test
+
+Task `exp9061-sealed-calibrated-decisions` SHALL produce `results/experiment_9061_v773_sealed_calibrated_decisions.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9061-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9062-V773: Measure continuous local spline learning on sealed future streams
+
+Task `exp9062-sealed-online-streams` SHALL produce `results/experiment_9062_v773_sealed_online_streams.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9062-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9063-V773: Independently reduce the fixed detector and continuous-learning bounds
+
+Task `exp9063-joint-benefit-audit` SHALL produce `results/experiment_9063_v773_joint_benefit_audit.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9063-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9064-V773: Test matched energy decisions against independent human factual judgments
+
+Task `exp9064-human-energy-pilot` SHALL produce `results/experiment_9064_v773_human_energy_pilot.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9064-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9065-V773: Measure complete spline service costs and supported hardware operations
+
+Task `exp9065-complete-service-cost` SHALL produce `results/experiment_9065_v773_complete_service_cost.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9065-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9066-V773: Assess held-family supervisor transfer only from new live outcomes
+
+Task `exp9066-arc-transfer-evidence` SHALL produce `results/experiment_9066_v773_arc_transfer_evidence.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9066-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+### REQ-REPORT-9067-V773: Reconcile fourteen outcomes and close exact unchanged scopes
+
+Task `exp9067-capstone` SHALL produce `results/experiment_9067_v773_capstone.json`
+under its full V773 prompt. Preserve all declared gates, primitive unit rows,
+current invocation scope, original failed evidence and verdict_class. Status: Planned.
+
+#### SCENARIO-REPORT-9067-V773
+
+Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
+Real private CLI/cold replay SHALL qualify owned work before publication. External
+blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
