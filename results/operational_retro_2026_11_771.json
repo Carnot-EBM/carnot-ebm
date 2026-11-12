@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.771",
+  "generated_at": "2026-11-12T05:58:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 49.7,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify provenance with immutable historical test authority",
+      "duration_minutes": 13.65,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Authenticate retained shard A without new generation or revised labels",
+      "duration_minutes": 11.56,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and separate graph and independent-label claims",
+      "duration_minutes": 10.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Complete the frozen bounded Qwen source with shard B",
+      "duration_minutes": 9.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and preserve V769 failures and frozen scientific methods",
+      "duration_minutes": 2.47,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.771 completed 6 compute-bound experiments (0 synthesis-only) in 49.7 wall-time minutes (50 minutes / 0.8 hours, averaging 8 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The top 5 slowest tasks (all compute_bound: true) were 'Qualify provenance with immutable historical test authority' (13.65 minutes / 14min), 'Authenticate retained shard A without new generation or revised labels' (11.56 minutes / 12min), 'Reconcile fourteen outcomes and separate graph and independent-label claims' (10.66 minutes / 11min), 'Complete the frozen bounded Qwen source with shard B' (9.69 minutes / 10min), and 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.47 minutes / 2min), with no data available this milestone for the individual task name or duration of the remaining completed compute-bound experiment. Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 6 completed experiments were compute-bound (0 synthesis-only) across 49.7 wall-time minutes (50 minutes / 0.8 hours, averaging 8 minutes per experiment), led by 'Qualify provenance with immutable historical test authority' at 13.65 minutes (14min) and 'Authenticate retained shard A without new generation or revised labels' at 11.56 minutes (12min).",
+    "Outcome reconciliation, bounded Qwen shard B completion, and fourteen-task binding accounted for the next three longest durations: 'Reconcile fourteen outcomes and separate graph and independent-label claims' (10.66 minutes / 11min), 'Complete the frozen bounded Qwen source with shard B' (9.69 minutes / 10min), and 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.47 minutes / 2min); no data is available this milestone for the individual task name or duration of the remaining completed compute-bound experiment.",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Parallelize and cache immutable historical test authority verification and retained shard A authentication checks across 'Qualify provenance with immutable historical test authority' (13.65 minutes / 14min) and 'Authenticate retained shard A without new generation or revised labels' (11.56 minutes / 12min).",
+    "Batch single-GPU Qwen inference requests in 'Complete the frozen bounded Qwen source with shard B' (9.69 minutes / 10min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Pre-index and share fourteen-task binding and outcome-reconciliation artifacts between 'Bind fourteen tasks and preserve V769 failures and frozen scientific methods' (2.47 minutes / 2min) and 'Reconcile fourteen outcomes and separate graph and independent-label claims' (10.66 minutes / 11min) to lower the 8-minute per-experiment average.",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize and cache immutable historical test authority provenance checks (13.65 minutes / 14min) and retained shard A authentication checks (11.56 minutes / 12min).",
+    "Optimize single-GPU inference batching for 'Complete the frozen bounded Qwen source with shard B' (9.69 minutes / 10min) without applying DualGPURunner to single-model execution, and share fourteen-task state across the 10.66-minute (11min) reconciliation and 2.47-minute (2min) binding tasks.",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.771 completed 6 compute-bound experiments (0 synthesis-only) in 49.7 wall-time minutes (50 minutes / 0.8 hours, averaging 8 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Parallelizing and caching provenance and retained shard A authentication checks across the 13.65-minute (14min) and 11.56-minute (12min) tasks, batching single-GPU Qwen shard B completion in the 9.69-minute (10min) task while sharing fourteen-task state across the 10.66-minute (11min) and 2.47-minute (2min) tasks, and persisting direct experiment timestamps will improve execution efficiency and observability in the next milestone."
+}

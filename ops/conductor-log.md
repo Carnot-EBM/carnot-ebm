@@ -21880,3 +21880,4 @@ code |
 | 2026-11-12 04:39 UTC | Measure energy decisions against independent human | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9033-human-label-methods, exp9033-human-label-methods) |
 | 2026-11-12 04:39 UTC | Measure complete spline service costs and actual a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9034-spline-calibrated-decisions, exp9035-online-spline-streams) |
 | 2026-11-12 04:46 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9027-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
+| 2026-11-12 05:46 UTC | Reconcile fourteen outcomes and separate graph and | OK | 99 passed, 1 warning in 120.56s (0:02:00) |
