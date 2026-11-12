@@ -112843,3 +112843,28 @@ SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disquali
 Private tests and real CLI replay SHALL preserve assertions and reject changed
 authority. All scientific controls and original support/effect thresholds SHALL
 remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9030-CUSTODY: Current audit of retained A response bytes
+
+Exp9030 SHALL use no model, no training and no network. It SHALL authenticate
+Exp9028 provenance_ready_score=1 and Exp9027 frozen_graph_authority_ready_score=1
+against frozen hashes before auditing the original Exp8990 bytes. Original
+producer flags and failed health SHALL remain unchanged and explicitly cited.
+The audit SHALL reconstruct all512 first responses, parser categories and BFS
+labels against the committed64 calibration/64 test/384 online roles, original
+checkpoint and invocation ledger, GGUF/tokenizer/CUDA receipt and trained state.
+Source custody SHALL NOT certify non-exposure. Published final-test unit outcomes
+are score exposure; absent proof of an unexposed test panel SHALL block admission
+with exact observed operands and shard_ready_score=0. Oracle-label positives
+SHALL be circular_positive and independent_generalization_score SHALL stay0.
+
+#### SCENARIO-REPORT-9030-CUSTODY
+
+Private missing-input and changed-authority controls SHALL reject. A real CLI
+outside the checkout without PYTHONPATH SHALL cold-replay primitive reductions
+and reject rehashed row or summary drift. All512 identities, including failures,
+SHALL remain in denominators. Frozen owned and direct-consumer checks, unchanged
+adversarial and row scanners, private E2E-018/021 and100 percent new statements
+with zero exclusions SHALL qualify current scoped acceptance. Historical failed
+repository health SHALL remain separate. External non-exposure failure is a
+complete blocked result, never partial and never replacement generation.
