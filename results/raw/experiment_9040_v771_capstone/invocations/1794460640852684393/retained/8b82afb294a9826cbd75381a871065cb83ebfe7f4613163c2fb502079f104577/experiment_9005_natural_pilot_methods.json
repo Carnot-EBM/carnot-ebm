@@ -1,0 +1,51 @@
+{
+  "experiment": 9005,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-11",
+  "started_at": "2026-11-11T13:59:25.400087+00:00",
+  "finished_at": "2026-11-11T13:59:25.400087+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Freeze a human-label pilot with shared Qwen features and matched heads",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp9001-human-source-authority",
+  "failed_field": "natural_pilot_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9001_v769_human_source_authority.json",
+  "failed_evidence_sha256": "sha256:9a6d75d73f3bcce3d2f57da61bd679d5f49a70785648a434f418b1fd4ae0256f",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp9001-human-source-authority",
+    "failed_field": "natural_pilot_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9001_v769_human_source_authority.json",
+    "failed_evidence_sha256": "sha256:9a6d75d73f3bcce3d2f57da61bd679d5f49a70785648a434f418b1fd4ae0256f"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9001-human-source-authority.natural_pilot_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp9001-human-source-authority",
+      "artifact_field": "natural_pilot_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9001_v769_human_source_authority.json",
+      "artifact_sha256": "sha256:9a6d75d73f3bcce3d2f57da61bd679d5f49a70785648a434f418b1fd4ae0256f"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

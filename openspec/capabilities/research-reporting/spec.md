@@ -112877,7 +112877,33 @@ remain fixed. Implementation status: Planned.
 
 Task `exp9040-capstone` SHALL deliver `results/experiment_9040_v771_capstone.json` under its frozen V771 protocol. V770 demonstrates that complete accounting may be terminal blocked and still qualify. Reconcile new V771 rows and skips without reciting old positives or upgrading quarantined history.
 
+Exp9040 SHALL authenticate the retained Exp9027 full-object authorities and all
+available Exp9027–9039 primaries or exact scheduler alternates. Scheduler-only
+skips SHALL retain null producer verdicts and absent primary paths. The capstone
+SHALL independently retain the 7 graph, 10 learning and 4 human bound operands,
+source-identity primitives, rejected A/B evidence, complete costs and optional ARC
+support. Original Exp8990 and failed V769 primaries SHALL stay disqualified;
+the 512 historical A calls SHALL be counted once, with zero current model calls.
+Complete owned accounting SHALL have reconciliation_ready_score=1 and a terminal
+blocked scientific verdict when external science is unavailable. Actual prior
+verdicts, exact reopening operands and historical FoVer gates SHALL remain separate.
+
 #### SCENARIO-REPORT-9040-V771
+
+Private missing-source, changed-authority and rehashed-summary controls SHALL
+reject invented readiness. Real CLI replay outside the checkout without
+PYTHONPATH SHALL rebuild all fourteen slots from retained bytes. Every frozen
+direct-consumer node SHALL run with historical authority supplied privately;
+assertions, thresholds and validators SHALL remain unchanged. Current normal-exit
+checks and 100 percent newly owned statements with zero exclusions SHALL gate
+atomic publication. Historical and current broad-suite health SHALL remain
+separate from scoped acceptance. Ops reconciliation is conductor-owned.
+
+Implementation evidence, 2026-11-12: `python/carnot/reporting/v771_capstone.py`,
+`scripts/experiments/experiment_9040_v771_capstone.py` and private controls in
+`tests/python/test_v771_capstone_9040.py` implement this accounting boundary.
+The primary's frozen validation receipts determine acceptance; source custody
+does not change historical disqualification or supply missing scientific rows.
 
 The task SHALL retain per-unit rows, exact upstream gate operands, measured
 substrate, verdict_class and original failed evidence. Missing external inputs

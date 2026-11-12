@@ -1,0 +1,51 @@
+{
+  "experiment": 9025,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-11",
+  "started_at": "2026-11-11T20:17:56.186987+00:00",
+  "finished_at": "2026-11-11T20:17:56.186987+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Assess held-family supervisor transfer only from new live outcomes",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp9013-branch-contract",
+  "failed_field": "arc_new_outcomes_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9013_v770_branch_contract.json",
+  "failed_evidence_sha256": "sha256:dc94513d17071575dcb0d2f93610b7978bda98b361b00e82764a49174ed6dbe8",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp9013-branch-contract",
+    "failed_field": "arc_new_outcomes_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9013_v770_branch_contract.json",
+    "failed_evidence_sha256": "sha256:dc94513d17071575dcb0d2f93610b7978bda98b361b00e82764a49174ed6dbe8"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9013-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp9013-branch-contract",
+      "artifact_field": "arc_new_outcomes_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9013_v770_branch_contract.json",
+      "artifact_sha256": "sha256:dc94513d17071575dcb0d2f93610b7978bda98b361b00e82764a49174ed6dbe8"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
