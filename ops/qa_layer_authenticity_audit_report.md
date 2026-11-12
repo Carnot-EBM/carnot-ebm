@@ -3,499 +3,98 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-12
 
-Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 9 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 0 |
+| `CLEAN` | 3 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 7 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_byte_identical_online_arm_reason` — json { "frozen_first_win": 0.04, "online_scratch_first_win": 0.04, "online_warm_first_win": 0.04, "frozen_solve_rate": 0.12, "online_scratch_solve_rate": 0.12, "online_warm_solve_rate": 0.12 } ``` Both metric families are identical across arms. The function returns `None`; the enclosing lever-evidence check emits no flag for this case.
-- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — active_probe_result.posterior_entropy_reduction = 0.0` after one live probe, alongside `active_probe_result.synthetic_positive_control.posterior_entropy_reduction = 0.6616681146127785`. The synthetic control masks the live mechanism’s failure to discriminate.
-- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — This nested, principle-annotated nonexecution record passed the full verifier without flags: ```json { "experiment": "arc_active_probe_disambiguation", "active_probe_result": { "probe_actions_taken": { "principle": "Count executed probe actions.", "value": 0 }, "hypothesis_posterior_built": { "principle": "True only if posterior construction ran.", "value": false }, "posterior_entropy_reduction": 
-- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — json { "generation_diagnostics": { "candidate_pool": { "principle": "Candidates actually generated.", "value": [] } } } ``` This nested, annotated empty pool is not detected as empty and instead supplies affirmative exercise evidence.
-- `adversarial_verify.py::_zero_lever_delta_reasons` — json {"live_solve_rate_delta": 0.0} ``` This field/value appears in results/experiment_4981_levelup_attempt.json. Used as the sole outcome measurement in an otherwise recognized exploration artifact without exercise evidence, it produces no reason or lever-evidence flag.
-- `adversarial_verify.py::_lever_exercise_severity` — complete: search_layer_solved_r11l_L4_real_env_confirmed` This is the actual honest_verdict in `results/experiment_4021_heuristic_search_over_verified_wm.json`. All three claim helpers return false for that artifact, and this function returns WARN.
-- `adversarial_verify.py::_has_positive_top_level_metric` — Existing artifact: `results/experiment_4729_held_out_first_win_readiness.json` ```json {"first_win_delta_vs_baseline": 0.01} ``` With requested key `first_win_delta`, the helper returns `False`.
+- `adversarial_verify.py::_has_first_party_qd_result_field` — qd_measurement` — an actual top-level result field in: - `results/experiment_4653_energy_fitness_qd_generation_live.json` - `results/experiment_4738_energy_fitness_qd_generation_valid_test.json` Their other recognized keys mask this omission. This realistic fragment reproduces the bypass independently: ```json { "game": "tn36", "honest_verdict": "complete: QD measurement collected", "qd_measuremen
+- `adversarial_verify.py::_claims_qd_energy_fitness_generation_win` — These established metric names are absent from the recognition lists: ```json { "game": "bp35", "headline": "energy-fitness QD live generation", "energy_qd_first_win": 0.25, "naive_search_first_win": 0.0, "energy_qd_vs_naive_delta": 0.25, "random_mutation_ablation_passed": false } ``` The field names occur in results/experiment_4738_energy_fitness_qd_generation_valid_test.json; the positive values
+- `adversarial_verify.py::check_qd_random_mutation_ablation_overclaim` — json { "game": "bp35", "headline": "energy-fitness QD live generation", "honest_verdict": "success: energy_fitness_qd_winning_trajectory_surfaced", "winning_trajectory_surfaced": true, "reproducible_levels_delta": 1, "random_mutation_ablation_passed": false } ``` Observed: **no flags**. Both positive-result field names already occur in `results/experiment_5154_energy_fitness_directed_exploration_v
+- `adversarial_verify.py::_claims_value_routing_live_claim` — json { "game": "ar25", "honest_verdict": "success: value-routing first-win rate improved", "conclusion": "Live agent first-win rate increased from 0.04 to 0.08.", "first_win_rate_delta": 0.04 } ``` Observed: routing context is recognized, but the function returns False and the caller emits no cost-control flags despite missing controls.
+- `adversarial_verify.py::check_value_routing_cost_control_overclaim` — "first_win_rate_delta": {"principle": "Measured live first-win lift against the baseline.", "value": 0.04}` together with `"sim_timed_out": true`, as shown above: a principle-annotated positive win with failed timeout control receives no flag.
+- `adversarial_verify.py::_bool_leaf_values` — json {"per_subgoal_reachable": [true, null]}
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_byte_identical_online_arm_reason` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_zero_lever_delta_reasons` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_lever_exercise_severity` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_positive_top_level_metric` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_first_party_qd_result_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_qd_energy_fitness_generation_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_qd_random_mutation_ablation_overclaim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_value_routing_live_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_value_routing_cost_control_overclaim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_bool_leaf_values` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_byte_identical_online_arm_reason
+## adversarial_verify.py::_has_positive_metric_pair
 
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-SILENT_NON_FIRING
+CLEAN
 
 ## CLAIM
-The function name and returned message claim to detect online-driver arms whose metrics agree beyond the configured significant-digit threshold.
+With no docstring, `_has_positive_metric_pair` indicates whether any supplied metric pair has two finite values satisfying `left > right`.
 
 ## FINDINGS
-
-1. **A/F — Adding another metric disables detection.** The comparison `_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]` requires every collected metric to equal one value. It does not compare corresponding metrics across arms. The MISSED INPUT contains two metric families, each identical across all three arms, yet produces `return None` and no arm-degeneracy flag.
-
-2. **Field extraction silently loses nested annotations.** There are no direct dictionary-field reads in this function; extraction is delegated through `_online_arm_metric_items(d)`. Repository inspection and execution confirmed that principle-wrapped rates inside arm rows produce an empty collection. The caller’s normalization only unwraps top-level fields, so these valid nested annotations remain invisible.
-
-3. **B — Literal arm names substitute for the concept.** `_LEVER_ONLINE_ARM_MARKERS` represents online-driver arm identities, but its required vocabulary excludes a cold-start arm named differently from scratch. Three explicitly declared arms with identical rates can therefore fail `not all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS)` and disappear without an unsupported-input diagnostic.
-
-4. **Substring and context blindness.** `marker in labels` accepts markers inside unrelated longer words and negated labels. Joining all labels also loses which distinct arm supplied each marker; `len(items) < 3` counts measurements, not distinct arms. This establishes faulty identity recognition, though an incidental substring match alone does not prove fabrication or honest-work quarantine.
-
-5. **C — Both eligibility gates lack effective focused tests.** All eight tests in the dedicated lever-evidence test module passed when called directly. They also passed after independently deleting `len(items) < 3` and the entire required-marker condition in memory. Those tests do not establish either gate’s correctness; the full suite was not mutation-tested.
-
-6. **Remaining classes:** Exactly three items pass the local count boundary, so no count off-by-one is demonstrated. Precision behavior is delegated to `_significant_digits_match`. This function contains no absolute path, filesystem write, verdict/prose scan, or timing measurement; no D/E/G defect is established here.
+none found
 
 ## COUNTEREXAMPLE
-
-False negative, reproduced after the caller’s normal top-level normalization:
-
-```json
-{
-  "arms": [
-    {
-      "arm": "frozen",
-      "first_win_rate": {
-        "principle": "Held-out first-win rate.",
-        "value": 0.04
-      }
-    },
-    {
-      "arm": "online-scratch",
-      "first_win_rate": {
-        "principle": "Held-out first-win rate.",
-        "value": 0.04
-      }
-    },
-    {
-      "arm": "online-warm",
-      "first_win_rate": {
-        "principle": "Held-out first-win rate.",
-        "value": 0.04
-      }
-    }
-  ]
-}
-```
-
-Extraction returns no items; the function returns `None`.
-
-With bare rates, the arm labels `["frozen", "online-cold", "online-warm"]` also bypass detection. Conversely, `["unfrozen", "scratchpad", "warmup"]` satisfies all three marker checks; a label such as `"not_frozen"` also supplies the frozen marker.
+none constructed
 
 ## MISSED INPUT
-
-```json
-{
-  "frozen_first_win": 0.04,
-  "online_scratch_first_win": 0.04,
-  "online_warm_first_win": 0.04,
-  "frozen_solve_rate": 0.12,
-  "online_scratch_solve_rate": 0.12,
-  "online_warm_solve_rate": 0.12
-}
-```
-
-Both metric families are identical across arms. The function returns `None`; the enclosing lever-evidence check emits no flag for this case.
+none found
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+KEEP
 
 ## RATIONALE
-Detection must compare corresponding metrics across distinct arms; additional measurements must not erase an existing degeneracy finding. Normalize nested annotations and distinguish unreadable declared arm evidence from a successful comparison. Broader tests and end-to-end checks were not run; these reproduced bypasses remain unfixed.
+The inspected artifact pipeline unwraps principle annotations before this helper runs, and `_finite_float` safely rejects nonnumeric or nonfinite values; 25 focused assertions passed. Strict inequality correctly excludes ties, and this helper contains no text patterns, hardcoded paths, writes, or measurements.
+
+Full-suite mutation testing was not run; this verdict covers the helper and its inspected calling path.
 
 
-## adversarial_verify.py::_has_positive_probe_exercise_evidence
+## adversarial_verify.py::_top_level_field_name_text
 
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-
-SILENT_NON_FIRING
+CLEAN
 
 ## CLAIM
-
-`True when a declared active-probe path emitted real exercise evidence.`
+`_top_level_field_name_text` returns space-separated lowercase top-level field names, excluding `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS`.
 
 ## FINDINGS
-
-1. **A — Evidence from different runs is combined, silently disabling detection.** The two independent searches, `for value in _real_field_values(d, "probe_actions_taken")` and `for value in _real_field_values(d, "posterior_entropy_reduction")`, discard provenance before `return probe_actions_positive and entropy_reduction_positive`. A live probe with zero entropy reduction passes using entropy reduction from a synthetic positive control. Reproduced: the caller emits no lever warning; removing only the synthetic control restores the warning. The historical experiment 4727 artifact already contains this synthetic-control structure and its positive entropy measurement.
-
-2. **Field extraction accepts metadata as measurements.** Both instances of `for number in _numeric_leaf_values(value)` accept any positive numeric descendant. Reproduced: metric dictionaries containing zero measured values, a positive budget, and a positive hypothesis count return true and suppress the warning. Ordinary principle/value wrappers, lists, and None are handled by the helpers; the defect is indiscriminate numeric extraction.
-
-3. **C — The targeted tests do not establish that this function works.** All 13 test functions from the carveout-hardening and lever-exercise-evidence modules pass when this entire function always returns false. Removing the entropy conjunct also leaves all 13 passing; removing the actions conjunct fails the historical unrun-probe test. The positive-exercise regression passes even without its supposed exemption.
-
-4. **B — No demonstrated missing alias.** The two fixed field names represent executed-probe count and measured entropy reduction, matching the documented contract. No supported omitted field name was established.
-
-5. **String matching, negation, and numeric boundaries:** no free-text matching occurs here. `float(number) > 0.0` correctly excludes exactly zero under the positive-evidence contract.
-
-6. **D–G:** this function contains no filesystem paths, writes, measurements, or unchecked terminal recognizer default. Its confirmed silent bypass comes from accepting unrelated positive evidence.
+none found
 
 ## COUNTEREXAMPLE
-
-```json
-{
-  "experiment": "arc_active_probe_disambiguation",
-  "active_probe_result": {
-    "probe_actions_taken": 1,
-    "hypothesis_posterior_built": true,
-    "posterior_entropy_reduction": 0.0,
-    "synthetic_positive_control": {
-      "passed": true,
-      "posterior_entropy_reduction": 0.6616681146127785
-    }
-  }
-}
-```
-
-Observed: helper returns true; no lever warning. Expected under the documented guard: flag the live probe’s zero entropy reduction.
-
-A second reproduced bypass accepts these zero measurements because their metadata contains positive numbers:
-
-```json
-{
-  "probe_actions_taken": {
-    "principle": "executed probe actions",
-    "value": 0,
-    "budget": 10
-  },
-  "posterior_entropy_reduction": {
-    "principle": "measured entropy drop",
-    "value": 0.0,
-    "n_hypotheses": 2
-  }
-}
-```
+none constructed
 
 ## MISSED INPUT
-
-`active_probe_result.posterior_entropy_reduction = 0.0` after one live probe, alongside `active_probe_result.synthetic_positive_control.posterior_entropy_reduction = 0.6616681146127785`. The synthetic control masks the live mechanism’s failure to discriminate.
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-Validate both measurements within the same actual probe run, distinguish synthetic controls, and extract measured values explicitly. Add a regression that flags the counterexample and a positive case that fails when this exemption is removed.
-
-Full-suite mutation coverage was not checked; the demonstrated bypass silently suppresses a required warning.
-
-
-## adversarial_verify.py::_declared_but_unrun_probe_reasons
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_declared_but_unrun_probe_reasons` claims to identify declared probes that did not run; the supplied function has no docstring.
-
-## FINDINGS
-
-1. **A / Field extraction: nested annotations silently bypass detection.** These conditions require bare scalar values:
-   - `if leaf == "probe_actions_taken" and _is_finite_number(value) and float(value) == 0.0:`
-   - `elif leaf == "hypothesis_posterior_built" and value is False:`
-   - `and _is_finite_number(value)` followed by `and float(value) == 0.0` in the entropy branch.
-
-   The walker visits a wrapped scalar under a different leaf name, so none matches. Lists of zeros/false values also escape; nulls are ignored. Repository inspection confirmed that upstream normalization handles only top-level wrappers: the nested fragment below passed the full verifier with **zero flags**.
-
-2. **F / Declaration without evidence passes.** `declared = True` creates no obligation to provide valid execution evidence. Missing, null, or unrecognized measurements leave `reasons` empty, and `return reasons` reports exactly the same result as a successful check. I reproduced a declared active probe with all three measurements null passing the full verifier without flags.
-
-3. **Global positive evidence erases local failures.** `if _has_positive_probe_exercise_evidence(d):` immediately returns an empty list before inspecting any failure. The actual helper searches the entire artifact: a successful positive control suppresses a separate experimental probe reporting zero actions and false posterior construction. It can also combine positive action counts and positive entropy reduction from different records, without establishing that either record contains both.
-
-4. **Context blindness flags intentionally disabled controls.** `leaf = path[-1].lower()` discards whether a measurement belongs to the experimental probe or its disabled ablation. An artifact explicitly reporting that only the no-probe control ran still receives a warning for its expected zero/false measurements. The function never distinguishes deliberate control configuration from failed execution.
-
-5. **Zero information gain is classified as nonexecution.** The entropy branch flags zero reduction even when actions were executed and posterior construction succeeded. A real probe can produce an uninformative observation; that does not mean it never ran. Equality to zero is implemented correctly—the classification attached to that boundary is wrong. The current extension spec repeats this conflation.
-
-6. **B / The recognition vocabulary does not define the concept.** The declaration markers represent probe declarations; the three exact leaf names represent nonexecution evidence. An explicit false active-probe flag has no corresponding failure branch. Moreover, every reason-producing field already matches a declaration marker, making `if not declared:` redundant. Although `marker in path_lower` lacks boundaries, I found no independent substring-caused misclassification: declaration matching cannot itself produce a reason.
-
-7. **C / Important branches lack independent test protection.** I directly executed all 13 test functions in the two focused review modules. Removing the entropy-zero branch, removing the positive-evidence shortcut, removing the final declaration gate, or removing any individual declaration marker each left **13/13 passing**. Removing the action-zero or false-posterior branch failed one test each. The entropy regression is masked by neighboring reasons; the positive-exercise test does not exercise the shortcut’s effect.
-
-## COUNTEREXAMPLE
-
-False negative: a successful control suppresses the experimental probe’s explicit nonexecution.
-
-```json
-{
-  "experiment": "arc_active_probe_disambiguation",
-  "honest_verdict": "complete: active_probe_no_new_level_honest_null",
-  "active_probe_result": {
-    "probe_actions_taken": 0,
-    "hypothesis_posterior_built": false,
-    "posterior_entropy_reduction": 0.0
-  },
-  "positive_control": {
-    "probe_actions_taken": 3,
-    "hypothesis_posterior_built": true,
-    "posterior_entropy_reduction": 0.25
-  }
-}
-```
-
-Actual result: an empty reason list. With ordinary methodology fields added, the full verifier also emitted zero flags.
-
-## MISSED INPUT
-
-This nested, principle-annotated nonexecution record passed the full verifier without flags:
-
-```json
-{
-  "experiment": "arc_active_probe_disambiguation",
-  "active_probe_result": {
-    "probe_actions_taken": {
-      "principle": "Count executed probe actions.",
-      "value": 0
-    },
-    "hypothesis_posterior_built": {
-      "principle": "True only if posterior construction ran.",
-      "value": false
-    },
-    "posterior_entropy_reduction": {
-      "principle": "Measured posterior entropy reduction.",
-      "value": 0.0
-    }
-  }
-}
-```
+none found
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+KEEP
 
 ## RATIONALE
-Execution evidence must be normalized and evaluated within each probe’s scope, with missing evidence distinguished from a pass and information gain distinguished from execution. This function contains no absolute write targets, tracked-state writes, or measurements computed before work; reproduction files stayed in temporary storage.
+`for key in d` reads keys, so principle-wrapped values, lists, and None do not affect extraction; exclusion uses exact membership, not substring matching. Four isolated assertions passed, and this helper contains no detection rules, numeric thresholds, writes, bypass defaults, or measurements.
 
-The full suite was not run; confirmed failures let unrun probes receive the same empty result as exercised probes.
+Full-suite and mutation tests were not run; protection against deleting its exclusion remains unverified.
 
 
-## adversarial_verify.py::_has_nondegenerate_lever_evidence
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-By its name, `_has_nondegenerate_lever_evidence` claims to recognize evidence that an artifact’s lever actually exercised without degeneracy.
-
-## FINDINGS
-
-1. **Silent bypass through nested annotations.** `if isinstance(value, (list, dict, str)) and len(value) > 0:` accepts an annotation dictionary containing an empty pool because the wrapper itself is nonempty. The counterexample returns True and suppresses the caller’s lever-degeneracy warning. The public verifier unwraps top-level annotations, but nested annotations survive.
-
-2. **Substring matching and negation blindness.** `if any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):` also recognizes status and explanatory fields containing a pool marker. The following length check accepts any nonempty string, including an explicit statement that generation never occurred. It examines neither the field’s role nor the statement’s meaning.
-
-3. **Unrelated shapes become execution evidence.** `if "shape" in leaf:` matches inside longer words and accepts shape fields unrelated to exercising the lever. Combined with `if len(dims) == 2 and dims[0] > 1 and dims[1] > 1:`, an ordinary input shape or reshape configuration suppresses the zero-coverage warning. Neither proves execution.
-
-4. **Nested shape annotations cause the opposite error.** `dims = _shape_dims(value)` receives the annotation dictionary rather than its dimensions. Traversal subsequently reaches the wrapped dimensions under a different leaf name, which no longer matches `"shape"`. A valid nested grid shape therefore returns False and triggers a warning where the identical bare shape passes.
-
-5. **Positive metadata is mistaken for positive measurements.** `if _max_positive_real_field(d, key) is not None:` accepts any positive numeric descendant under a listed field. A scoring summary reporting zero observations but a positive expected count returns True. Evidence under a baseline also excuses a disabled treatment: the function never associates the evidence with the lever being assessed.
-
-6. **The name lists underrepresent their concepts.** The numeric tuple represents positive mechanism-exercise counters, but omits archive_size—a field actually present in this repository’s archive diagnostics. `_LEVER_POOL_KEY_MARKERS` represents populated candidate/proposal collections, but omits candidates, another existing artifact field. Verified fragments using those names return False and receive the zero-coverage warning despite containing qualifying evidence.
-
-7. **Focused tests leave substantial branches unprotected.** All 13 tests in the lever-evidence and carveout-hardening modules pass. In-memory deletion of `_has_positive_probe_exercise_evidence(d)` leaves all 13 passing; individually deleting any numeric tuple entry except `"archive_cells"` also survives. Removing recognition of candidate_pool, candidate_generation_pool, or generated_pool individually survives; deleting the distinct-arm, whole-pool, shape, or `"archive_cells"` alternatives does fail a test. These results establish gaps in those focused tests, not whole-suite mutation survival.
-
-There are no direct dictionary lookups in the supplied function; numeric helpers handle lists, annotations and None, while the container branches mishandle their semantics as described above. No independently established off-by-one defect was found: the function has no docstring specifying equality behavior. No absolute write target, tracked-state mutation, or prematurely computed measurement appears here; the terminal `return False` requests further scrutiny in the caller rather than disabling it.
-
-## COUNTEREXAMPLE
-
-```json
-{
-  "experiment": "arc_candidate_generation_coverage_audit",
-  "honest_verdict": "complete: candidate_generation_coverage_no_gain",
-  "coverage_delta": 0.0,
-  "generation_diagnostics": {
-    "candidate_pool": {
-      "principle": "Candidates actually generated.",
-      "value": []
-    }
-  }
-}
-```
-
-The helper returns True. Through the public file verifier, the required lever-degeneracy warning disappears; an unrelated informational zero-metric flag remains.
-
-Other independently verified substitutions that incorrectly return True:
-
-```json
-{"candidate_pool_status": "not generated: scorer unavailable"}
-```
-
-```json
-{"reshape_target": [30, 30]}
-```
-
-```json
-{"candidate_scores": {"count": 0, "expected_count": 64}}
-```
-
-## MISSED INPUT
-
-```json
-{
-  "generation_diagnostics": {
-    "candidate_pool": {
-      "principle": "Candidates actually generated.",
-      "value": []
-    }
-  }
-}
-```
-
-This nested, annotated empty pool is not detected as empty and instead supplies affirmative exercise evidence.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The function substitutes container presence, positive metadata and unrelated dimensions for evidence of execution, while rejecting equivalent legitimate nested annotations. These failures were reproduced through the public verifier, and the focused tests remain green.
-
-Not checked: full-suite, lint/spec-coverage or hardware end-to-end checks; both false-negative and false-positive behavior remain demonstrated.
-
-
-## adversarial_verify.py::_zero_lever_delta_reasons
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`_zero_lever_delta_reasons` returns reasons for zero lever-delta measurements lacking non-degenerate exercise evidence; it has no docstring.
-
-## FINDINGS
-
-1. **A/1 — Wrapped zeros silently disappear.** `if _is_finite_number(value) and float(value) == 0.0:` requires a scalar at the matching field. The actual walker yields the wrapper dictionary, then its numeric child; `leaf = path[-1].lower()` sees the child’s generic value key and loses the measurement name. Verified: the bare zero produces a reason and a caller warning; its principle-annotated equivalent produces neither. Per-game dictionaries and per-seed lists containing only zeros also escape.
-
-2. **B/5 — The marker list underspecifies the concept.** `_LEVER_ZERO_DELTA_KEY_MARKERS` represents coverage and generation/exploration outcome deltas, but omits the live solve-rate delta field shown below, which exists in real project artifacts. `if not any(marker in leaf for marker in _LEVER_ZERO_DELTA_KEY_MARKERS):` skips it even when its value is exactly zero. Verified through both this function and its caller.
-
-3. **2/3 — Substring matching confuses configuration with observations.** `marker in leaf` accepts a metric-name substring anywhere in a key, including a minimum-threshold configuration field. The configuration-only example below produces a degeneration warning despite containing no measured delta. Adding word boundaries alone would not distinguish a threshold from a measurement.
-
-4. **C — Every individual marker lacks an independent regression pin.** Directly executing the eight existing focused test functions passed after removing each of the six markers individually. Removing all markers failed the catch-all test: its overlapping inputs protect the combined behavior while allowing every individual recognizer to disappear.
-
-## COUNTEREXAMPLE
-
-False negative; the function returns an empty list and its caller emits no lever-evidence flag:
-
-```json
-{
-  "experiment": "arc_online_action_learning",
-  "inference_substrate": "online_action_learning",
-  "honest_verdict": "complete: online_action_learning_no_lift_null",
-  "coverage_delta": {
-    "principle": "Coverage improvement requires an exercised generator.",
-    "value": 0.0
-  }
-}
-```
-
-False positive; the caller warns about a zero delta inferred solely from a configured threshold:
-
-```json
-{
-  "experiment": "arc_online_action_learning",
-  "inference_substrate": "online_action_learning",
-  "honest_verdict": "complete: online_action_learning_no_lift_null",
-  "min_coverage_delta": 0.0
-}
-```
-
-## MISSED INPUT
-
-```json
-{"live_solve_rate_delta": 0.0}
-```
-
-This field/value appears in results/experiment_4981_levelup_attempt.json. Used as the sole outcome measurement in an otherwise recognized exploration artifact without exercise evidence, it produces no reason or lever-evidence flag.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-Read-only execution confirmed that annotation alone disables detection, while configuration alone can trigger it. Exact-zero comparison is appropriate, the caller supplies the exercise-evidence gate, and this function contains no absolute paths, writes, or timing measurements. Full-suite mutation coverage was not checked; the demonstrated silent omissions remain fabrication-detection gaps.
-
-
-## adversarial_verify.py::_lever_exercise_severity
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Assign lever-exercise severity, escalating adversarial/submitted artifacts and recognized gate, ARC win/solve, or success claims to critical; the supplied function has no docstring.
-
-## FINDINGS
-1. **A/B — Solve headlines silently miss escalation.** Both `_claims_arc_live_search_win(d)` and `_is_arc_solve_claim(d)` reject the actual corpus headline in MISSED INPUT. Adding an empty proposal pool produces WARN through the full artifact reader, although the repository specification requires CRITICAL when a degenerate artifact headlines a solve. The warning fires; the required escalation fails.
-
-2. **Field extraction assumes scalar types.** `verdict = str(d.get("honest_verdict", "")).lower()` stringifies wrapped dictionaries and lists instead of extracting their values; None becomes unrecognized text. `d.get("flagged_adversarial") is True` and `d.get("submitted_to_leaderboard") is True` reject wrapped true values. These cause incorrect WARN results on direct calls; the normal artifact reader already unwraps top-level annotations before calling this function, so that path is protected.
-
-3. **B — The prefix list incompletely represents affirmative success headlines.** `verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_"))` omits space-separated forms accepted elsewhere in this verifier. `.lower()` also leaves leading whitespace intact. Both examples below receive WARN. The shown prefix test is anchored and delimiter-qualified; it does not match inside an unrelated longer word.
-
-4. **Negation blindness propagates through `_flips_gate(d)`.** The explicit denial in COUNTEREXAMPLE receives CRITICAL through the full reader because the delegated recognizer matches the gate-status phrase without interpreting its denial. An honest null therefore receives an unwarranted severity escalation.
-
-5. **C — Most individual escalation rules lack effective regression coverage.** In-memory mutation against the two relevant test modules, totaling 13 passing tests, showed that deleting any of these individually leaves every test passing: the submission condition, `_claims_arc_live_search_win(d)`, `_is_arc_solve_claim(d)`, or the prefixes `"success_"`, `"shipped:"`, `"shipped_"`, `"passed:"`, `"passed_"`. Quarantine, gate, and `"success:"` mutations fail tests. Replacing `return "warn"` with `return "critical"` also leaves all 13 passing. These results establish gaps in those modules, not the entire repository suite.
-
-6. **Remaining classes:** The supplied function contains no numeric thresholds, absolute paths, writes, or measurements. Its `return "warn"` preserves a warning rather than disabling the caller’s check; the default itself is not a no-check bypass.
-
-## COUNTEREXAMPLE
-False negative: expected CRITICAL for a solve headline with degenerate evidence; the full reader returns WARN.
-
-```json
-{
-  "experiment": "arc_synthetic_generation_lever",
-  "honest_verdict": "complete: search_layer_solved_r11l_L4_real_env_confirmed",
-  "inference_substrate": "exploration lever exercise replay",
-  "proposal_pool": []
-}
-```
-
-False positive in severity: substituting this verdict into that payload returns CRITICAL despite explicitly denying the gate claim.
-
-```json
-{
-  "honest_verdict": "complete: gate_met_not_claimed_active_probe_honest_null"
-}
-```
-
-Additional verified misses:
-
-- `{"honest_verdict": "success generation_lever_headline"}` → WARN.
-- `{"honest_verdict": " success: generation_lever_headline"}` → WARN.
-- Direct call with `{"flagged_adversarial": {"principle": "Quarantine determination.", "value": true}}` → WARN; normalization restores CRITICAL.
-
-## MISSED INPUT
-`complete: search_layer_solved_r11l_L4_real_env_confirmed`
-
-This is the actual honest_verdict in `results/experiment_4021_heuristic_search_over_verified_wm.json`. All three claim helpers return false for that artifact, and this function returns WARN.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Escalation relies on incomplete affirmative recognizers and a context-blind gate recognizer, allowing both missed solve escalation and false escalation of explicit denials. Normalize field shapes at the supported entry boundary, recognize affirmative claims with negation context, and independently test every escalation condition and the warning fallback.
-
-Full-suite and hardware E2E checks were not run; the focused pytest run passed 13 tests. The demonstrated severity errors remain unfixed.
-
-
-## adversarial_verify.py::_has_positive_top_level_metric
+## adversarial_verify.py::_has_first_party_qd_result_field
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -505,53 +104,462 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-The name `_has_positive_top_level_metric` promises to identify a positive top-level metric matching the requested keys; no docstring is supplied.
+The name promises to detect first-party quality-diversity result fields; no docstring is supplied.
 
 ## FINDINGS
 
-1. **A/B/F — Real metric names silently escape recognition.** `kl == wanted or kl.endswith(f"_{wanted}")` rejects metrics with trailing comparison qualifiers. The existing positive field in MISSED INPUT returns `False` with the caller’s perception metric keys. A QD probe using a qualified positive delta passed full artifact verification with zero flags; the equivalent unqualified delta triggered the critical ablation flag.
+1. **A/B/F — A real result field is silently missed.** The measurement field under MISSED INPUT exists in two research artifacts but matches none of `_QD_FIRST_PARTY_FIELD_MARKERS`. The helper returns false. In the reproduced fragment, its caller consequently emits no QD-ablation warning despite the missing ablation declaration. Unrecognized results are indistinguishable from absent results.
 
-2. **2/3 — Arbitrary prefixes erase metric ownership.** `kl.endswith(f"_{wanted}")` accepts a control arm’s positive delta as evidence that the experimental arm won. The COUNTEREXAMPLE returns `True` and triggers a critical QD-ablation flag despite QD’s own delta being zero. The underscore provides a lexical boundary; the defect is failure to distinguish experimental results from control results.
+2. **2/3/5 — Substring presence does not establish a result or an affirmative claim.** `if any(marker in kl for marker in _QD_FIRST_PARTY_FIELD_MARKERS):` accepts the blocked-run field under COUNTEREXAMPLE. The helper returns true, and its caller emits an erroneous ablation warning. A QA-only test-count field also reproduced this failure. The function reads neither the values nor the explicit denial in the verdict.
 
-3. **1 — Wrapped numbers fail in direct calls.** `for key, value in d.items():` passes the raw value into `_is_finite_number(value)` without unwrapping annotations. A positive principle-wrapped number therefore returns `False`. Main artifact verification normalizes top-level wrappers beforehand, so this is a direct-call limitation, not a demonstrated wrapper bypass through that entrypoint. Lists and None are rejected; neither inherently represents a positive scalar measurement.
+3. **B/C — Some configured rules are redundant.** The marker live_first_win_rate_qd is completely covered by first_win_rate_qd. Furthermore, none of the current metadata-exclusion keys contains any result marker, so deleting `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` and its `continue` changes no classification. No additional omitted member of that exclusion set was established.
 
-4. **C — Matching branches lack independent regression protection.** Separately deleting `kl == wanted`, deleting `kl.endswith(f"_{wanted}")`, and removing `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` each left all 34 focused tests green. Each mutation received 16 helper calls. These tests cannot independently establish that either matching alternative works; whole-suite mutation survival was not established.
+4. **C — The focused tests tolerate disabling the entire detector.** All 30 tests across the hardening, citation-scope, and moat-claim test files passed normally. All 30 also passed after replacing this helper with an unconditional false result; the replacement executed seven times. Those tests do not independently protect this detector. Whole-suite mutation survival was not established.
 
-5. **4/5 — Threshold and scope.** `float(value) > 0.0` correctly excludes exactly zero. Top-level-only traversal matches the name. The mismatch is that permitted wrapped values and semantically equivalent qualified metric names disappear, while unrelated prefixed metrics count.
-
-6. **B/D/E/G — No additional demonstrated defects.** The metadata exclusion set’s contents are outside the supplied function; no omitted member is established here. This helper contains no absolute paths, writes, duration measurements, or free-text phrase checks.
+5. **1/4/D/E/G — No corresponding defects here.** `for key in d:` and `kl = str(key).lower()` inspect keys, not field values. Principle wrappers, lists, and None therefore do not cause the cited extraction bug. This helper contains no numeric thresholds, filesystem paths, writes, or measurements. Its top-level scope agrees with the surrounding specification.
 
 ## COUNTEREXAMPLE
 
 ```json
 {
   "game": "tn36",
-  "headline": "energy-fitness QD live generation measurement",
-  "honest_verdict": "complete: energy_fitness_qd_generation_observed",
-  "solve_provenance": "live_agent_self_discovery",
-  "random_mutation_ablation_passed": false,
-  "solve_rate_delta": 0.0,
-  "random_mutation_solve_rate_delta": 0.04
+  "honest_verdict": "blocked: QD disabled; no search attempted",
+  "qd_arms_not_attempted": true
 }
 ```
 
-With requested key `solve_rate_delta`, the helper returns `True`. The control improved; QD did not. The caller nevertheless emits a critical QD-win flag.
+Observed: helper returns true; caller emits WARN `qd-random-mutation-ablation-omitted`. The artifact explicitly records that the work was not attempted.
+
+Separately, replacing the last field with `"qd_arm_test_count": 4` also triggers the warning for QA metadata.
 
 ## MISSED INPUT
 
-Existing artifact: `results/experiment_4729_held_out_first_win_readiness.json`
+`qd_measurement` — an actual top-level result field in:
+
+- `results/experiment_4653_energy_fitness_qd_generation_live.json`
+- `results/experiment_4738_energy_fitness_qd_generation_valid_test.json`
+
+Their other recognized keys mask this omission. This realistic fragment reproduces the bypass independently:
 
 ```json
-{"first_win_delta_vs_baseline": 0.01}
+{
+  "game": "tn36",
+  "honest_verdict": "complete: QD measurement collected",
+  "qd_measurement": {
+    "first_win_rate": 0.25,
+    "solve_rate": 0.25,
+    "variant_attempts_count": 4
+  }
+}
 ```
 
-With requested key `first_win_delta`, the helper returns `False`.
+Observed: helper returns false; caller emits no QD-ablation flags.
 
 ## RECOMMENDATION
 
-WIDEN_PATTERN_TO_CONCEPT
+NEEDS_REDESIGN
 
 ## RATIONALE
 
-Recognition must preserve metric ownership while accepting established comparison qualifiers; adding unrestricted substring matching would worsen the control-arm false positive. Read-only artifact probes and three in-memory deletion runs confirmed the failures and focused-test gaps. Full-suite mutation testing was not performed; both demonstrated misclassification paths remain.
+The recognizer misses an existing result schema while accepting explicit non-execution and QA metadata as research results. Recognize result fields by their meaning and ownership, with independent tests for actual measurements, blocked runs, and metadata.
+
+Full-suite, lint/spec-coverage, and E2E checks were not run; the demonstrated defects remain unfixed.
+
+
+## adversarial_verify.py::_claims_qd_energy_fitness_generation_win
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name implies detection of artifacts claiming a QD energy-fitness generation win.
+
+## FINDINGS
+1. **A / F — Confirmed silent bypass through annotated fields.** The line `if d.get("winner_generated") is True:` accepts only the bare Boolean. A principle-wrapped true value returns false. With QD context established and a failed ablation explicitly reported, the counterexample below produces **zero QD flags**.
+
+2. **1 — Numeric detection has the same extraction defect.** `winner_count = _finite_float(d, "winner_generated_count")` delegates to a helper that rejects wrapped numbers. The helpers referenced by `_QD_POSITIVE_DELTA_KEYS` and `_QD_BASELINE_PAIRS` also reject wrapped metric values. Independently reproduced: a wrapped positive count, wrapped positive delta, and wrapped winning metric pair each return false. Lists and None likewise supply no recognized evidence; rejecting them is not independently a bug without an applicable schema.
+
+3. **B / 5 — The metric lists cover selected spellings, not the claimed concept.** `_QD_POSITIVE_DELTA_KEYS` represents positive QD generation improvement; `_QD_BASELINE_PAIRS` represents QD outperforming its search baseline. Both omit the project's existing energy-QD versus naive-search metric family, named below. A positive result using that family returns false even with recognized QD context. The historical artifact inspected reports zero lift; the defect concerns positive results using its established field names.
+
+4. **5 / F — An explicit textual win is ignored.** After the context check, every success route requires one of the selected structured metrics. The function never evaluates whether a verdict asserts a win. The explicit success verdict below returns false without those metrics, so the caller skips its critical ablation check.
+
+5. **C — Three detection routes lack independent regression protection.** In-memory removal of the Boolean branch, positive-delta branch, or metric-pair branch individually left **all 13 focused test functions passing**. Their overclaim fixtures provide overlapping win signals. Removing the positive-count branch failed one test. Full-suite mutation survival was not established.
+
+6. **2 / 3 / 4 — No additional defect established.** The supplied body contains no direct substring, regex, or negation matching. `winner_count > 0.0` correctly excludes zero; the inspected numeric helpers likewise require strictly positive improvement. There is no docstring promising a different equality boundary.
+
+7. **D / E / G — No matching hazard found in this function.** It contains no absolute filesystem target, write operation, or measurement. The focused tests examined write their fixture artifacts into temporary directories.
+
+## COUNTEREXAMPLE
+```json
+{
+  "game": "tn36",
+  "headline": "energy-fitness QD live generation",
+  "winner_generated": {
+    "principle": "True iff QD produced a winning trajectory.",
+    "value": true
+  },
+  "random_mutation_ablation_passed": false
+}
+```
+
+Expected: recognize the win and emit the critical failed-ablation flag. Observed: false from the recognizer and zero QD flags. Replacing the wrapper with bare true triggers the flag.
+
+## MISSED INPUT
+These established metric names are absent from the recognition lists:
+
+```json
+{
+  "game": "bp35",
+  "headline": "energy-fitness QD live generation",
+  "energy_qd_first_win": 0.25,
+  "naive_search_first_win": 0.0,
+  "energy_qd_vs_naive_delta": 0.25,
+  "random_mutation_ablation_passed": false
+}
+```
+
+The field names occur in results/experiment_4738_energy_fitness_qd_generation_valid_test.json; the positive values above form the reproduced missed case.
+
+This explicit verdict also goes unrecognized without a selected structured win metric:
+
+```text
+success: energy_fitness_qd_winner_generated_1
+```
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+Unwrap annotated values before type checks, cover the established metric family, and test each recognition route independently.
+Full-suite, lint, spec-coverage, and E2E checks were not run; validation used direct reproductions and the 13 focused test functions.
+Risk: declared wins can silently bypass the critical ablation gate.
+
+
+## adversarial_verify.py::check_qd_random_mutation_ablation_overclaim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+“Flag QD generation wins that do not beat random-mutation ablation.”
+
+## FINDINGS
+
+1. **A/B/F — Real win fields silently escape.** At `if not _claims_qd_energy_fitness_generation_win(d):`, the inspected helper does not recognize the positive trajectory and reproducible-level fields shown under MISSED INPUT. Those field names occur in existing project artifacts. With an explicit false ablation, omission detection also stays silent: the function emits **zero flags**.
+
+2. **Conflicting failures are overridden.** `if any(value is True for value in ablation_values):` accepts one passing boolean anywhere collected by the recursive extractor. A historical pass, another game’s pass, or another arm’s pass overrides the current claim’s explicit failure. Extraction discards the association between evidence and claim.
+
+3. **Field wrapping still disables win recognition.** `_typed_field_values(d, "random_mutation_ablation_passed", "bool")` handles annotated ablation values, lists, and None appropriately. However, the inspected helper called at `_claims_qd_energy_fitness_generation_win(d)` assumes bare winner booleans and numerical metrics. Wrapping the only positive winner field makes a previously detected overclaim disappear.
+
+4. **Substring and negation failures enter through the claim helper.** At `_claims_qd_energy_fitness_claim(d)`, delegated substring matching recognizes the generation marker inside an unrelated longer word; it also recognizes explicitly negated generation declarations. Both examples below produce an omission warning despite declaring no generation attempt. The supplied body contains no independent text-boundary or negation protection.
+
+5. **C — A recognition branch survives deletion.** Deleting boolean-only win recognition from the inspected helper **in memory** left all seven selected QD/helper regression tests passing. The main positive fixture supplies several simultaneous win signals, allowing neighboring recognizers to hide that deletion. This establishes a gap in those selected tests; it does not establish that the entire repository suite would pass.
+
+6. **Docstring understates the actual scope.** `if ablation_omitted:` emits `severity="warn"` before checking for a generation win. Consequently, the function also flags recognized generation measurements without wins. That broader behavior is explicitly exercised by existing tests.
+
+## COUNTEREXAMPLE
+
+A failed current ablation is cleared by an unrelated historical pass:
+
+```json
+{
+  "game": "tn36",
+  "headline": "energy-fitness QD live generation",
+  "honest_verdict": "success: energy_fitness_qd_winner_generated_1",
+  "winner_generated": true,
+  "random_mutation_ablation_passed": false,
+  "prior_run": {
+    "random_mutation_ablation_passed": true
+  }
+}
+```
+
+Expected: critical flag. Observed: **no flags**.
+
+Removing `prior_run` and replacing the winner field with this annotated equivalent also produces **no flags**:
+
+```json
+"winner_generated": {
+  "principle": "whether generation found a winner",
+  "value": true
+}
+```
+
+These two independent honest fragments each produce an omission warning:
+
+```json
+{
+  "game": "tn36",
+  "headline": "QD archive delivery timing; no candidate search attempted",
+  "honest_verdict": "complete: qd_archive_delivery_only"
+}
+```
+
+Here, “delivery” contains “live”.
+
+```json
+{
+  "game": "tn36",
+  "headline": "energy-fitness QD generation not attempted; baseline timing only",
+  "honest_verdict": "blocked_energy_fitness_qd_generation_not_attempted"
+}
+```
+
+## MISSED INPUT
+
+```json
+{
+  "game": "bp35",
+  "headline": "energy-fitness QD live generation",
+  "honest_verdict": "success: energy_fitness_qd_winning_trajectory_surfaced",
+  "winning_trajectory_surfaced": true,
+  "reproducible_levels_delta": 1,
+  "random_mutation_ablation_passed": false
+}
+```
+
+Observed: **no flags**. Both positive-result field names already occur in `results/experiment_5154_energy_fitness_directed_exploration_v472.json`; this constructed fragment changes their null results into a claimed win.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Ablation evidence must remain associated with the claimed run or game, and win recognition must handle annotated fields and established result vocabulary. Direct probes reproduced these failures, and the selected tests missed a deleted recognizer; the supplied body contains no numeric thresholds, absolute paths, filesystem writes, or timing measurements. Full-suite mutation testing and repository-wide side-effect checks were not run; the demonstrated risk is false reassurance from zero emitted flags.
+
+
+## adversarial_verify.py::_claims_value_routing_live_claim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_claims_value_routing_live_claim` promises to recognize artifacts asserting live value-routing claims; no docstring defines narrower scope.
+
+## FINDINGS
+
+1. **Claim-field whitelist silently bypasses enforcement.** `_claim_text(d, _VALUE_ROUTING_CLAIM_TEXT_KEYS)` ignores the additional claim field in MISSED INPUT, while `_field_name_text(d)` collects keys rather than scalar values. The fragment returns False despite explicitly claiming live improvement. The caller emits neither cost-control flag nor an unrecognized-claim diagnostic.
+
+2. **Live vocabulary is narrower than live execution.** `_has_marker(text, _ARC_LIVE_CONTEXT_MARKERS)` recognizes selected live/submitted/scored wording but omits online-agent wording. A top-level verdict claiming improved first-win rate for an online agent also returned False with no cost-control flags.
+
+3. **Substring matching creates false claims.** `"live_" in text` matches inside the heartbeat configuration key in COUNTEREXAMPLE. The marker helper is broader still: it matches live inside delivered. Both can classify offline work as live; with a positive offline delta, the caller emits a false critical flag.
+
+4. **Negation and field values do not constrain recognition.** `_field_name_text(d)` contributes live-related keys even when their values are False or None. `_has_marker(text, _ARC_LIVE_CONTEXT_MARKERS)` also accepts statements explicitly saying live evaluation was not attempted. Both cases were reproduced as false warnings.
+
+5. **Wrapped metadata contaminates claim text.** `_claim_text(d, _VALUE_ROUTING_CLAIM_TEXT_KEYS)` stringifies wrapped dictionaries, including their principle explanations. A provenance wrapper whose value identifies offline development nevertheless triggers when its principle mentions live-agent discovery. This treats explanatory metadata as an asserted result.
+
+6. **Two branches are behaviorally redundant.** `d.get("solve_provenance") == "live_agent_self_discovery"` assumes a bare string; wrapped dicts, lists and None fail that comparison. A wrapped canonical value currently survives through the broader text marker, so this is not an independent false negative. That marker also subsumes `"live_" in text`: deleting both branches in memory left all 20 focused tests green.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "complete: offline value-routing ablation; no agent evaluation performed",
+  "keepalive_interval_s": 30,
+  "first_win_rate_delta": 0.04
+}
+```
+
+Observed: returns True. The caller emits both warning and critical cost-control flags against explicitly offline work because the heartbeat key contains the live substring.
+
+## MISSED INPUT
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: value-routing first-win rate improved",
+  "conclusion": "Live agent first-win rate increased from 0.04 to 0.08.",
+  "first_win_rate_delta": 0.04
+}
+```
+
+Observed: routing context is recognized, but the function returns False and the caller emits no cost-control flags despite missing controls.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The implementation confuses textual occurrence with an affirmative claim while silently ignoring claims outside selected fields; both failure directions were reproduced through its caller. This function contains no numeric thresholds, absolute paths, writes, or measurement computations. Full-suite mutation testing and unrelated E2E checks were not run; silent bypasses and false critical flags are demonstrated risks.
+
+
+## adversarial_verify.py::check_value_routing_cost_control_overclaim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Flag value-routing wins that do not report feature cost and no-timeout.`
+
+## FINDINGS
+
+1. **A/F — A wrapped positive win can bypass the check completely.** `if not _claims_value_routing_live_win(d):` returns before validating timeout status. Inspection and execution of the repository helper confirmed that it ignores principle-wrapped positive deltas. The counterexample below reports a positive live lift and an explicit timeout but produces **zero flags**.
+
+2. **1 — Filtering valid leaves hides missing measurements.** The reads `cost_values = _typed_field_values(d, "per_node_feature_cost_ms", "number")` and `timeout_values = _typed_field_values(d, "sim_timed_out", "bool")` support wrappers and containers, but discard invalid or missing leaves. Consequently, `all(value is False for value in timeout_values)` verifies only surviving booleans: one game reporting false can hide another game’s null timeout. Likewise, one finite cost clears a collection containing missing costs.
+
+3. **1 — Wrapper metadata can substitute for the actual value.** The extraction helper searches arbitrary leaves before requiring the wrapper’s value. A sample count can therefore satisfy the numeric cost check while the measurement itself is null; an unrelated false metadata boolean can satisfy the timeout check. These are reproduced false negatives, not merely theoretical type concerns.
+
+4. **5 — Controls are collected without identifying the run they describe.** Both extraction calls recursively search the artifact. Controls recorded for a previous run can clear missing controls for the claimed win. Conversely, a historical timeout causes a critical flag even when the current run explicitly reports successful controls. The implementation checks artifact-wide contents rather than attributable evidence.
+
+5. **2/3/B — Claim recognition is broader about context and narrower about wins.** The delegated `_claims_value_routing_live_claim(d)` treats an internal substring in the delivery example below as live context and also accepts explicitly negated live activity. Meanwhile, `_claims_value_routing_live_win(d)` recognizes selected numeric representations, missing positive wins expressed only in verdict text or nested results. Its fixed metric patterns represent positive live improvement but omit these plausible representations.
+
+6. **C — Four damaging deletions survive the focused tests.** All 22 existing test functions in the typed-field and 4659 hardening files passed when invoked directly with isolated temporary directories. They also all passed after individually deleting either omission branch containing `omitted.append("per_node_feature_cost_ms")` or `omitted.append("sim_timed_out")`, removing `cost_ok` from the acceptance condition, or removing `bool(timeout_values)`. The omission-detail assertions also match the fixed advice naming both fields, so they do not prove that either missing field was actually identified.
+
+7. **4/D/E/G — No additional issue established in these classes.** The supplied body contains no numeric threshold, absolute filesystem target, file write, or timing measurement. Zero cost is retained, and boolean false is tested correctly by identity. The inspected focused tests write their fixture artifacts into temporary directories. No supported alternate control-field name was established.
+
+## COUNTEREXAMPLE
+
+This reports a positive live win and an explicit timeout:
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: value_routing_cost_fixed_live_firstwin_up_1",
+  "solve_provenance": "live_agent_self_discovery",
+  "first_win_rate_delta": {
+    "principle": "Measured live first-win lift against the baseline.",
+    "value": 0.04
+  },
+  "per_node_feature_cost_ms": 0.42,
+  "sim_timed_out": true
+}
+```
+
+Actual result: **no flags**. Expected: a critical cost-control flag.
+
+Other reproduced cases:
+
+- With a recognized bare positive delta, `sim_timed_out: {"ar25": false, "lp85": null}` passes despite the missing timeout measurement.
+- `per_node_feature_cost_ms: {"value": null, "n_samples": 100}` satisfies the cost requirement.
+- `sim_timed_out: {"value": null, "measured": false}` satisfies the no-timeout requirement.
+- An offline artifact with `headline: "offline value-routing delivery benchmark"`, `solve_provenance: "offline_replay"` and `first_win_rate_delta: 0.04` receives warning and critical flags: “delivery” contains “live”.
+- Explicitly describing the offline result as `complete: value_routing_offline_ablation_live_not_attempted` also triggers those flags.
+
+## MISSED INPUT
+
+`"first_win_rate_delta": {"principle": "Measured live first-win lift against the baseline.", "value": 0.04}` together with `"sim_timed_out": true`, as shown above: a principle-annotated positive win with failed timeout control receives no flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Direct probes reproduced silent passes and false critical flags, while four damaging deletions survived all 22 focused test functions. Recognition and control validation must preserve field values, missing entries, and their association with the claimed run.
+
+Full-suite mutation testing was not run; the current absence of flags does not establish valid cost controls.
+
+
+## adversarial_verify.py::_numeric_leaf_values
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+`_numeric_leaf_values` collects finite numeric leaves from nested dictionaries and lists, excluding designated metadata.
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+Dictionary recursion handles principle wrappers, list recursion preserves nested measurements, and `key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` performs exact membership matching. Twelve isolated source-extracted checks passed; this helper contains no free-text matching, numeric thresholds, filesystem writes, or timing measurements. Full-suite mutation testing was not performed, so independent regression protection for every branch remains unverified.
+
+
+## adversarial_verify.py::_bool_leaf_values
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+The name `_bool_leaf_values` promises recursive boolean-leaf extraction, with selected metadata excluded; no docstring is supplied.
+
+## FINDINGS
+
+1. **A/F — Missing observations silently become passing evidence.** `return []` discards None and invalid scalar values. During list recursion, `values.extend(_bool_leaf_values(item))` therefore erases unmeasured subgoals. Reproduced through the actual artifact verifier: the COUNTEREXAMPLE produces zero flags; replacing its missing observation with false produces the expected critical flag. The defect is the caller treating filtered observations as complete evidence.
+
+2. **B — Correction history counts as current evidence.** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` represents exclusion of descriptive metadata, but its configured set omits correction notes. Consequently, `values.extend(_bool_leaf_values(nested))` collects a superseded boolean alongside the current value. The second COUNTEREXAMPLE clears the L2 reachable-plan critical flag despite the current value being false; removing the correction history restores that flag.
+
+3. **C — The metadata exclusion lacks independent regression protection in the focused tests.** Deleting `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` in memory left all 20 selected existing test functions passing. Separately deleting the boolean, dictionary, and list branches caused eight, four, and one failures respectively. Whole-suite mutation survival was not established.
+
+4. **1/5 — Ordinary wrappers work; evidence meaning is lost.** Dictionary and list recursion correctly preserve native true and false values inside annotations. However, extraction neither preserves missing observations nor distinguishes current results from historical metadata. Its name describes collection, not validation; callers require stronger guarantees.
+
+5. **2/3/4/D/E/G — No additional applicable defect.** There are no free-text matches, negation checks, numeric thresholds, absolute paths, writes, or measurements in this function. The audit reproductions used temporary artifact paths.
+
+## COUNTEREXAMPLE
+
+This artifact passed the actual verifier with zero flags despite an unmeasured second subgoal:
+
+```json
+{
+  "experiment": "hierarchical_subgoal_search_live",
+  "game": "lp85",
+  "headline": "generic agent reached L2 via hierarchical subgoal search",
+  "honest_verdict": "success: hierarchical_subgoal_generic_agent_new_level_lp85_L2",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "live_agent_self_discovery",
+  "generic_agent_reached_level": {"lp85": 2},
+  "reproduced_levels": {"lp85": 1},
+  "subgoal_decomposition": ["unlock left portal", "enter target frame"],
+  "per_subgoal_reachable": [true, null],
+  "no_subgoal_ablation_reached_level": {"lp85": 1},
+  "random_subgoal_ablation_reached_level": {"lp85": 0},
+  "offline_reproduced": {"lp85": true},
+  "goal_predicate_satisfiable": {"lp85": true},
+  "l2_plan_reaches_goal": {"lp85": true},
+  "random_seed": 4683,
+  "duration_s": 120.0,
+  "reproducibility_checksum": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+}
+```
+
+Separately, this control bypassed the reachable-plan check in an otherwise qualifying L2 artifact:
+
+```json
+{
+  "l2_plan_reaches_goal": {
+    "lp85": {
+      "principle": "A reachable plan must actually reach its goal.",
+      "value": false,
+      "correction_note": {
+        "previous_value": true,
+        "reason": "Replay invalidated the original plan."
+      }
+    }
+  }
+}
+```
+
+## MISSED INPUT
+
+```json
+{"per_subgoal_reachable": [true, null]}
+```
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Validate every required observation before treating collected booleans as complete evidence, and distinguish current values from correction history. Both demonstrated bypasses survive actual artifact verification. No source files changed; full-suite mutation, lint, spec coverage, and unrelated E2E checks were not run.
 

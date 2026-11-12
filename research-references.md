@@ -56640,3 +56640,99 @@ Exp9043 found 206 missing pages and nine existing pages without QIDs. Repeating
 those requests cannot establish identity closure. Exp9053 also found 1,006 annotation
 participation mismatches in Exp9044's older receipt. Preserve that failed authority
 and the later code repair separately. Neither source can authorize the old pilot.
+
+## 2026-11-12 — V774 planning scan: executable custody and adjudicated labels
+
+Recorded before the V774 design. All eight requested research topics and six
+secondary channels were checked. External claims are leads, not Carnot results.
+
+### Findings that change the proposed experiments
+
+- **Adjudication rather than another unavailable consensus release.**
+  [Beyond Majority Vote, 2609.03953](https://arxiv.org/abs/2609.03953), September 3,
+  2026, studies missed factual errors and disagreement across first-pass human
+  annotation, medical experts and evidence-based fact checking. The
+  [author release](https://github.com/isi-vista/mdhjudgments), revision
+  `30d9349a2a8d6a7395681cfbd23cc8116af5a2da`, actually contains five separate
+  annotation/adjudication JSONL files, conversion code and annotation instructions.
+  A metadata-only read found 541 response records and 312 distinct question
+  strings. These are not 312 proven independent question families. No answer text
+  or label values were rendered during planning. The release warns that anonymized
+  adjudicator IDs cannot establish unique person counts. Its data license is
+  CC-BY-4.0 except third-party evidence excerpts; code is MIT. Test human-target
+  sensitivity on this separate source, preserving its selected-for-adjudication
+  population. Do not claim that a majority vote is objective truth or that this
+  repairs the failed MDH-Bench release. Freeze source grouping and a protected
+  evaluation before fitting any head.
+- **Define the target precisely.** [What Hallucinations Have We Measured?,
+  2610.38520](https://arxiv.org/abs/2610.38520), October 28, 2026, distinguishes
+  expressed uncertainty, errors corrected by re-elicitation and persistent errors.
+  Use a factual-error target and separate uncertainty diagnostics. A single
+  archived answer cannot identify the paper's behavioral categories without its
+  intervention protocol; do not assign those categories by string matching.
+- **Keep the full computation in the cost.** [Weakly Supervised Distillation,
+  2604.06277v2](https://arxiv.org/abs/2604.06277), revised November 8, 2026,
+  distinguishes cheap probe scoring from complete generation-plus-probe cost.
+  Its weak labels are not independent human truth. Use the timing decomposition
+  in the paired service study, and retain matched linear probes. No generator
+  fine-tuning or replacement labels follow from this paper.
+- **Continuous small-head learning.** [Online spline KAN, 2602.02056v4](https://arxiv.org/abs/2602.02056)
+  and [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987) support
+  measuring delayed local updates together with retention and full service cost.
+  Keep the already frozen ten learning bounds. Local basis support does not
+  eliminate dense guards, anchors, durable writes or forgetting.
+
+### Requested topics and implementation decisions
+
+| Topic | Primary work checked | Decision |
+|---|---|---|
+| EBM reasoning/verification | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 6, 2026; [EBT ICLR proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) | New training evidence merits study; it does not reopen Carnot's retired generation protocols. |
+| Neural constraint satisfaction | [PAL, 2503.19466](https://arxiv.org/abs/2503.19466), March 2025 | Explicit constrained distributions remain a useful architectural lead, not independent factual labels. |
+| Ising applications in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), June 30, 2026 | Include sample-quality and supported-operation boundaries in the hardware map. |
+| Hallucination detection/mitigation | Adjudication and taxonomy papers above; [HalluGuard, 2601.18753](https://arxiv.org/abs/2601.18753) | Test target sensitivity and source-independent features before another generalization claim. |
+| KAN | Online spline KAN above; [KANs still forget, AAAI 2025](https://ojs.aaai.org/index.php/AAAI/article/view/33986) | Preserve frozen knots and retention controls in the pending continuous-learning study. |
+| Energy-guided decoding | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484), January 2026 | Defer steering until a measured useful energy signal exists. |
+| Hardware sampling | [PAOA, 2507.07420v3](https://arxiv.org/abs/2507.07420), December 2025 revision; [sparse FPGA Ising, July 2026](https://www.nature.com/articles/s41467-026-75119-0) | Distinguish quadratic sampling, spline scoring and complete-service cost. No borrowed FPGA speedup. |
+| Continual/online constraints | Continual Calibration and online spline work above | Prediction-before-feedback, atomic recovery and paired future loss remain required. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** EBT (`ZBj3Qp1bYg`) and ARM-EBM (`997oprE4sh`) forums returned
+  browser challenges; the EBT PDF also challenged this time. The official ICLR
+  proceedings supplied the EBT abstract. No uninspected review claim is made.
+- **Semantic Scholar:** browser API requests failed; normal Graph API requests
+  through Python succeeded. EBT returned 20 citing papers with another page;
+  ARM-EBM returned ten without another page. This is partial citation coverage.
+  Checked [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871) as a
+  primary lead on learned scores and analytical constraints; keep source/model
+  shortcuts out of detector features. Citation counts are not evidence quality.
+- **Hugging Face Papers:** the generic query failed; the
+  [HalluGuard page](https://huggingface.co/papers/2601.18753) was accessible.
+  Technical claims use the primary paper and original release instead of votes.
+- **GitHub trending:** the [Python monthly page](https://github.com/trending/python?since=monthly)
+  was accessible but carried a two-month-old crawl. No current EBM/KAN ranking
+  was established. The adjudication repository is author-linked, not a popularity
+  recommendation; no dependency installation is proposed.
+- **Extropic:** [writing](https://extropic.ai/writing) remains sparse;
+  [Torx, Thermalizers and Z1](https://extropic.ai/writing/from-one-to-one-billion)
+  describes the summer 2026 vendor stack. It provides no local TSU availability,
+  supported spline update operation or complete Carnot service timing.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint-evaluation layer. No reproducible public architecture,
+  weights or new local deployment evidence was established from that page.
+
+### Local observations that determine scope
+
+Exp9055 completed 1,024 graph identities in 47,987 proposals. Exp9058 retained
+512 first Qwen responses with protected TEST custody. Exp9059 has no primary or
+distinct conductor run. Its title and Exp9058's title share the same stripped
+first 50 characters. The current scheduler indexes completion by that prefix
+and treats an absent artifact as not contradicting the log. This is a concrete
+mechanism for the skip; V774 can avoid it by putting the unique experiment ID
+first in every title, without editing the conductor. A custody check must still
+prove B has no prior attempts before generation; missing primary alone is not proof.
+
+Exp9056 found no original individual judgments or original factual-error
+instructions, and only 396 candidate groups, in MDH-Bench. That unchanged release
+stays closed. MDHJudgments is a different author release and a different,
+adjudication-conditioned estimand. It needs its own authority and exposure check.
