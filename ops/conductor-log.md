@@ -21905,3 +21905,4 @@ code |
 | 2026-11-12 18:00 UTC | Qualify MDH original human judgments and unseen pr | OK | 101 passed, 1 warning in 17.83s |
 | 2026-11-12 18:09 UTC | Freeze matched energy and linear probes for the hu | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9056-human-release-authority.human_source_ready_score (actual=0 == expected=1) |
 | 2026-11-12 18:53 UTC | Collect the completed prospective Qwen graph shard | OK | 91 passed, 1 warning in 17.59s |
+| 2026-11-12 19:01 UTC | Admit the full graph corpus without exposing TEST  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp9059-fresh-corpus-b.shard_ready_score (upstream artifact not found for task id 'exp9059-fresh-corpus-b') |
