@@ -59240,3 +59240,26 @@ current scoped acceptance and remains failed with original logs and verdicts.
 #### SCENARIO-VERIFY-9013-REPLAY
 Private receipt controls and real foreign-directory CLI children SHALL verify
 missing-input blocking, successful replay and tamper refusal without a model.
+
+### REQ-VERIFY-9027: V771 replay preserves immutable scientific and failed evidence
+
+Exp9027 SHALL freeze owned files, tests, direct consumers and commands before
+measurement. Actual normal-exit pytest, private E2E-018/021, Ruff, strict mypy,
+explicit-path spec checks and100 percent newly owned statements with zero
+exclusions SHALL gate primary publication. Cold replay SHALL independently
+recompute contract, original science, historical failures and the Exp9013 ARC
+delta. Validators and original scientific assertions SHALL remain unchanged.
+
+#### SCENARIO-VERIFY-9027-REPLAY
+
+Real CLI children outside the checkout without PYTHONPATH SHALL reject absent
+inputs, changed authority and rehashed summary tampering. An intact candidate
+SHALL replay. MODEL_SPECS and model_specs SHALL be empty, current invocation
+counts SHALL be zero, and historical calls SHALL enter only through citations.
+
+Implementation note,2026-11-12: Private controls reject missing authority,
+stale or failed receipts, changed full objects and rehashed historical verdicts
+or archive summaries. The direct CLI runs outside the checkout without
+PYTHONPATH. Coverage measures all182 new statements with zero missing statements
+or exclusions; primary publication additionally requires unchanged scanners and
+fresh-process replay. No scientific fit or model load is repeated.

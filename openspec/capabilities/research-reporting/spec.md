@@ -112559,6 +112559,31 @@ and research-roadmap-next.yaml. Historical scientific outcomes stay unchanged.
 
 Task `exp9027-branch-contract` SHALL deliver `results/experiment_9027_v771_branch_contract.json` under its frozen V771 protocol. V770 closed scheduling, not science. Exp9013 qualified authority; Exp9014 is disqualified; Exp9015 is source-blocked; Exp9026 qualified accounting with blocked science. Preserve those results and bind V771 without rerunning a development fit.
 
+Exp9027 SHALL pin the preserved V770 design and queue and all four named
+primaries. It SHALL compare all fourteen complete V771 objects in visible order,
+using staged/staged before activation and active bytes after activation. It SHALL
+retain the original V768 states, four admission checks,1024 graph IDs and
+128 CAL/128 TEST/768 online roles without refitting. Graph authority, five-arm
+online methods, administrative custody and new ARC support SHALL have independent
+binary readiness fields. ARC deltas SHALL use Exp9013 as the saved baseline.
+The archive observation SHALL report actual bytes separately from the planning
+observation that the archive ended at V769. Failed V769 health, Exp9014 consumer
+logs and Exp9015 source-access operands SHALL remain available by hash.
+
+#### SCENARIO-REPORT-9027-CUSTODY
+
+Private roots SHALL exercise active and staged contracts, missing authority,
+changed objects and coordinated rehashes. Current failed, absent, stale, altered
+or abnormal receipts SHALL disqualify every readiness field. Unavailable external
+authority SHALL be terminal blocked with its exact operand. Successful current
+checks SHALL not change historical failed health or imply scientific benefit.
+
+Implementation note,2026-11-12: The V771 binding and CLI are implemented with
+private authority, receipt and replay controls. Thirteen owned tests pass and
+all182 newly owned statements are covered. The publication runner retains its
+current validation receipts under the Exp9027 raw directory. The single broad
+suite attempt timed out at180 seconds; repository health stays failed.
+
 #### SCENARIO-REPORT-9027-V771
 
 The task SHALL retain per-unit rows, exact upstream gate operands, measured
