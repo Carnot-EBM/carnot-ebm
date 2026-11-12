@@ -1,0 +1,95 @@
+[exp9030] phase=before_authentication completed=0 pending=512
+[exp9000] phase=authenticate_retained completed=1 pending=2688
+[exp9000] phase=authenticate_retained completed=251 pending=2438
+[exp9000] phase=authenticate_retained completed=501 pending=2188
+[exp9000] phase=authenticate_retained completed=751 pending=1938
+[exp9000] phase=authenticate_retained completed=1001 pending=1688
+[exp9000] phase=authenticate_retained completed=1251 pending=1438
+[exp9000] phase=authenticate_retained completed=1501 pending=1188
+[exp9000] phase=authenticate_retained completed=1751 pending=938
+[exp9000] phase=authenticate_retained completed=2001 pending=688
+[exp9000] phase=authenticate_retained completed=2251 pending=438
+[exp9000] phase=authenticate_retained completed=2501 pending=188
+[exp9030] phase=response_reduction completed=1 pending=511
+[exp9030] phase=response_reduction completed=65 pending=447
+[exp9030] phase=response_reduction completed=129 pending=383
+[exp9030] phase=response_reduction completed=193 pending=319
+[exp9030] phase=response_reduction completed=257 pending=255
+[exp9030] phase=response_reduction completed=321 pending=191
+[exp9030] phase=response_reduction completed=385 pending=127
+[exp9030] phase=response_reduction completed=449 pending=63
+[exp9030] phase=after_audit completed=512 pending=0
+.[exp9030] phase=before_authentication completed=0 pending=512
+[exp9030] phase=before_authentication completed=0 pending=512
+..before subprocess ('--audit-only', '--output', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/experiment_9030_v771_retained_shard_a.json'))
+waiting subprocess completed=0 pending=1
+after subprocess 0  completed=65 pending=447
+[exp9030] phase=response_reduction completed=129 pending=383
+[exp9030] phase=response_reduction completed=193 pending=319
+[exp9030] phase=response_reduction completed=257 pending=255
+[exp9030] phase=response_reduction completed=321 pending=191
+[exp9030] phase=response_reduction completed=385 pending=127
+[exp9030] phase=response_reduction completed=449 pending=63
+[exp9030] phase=after_audit completed=512 pending=0
+[exp9030] phase=terminal_written completed=512 pending=0
+ 
+before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/experiment_9030_v771_retained_shard_a.json'))
+waiting subprocess completed=0 pending=1
+after subprocess 0 nse_reduction completed=65 pending=447
+[exp9030] phase=response_reduction completed=129 pending=383
+[exp9030] phase=response_reduction completed=193 pending=319
+[exp9030] phase=response_reduction completed=257 pending=255
+[exp9030] phase=response_reduction completed=321 pending=191
+[exp9030] phase=response_reduction completed=385 pending=127
+[exp9030] phase=response_reduction completed=449 pending=63
+[exp9030] phase=after_audit completed=512 pending=0
+{"passed": true, "reason": "replay_passed"}
+ 
+before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/experiment_9030_v771_retained_shard_a.json'))
+after subprocess 1 {"passed": false, "reason": "reduction_drift"}
+ 
+before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/experiment_9030_v771_retained_shard_a.json'))
+waiting subprocess completed=0 pending=1
+after subprocess 1 ction completed=65 pending=447
+[exp9030] phase=response_reduction completed=129 pending=383
+[exp9030] phase=response_reduction completed=193 pending=319
+[exp9030] phase=response_reduction completed=257 pending=255
+[exp9030] phase=response_reduction completed=321 pending=191
+[exp9030] phase=response_reduction completed=385 pending=127
+[exp9030] phase=response_reduction completed=449 pending=63
+[exp9030] phase=after_audit completed=512 pending=0
+{"passed": false, "reason": "primitive_drift:rows"}
+ 
+before subprocess ('--audit-only', '--input-root', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/absent'), '--output', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/missing/experiment_9030_v771_retained_shard_a.json'))
+after subprocess 0 [exp9030] phase=before_authentication completed=0 pending=512
+[exp9030] phase=terminal_written completed=0 pending=0
+ 
+before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/missing/experiment_9030_v771_retained_shard_a.json'))
+after subprocess 0 [exp9030] phase=before_authentication completed=0 pending=512
+{"passed": true, "reason": "replay_passed"}
+ 
+before subprocess ('--audit-only', '--input-root', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/altered-authority'), '--output', PosixPath('/tmp/carnot-9030-checks-ez8kp7ut/owned_tests/test_real_private_cli_and_reha0/altered/experiment_9030_v771_retained_shard_a.json'))
+after subprocess 0 [exp9030] phase=before_authentication completed=0 pending=512
+[exp9030] phase=terminal_written completed=0 pending=0
+ 
+before subprocess ('--date', 'bad')
+after subprocess 2  usage: experiment_9030_v771_retained_shard_a.py [-h] [--date {20261112}]
+                                                [--input-root INPUT_ROOT]
+                                                [--output OUTPUT]
+                                                [--audit-only]
+                                                [--cold-replay COLD_REPLAY]
+experiment_9030_v771_retained_shard_a.py: error: argument --date: invalid choice: 'bad' (choose from 20261112)
+
+.[exp9030] phase=before_authentication completed=0 pending=512
+[exp9030] phase=before_authentication completed=0 pending=512
+.[exp9030] phase=validation completed=0 pending=1
+[exp9030] phase=terminal_written completed=512 pending=0
+[exp9030] phase=validation completed=0 pending=1
+..
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+7 passed, 1 warning in 206.90s (0:03:26)

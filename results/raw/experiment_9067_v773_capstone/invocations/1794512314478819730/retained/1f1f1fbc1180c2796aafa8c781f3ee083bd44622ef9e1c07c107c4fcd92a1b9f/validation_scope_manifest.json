@@ -1,0 +1,198 @@
+{
+  "check_commands": {
+    "mypy": [
+      "mypy",
+      "--strict",
+      "python/carnot/reporting/v773_branch_contract.py",
+      "python/carnot/reporting/v773_branch_evidence.py",
+      "scripts/experiments/experiment_9054_v773_branch_contract.py"
+    ],
+    "owned_statement_coverage": [
+      "Coverage.combine",
+      "Coverage.json_report",
+      "coverage report --fail-under=100",
+      "python/carnot/reporting/v773_branch_contract.py",
+      "python/carnot/reporting/v773_branch_evidence.py",
+      "scripts/experiments/experiment_9054_v773_branch_contract.py"
+    ],
+    "owned_tests": [
+      "coverage run",
+      "pytest",
+      "tests/python/test_v773_branch_contract_9054.py",
+      "tests/python/test_primary_publication_7928.py",
+      "tests/python/test_experiment_7837_v681_contract_methods.py"
+    ],
+    "private_e2e018_021": [
+      "pytest",
+      "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "tests/python/test_restricted_decision_audit_8210.py",
+      "tests/python/test_hard_exit_learning_qualification_8206.py::test_real_child_two_crashes_and_no_crash"
+    ],
+    "ruff_check": [
+      "ruff",
+      "check",
+      "python/carnot/reporting/v773_branch_contract.py",
+      "python/carnot/reporting/v773_branch_evidence.py",
+      "scripts/experiments/experiment_9054_v773_branch_contract.py",
+      "tests/python/test_v773_branch_contract_9054.py"
+    ],
+    "ruff_format": [
+      "ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/v773_branch_contract.py",
+      "python/carnot/reporting/v773_branch_evidence.py",
+      "scripts/experiments/experiment_9054_v773_branch_contract.py",
+      "tests/python/test_v773_branch_contract_9054.py"
+    ],
+    "spec_coverage": [
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_v773_branch_contract_9054.py",
+      "tests/python/test_primary_publication_7928.py",
+      "tests/python/test_experiment_7837_v681_contract_methods.py"
+    ]
+  },
+  "code_test_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v773_branch_contract.py",
+      "sha256": "sha256:baa83c173d6337de6bb95973494b44d6d4f54215061a38008cd00bec4be364ec"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v773_branch_evidence.py",
+      "sha256": "sha256:31cfe72f6d0e98588f7ffd7167723dfc06db0655dcfb53c291bd8d3c6e449616"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9054_v773_branch_contract.py",
+      "sha256": "sha256:ddf7e29ba12477936f1f32ca258af1dd7ccc0632c667e208ed63203798fb5037"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v773_branch_contract_9054.py",
+      "sha256": "sha256:003ea29ecad487d11320092842379477b6804049c869bca97707ef2882c54add"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7837_v681_contract_methods.py",
+      "sha256": "sha256:cb5f5e2a4efca141fbaf90013d99a5989416ea30a3103e76b1c6cad347ae6ac5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hard_exit_learning_qualification_8206.py",
+      "sha256": "sha256:e35a9bf809590b970f5062118cc7da637e44790aa13f56922412e147ec55c60b"
+    }
+  ],
+  "direct_consumer_tests": [
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_experiment_7837_v681_contract_methods.py"
+  ],
+  "excluded_statements": 0,
+  "hard_cap_s": 4800,
+  "learning_restart": "E2E-020",
+  "measurement_limit_s": 3300,
+  "owned_paths": [
+    "python/carnot/reporting/v773_branch_contract.py",
+    "python/carnot/reporting/v773_branch_evidence.py",
+    "scripts/experiments/experiment_9054_v773_branch_contract.py"
+  ],
+  "owned_tests": [
+    "tests/python/test_v773_branch_contract_9054.py"
+  ],
+  "policy": "New scoped acceptance only; original producers, tests and acceptance rules remain unchanged.",
+  "private_e2e_tests": [
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+    "tests/python/test_restricted_decision_audit_8210.py",
+    "tests/python/test_hard_exit_learning_qualification_8206.py::test_real_child_two_crashes_and_no_crash"
+  ],
+  "repository_health_separate": true,
+  "required_check_names": [
+    "owned_tests",
+    "private_e2e018_021",
+    "ruff_check",
+    "ruff_format",
+    "mypy",
+    "spec_coverage",
+    "owned_statement_coverage"
+  ],
+  "required_normal_exit": true,
+  "reused_code_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v769_branch_contract.py",
+      "sha256": "sha256:55c955e7842eec0d47ec9fc2ba8fe695523455a9f0b0e4db19c74e97c62df956"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v769_branch_evidence.py",
+      "sha256": "sha256:65ae508de0eba8a9a07aaf48aef4bd6be4714b259beaaa03a5a55359a686a9f0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v768_branch_contract.py",
+      "sha256": "sha256:8056a923517b576548772eba84204f97e5d42898ec9de519bf6fd257f2747486"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v768_capstone.py",
+      "sha256": "sha256:1bd227fb2ddf060768ca23beffafea0e709d19875f7e91aa1fbe7de914e0fbbe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v767_branch_contract.py",
+      "sha256": "sha256:80272a1034e234ef83a4e75a4e4eea43496cd3721a5de821686a3bed8919d7bf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v766_branch_evidence.py",
+      "sha256": "sha256:454c5315045dd9d86bdf4b4de07614c1b13e20cfd77c7cfe0b4683b12f02fb1d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_frontier_8720.py",
+      "sha256": "sha256:41ac61aa16daa56163fc0a4e55efc2e125746df558ffcacc74008075d798807b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v755_branch_runner.py",
+      "sha256": "sha256:6cccd18ca0146e234cd66e7b936772c7d27c1538db6945d71d00b80ee808a6f9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v756_branch_qualification.py",
+      "sha256": "sha256:fbc3bc112cb6177c15f9a5fe18caf984869a7629123f79580aebde7a4b181d55"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py",
+      "sha256": "sha256:07c8a183d066c1eaefed6ac721181f2bb935d1a68ef192e125cd6bb798445a11"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v770_branch_contract.py",
+      "sha256": "sha256:75d2cd8d74cdd40f97adb4e17ca0293dc957c24508fbf4e48d02dc8b4b263711"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v770_branch_evidence.py",
+      "sha256": "sha256:4b8c17021c4172fca625c787a233dc071cb9af612e78ece019b44ba2db5c2a81"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9013_v770_branch_contract.py",
+      "sha256": "sha256:fe3002a732197db65b13dba6529c2ec7025ca730f75ab459bb23cae1d55fdfe4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v771_branch_contract.py",
+      "sha256": "sha256:b3c83df0b5d1a874950b3b6f8a77829af15a9af1edb8db4cbde877a69fa64696"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v771_branch_evidence.py",
+      "sha256": "sha256:2c28b3994b79dc1b76496ac3e756beae4106874c066d30902242071336986d78"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v772_branch_contract.py",
+      "sha256": "sha256:50afa8c0f1c21ca82ba0e1adf5a29591379734bb29b105e12320b383db585678"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v772_branch_evidence.py",
+      "sha256": "sha256:83d356ec73790ba2f445700ed147fdb75401d58a861ba69ebc91cd78b00f02d2"
+    }
+  ],
+  "statement_percent": 100,
+  "validation_reserve_s": 1200
+}

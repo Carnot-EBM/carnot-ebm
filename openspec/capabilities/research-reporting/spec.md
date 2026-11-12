@@ -113605,3 +113605,35 @@ hash-bound primary and validation receipts. Candidate similarity groups do not
 establish source-family independence; no roles, human outcomes or detector
 results are released. Historical Mu-SHROOM failures remain closed. Operational
 and traceability reconciliation is left to the conductor as requested.
+
+#### SCENARIO-REPORT-9067-EXACT-ACCOUNTING
+
+Exp9067 SHALL authenticate fourteen full V773 task objects with the independent
+Exp9054 digest and retained actual queue/design bytes. It SHALL retain exact
+producer and scheduler bytes, keep absent producer verdicts null, and record
+archive lag separately from current source-code drift. All seven graph, ten
+learning and four human bounds SHALL remain unmeasured without qualified paired
+primitive predictions and authorized truth. A complete roster or transport shard
+SHALL NOT establish detector benefit. Original 414/1024 construction and failed
+Mu-SHROOM authority SHALL remain preserved. The current 1024/1024 roster SHALL be
+recounted from its construction ledger without generating replacement graphs.
+
+Missing human authority SHALL close the unchanged 400-group MDH scope until
+changed original release bytes arrive. Missing QIDs require authenticated author
+mapping. A complete graph null SHALL favor converged linear; an exhausted fixed
+100000-proposal continuation requires a preregistered new mechanism. No unchanged
+external block SHALL turn complete accounting into a partial report. The current
+scope SHALL own only the new capstone module and CLI, cover every statement with
+zero exclusions, preserve original direct-consumer assertions, run private
+E2E-018/020/021, and reject missing input, changed authority and rehashed tampering
+through real foreign-directory CLI replay without PYTHONPATH. Publication SHALL
+use primary_publication after passed owned checks and unchanged terminal scanners.
+No LLM, generation, fit, external publication or activation is authorized.
+Ops/status/changelog/traceability reconciliation is conductor-owned for this run.
+
+Implementation note,2026-11-12,REQ-REPORT-9067-V773: the new
+`python/carnot/reporting/v773_capstone.py`, direct experiment CLI and
+`tests/python/test_v773_capstone_9067.py` implement exact fourteen-slot accounting.
+The dated primary records actual current validation receipts and measured owned
+statements. Its reconciliation score qualifies accounting only; original human
+authority and unavailable graph/learning/cost science remain terminal blocked.
