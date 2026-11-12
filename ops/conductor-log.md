@@ -21889,3 +21889,9 @@ code |
 | 2026-11-12 11:09 UTC | Explain every unresolved natural-source identity f | OK | 97 passed, 1 warning in 36.12s |
 | 2026-11-12 12:03 UTC | Test original human-annotation availability before | OK | 128 passed, 1 warning in 29.22s |
 | 2026-11-12 12:13 UTC | Collect fresh bounded Qwen graph shard A | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9042-fresh-seal-methods.fresh_source_ready_score (actual=0 == expected=1) |
+| 2026-11-12 12:23 UTC | Collect fresh bounded Qwen graph shard B | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9042-fresh-seal-methods.fresh_source_ready_score (actual=0 == expected=1) |
+| 2026-11-12 12:25 UTC | Admit fresh graph rows without releasing TEST outc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9045-fresh-corpus-a, exp9046-fresh-corpus-b) |
+| 2026-11-12 12:25 UTC | Freeze calibrated decisions on fresh graphs before | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9047-sealed-corpus-admission) |
+| 2026-11-12 12:25 UTC | Measure continuous spline adaptation with sealed f | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9047-sealed-corpus-admission) |
+| 2026-11-12 12:25 UTC | Independently reduce all fixed detector and contin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9048-sealed-calibrated-decisions, exp9049-sealed-online-streams) |
+| 2026-11-12 12:25 UTC | Measure complete spline service cost and hardware | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9050-joint-benefit-audit, exp9050-joint-benefit-audit) |
