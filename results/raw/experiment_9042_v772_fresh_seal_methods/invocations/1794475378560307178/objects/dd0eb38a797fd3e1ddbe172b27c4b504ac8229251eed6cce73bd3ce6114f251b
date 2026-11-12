@@ -1,0 +1,126 @@
+{
+  "experiment_id": 8986,
+  "task_id": "exp8986-spline-basis-methods",
+  "run_date": "20261111",
+  "seeds": [
+    71,
+    72,
+    73
+  ],
+  "fit_count": 256,
+  "guard_count": 64,
+  "feature_count": 27,
+  "knots": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -0.5,
+    0,
+    0.5,
+    1,
+    1,
+    1,
+    1
+  ],
+  "degree": 3,
+  "basis_per_coordinate": 7,
+  "parameter_counts": {
+    "spline": 217,
+    "linear": 28
+  },
+  "scaling": "fit-only min/max; [-1,1]; clip future; constant=0",
+  "objective": "mean(logaddexp(0,z)-y*z)+0.01*sum(beta[1:]**2)/2",
+  "energy": "E(correct)=0; E(error)=-z; p_error=sigmoid(z)",
+  "optimizer": {
+    "method": "L-BFGS-B",
+    "initialization": "zeros",
+    "bounds": null,
+    "maxiter": 500,
+    "gtol": 1e-06,
+    "ftol": 1e-12
+  },
+  "convergence_rule": "finite objective, coefficients, probabilities and actual gradient; max(abs(gradient))<=1e-6",
+  "temperature_grid": [
+    0.5,
+    1,
+    2,
+    4
+  ],
+  "temperature_selection": "fresh calibration only; minimum ensemble Brier; ascending ties",
+  "seed_reduction": "mean probabilities; seeds do not create independent graphs",
+  "feature_readout": [
+    "source_embedding8",
+    "answer_embedding8",
+    "mean_embedding8",
+    "mean_token_nll",
+    "first_answer_top2_margin",
+    "missing_answer"
+  ],
+  "forbidden_features": [
+    "BFS",
+    "label",
+    "graph_id",
+    "distance",
+    "answer_membership",
+    "source_metadata"
+  ],
+  "invariant_aggregation": "sort each coordinate before neighbor and pool summation; same frozen encoder bytes",
+  "development_signal_gate": "Exp8987 only; not part of spline_methods_ready_score",
+  "claim_scope": "numerical mechanics and exposed development only; no KAC reproduction or conformal guarantee",
+  "historical_context": {
+    "path": "results/experiment_8973_v767_shared_feature_methods.json",
+    "shared_methods_ready_score": 0,
+    "required_as_gate": false
+  },
+  "seven_bound_contract": {
+    "family_alpha": 0.05,
+    "bound_alpha": 0.0071428571428571435,
+    "bootstrap_draws": 10000,
+    "bootstrap_unit": "paired graph; resample all arms together; rerank exact half within draw",
+    "multiplicity": "Bonferroni seven one-sided percentile bounds",
+    "bounds": [
+      {
+        "control": "prevalence",
+        "criterion": "lower>0",
+        "metric": "brier_improvement"
+      },
+      {
+        "control": "confidence_logistic",
+        "criterion": "lower>0",
+        "metric": "brier_improvement"
+      },
+      {
+        "control": "shared_logistic",
+        "criterion": "lower>0",
+        "metric": "brier_improvement"
+      },
+      {
+        "control": "confidence_logistic",
+        "criterion": "upper<=0",
+        "metric": "accepted_error_delta_50"
+      },
+      {
+        "control": "shared_logistic",
+        "criterion": "upper<=0",
+        "metric": "accepted_error_delta_50"
+      },
+      {
+        "metric": "brier_improvement",
+        "control": "converged_linear",
+        "criterion": "lower>0"
+      },
+      {
+        "metric": "accepted_error_delta_50",
+        "control": "converged_linear",
+        "criterion": "upper<=0"
+      }
+    ],
+    "status": "frozen_unmeasured_until_fresh_calibration_and_test"
+  },
+  "time_budget": {
+    "measurement_seconds": 3600,
+    "reserve_checks_seconds": 900,
+    "hard_cap_seconds": 4800
+  }
+}

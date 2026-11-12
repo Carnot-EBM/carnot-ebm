@@ -59292,6 +59292,14 @@ may check unchanged support requirements using separate protected receipts.
 Static and online retention predictions SHALL both seal before final TEST truth
 reduction. Original fitted states and seven detector bounds SHALL remain fixed.
 
+#### SCENARIO-VERIFY-9042-BOUNDED
+
+Seed772042 construction SHALL retain accepted and rejected proposal primitives,
+all historical seeds/graphs, and independent replay. Rehashed aggregate or roster
+tampering SHALL fail. Exhaustion SHALL preserve all1024 intended slots with
+explicit withheld/censored status, never outcome zeros or replacement graphs.
+Final truth access SHALL log purpose and denial without opening protected bytes.
+
 #### SCENARIO-VERIFY-V772-SEAL
 
 A previous topology with renamed nodes, changed fitted state, duplicate first

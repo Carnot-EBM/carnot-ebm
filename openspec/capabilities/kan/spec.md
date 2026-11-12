@@ -3842,6 +3842,13 @@ selection and Exp8988 causal coefficient updates may adapt. Qwen weights, spline
 knots and original acceptance bounds SHALL remain fixed. Sparse-update operation
 counts SHALL NOT imply complete service or FPGA acceleration.
 
+#### SCENARIO-KAN-9042-STATES
+
+Exp9042 SHALL hash all original spline and four control states, encoder, scaling,
+knots, prompt/parser,64 development guard identities, seven detector bounds and
+ten learning bounds before constructing the roster. It SHALL not repeat fitting
+or development admission and SHALL keep model invocation counters zero.
+
 #### SCENARIO-KAN-V772-FROZEN
 
 Changing a frozen coefficient/basis hash before collection SHALL block. Online

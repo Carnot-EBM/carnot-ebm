@@ -112993,6 +112993,36 @@ under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
 per-unit evidence, exact gate operands, current invocation scope and verdict_class.
 Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
 
+Exp9042 SHALL authenticate Exp9041 frozen_methods_ready_score=1 and original
+Exp8987/8988 states and protocols before proposing graphs. Seed772042 SHALL
+use the existing matched k2/k3 graph distribution and exact isomorphism
+comparison against retained development and all matching historical proposals.
+The global cap is20000 proposals and300 seconds; an incomplete1024 roster SHALL
+be terminal blocked, retain every proposal and zero fresh_source_ready_score.
+The fixed A/B64 CAL/64 TEST/384 online roles SHALL never be response-selected.
+One unchanged manifest SHALL bind states, budgets, roles, streams, history and
+future static/retention seals. No model loads or refitting are permitted.
+
+#### SCENARIO-REPORT-9042-CUSTODY
+
+Private tests SHALL reject changed roster/state, renamed historical topology,
+duplicate first response, nested label-bearing logs, unauthorized TEST reads,
+swapped truth, and changed restart bindings. A real interrupted private worker
+SHALL resume without repeating a started request, censor lost responses, and
+match the uninterrupted checkpoint. TEST truth SHALL remain inaccessible until
+both Exp9048 and Exp9049 prediction seals bind the same manifest and labels.
+Fixtures establish mechanics only. Normal-exit owned/direct-consumer checks,
+private E2E-018/020/021, strict mypy, Ruff, explicit spec coverage and100 percent
+new statements without exclusions SHALL precede atomic primary publication.
+
+Implementation,2026-11-12: `fresh_seal_methods_9042.py`,
+`fresh_seal_custody_9042.py`, `fresh_seal_runner_9042.py` and the standalone
+Exp9042 CLI implement the bounded freeze and private custody checks, exercised
+by `tests/python/test_fresh_seal_methods_9042.py`. The measured seed772042
+construction indexed161887 retained graph/seed entries and accepted414 of1024
+graphs within20000 proposals. The610 unfilled slots remain censored; the
+prospective cohort is incomplete and collection readiness remains zero.
+
 #### SCENARIO-REPORT-9042-V772
 
 Private missing-input, changed-authority and rehashed-tamper controls SHALL
