@@ -113380,6 +113380,28 @@ Private missing-input, changed-authority and rehashed-tamper checks SHALL reject
 Real private CLI/cold replay SHALL qualify owned work before publication. External
 blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
 
+#### SCENARIO-REPORT-9058-FIRST-RESPONSE-CUSTODY
+
+Authenticate Exp9055 primary bytes, its full manifest, original state components,
+historical provenance, prompt/parser and resource checks before loading Qwen.
+Audit both collectors for earlier response exposure before either starts. Keep
+the original shard A order:64 CAL,64 TEST and384 online units. Persist request
+intent before transport. A lost first request stays censored across restart.
+Publish only identity and scalar transport rows. Keep responses and logprobs
+private for Exp9060 admission and later authorized reducers. No truth is read.
+Use the owned GPU lease and unchanged bounded runtime. Current invocations
+are serialized separately from historical receipts. Missing authority blocks;
+failed owned validation disqualifies and gives zero shard readiness.
+
+#### SCENARIO-REPORT-9058-PRIVATE-QUALIFICATION
+
+Private tests SHALL reject missing input, changed authority, duplicate attempts,
+nested truth logs and rehashed aggregate tampering. The real CLI and cold replay
+SHALL run outside the checkout without PYTHONPATH. Freeze owned and direct
+consumer checks before measurement. Require100 percent newly owned statements
+with zero exclusions, private E2E-018/021, Ruff, strict mypy, explicit spec tracing
+and unchanged artifact scanners. Retain historical repository failures separately.
+
 ### REQ-REPORT-9059-V773: Collect the completed prospective Qwen graph shard B
 
 Task `exp9059-fresh-corpus-b` SHALL produce `results/experiment_9059_v773_fresh_corpus_b.json`
