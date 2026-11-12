@@ -112718,6 +112718,48 @@ remain fixed. Implementation status: Planned.
 
 Task `exp9031-graph-corpus-b` SHALL deliver `results/experiment_9031_v771_graph_corpus_b.json` under its frozen V771 protocol. Exp9017 never passed provenance qualification. The original B identities and method stay fixed. A current qualified producer is the changed prerequisite; collect only the missing bounded Qwen shard.
 
+Frozen execution contract,2026-11-12: Authenticate the pinned Exp9028
+provenance_ready_score=1 and Exp9027 frozen_graph_authority_ready_score=1,
+including exact integer types and normal owned acceptance. Reuse Exp8987's
+original B graphs, prompts, roles and model settings. Inventory prior B
+primaries and primitive responses before compute; any completed matching
+identity SHALL terminate as complete_blocked_changed_input. Retain rejected
+bytes. Only the established leased GPU0 Qwen Q4_K_M collector may generate.
+Keep240-second preflight/load limits,30-second requests,2700-second generation,
+16-request checkpoints,3300-second measurement and1200-second validation reserve
+inside4800 seconds. Current ledger tokens determine bounded-generation versus
+load-only versus no-load class; no runtime padding or historical current calls.
+All512 authentic first responses and64/64/384 roles plus current checks are
+required for shard_ready_score=1. Source admission is circular_positive only.
+
+#### SCENARIO-REPORT-9031-CUSTODY
+
+Tests first SHALL cover missing inputs, changed authority, typed gates, prior
+completed B responses, failed current checks and independent graph reductions.
+Real private CLI children outside the checkout without PYTHONPATH SHALL replay
+and reject rehashed aggregate or primitive tampering. Freeze all owned/direct
+consumer commands before measurement. Actual normal exits, private E2E-018/021,
+Ruff, strict mypy, explicit-path spec coverage and100 percent new statements
+with zero exclusions SHALL gate publication through primary_publication and
+unchanged scanners. Historical failed repository health SHALL stay separate.
+Private fixtures SHALL never grant readiness or make model calls. The conductor
+owns ops and traceability reconciliation for this invocation.
+
+Implementation note,2026-11-12: `graph_corpus_b_9031.py`,
+`graph_corpus_runner_9031.py` and the direct experiment CLI reuse the frozen
+collector and reducers. Private tests cover current authority, prior responses,
+unknown GPU health, exact B identity, oracle-only readiness and cold replay.
+The parent reports completed/pending ledger counts every30 seconds while native
+work waits. Current acceptance and collection outcomes belong to the terminal
+artifact; historical failed health remains unchanged.
+
+Qualification failure rule,2026-11-12: A failed measured invocation SHALL stay
+disqualified. Repair private fixture isolation without changing assertions or
+scientific bounds. A later invocation SHALL retain the rejected candidate and
+its failed receipts as upstream byte references. Existing completed B bytes
+SHALL block that later invocation as changed_input; repair SHALL NOT trigger
+replacement generation or silently promote the earlier failed qualification.
+
 #### SCENARIO-REPORT-9031-V771
 
 The task SHALL retain per-unit rows, exact upstream gate operands, measured

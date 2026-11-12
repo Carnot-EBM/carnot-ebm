@@ -1,0 +1,147 @@
+..[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+.before_private_subprocess ('--date', '20261112', '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 ection completed=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_changed_input", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 1 {"passed": false, "replay_passed": false}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 1 {"passed": false, "replay_passed": false}
+ 
+before_private_subprocess ('--date', '20261112', '--input-root', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/absent'), '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 pleted=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_authority_bytes", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--date', '20261112', '--input-root', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/altered-authority'), '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 pleted=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_authority_bytes", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--date', 'wrong')
+after_private_subprocess 2                 [--input-root INPUT_ROOT]
+                                              [--fixture-e2e FIXTURE_E2E]
+                                              [--cold-replay COLD_REPLAY]
+experiment_9031_v771_graph_corpus_b.py: error: argument --date: invalid choice: 'wrong' (choose from 20261112)
+
+before_private_subprocess ('--date', '20261112', '--fixture-e2e', PosixPath('/home/ianblenke/github.com/ianblenke/carnot/bad.json'))
+after_private_subprocess 2                                          [--input-root INPUT_ROOT]
+                                              [--fixture-e2e FIXTURE_E2E]
+                                              [--cold-replay COLD_REPLAY]
+experiment_9031_v771_graph_corpus_b.py: error: fixture writes require private scratch
+
+.[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+F..[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+[exp8931] phase=owned_validation completed=0 pending=1
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-io75br1f/owned_tests/test_production_validation_and0/results/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_changed_input", "shard_ready_score": 0}
+[exp8931] phase=owned_validation completed=0 pending=1
+[exp8931] phase=owned_checks_failed_primary_unchanged completed=0 pending=1
+.[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+F
+=================================== FAILURES ===================================
+___________________ test_runtime_dispatch_and_unknown_health ___________________
+
+work = {'authentication': {'checks': [{'artifact_field': 'sha256', 'check': 'authority_bytes', 'expected': 'sha256:32fbf7d2e3...tifact_field': 'previous_completed_B_identities', 'check': 'changed_input', 'expected': 0, 'observed': 512, ...}], ...}
+tmp_path = PosixPath('/tmp/carnot-9031-validation-io75br1f/owned_tests/test_runtime_dispatch_and_unkn0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e98662c90>
+
+    def test_runtime_dispatch_and_unknown_health(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9031-V771: only authenticated live work reaches B's leased collector."""
+        calls = []
+    
+        def capture(units, raw, *, task_id):
+            calls.append(task_id)
+            assert len(units) == 512 and task_id == d.TASK
+            return deepcopy(work["runtime"])
+    
+        monkeypatch.setattr(r.runtime, "run", capture)
+        assert not r.freeze(d.ROOT, tmp_path / "live", False)["runtime"]["live"]
+>       assert calls == [d.TASK]
+E       AssertionError: assert [] == ['exp9031-graph-corpus-b']
+E         
+E         Right contains one more item: 'exp9031-graph-corpus-b'
+E         Use -v to get more diff
+
+tests/python/test_graph_corpus_b_9031.py:169: AssertionError
+______________________ test_oracle_positive_and_load_only ______________________
+
+work = {'authentication': {'checks': [{'artifact_field': 'sha256', 'check': 'authority_bytes', 'expected': 'sha256:32fbf7d2e3...tifact_field': 'previous_completed_B_identities', 'check': 'changed_input', 'expected': 0, 'observed': 512, ...}], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6efb0f95b0>
+
+    def test_oracle_positive_and_load_only(work, monkeypatch):
+        """REQ-REPORT-9031-V771: actual current ledger tokens determine the inference class."""
+        from test_matched_depth_control_8948 import response
+    
+        monkeypatch.setattr(d, "qualified", lambda _: True)
+        monkeypatch.setattr(d, "raw_complete", lambda _: True)
+        runtime = work["runtime"]
+        runtime["rows"] = [
+            d.source.label_response(u, response(u["expected"][0])) for u in work["units"]
+        ]
+        runtime["live"] = True
+        runtime["ledger"] = [
+            dict(
+                operation="model_load",
+                call_id="load",
+                scope="current",
+                status="completed",
+                output_tokens=0,
+            )
+        ] + [
+            dict(
+                operation="generation",
+                call_id=u["unit_id"],
+                scope="current",
+                status="completed",
+                output_tokens=1,
+            )
+            for u in work["units"]
+        ]
+        runtime["counts"] = d.custody.ledger_counts(runtime["ledger"])
+        validation = dict(receipts=[], coverage={}, scope={})
+        value = d.build(work, validation, False)
+>       assert value["verdict_class"] == "circular_positive" and value["shard_ready_score"] == 1
+E       AssertionError: assert ('blocked' == 'circular_positive'
+E         
+E         - circular_positive
+E         + blocked)
+
+tests/python/test_graph_corpus_b_9031.py:272: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_graph_corpus_b_9031.py::test_runtime_dispatch_and_unknown_health
+FAILED tests/python/test_graph_corpus_b_9031.py::test_oracle_positive_and_load_only
+2 failed, 7 passed, 1 warning in 108.78s (0:01:48)

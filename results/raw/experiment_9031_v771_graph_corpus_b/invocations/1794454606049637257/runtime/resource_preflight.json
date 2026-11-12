@@ -1,0 +1,96 @@
+{
+  "checks": [
+    {
+      "artifact_field": "sys.prefix",
+      "check": "repository_virtualenv",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+      "sha256": null,
+      "upstream": "environment"
+    },
+    {
+      "artifact_field": "scipy",
+      "check": "dependency",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9031_v771_graph_corpus_b/invocations/1794454606049637257/runtime",
+      "sha256": null,
+      "upstream": "environment"
+    },
+    {
+      "artifact_field": "http_status",
+      "check": "required_network",
+      "expected": 200,
+      "observed": 200,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8990_v768_graph_corpus_a.py",
+      "sha256": "sha256:0e0c384afb88a86709d554a526f0bf111a58593a8401b0ffb023803b99b68527",
+      "upstream": "model_host_connectivity"
+    }
+  ],
+  "failures": [],
+  "resources": {
+    "dependencies": [
+      "jax",
+      "numpy",
+      "scipy",
+      "sklearn",
+      "coverage",
+      "pytest",
+      "ruff",
+      "mypy"
+    ],
+    "disk_free_bytes": 522164133888,
+    "exclusion_manifest_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0"
+    },
+    "free_memory_checked": true,
+    "memory_available_bytes": 26746101760,
+    "repository_virtualenv": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+    "required_network_checks": [
+      {
+        "artifact_field": "sys.prefix",
+        "check": "repository_virtualenv",
+        "expected": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+        "observed": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+        "sha256": null,
+        "upstream": "environment"
+      },
+      {
+        "artifact_field": "scipy",
+        "check": "dependency",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9031_v771_graph_corpus_b/invocations/1794454606049637257/runtime",
+        "sha256": null,
+        "upstream": "environment"
+      },
+      {
+        "artifact_field": "http_status",
+        "check": "required_network",
+        "expected": 200,
+        "observed": 200,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8990_v768_graph_corpus_a.py",
+        "sha256": "sha256:0e0c384afb88a86709d554a526f0bf111a58593a8401b0ffb023803b99b68527",
+        "upstream": "model_host_connectivity"
+      }
+    ],
+    "resource_failures": [],
+    "resources_checked": true,
+    "writable_disk_checked": true
+  }
+}
