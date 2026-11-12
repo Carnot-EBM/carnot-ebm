@@ -21872,3 +21872,4 @@ code |
 | 2026-11-12 02:26 UTC | Resolve multilingual source identities with bounde | OK | 108 passed, 1 warning in 25.15s |
 | 2026-11-12 03:14 UTC | Authenticate retained shard A without new generati | OK | 88 passed, 1 warning in 103.99s (0:01:43) |
 | 2026-11-12 04:20 UTC | Complete the frozen bounded Qwen source with shard | OK | 91 passed, 1 warning in 71.53s (0:01:11) |
+| 2026-11-12 04:29 UTC | Join authenticated shards under the original graph | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9030-retained-shard-a.shard_ready_score (actual=0 == expected=1) |
