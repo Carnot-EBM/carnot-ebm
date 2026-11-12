@@ -21895,3 +21895,4 @@ code |
 | 2026-11-12 12:25 UTC | Measure continuous spline adaptation with sealed f | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9047-sealed-corpus-admission) |
 | 2026-11-12 12:25 UTC | Independently reduce all fixed detector and contin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9048-sealed-calibrated-decisions, exp9049-sealed-online-streams) |
 | 2026-11-12 12:25 UTC | Measure complete spline service cost and hardware | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9050-joint-benefit-audit, exp9050-joint-benefit-audit) |
+| 2026-11-12 12:32 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9041-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
