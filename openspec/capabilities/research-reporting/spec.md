@@ -113533,3 +113533,53 @@ REQ-REPORT-9055-CONTINUATION cursor schema: `continuation_counter` SHALL contain
 `initial`, `last_completed` and `next` integer cursor positions. It is checkpoint
 metadata. `proposal_count` SHALL remain the separately reduced total proposal count.
 This records the cursor/count identity without presenting two scientific metrics.
+
+### REQ-REPORT-9056-AUTHORITY: Audit pinned original MDH release without opening targets
+
+The MDH audit SHALL authenticate revision 7a1ea413106baa9943bb87a6db38dcf262c5a9ae,
+original workbook bytes and documentation before reading prompt/response fields.
+Only allowlisted prompt, response and source identifiers may reach public planning.
+Headers, member hashes and per-response missing authority SHALL remain reconstructable.
+Publication claims, automated labels, composite R-Score and model names SHALL NOT
+substitute for three attributable independent original factual-error judgments.
+Unknown original authority SHALL produce terminal blocked, with exact operands;
+completed eligibility rejection SHALL produce terminal null. No model SHALL load.
+
+#### SCENARIO-REPORT-9056-SCHEMA
+
+Private workbooks with extra targets or model fields SHALL not leak their values.
+Duplicate annotators, automatic targets and absent original judgments SHALL not
+qualify. Inspect ZIP/XML members without executing macros or external workbook links.
+All released response slots SHALL retain row identities and source-byte hashes.
+
+#### SCENARIO-REPORT-9056-CUSTODY
+
+Missing files and fields SHALL differ from observed zero. Pinned hashes SHALL reject
+changed authority even when an attacker rehashes the manifest and primary envelope.
+Unknown exposure joins, including unresolved Mu-SHROOM identities, SHALL block
+eligibility. No cohort or class-support claim is permitted before authority closure.
+The separate pilot requires exactly400 unseen source-family groups; ordering uses
+SHA256 of v773-mdh-v1 plus canonical group ID, with160 FIT,40 CAL and200 TEST.
+All protected values remain sealed until an authorized evaluator; no regeneration.
+
+#### SCENARIO-REPORT-9056-QUALIFICATION
+
+Freeze owned and direct-consumer paths before measurement. Require real private
+CLI/cold replay outside the checkout without PYTHONPATH, missing-input, changed
+source and rehashed-tamper controls, private E2E-018/021, Ruff, strict mypy,
+explicit-path spec coverage and100 percent newly owned statements, zero exclusions.
+Use unchanged adversarial and strict row scanners before primary_publication.
+Current failures disqualify and zero readiness; retained repository debt remains
+failed separately. Status/changelog/traceability reconciliation is conductor-owned.
+
+Implementation note for REQ-REPORT-9056-AUTHORITY (2026-11-12): implemented in
+`mdh_human_release_9056.py`, `mdh_human_release_runner_9056.py` and the requested
+experiment CLI. Tests retain all4800 scheduled response slots, including two
+missing responses, exclude appended summary rows, and exercise original-byte
+custody, target protection, missing inputs and rehashed tampering. The frozen
+owned run passes20 tests and measures289/289 statements with zero exclusions.
+Final authority and current consumer/E2E qualification are recorded in the
+hash-bound primary and validation receipts. Candidate similarity groups do not
+establish source-family independence; no roles, human outcomes or detector
+results are released. Historical Mu-SHROOM failures remain closed. Operational
+and traceability reconciliation is left to the conductor as requested.
