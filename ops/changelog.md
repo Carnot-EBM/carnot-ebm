@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-12 UTC — Operational retrospective for milestone 2026.11.772
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.772`: updated `results/operational_retro_2026_11_772.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed experiments (all 5 compute-bound, 0 synthesis-only) across 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment).
+- The 5 completed experiments (all `compute_bound: true`) were: `Freeze fresh graph identities and prediction-before-truth custody` (15.33 minutes / 15min), `Reconcile thirteen outcomes and decide exact continuation boundaries` (7.33 minutes / 7min), `Bind thirteen tasks and preserve completed V771 evidence` (2.51 minutes / 3min), `Explain every unresolved natural-source identity from retained responses` (0.02 minutes / 0min), and `Test original human-annotation availability before another natural pilot` (0.0 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or process telemetry); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.
+- Suggested improvements: parallelize and cache fresh graph identity freezing and prediction-before-truth custody checks in the 15.33-minute (15min) task without engaging `DualGPURunner`, cache and share thirteen-task binding, completed V771 evidence, and thirteen-outcome reconciliation state across the 7.33-minute (7min) and 2.51-minute (3min) tasks, persist direct per-experiment timestamps to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability during compute-bound runs.
+
 ## 2026-11-12 UTC — Exp9044 participation authority repair
 
 - Preserve nested annotator IDs independently of span schema validity; enforce

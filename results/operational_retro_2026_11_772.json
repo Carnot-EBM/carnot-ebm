@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.772",
+  "generated_at": "2026-11-12T13:34:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 25.2,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Freeze fresh graph identities and prediction-before-truth custody",
+      "duration_minutes": 15.33,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and decide exact continuation boundaries",
+      "duration_minutes": 7.33,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and preserve completed V771 evidence",
+      "duration_minutes": 2.51,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Explain every unresolved natural-source identity from retained responses",
+      "duration_minutes": 0.02,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test original human-annotation availability before another natural pilot",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.772 completed 5 compute-bound experiments (0 synthesis-only) in 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 5 completed tasks (all compute_bound: true) were 'Freeze fresh graph identities and prediction-before-truth custody' (15.33 minutes / 15min), 'Reconcile thirteen outcomes and decide exact continuation boundaries' (7.33 minutes / 7min), 'Bind thirteen tasks and preserve completed V771 evidence' (2.51 minutes / 3min), 'Explain every unresolved natural-source identity from retained responses' (0.02 minutes / 0min), and 'Test original human-annotation availability before another natural pilot' (0.0 minutes / 0min). Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 5 completed experiments were compute-bound (0 synthesis-only) across 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment), led by 'Freeze fresh graph identities and prediction-before-truth custody' at 15.33 minutes (15min).",
+    "Outcome reconciliation and task binding accounted for the remaining wall time: 'Reconcile thirteen outcomes and decide exact continuation boundaries' took 7.33 minutes (7min) and 'Bind thirteen tasks and preserve completed V771 evidence' took 2.51 minutes (3min), while 'Explain every unresolved natural-source identity from retained responses' (0.02 minutes / 0min) and 'Test original human-annotation availability before another natural pilot' (0.0 minutes / 0min) completed near-instantly.",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Parallelize and cache fresh graph identity freezing and prediction-before-truth custody verification in 'Freeze fresh graph identities and prediction-before-truth custody' (15.33 minutes / 15min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Pre-index and share thirteen-task binding, completed V771 evidence, and thirteen-outcome reconciliation state between 'Bind thirteen tasks and preserve completed V771 evidence' (2.51 minutes / 3min) and 'Reconcile thirteen outcomes and decide exact continuation boundaries' (7.33 minutes / 7min) to reduce the 5-minute per-experiment average.",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize and cache fresh graph identity freezing and prediction-before-truth custody checks in 'Freeze fresh graph identities and prediction-before-truth custody' (15.33 minutes / 15min).",
+    "Share thirteen-task binding and completed V771 evidence state across 'Bind thirteen tasks and preserve completed V771 evidence' (2.51 minutes / 3min) and 'Reconcile thirteen outcomes and decide exact continuation boundaries' (7.33 minutes / 7min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.772 completed 5 compute-bound experiments (0 synthesis-only) in 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Parallelizing and caching fresh graph identity freezing and prediction-before-truth custody checks in the 15.33-minute (15min) task, sharing thirteen-task state across the 7.33-minute (7min) reconciliation and 2.51-minute (3min) binding tasks, and persisting direct experiment timestamps will improve execution efficiency and observability in the next milestone."
+}

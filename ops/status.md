@@ -1,5 +1,9 @@
 # Carnot — Operational Status
 
+## 2026-11-12 UTC — Milestone 2026.11.772 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_772.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed compute-bound experiments (0 synthesis-only) across 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment): freezing fresh graph identities and prediction-before-truth custody (15.33 min / 15min), reconciling thirteen outcomes and deciding exact continuation boundaries (7.33 min / 7min), binding thirteen tasks and preserving completed V771 evidence (2.51 min / 3min), explaining every unresolved natural-source identity from retained responses (0.02 min / 0min), and testing original human-annotation availability before another natural pilot (0.0 min / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: parallelize and cache fresh graph identity freezing and prediction-before-truth custody checks in the 15.33-minute (15min) task, cache and share thirteen-task binding, completed V771 evidence, and thirteen-outcome reconciliation state across the 7.33-minute (7min) and 2.51-minute (3min) tasks, persist direct experiment timestamps, and restore GPU monitor availability.
+
 ## 2026-11-12 UTC — Exp9044 participation authority repair
 
 **Last Updated:** 2026-11-12 (Exp9044 participation repair only)
