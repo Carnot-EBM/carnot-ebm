@@ -23626,3 +23626,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-12: Resolve multilingual source identities with bounded resumable metadata (⚠️ Blocked) — honest_verdict=complete_blocked_release_identity_closure; results/experiment_9029_v771_source_identity_resolution.json
 - 2026-11-12: Authenticate retained shard A without new generation or revised labels (⚠️ Blocked) — honest_verdict=complete_blocked_nonexposure_audit; results/experiment_9030_v771_retained_shard_a.json
 - 2026-11-12: Complete the frozen bounded Qwen source with shard B (⚠️ Blocked) — honest_verdict=complete_blocked_changed_input; results/experiment_9031_v771_graph_corpus_b.json
+- 2026-11-12: Reconcile fourteen outcomes and separate graph and independent-label claims (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9040_v771_capstone.json
