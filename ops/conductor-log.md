@@ -21867,3 +21867,4 @@ code |
 | 2026-11-12 00:15 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_variant_denominators age-week 1: OPEN 7 days: SILENT_NON |
 | 2026-11-12 00:15 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 0: OPEN  |
 | 2026-11-12 00:15 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_text age-week 0: OPEN 1 days: REAL_BUG on adversar |
+| 2026-11-12 00:34 UTC | Bind fourteen tasks and preserve V769 failures and | OK | 94 passed, 1 warning in 46.86s |
