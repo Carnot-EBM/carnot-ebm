@@ -1,0 +1,87 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________ test_private_publication_missing_inputs_and_tamper ______________
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_private_publication_missi0')
+
+    def test_private_publication_missing_inputs_and_tamper(tmp_path):
+        """SCENARIO-REPORT-9028-REPLAY: private terminal publications reject rehashed drift."""
+        from carnot.reporting import historical_provenance_9028 as d
+    
+>       work = work_fixture(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_historical_provenance_9028.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_private_publication_missi0')
+
+    def work_fixture(tmp_path):
+        """Administrative fixture receipts have no live or historical science credit."""
+        from carnot.reporting import historical_provenance_9028 as d
+        from carnot.reporting import scoped_provenance_9014 as old
+>       from tests.python.test_scoped_provenance_9014 import work_fixture as original_fixture
+E       ModuleNotFoundError: No module named 'tests.python'
+
+tests/python/test_historical_provenance_9028.py:94: ModuleNotFoundError
+_______________________ test_execute_paths_and_deadline ________________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_execute_paths_and_deadlin0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f64894d2780>
+
+    def test_execute_paths_and_deadline(tmp_path, monkeypatch):
+        """REQ-REPORT-9028-QUALIFICATION: bounded execution keeps real checker semantics."""
+        from carnot.reporting import historical_provenance_9028 as d
+    
+>       fixture = work_fixture(tmp_path / "fixture")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_historical_provenance_9028.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_execute_paths_and_deadlin0/fixture')
+
+    def work_fixture(tmp_path):
+        """Administrative fixture receipts have no live or historical science credit."""
+        from carnot.reporting import historical_provenance_9028 as d
+        from carnot.reporting import scoped_provenance_9014 as old
+>       from tests.python.test_scoped_provenance_9014 import work_fixture as original_fixture
+E       ModuleNotFoundError: No module named 'tests.python'
+
+tests/python/test_historical_provenance_9028.py:94: ModuleNotFoundError
+__________________ test_main_records_failed_current_terminal ___________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_main_records_failed_curre0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f64894d3b00>
+
+    def test_main_records_failed_current_terminal(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-9028-RECEIPTS: failed current scans disqualify a new candidate."""
+        from carnot.reporting import historical_provenance_9028 as d
+    
+>       work = work_fixture(tmp_path / "fixture")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_historical_provenance_9028.py:249: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/carnot-9028-red-orchestration/test_main_records_failed_curre0/fixture')
+
+    def work_fixture(tmp_path):
+        """Administrative fixture receipts have no live or historical science credit."""
+        from carnot.reporting import historical_provenance_9028 as d
+        from carnot.reporting import scoped_provenance_9014 as old
+>       from tests.python.test_scoped_provenance_9014 import work_fixture as original_fixture
+E       ModuleNotFoundError: No module named 'tests.python'
+
+tests/python/test_historical_provenance_9028.py:94: ModuleNotFoundError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_historical_provenance_9028.py::test_private_publication_missing_inputs_and_tamper
+FAILED tests/python/test_historical_provenance_9028.py::test_execute_paths_and_deadline
+FAILED tests/python/test_historical_provenance_9028.py::test_main_records_failed_current_terminal
+3 failed, 18 deselected, 1 warning in 1.89s

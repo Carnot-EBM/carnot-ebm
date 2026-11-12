@@ -112597,6 +112597,52 @@ remain fixed. Implementation status: Planned.
 
 Task `exp9028-historical-provenance-qualification` SHALL deliver `results/experiment_9028_v771_historical_provenance_qualification.json` under its frozen V771 protocol. Exp9014 failed six original V767 consumer tests at task_authority: the reader follows mutable vNEXT/queue bytes. Its valid receipt control correctly rejected that failed validation set. Change historical test input custody, not receipt acceptance or scientific gates.
 
+### REQ-REPORT-9028-HISTORY: Bind historical readers to preserved input bytes
+
+The V767 reader SHALL accept an explicit private authority root in Python and
+its real CLI. Its original independent task digest SHALL remain unchanged.
+Original test nodes and assertions SHALL remain intact. Their private fixture
+SHALL copy the preserved V767 design and queue, never a successor document.
+Authority files and original failing logs SHALL retain their byte hashes.
+Exp9014 and earlier failed primaries SHALL remain unchanged and disqualified.
+
+#### SCENARIO-REPORT-9028-AUTHORITY
+
+Before changing the reader, reproduce all six task_authority failures in private
+scratch. Matching historical bytes SHALL pass the original authority reader.
+Missing, reordered, prompt-changed, independently wrong-digest and successor
+authority copies SHALL fail, including through real child CLI paths.
+Mutation controls SHALL change only private copies.
+
+### REQ-REPORT-9028-QUALIFICATION: Require current evidence for scoped readiness
+
+Reuse the existing provenance serializer and current receipt checker. Freeze
+owned statements, direct consumers, original node hashes, commands and code
+before measurement. Require every original serializer control and all six
+V767 regressions. Current model calls SHALL be zero. Fixture controls SHALL
+earn no science credit. Historical repository health SHALL remain failed.
+
+#### SCENARIO-REPORT-9028-RECEIPTS
+
+Real CLI children SHALL accept actual passing current normal-exit receipts.
+Separate missing, stale, failed, timeout, log-hash, command, duplicate and
+code-hash mutations SHALL refuse. Failed current checks SHALL zero both
+readiness scores. Require 100 percent new statements with zero exclusions,
+private E2E-018/021, unchanged scanners and foreign-directory cold replay.
+
+#### SCENARIO-REPORT-9028-REPLAY
+
+Missing inputs SHALL retain exact failed operands and end blocked. Changed
+authority, changed retained bytes and rehashed aggregate tampering SHALL fail
+replay. Retain per-control primitive rows and independently recompute summaries.
+Publication SHALL use primary_publication after current checks pass.
+
+Implementation: `historical_provenance_9028.py`, its dated experiment CLI and
+private tests implement these requirements. The original V767 test functions
+retain their AST hashes. A private authority fixture supplies preserved inputs
+to both Python calls and child CLIs. The new primary records current checks;
+it does not change Exp9014 or earlier health observations.
+
 #### SCENARIO-REPORT-9028-V771
 
 The task SHALL retain per-unit rows, exact upstream gate operands, measured

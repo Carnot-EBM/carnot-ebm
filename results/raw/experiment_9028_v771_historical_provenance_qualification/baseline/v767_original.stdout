@@ -1,0 +1,209 @@
+F.FF.F.FF                                                                [100%]
+=================================== FAILURES ===================================
+___________________________ test_census_and_science ____________________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_census_and_science0')
+
+    def test_census_and_science(tmp_path):
+        """REQ-REPORT-8984: scientific nulls and external blocks retain independent findings."""
+>       work = m.collect(tmp_path / "raw", "20261110")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v767_capstone_8984.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v767_capstone.py:173: in collect
+    require(contract["ready"], "task_authority")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, reason = 'task_authority'
+
+    def require(condition: bool, reason: str) -> None:
+        """Reject changed arithmetic even when an attacker recomputes the outer hash."""
+        if not condition:
+>           raise ValueError(reason)
+E           ValueError: task_authority
+
+python/carnot/reporting/v763_capstone_reduction.py:29: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start_authentication completed=0 pending=14
+______________________ test_resources_and_empty_reduction ______________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_resources_and_empty_reduc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f858e6af230>
+
+    def test_resources_and_empty_reduction(tmp_path, monkeypatch):
+        """REQ-REPORT-8984: resource failure blocks science; optional hardware never blocks CPU."""
+>       work = m.collect(tmp_path / "raw", "20261110", sources=tmp_path / "absent")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v767_capstone_8984.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v767_capstone.py:173: in collect
+    require(contract["ready"], "task_authority")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, reason = 'task_authority'
+
+    def require(condition: bool, reason: str) -> None:
+        """Reject changed arithmetic even when an attacker recomputes the outer hash."""
+        if not condition:
+>           raise ValueError(reason)
+E           ValueError: task_authority
+
+python/carnot/reporting/v763_capstone_reduction.py:29: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start_authentication completed=0 pending=14
+_______________ test_cli_publication_replay_and_rehashed_tamper ________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_cli_publication_replay_an0')
+
+    def test_cli_publication_replay_and_rehashed_tamper(tmp_path):
+        """SCENARIO-REPORT-8984-V767: E2E-018/021 actual children publish and refuse forged aggregates."""
+        output = tmp_path / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        child = subprocess.run(
+            [*command, "--date", "20261110", "--output", str(output)],
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=180,
+        )
+>       assert child.returncode == 0, child.stdout + child.stderr
+E       AssertionError: [exp8984] phase=imports_before completed=0 pending=1
+E         [exp8984] phase=start completed=0 pending=0
+E         [exp8984] phase=start_authentication completed=0 pending=14
+E         {"passed": false, "reason": "task_authority"}
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...xp8984] phase=start_authentication completed=0 pending=14\n{"passed": false, "reason": "task_authority"}\n', stderr='').returncode
+
+tests/python/test_v767_capstone_8984.py:161: AssertionError
+__________________ test_changed_producer_and_terminal_failure __________________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_changed_producer_and_term0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f858e6ae840>
+
+    def test_changed_producer_and_terminal_failure(tmp_path, monkeypatch):
+        """REQ-REPORT-8984: rejected graph bytes preserve independent natural access evidence."""
+        monkeypatch.setitem(m.PINS, 8973, "sha256:changed")
+>       work = m.collect(tmp_path / "raw", "20261110")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v767_capstone_8984.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v767_capstone.py:173: in collect
+    require(contract["ready"], "task_authority")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, reason = 'task_authority'
+
+    def require(condition: bool, reason: str) -> None:
+        """Reject changed arithmetic even when an attacker recomputes the outer hash."""
+        if not condition:
+>           raise ValueError(reason)
+E           ValueError: task_authority
+
+python/carnot/reporting/v763_capstone_reduction.py:29: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start_authentication completed=0 pending=14
+___________ test_output_local_receipts_and_explicit_override[False] ____________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_output_local_receipts_and0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f858e574d70>
+explicit = False
+
+    @pytest.mark.parametrize("explicit", [False, True])
+    def test_output_local_receipts_and_explicit_override(tmp_path, monkeypatch, explicit):
+        """REQ-REPORT-8984: qualification follows output custody and explicit overrides."""
+        output = tmp_path / (m.NAME + ".json")
+        local = tmp_path / "raw" / m.NAME / "validation.json"
+        validation = dict(
+            passed=False,
+            coverage=dict(complete=False),
+            receipts=[dict(name="local_validation", passed=False)],
+        )
+        atomic_json(local, validation)
+        args = ["--output", str(output)]
+        if explicit:
+            validation = dict(validation, receipts=[dict(name="explicit_validation", passed=False)])
+            override = tmp_path / "explicit.json"
+            atomic_json(override, validation)
+            args += ["--receipts", str(override)]
+        observed = []
+    
+        def reject(candidate, raw):
+            observed.append(json.loads(candidate.read_bytes())["validation_state"])
+            return dict(passed=False)
+    
+        monkeypatch.setattr(m, "terminal", reject)
+        assert m.main(args) == 1
+>       assert observed == [validation]
+E       AssertionError: assert [] == [{'coverage':...ed': False}]}]
+E         
+E         Right contains one more item: {'coverage': {'complete': False}, 'passed': False, 'receipts': [{'name': 'local_validation', 'passed': False}]}
+E         Use -v to get more diff
+
+tests/python/test_v767_capstone_8984.py:263: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+____________ test_output_local_receipts_and_explicit_override[True] ____________
+
+tmp_path = PosixPath('/tmp/carnot-9028-original/test_output_local_receipts_and1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8590f09ac0>
+explicit = True
+
+    @pytest.mark.parametrize("explicit", [False, True])
+    def test_output_local_receipts_and_explicit_override(tmp_path, monkeypatch, explicit):
+        """REQ-REPORT-8984: qualification follows output custody and explicit overrides."""
+        output = tmp_path / (m.NAME + ".json")
+        local = tmp_path / "raw" / m.NAME / "validation.json"
+        validation = dict(
+            passed=False,
+            coverage=dict(complete=False),
+            receipts=[dict(name="local_validation", passed=False)],
+        )
+        atomic_json(local, validation)
+        args = ["--output", str(output)]
+        if explicit:
+            validation = dict(validation, receipts=[dict(name="explicit_validation", passed=False)])
+            override = tmp_path / "explicit.json"
+            atomic_json(override, validation)
+            args += ["--receipts", str(override)]
+        observed = []
+    
+        def reject(candidate, raw):
+            observed.append(json.loads(candidate.read_bytes())["validation_state"])
+            return dict(passed=False)
+    
+        monkeypatch.setattr(m, "terminal", reject)
+        assert m.main(args) == 1
+>       assert observed == [validation]
+E       AssertionError: assert [] == [{'coverage':...ed': False}]}]
+E         
+E         Right contains one more item: {'coverage': {'complete': False}, 'passed': False, 'receipts': [{'name': 'explicit_validation', 'passed': False}]}
+E         Use -v to get more diff
+
+tests/python/test_v767_capstone_8984.py:263: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v767_capstone_8984.py::test_census_and_science - Val...
+FAILED tests/python/test_v767_capstone_8984.py::test_resources_and_empty_reduction
+FAILED tests/python/test_v767_capstone_8984.py::test_cli_publication_replay_and_rehashed_tamper
+FAILED tests/python/test_v767_capstone_8984.py::test_changed_producer_and_terminal_failure
+FAILED tests/python/test_v767_capstone_8984.py::test_output_local_receipts_and_explicit_override[False]
+FAILED tests/python/test_v767_capstone_8984.py::test_output_local_receipts_and_explicit_override[True]
+6 failed, 3 passed, 1 warning in 3.60s

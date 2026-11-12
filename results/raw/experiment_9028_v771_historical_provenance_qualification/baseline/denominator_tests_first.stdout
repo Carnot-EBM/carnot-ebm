@@ -1,0 +1,43 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_reduction_requires_current_coverage_and_controls _____________
+
+tmp_path = PosixPath('/tmp/carnot-9028-denominator-red/test_reduction_requires_curren0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc52ce4f020>
+
+    def test_reduction_requires_current_coverage_and_controls(tmp_path, monkeypatch):
+        """REQ-REPORT-9028-QUALIFICATION: current failures zero readiness and leave old verdicts intact."""
+        from carnot.reporting import historical_provenance_9028 as d
+    
+        work = work_fixture(tmp_path)
+        monkeypatch.setattr(d, "verify_coverage", lambda *_: True)
+        value = d.build(work)
+        assert value["provenance_ready_score"] == value["validation_scope_ready_score"] == 1
+        assert value["original_verdict_preserved"] and not value["repository_health_passed"]
+        assert value["MODEL_SPECS"] == value["model_specs"] == value["trained_head_specs"] == []
+        assert not any(value["model_invocation_counts"].values())
+        for key in ("controls", "current_receipt_mutation_rows", "historical_authority_rows"):
+            changed = deepcopy(work)
+            changed[key][0]["passed"] = False
+            assert d.build(changed)["provenance_ready_score"] == 0
+        changed = deepcopy(work)
+        changed["validation"]["receipts"][0]["exit_code"] = 1
+        assert d.build(changed)["verdict_class"] == "disqualified"
+        changed["evidence"]["failures"] = [dict(check="input_bytes", observed="missing_file")]
+        assert d.build(changed)["honest_verdict"] == "complete_blocked_input_bytes"
+        for key in ("controls", "current_receipt_mutation_rows", "historical_authority_rows"):
+            changed[key] = []
+        blocked = d.build(changed)
+>       assert blocked["intended_count"] == blocked["censored_count"] == 21
+E       assert 0 == 21
+
+tests/python/test_historical_provenance_9028.py:197: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_historical_provenance_9028.py::test_reduction_requires_current_coverage_and_controls
+1 failed, 22 deselected, 1 warning in 2.18s

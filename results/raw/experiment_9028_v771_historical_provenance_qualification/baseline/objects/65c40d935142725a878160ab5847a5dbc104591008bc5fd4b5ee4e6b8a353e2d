@@ -1,0 +1,50 @@
+.[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+.before_private_child ['--date', '20261111', '--fixture-e2e', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 0 [exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=before_terminal_validation completed=0 pending=0
+[exp8931] phase=terminal_published completed=512 pending=0
+{"primary_path": "/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/experiment_8990_v768_graph_corpus_a.json", "primary_sha256": "sha256:7ee572c705cf58d04ec95870059cfcaa19b8b99f0de06c2e1493a4f4b3ce779d", "sidecar_path": "/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/raw/experiment_8990_v768_graph_corpus_a/validators/7ee572c705cf58d04ec95870059cfcaa19b8b99f0de06c2e1493a4f4b3ce779d.json", "honest_verdict": "complete_null_graph_corpus_a", "shard_ready_score": 0}
+
+before_private_child ['--cold-replay', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 0 {"passed": true, "replay_passed": true}
+
+before_private_child ['--cold-replay', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 1 {"passed": false, "replay_passed": false}
+
+before_private_child ['--cold-replay', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 1 {"passed": false, "replay_passed": false}
+
+before_private_child ['--date', '20261111', '--fixture-e2e', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/blocked/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 0 [exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=before_terminal_validation completed=0 pending=0
+[exp8931] phase=terminal_published completed=512 pending=0
+{"primary_path": "/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/blocked/experiment_8990_v768_graph_corpus_a.json", "primary_sha256": "sha256:eb4608551ff77655157961f4847baeaab4b91f037324a70ff1a59c84674c19bc", "sidecar_path": "/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/blocked/raw/experiment_8990_v768_graph_corpus_a/validators/eb4608551ff77655157961f4847baeaab4b91f037324a70ff1a59c84674c19bc.json", "honest_verdict": "complete_blocked_authority_bytes", "shard_ready_score": 0}
+
+before_private_child ['--cold-replay', '/tmp/carnot-8990-validation-uzklqsit/pytest/test_private_cli_replay0/blocked/experiment_8990_v768_graph_corpus_a.json']
+after_private_child 0 {"passed": true, "replay_passed": true}
+
+before_private_child ['--date', 'wrong']
+after_private_child 2 
+before_private_child ['--date', '20261111', '--fixture-e2e', '/home/ianblenke/github.com/ianblenke/carnot/bad.json']
+after_private_child 2 
+.[exp8931] phase=before_resource_preflight completed=0 pending=512
+[exp8931] phase=before_tokenizer_preflight completed=0 pending=512
+[exp8931] phase=after_tokenizer_preflight completed=1 pending=512
+[exp8931] phase=after_resource_preflight completed=1 pending=512
+[exp8931] phase=before_resource_preflight completed=0 pending=512
+[exp8931] phase=before_tokenizer_preflight completed=0 pending=512
+[exp8931] phase=after_tokenizer_preflight completed=0 pending=512
+[exp8931] phase=before_resource_preflight completed=0 pending=512
+[exp8931] phase=before_resource_preflight completed=0 pending=512
+[exp8931] phase=before_resource_preflight completed=0 pending=512
+.
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 1 warning in 105.02s (0:01:45)

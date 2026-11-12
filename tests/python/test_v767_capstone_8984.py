@@ -13,6 +13,15 @@ from carnot.reporting import v767_capstone as m
 from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
 
 
+@pytest.fixture(autouse=True)
+def preserved_v767_authority(tmp_path, monkeypatch):
+    """REQ-REPORT-9028-HISTORY: give original nodes and their children preserved authority bytes."""
+    from carnot.reporting.historical_provenance_9028 import historical_authority
+
+    root = historical_authority(tmp_path / "v767_authority")
+    monkeypatch.setenv("CARNOT_V767_AUTHORITY_ROOT", str(root))
+
+
 def test_census_and_science(tmp_path):
     """REQ-REPORT-8984: scientific nulls and external blocks retain independent findings."""
     work = m.collect(tmp_path / "raw", "20261110")

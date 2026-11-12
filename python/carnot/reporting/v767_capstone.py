@@ -163,23 +163,31 @@ def slot(task: Json, value: Json, ref: Json | None, logs: list[str], values: Jso
     )
 
 
-def collect(raw: Path, run_date: str, sources: Path = ROOT / "results") -> Json:
+def collect(
+    raw: Path,
+    run_date: str,
+    sources: Path = ROOT / "results",
+    authority_root: Path | None = None,
+) -> Json:
     """Retain original producer bytes and the exact authority before any numerical reduction."""
     progress("start_authentication", 0, 14)
     start = time.monotonic_ns()
     raw.mkdir(parents=True, exist_ok=True)
     preconditions = authority.resources(raw, run_date)
-    contract = authority.authority(ROOT)
+    authority_root = authority_root or Path(os.environ.get("CARNOT_V767_AUTHORITY_ROOT", str(ROOT)))
+    contract = authority.authority(authority_root)
     require(contract["ready"], "task_authority")
     tasks, values, refs = contract["tasks"], {}, []
     for name in [
-        authority.DESIGN,
         "ops/conductor-log.md",
         "research-complete.yaml",
         "research-references.md",
     ]:
         refs.append(retain(ROOT / name, raw, sha256_file(ROOT / name)))
-    log = Path(refs[1]["path"]).read_text().splitlines()
+    log = Path(refs[0]["path"]).read_text().splitlines()
+    for name in [authority.DESIGN, authority.ACTIVE, authority.STAGED]:
+        if (authority_root / name).is_file():
+            refs.append(retain(authority_root / name, raw, sha256_file(authority_root / name)))
     for task in tasks[:-1]:
         n = int(task["id"][3:7])
         candidates = list(sources.glob(f"experiment_{n}_*.json"))
@@ -247,7 +255,6 @@ def collect(raw: Path, run_date: str, sources: Path = ROOT / "results") -> Json:
     gate = json.loads(Path(receipts[0]["log_path"]).read_bytes())
     refs.append(reference(Path(receipts[0]["log_path"])))
     for name in [
-        authority.ACTIVE,
         "scripts/publication_gate.py",
         "ops/publication_gate_state.json",
         "docs/technical-report.md",
@@ -579,6 +586,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--date", choices=["20261110"], default="20261110")
     parser.add_argument("--output", type=Path, default=ROOT / "results" / (NAME + ".json"))
     parser.add_argument("--sources", type=Path, default=ROOT / "results")
+    parser.add_argument("--authority-root", type=Path)
     parser.add_argument("--receipts", type=Path)
     parser.add_argument("--cold-replay", type=Path)
     args = parser.parse_args(argv)
@@ -589,7 +597,7 @@ def main(argv: list[str] | None = None) -> int:
         output = args.output.absolute()
         receipts = args.receipts or output.parent / "raw" / NAME / "validation.json"
         raw = output.parent / "raw" / NAME / "invocations" / str(time.monotonic_ns())
-        work = collect(raw, args.date, args.sources)
+        work = collect(raw, args.date, args.sources, args.authority_root)
         validation = (
             json.loads(receipts.read_bytes())
             if receipts.is_file()
