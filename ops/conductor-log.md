@@ -21873,3 +21873,9 @@ code |
 | 2026-11-12 03:14 UTC | Authenticate retained shard A without new generati | OK | 88 passed, 1 warning in 103.99s (0:01:43) |
 | 2026-11-12 04:20 UTC | Complete the frozen bounded Qwen source with shard | OK | 91 passed, 1 warning in 71.53s (0:01:11) |
 | 2026-11-12 04:29 UTC | Join authenticated shards under the original graph | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9030-retained-shard-a.shard_ready_score (actual=0 == expected=1) |
+| 2026-11-12 04:37 UTC | Qualify original human labels and freeze matched p | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9029-source-identity-resolution.source_identity_ready_score (actual=0 == expected=1) |
+| 2026-11-12 04:39 UTC | Test frozen spline decisions against all registere | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9032-corpus-admission) |
+| 2026-11-12 04:39 UTC | Measure continuous coefficient learning on sealed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9032-corpus-admission) |
+| 2026-11-12 04:39 UTC | Audit future spline benefit and simultaneous share | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9035-online-spline-streams) |
+| 2026-11-12 04:39 UTC | Measure energy decisions against independent human | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9033-human-label-methods, exp9033-human-label-methods) |
+| 2026-11-12 04:39 UTC | Measure complete spline service costs and actual a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9034-spline-calibrated-decisions, exp9035-online-spline-streams) |
