@@ -113305,13 +113305,32 @@ all sample counts, authority boundaries and acceptance gates. No result is claim
 
 Task `exp9054-branch-contract` SHALL produce `results/experiment_9054_v773_branch_contract.json`
 under its full V773 prompt. Preserve all declared gates, primitive unit rows,
-current invocation scope, original failed evidence and verdict_class. Status: Planned.
+current invocation scope, original failed evidence and verdict_class. Status: Implemented;
+qualification is recorded in the primary's bound validation receipts and statement data.
+
+The contract SHALL compare fourteen complete objects and visible order Exp9054–9067
+against an independently pinned digest. It SHALL select staged/staged before activation
+and actual active bytes after activation. Preserved V772 design and queue bytes SHALL
+be checked against the original Exp9041 digest. Archive lag SHALL come from bytes.
+Contract readiness and qualified Exp9028/8987/8988 frozen-method readiness SHALL stay
+independent of optional ARC support. No model SHALL load. Exp9042's 414/1024 roster,
+20000-proposal cap, closed Mu-SHROOM identity and participation failures SHALL remain
+failed historical authority. A future MDH study requires separate source authority.
 
 #### SCENARIO-REPORT-9054-V773
 
 Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
 Real private CLI/cold replay SHALL qualify owned work before publication. External
 blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+Private controls SHALL cover both authority lifecycle states, all seven unchanged
+authority mutations, altered historical bytes, receipt failure and rehashed history
+tampering. Current affected consumers, E2E-018/021, Ruff, strict mypy, explicit-path
+spec coverage and 100 percent newly owned statements with zero exclusions SHALL
+qualify publication. Cold replay SHALL run outside the checkout without PYTHONPATH.
+Thirty new uncensored ARC episodes, three families and both arms per held family
+are required for ARC readiness; zero support SHALL leave administrative and method
+readiness intact. Historical repository health SHALL remain separately failed.
 
 ### REQ-REPORT-9055-V773: Complete the deterministic graph roster without changing its population
 

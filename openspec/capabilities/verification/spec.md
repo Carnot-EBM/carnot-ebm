@@ -59327,6 +59327,19 @@ Implementation status: Planned; tasks Exp9049/9050, with Exp9051 full service co
 
 ## V773 proposed evidence boundaries — 2026-11-12
 
+### REQ-VERIFY-9054: Preserve authority without promoting old outcomes
+
+Exp9054 SHALL authenticate V772 failures and original V768 fits without refitting,
+reading protected TEST truth, or inheriting historical model invocation credit.
+Current failed owned checks SHALL zero every readiness score. Historical source
+failure SHALL not block an otherwise qualified administrative custody contract.
+
+#### SCENARIO-VERIFY-9054-REPLAY
+
+Missing input, changed authority, changed original verdict, stale receipt, altered
+archive lag and rehashed aggregates SHALL fail independent private replay controls.
+Actual statement data SHALL qualify only the new modules and CLI, with no exclusions.
+
 ### REQ-VERIFY-V773-PROSPECTIVE
 
 Exp9055 SHALL preserve the original 414-object prospective graph prefix, seed

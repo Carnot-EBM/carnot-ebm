@@ -1,0 +1,2193 @@
+milestone: 2026.11.773
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+milestone_title: Complete Prospective Evidence, Human Factual Labels, and Continuous
+  Energy Learning
+tasks:
+- MODEL_SPECS: []
+  deliverable: results/experiment_9054_v773_branch_contract.json
+  estimated_wall_time_min: 30
+  gated_on: []
+  id: exp9054-branch-contract
+  inference_substrate_class: no_model_load
+  max_turns: 100
+  milestone: 2026.11.773
+  model: opus
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: New contract separates proposal-cap recovery and MDH authority from
+      the closed missing-QID/participation chain; preserve all previous gates and
+      failed evidence.
+    experiment_id: exp9053-capstone
+    retire_if_same_verdict: true
+    verdict: complete_blocked_declared_gate
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. V772 completed scheduling with no new detector
+    or learning measurement. Exp9042 stopped at 414/1024 graphs after a fixed 20000-proposal
+    cap. Exp9043 and the Exp9053 recount preserve failed natural-source authority.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/roadmap_contract.py; python/carnot/reporting/v772_branch_contract.py;
+    python/carnot/reporting/v772_branch_evidence.py; results/experiment_9041_v772_branch_contract.json;
+    results/experiment_9053_v772_capstone.json; results/experiment_8987_v768_spline_development_admission.json;
+    results/experiment_8988_v768_online_spline_methods.json; openspec/change-proposals/research-roadmap-v772-preserved-20261112.md;
+    openspec/change-proposals/research-roadmap-v772-queue-preserved-20261112.yaml;
+    python/carnot/reporting/arc_supervisor_frontier_8720.py; ops/arc_supervisor_refinement_ledger.json
+
+    TASK:
+
+    Bind fourteen tasks and preserve V772 failures and frozen methods. Deliver results/experiment_9054_v773_branch_contract.json,
+    primitive evidence under results/raw/experiment_9054_v773_branch_contract/, and
+    runnable scripts/experiments/experiment_9054_v773_branch_contract.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Compare all fourteen full task objects and visible order Exp9054..Exp9067.
+    Compare staged/staged before activation and actual active bytes after activation.
+    Bind the preserved V772 design, original independent task digest and queue. Record
+    completion-archive lag from bytes; do not manufacture rows or activate anything.
+
+    6. Authenticate qualified Exp9028 provenance and original Exp8987 states and Exp8988
+    five-arm protocol. Emit frozen_methods_ready_score independently from contract_ready_score.
+    Preserve graph thresholds and closed Mu-SHROOM identity/participation failures;
+    a new MDH study has separate source authority.
+
+    7. Inspect ARC receipts once against the retained Exp9041 frontier. arc_new_outcomes_ready_score=1
+    needs 30 NEW uncensored episodes, at least three families and both arms per held
+    family. Zero support must not fail contract or frozen-method readiness. Freeze
+    hashes and eligibility for the optional ARC consumer.
+
+    8. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    9. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - contract_ready_score, frozen_methods_ready_score, arc_new_outcomes_ready_score,
+    full_contract_rows, full_task_digest, frozen_state_references, frontier_delta_rows,
+    archive_lag. Principle: administrative success is not scientific benefit.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9054_v773_branch_contract.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Bind fourteen tasks and preserve V772 failures and frozen methods
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_9055_v773_prospective_roster.json
+  estimated_wall_time_min: 45
+  gated_on:
+  - artifact_field: forged
+    op: ==
+    upstream: exp9054-branch-contract
+    value: 1
+  id: exp9055-prospective-roster
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Measured 2.07 percent eligibility exhausted a hard-coded 20000 cap
+      in 27.78 seconds. Honor a fixed 100000 total cap with resumable continuation
+      of the same414 prefix, unchanged predicate and 300-second ceiling.
+    experiment_id: exp9042-fresh-seal-methods
+    retire_if_same_verdict: true
+    verdict: complete_blocked_fresh_roster_complete
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp9042 accepted 414 graphs; all 19586 rejections
+    were unequal answer cardinality, none were isomorphism collisions. Four blocks
+    yielded 112/102/107/93. The 20000 cap, including min(proposal_limit,20000), ended
+    a 27.78-second scan. No corresponding model collection ran.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/fresh_seal_methods_9042.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    python/carnot/reporting/fresh_seal_runner_9042.py; python/carnot/reporting/graph_source_8931.py;
+    python/carnot/reporting/relational_methods_8959.py; results/experiment_9042_v772_fresh_seal_methods.json;
+    results/experiment_9053_v772_capstone.json
+
+    TASK:
+
+    Complete the deterministic graph roster without changing its population. Deliver
+    results/experiment_9055_v773_prospective_roster.json, primitive evidence under
+    results/raw/experiment_9055_v773_prospective_roster/, and runnable scripts/experiments/experiment_9055_v773_prospective_roster.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Authenticate the original proposal ledger, all 414 accepted objects and absence
+    of model responses for this roster. Preserve the old primary. Recount rejection
+    causes and block yields. Rebuild historical overlap authority including every
+    later exposed graph; changed exposure of the accepted prefix blocks this continuation.
+
+    6. Continue the SAME seed expression 2**52 + 772042*10000000 + counter from counter
+    20000. Retain prefix objects, IDs and roles byte for byte. Fix only bounded scan
+    orchestration so the configured cap is honored; keep historical replay pinned
+    to the original implementation. Stop at exactly 1024 accepted graphs, 100000 TOTAL
+    proposals or 300 seconds of construction, whichever comes first. No second seed,
+    adaptive population, outcome-based replacement or smaller cohort. Preserve every
+    rejection and deterministic checkpoint; resume the same prefix after interruption.
+
+    7. Keep size 50..60, edge probability 3/(n-1), nonempty equal k2/k3 answer-set
+    cardinality, exact historical isomorphism rejection, original 128 CAL/128 TEST/768
+    online roles and A/B 64/64/384. Reuse original fitted heads, encoder, knots, guard
+    and seven/ten bounds. Source metadata can be read; model correctness cannot select
+    graphs.
+
+    8. Reuse Exp9042 custody controls and test cap crossing, exact prefix preservation,
+    interruption/resume, tampered ledger and late exposure. Detector views exclude
+    answers and truth. Seal expected prediction counts and authorized label-read schedule
+    for Exp9061/9062/9063. fresh_source_ready_score=1 requires all1024, zero overlap
+    and qualified custody; exhaustion is a terminal blocked result. The estimate from
+    2.07 percent acceptance is not guaranteed success.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - fresh_source_ready_score, original_prefix_sha256, continuation_counter, proposal_count,
+    rejection_counts, construction_duration_s, fresh_role_manifest, historical_overlap_rows,
+    state_hashes, label_access_policy, expected_seal_fields. Principle: more label-blind
+    proposals preserve the fixed estimand; fewer observations do not.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9055_v773_prospective_roster.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Complete the deterministic graph roster without changing its population
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9056_v773_human_release_authority.json
+  estimated_wall_time_min: 40
+  gated_on: []
+  id: exp9056-human-release-authority
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Switch to a separately registered author MDH release with workbook-level
+      human/source authority and a factual-error target; do not retry or claim to
+      repair the215 Mu-SHROOM identities or1006 participation mismatches.
+    experiment_id: exp9044-annotation-feasibility
+    retire_if_same_verdict: true
+    verdict: complete_blocked_source_identity_ready_score
+  - addressed_by: Require attributable original human judgments in MDH workbooks;
+      generated RAGognize labels cannot qualify.
+    experiment_id: exp8989-natural-annotation-authority
+    retire_if_same_verdict: true
+    verdict: complete_null_machine_annotation_only
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The October2026 MDH paper reports400 prompts
+    and three annotators. Its author Hub release contains four workbooks at revision7a1ea413106baa9943bb87a6db38dcf262c5a9ae,
+    dated March9. The viewer shows28 configuration text rows, not response units.
+    Old Mu-SHROOM identity and participation failures remain closed.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/natural_annotation_authority_8989.py; python/carnot/reporting/annotation_feasibility_9044.py;
+    python/carnot/reporting/hallutruth_release_8585.py; results/experiment_9043_v772_identity_obstruction_audit.json;
+    results/experiment_9044_v772_annotation_feasibility.json; results/experiment_9053_v772_capstone.json;
+    https://www.nature.com/articles/s41598-026-76014-w; https://huggingface.co/datasets/Prism-BMSCE/mdh-bench_multi-domain-hallucination-benchmark
+
+    TASK:
+
+    Qualify MDH original human judgments and unseen prompt groups. Deliver results/experiment_9056_v773_human_release_authority.json,
+    primitive evidence under results/raw/experiment_9056_v773_human_release_authority/,
+    and runnable scripts/experiments/experiment_9056_v773_human_release_authority.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Fetch only author release bytes and documentation at the pinned revision, with
+    hashes and rights. Bound acquisition to100MB,12 requests,25seconds/request and300seconds
+    total; respect access refusals. Inspect workbook members without macros or running
+    run_all_models_api.py. Reconcile March release versus October manuscript and advertised
+    models/runs. Publication claims alone do not authenticate rows.
+
+    6. Use a field allowlist to separate prompt/response text and source IDs from
+    human targets, automated labels, composite R-Score, explanations and model identity.
+    Keep outcome values protected. Establish the original factual-error criterion
+    and at least three attributable independent human judgments per admitted response,
+    including disagreement and missingness. Machine labels or one duplicated annotator
+    fail authority. Record the original authority of every response and run; no regeneration.
+
+    7. Build complete prompt/source-family clusters using metadata and text similarity
+    before labels. Join all retained exposure ledgers, including LPHB, FaithBench,
+    HalluTruthQA and Mu-SHROOM. Unknown overlap blocks eligibility; unresolved old
+    identities cannot be assumed different. Exactly400 independently grouped, unexposed
+    prompts and all their authenticated released responses are required for this separate
+    pilot. If source-family merging leaves fewer, stop without selecting a favorable
+    subset. No requirement from the old Mu-SHROOM pilot is weakened.
+
+    8. Freeze group ordering with SHA256 of salt v773-mdh-v1 and canonical group ID:
+    first160 FIT, next40 CAL, final200 TEST. No outcome values may reach planning
+    output. A trusted evaluator checks at least10 distinct groups per class in each
+    role and emits only readiness, preserving protected counts until final scoring.
+    human_source_ready_score requires identity, original annotations, criterion, rights,
+    full400 groups and custody. A completed eligibility rejection is terminal null;
+    inaccessible or unknown authority is blocked. Neither is a verifier result.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - human_source_ready_score, release_revision, release_hashes, rights_reference,
+    release_date_reconciliation, annotation_authority_rows, criterion_mapping, group_manifest_reference,
+    exposure_join_rows, protected_label_reference, schema_mutation_rows. Principle:
+    the author dataset and human targets, not the Hub viewer or a judge, define this
+    separate study.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9056_v773_human_release_authority.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Qualify MDH original human judgments and unseen prompt groups
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9057_v773_human_probe_methods.json
+  estimated_wall_time_min: 45
+  gated_on:
+  - artifact_field: human_source_ready_score
+    op: ==
+    upstream: exp9056-human-release-authority
+    value: 1
+  id: exp9057-human-probe-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: The MDH authority gate replaces a failed Mu-SHROOM dependency for
+      a distinct fixed factual-error pilot; no old pilot or source claim is reopened.
+    experiment_id: exp9033-human-label-methods
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Only qualified MDH source groups may support
+    this separate pilot. The Labeling Problem paper distinguishes factual correctness
+    from reference faithfulness. Test whether a small spline energy adds value over
+    a matched linear head, not whether the existing generators rank well.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/spline_basis_methods_8986.py; python/carnot/reporting/sentence_spline_fit_8334.py;
+    python/carnot/experiment_7452_v653_source_embeddings.py; python/carnot/experiment_7716_v672_qwen_semantic_pilot.py;
+    python/carnot/reporting/current_work_receipt.py; results/experiment_9056_v773_human_release_authority.json
+
+    TASK:
+
+    Freeze matched energy and linear probes for the human factual-error pilot. Deliver
+    results/experiment_9057_v773_human_probe_methods.json, primitive evidence under
+    results/raw/experiment_9057_v773_human_probe_methods/, and runnable scripts/experiments/experiment_9057_v773_human_probe_methods.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Freeze the exact160FIT/40CAL/200TEST groups and all authenticated released
+    responses. Target y=1 for a majority of original human factual-error judgments;
+    ties/UNSURE follow original documented adjudication, otherwise remain missing
+    and fail the fixed cohort. Do not inspect TEST values. Preserve individual judgments
+    for descriptive sensitivity after scoring. Equal-weight prompt groups, then responses
+    within each group.
+
+    6. Freeze Qwen3.8-27B Q4_K_M embedding prefill, mean pooling over prompt and response
+    content tokens, no reference answer or metadata. Use at most2048 tokens with no
+    silent truncation: longer inputs block this fixed recipe. Use a fixed Gaussian
+    projection to32 dimensions, seed773057, FIT-only centering/scaling, clipping at[-3,3].
+    Record clipping for every role. The generator weights remain frozen.
+
+    7. Compare prevalence, converged logistic linear and additive cubic B-spline energy
+    on identical projected features. Reuse the qualified convex optimizer; spline
+    fixed knots[-3,-2,-1,0,1,2,3], ridge0.01 excluding intercept, max2000iterations
+    and gradient infinity norm<=1e-6 for both fitted heads. No architecture search.
+    Select temperature from[0.5,1,2,4] on CAL only, ascending ties. Accept error probability<=0.1,
+    reject>=0.9, otherwise escalate; tie order is frozen group/response hash.
+
+    8. Freeze four simultaneous one-sided bounds: spline Brier improvement over prevalence
+    and over linear lower>0; accepted-error delta at exactly50percent weighted coverage
+    versus linear upper<=0; AUROC improvement over linear lower>0. Use10000 paired
+    prompt-group bootstrap draws, seed773064, familyalpha0.05 and tail0.0125. Rerank
+    within each draw. At least10 TEST groups per class; no alternate metric or role
+    if it fails. Ordinary CI95 and per-generator/domain sensitivities are secondary.
+
+    9. Write fixture-only prediction-seal and feature-exclusion tests, including nested
+    label leaks, swapped human/automatic columns, duplicate group IDs, mislabeled
+    substrate and convergence failure. No model load and no real TEST output. Emit
+    human_methods_ready_score only after the full frozen recipe and fail-closed controls
+    qualify.
+
+    10. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    11. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - human_methods_ready_score, protocol_reference, four_bound_contract, feature_allowlist,
+    embedding_recipe, optimizer_contract, split_hash, prediction_seal_schema, negative_controls.
+    Principle: the same representation and fixed source groups isolate head value;
+    a probe is not a deterministic certificate.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9057_v773_human_probe_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze matched energy and linear probes for the human factual-error pilot
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_9058_v773_fresh_corpus_a.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: fresh_source_ready_score
+    op: ==
+    upstream: exp9055-prospective-roster
+    value: 1
+  id: exp9058-fresh-corpus-a
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Original collection was skipped at414/1024 identities. The current
+      Exp9055 gate requires a completed continuation and unchanged nonexposure before
+      any model load.
+    experiment_id: exp9045-fresh-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  - addressed_by: Reuse the qualified Exp9028 serializer; historical receipts remain
+      references and do not become current model calls.
+    experiment_id: exp8990-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_graph_corpus_a
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The original V772 graph collection never ran
+    because its roster was incomplete. Exp9055 must complete the same prospective
+    roster and prove no response exposure before either collector starts.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/graph_source_8931.py; python/carnot/reporting/graph_corpus_a_8961.py;
+    python/carnot/reporting/invocation_provenance_9000.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    results/experiment_9028_v771_historical_provenance_qualification.json; results/experiment_9055_v773_prospective_roster.json
+
+    TASK:
+
+    Collect the completed prospective Qwen graph shard A. Deliver results/experiment_9058_v773_fresh_corpus_a.json,
+    primitive evidence under results/raw/experiment_9058_v773_fresh_corpus_a/, and
+    runnable scripts/experiments/experiment_9058_v773_fresh_corpus_a.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Use unsloth/Qwen3.8-27B-GGUF in MODEL_SPECS and record model/tokenizer/quantization
+    hashes, actual CUDA offload and current invocation counts. Declare model_bounded_generation
+    (10-second floor): every request has a fixed small token budget. No simulation
+    fallback or smoke-model headline. A block before loading reports actual no_model_load
+    separately from planned MODEL_SPECS; never fabricate duration.
+
+    5. Use only the frozen shardA:512 first responses,64CAL/64TEST/384online. Authenticate
+    the full source manifest and all fitted-state hashes. Use the shipped current-versus-historical
+    invocation serializer. Prior observations outside this same authenticated invocation
+    block changed input, even if a response looks unusable.
+
+    6. Load mandated Qwen Q4_K_M on one authorized RTX3090 lease with temperature0,
+    reasoning disabled,16tokens/request, frozen prompt/parser and actual logprobs.
+    Preflight/load each<=240seconds, each request<=30seconds and total collection<=2700seconds.
+    No retry, repair, best-of-N or default-model fallback. Record server executable,
+    tokenizer and GPU offload. Do not use the ARC resident server without its existing
+    lease mechanism.
+
+    7. Checkpoint each completed first response and flush progress at least every16units;
+    supervise child waits continuously. Lost in-flight answers remain censored and
+    never earn a replacement. Preserve scheduled denominator and transport/parser
+    failures. Resume only authenticated remaining units. Collect CAL/TEST/online under
+    the existing truth access policy; primaries expose only identity and transport
+    rows, not nested correctness/confidence/output summaries.
+
+    8. shard_ready_score=1 requires complete original512 transport records, authenticated
+    model and custody receipts, and owned checks; scientific label balance is checked
+    by admission. Stop safely before validation budget. Keep raw responses and truth
+    sidecars private until the independent reducer.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - shard_ready_score, shard_id, first_response_records, model_tokenizer_hashes,
+    actual_offload, per_request_receipts, custody_reference, state_hashes, censoring_rows.
+    Principle: one frozen first attempt is the scientific unit, including failed attempts.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9058_v773_fresh_corpus_a.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect the completed prospective Qwen graph shard A
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_9059_v773_fresh_corpus_b.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: fresh_source_ready_score
+    op: ==
+    upstream: exp9055-prospective-roster
+    value: 1
+  id: exp9059-fresh-corpus-b
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Original collection was skipped at414/1024 identities. The current
+      Exp9055 gate requires a completed continuation and unchanged nonexposure before
+      any model load.
+    experiment_id: exp9046-fresh-corpus-b
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  - addressed_by: Reuse the qualified Exp9028 serializer; historical receipts remain
+      references and do not become current model calls.
+    experiment_id: exp8990-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_graph_corpus_a
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The original V772 graph collection never ran
+    because its roster was incomplete. Exp9055 must complete the same prospective
+    roster and prove no response exposure before either collector starts.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/graph_source_8931.py; python/carnot/reporting/graph_corpus_a_8961.py;
+    python/carnot/reporting/invocation_provenance_9000.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    results/experiment_9028_v771_historical_provenance_qualification.json; results/experiment_9055_v773_prospective_roster.json
+
+    TASK:
+
+    Collect the completed prospective Qwen graph shard B. Deliver results/experiment_9059_v773_fresh_corpus_b.json,
+    primitive evidence under results/raw/experiment_9059_v773_fresh_corpus_b/, and
+    runnable scripts/experiments/experiment_9059_v773_fresh_corpus_b.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Use unsloth/Qwen3.8-27B-GGUF in MODEL_SPECS and record model/tokenizer/quantization
+    hashes, actual CUDA offload and current invocation counts. Declare model_bounded_generation
+    (10-second floor): every request has a fixed small token budget. No simulation
+    fallback or smoke-model headline. A block before loading reports actual no_model_load
+    separately from planned MODEL_SPECS; never fabricate duration.
+
+    5. Use only the frozen shardB:512 first responses,64CAL/64TEST/384online. Authenticate
+    the full source manifest and all fitted-state hashes. Use the shipped current-versus-historical
+    invocation serializer. Prior observations outside this same authenticated invocation
+    block changed input, even if a response looks unusable.
+
+    6. Load mandated Qwen Q4_K_M on one authorized RTX3090 lease with temperature0,
+    reasoning disabled,16tokens/request, frozen prompt/parser and actual logprobs.
+    Preflight/load each<=240seconds, each request<=30seconds and total collection<=2700seconds.
+    No retry, repair, best-of-N or default-model fallback. Record server executable,
+    tokenizer and GPU offload. Do not use the ARC resident server without its existing
+    lease mechanism.
+
+    7. Checkpoint each completed first response and flush progress at least every16units;
+    supervise child waits continuously. Lost in-flight answers remain censored and
+    never earn a replacement. Preserve scheduled denominator and transport/parser
+    failures. Resume only authenticated remaining units. Collect CAL/TEST/online under
+    the existing truth access policy; primaries expose only identity and transport
+    rows, not nested correctness/confidence/output summaries.
+
+    8. shard_ready_score=1 requires complete original512 transport records, authenticated
+    model and custody receipts, and owned checks; scientific label balance is checked
+    by admission. Stop safely before validation budget. Keep raw responses and truth
+    sidecars private until the independent reducer.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - shard_ready_score, shard_id, first_response_records, model_tokenizer_hashes,
+    actual_offload, per_request_receipts, custody_reference, state_hashes, censoring_rows.
+    Principle: one frozen first attempt is the scientific unit, including failed attempts.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9059_v773_fresh_corpus_b.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect the completed prospective Qwen graph shard B
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_9060_v773_sealed_corpus_admission.json
+  estimated_wall_time_min: 40
+  gated_on:
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp9058-fresh-corpus-a
+    value: 1
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp9059-fresh-corpus-b
+    value: 1
+  id: exp9060-sealed-corpus-admission
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: New collectors depend on a completed deterministic roster; exact
+      response and custody joins replace the previously absent shards.
+    experiment_id: exp9047-sealed-corpus-admission
+    retire_if_same_verdict: true
+    verdict: blocked_upstream_retired
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Both graph shards must qualify independently.
+    A complete roster fixes only source availability, not error support or detector
+    value.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/graph_corpus_a_8961.py; python/carnot/reporting/corpus_admission_8963.py;
+    python/carnot/reporting/fresh_seal_custody_9042.py; results/experiment_9055_v773_prospective_roster.json;
+    results/experiment_9058_v773_fresh_corpus_a.json; results/experiment_9059_v773_fresh_corpus_b.json
+
+    TASK:
+
+    Admit the full graph corpus without exposing TEST outcomes. Deliver results/experiment_9060_v773_sealed_corpus_admission.json,
+    primitive evidence under results/raw/experiment_9060_v773_sealed_corpus_admission/,
+    and runnable scripts/experiments/experiment_9060_v773_sealed_corpus_admission.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Join the exact1024 registered IDs and verify first attempts, raw model logprobs,
+    source/history hashes, state hashes and row custody. Independently recompute truth
+    with the existing graph evaluator in a protected process. Require at least200
+    errors and at least five examples of each class in every pooled role. Preserve
+    the original meaning and denominator from the V772 design; never replace outcomes
+    to pass support.
+
+    6. Keep semantic, format, out-of-graph and transport statuses distinct. Publish
+    only identity/transport and admission readiness; TEST truth, responses, predictions
+    and detailed support counts stay in protected receipts. CAL truth may serve calibration;
+    online labels are released only on the frozen schedule; TEST truth waits for BOTH
+    Exp9061 and Exp9062 seals.
+
+    7. Exercise duplicate, missing, replayed response, hash mismatch, nested truth
+    leak and rehashed-tamper controls. corpus_ready_score=1 requires all source, support
+    and custody checks. Poor support blocks the fixed cohort without shrinking it.
+    Graph truth remains executable-oracle evidence even when admissible.
+
+    8. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    9. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - corpus_ready_score, manifest_hash, role_counts, protected_support_reference,
+    inference_view_reference, truth_sidecar_reference, custody_rows, state_hashes.
+    Principle: scientific support and isolation must both hold before head evaluation.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9060_v773_sealed_corpus_admission.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Admit the full graph corpus without exposing TEST outcomes
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9061_v773_sealed_calibrated_decisions.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: corpus_ready_score
+    op: ==
+    upstream: exp9060-sealed-corpus-admission
+    value: 1
+  id: exp9061-sealed-calibrated-decisions
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: An admitted complete prospective corpus replaces the absent V772
+      source; fits and seven acceptance bounds remain identical.
+    experiment_id: exp9048-sealed-calibrated-decisions
+    retire_if_same_verdict: true
+    verdict: blocked_upstream_retired
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8987 admitted a development fit only. Fresh
+    graph TEST predictions must be fixed before the joint reducer can inspect truth.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/spline_basis_methods_8986.py; python/carnot/reporting/spline_development_admission_8987.py;
+    python/carnot/reporting/fresh_seal_custody_9042.py; openspec/change-proposals/v768-spline-protocol.json;
+    results/experiment_9060_v773_sealed_corpus_admission.json
+
+    TASK:
+
+    Seal calibrated graph decisions under the original seven-bound test. Deliver results/experiment_9061_v773_sealed_calibrated_decisions.json,
+    primitive evidence under results/raw/experiment_9061_v773_sealed_calibrated_decisions/,
+    and runnable scripts/experiments/experiment_9061_v773_sealed_calibrated_decisions.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Restore the original spline, converged_linear, shared_logistic, confidence_logistic
+    and prevalence fitted states and the unchanged graph encoder. Do not refit coefficients
+    or alter features. On128CAL graphs choose trained-arm temperature from[0.5,1,2,4],
+    ascending ties. CAL evidence is not TEST benefit.
+
+    6. Seal640 arm-by-TEST probabilities, ranks and typed decisions on128TEST graphs.
+    Accept error probability<=0.1, reject>=0.9, otherwise escalate. For exactly50percent
+    coverage rank by probability with frozen topology-hash ties. Keep predictions
+    and outcomes out of public summaries until Exp9063; the online producer cannot
+    read this task''s private predictions.
+
+    7. Check node-permutation tolerance1e-6, denied truth fields and removed-context
+    controls without changing the frozen fitted model. Retain controls as diagnostics.
+    static_predictions_ready_score requires complete calibrated predictions, state/custody
+    seals and owned validation. Numeric readiness does not require benefit; Exp9063
+    applies every original seven-bound criterion.
+
+    8. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    9. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - static_predictions_ready_score, prediction_seal, calibration_rows, fitted_state_hashes,
+    temperature_choices, integrity_control_rows, seven_bound_contract. Principle:
+    freeze decisions before observing TEST outcomes.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9061_v773_sealed_calibrated_decisions.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Seal calibrated graph decisions under the original seven-bound test
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9062_v773_sealed_online_streams.json
+  estimated_wall_time_min: 60
+  gated_on:
+  - artifact_field: corpus_ready_score
+    op: ==
+    upstream: exp9060-sealed-corpus-admission
+    value: 1
+  id: exp9062-sealed-online-streams
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Completed prospective streams replace absent V772 observations.
+      Qualified Exp8988 mechanics and all ten original benefit/retention bounds remain
+      frozen.
+    experiment_id: exp9049-sealed-online-streams
+    retire_if_same_verdict: true
+    verdict: blocked_upstream_retired
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. This is FR-11 continuous self-learning. Local
+    spline support suggests cheap updates, but neither useful future improvement nor
+    retention has been shown for the frozen method.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/online_spline_methods_8988.py; python/carnot/reporting/online_spline_fixtures_8988.py;
+    python/carnot/reporting/fresh_seal_custody_9042.py; openspec/change-proposals/v768-online-spline-protocol.json;
+    results/experiment_9060_v773_sealed_corpus_admission.json
+
+    TASK:
+
+    Measure continuous local spline learning on sealed future streams. Deliver results/experiment_9062_v773_sealed_online_streams.json,
+    primitive evidence under results/raw/experiment_9062_v773_sealed_online_streams/,
+    and runnable scripts/experiments/experiment_9062_v773_sealed_online_streams.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Use unchanged five arms: frozen_spline, adaptive_spline, bias_only_spline,
+    adaptive_linear, permuted_spline. Restore identical frozen encoders/basis and
+    temperature1 on24 disjoint32-query streams. Use logloss, initial-state anchor0.01
+    excluding intercept, normclip1, AdaGrad rate0.05 and epsilon1e-8. Do not update
+    Qwen, knots or source roles.
+
+    6. Predict before feedback. After query8/12/16/20/24/28/32 release labels1-4/5-8/.../25-28.
+    Permute only within already released blocks. Labels29-32 stay pending until Exp9063
+    finishes scientific scoring. The original64-graph development guard permits Brier
+    increase<=0.005 and no classification-error increase. Rejection restores coefficients
+    and accumulator while atomically acknowledging feedback.
+
+    7. Require exact state recovery after a real worker kill at query16, including
+    outstanding predictions, pending feedback and accumulator. Seal3840 online plus46080
+    retention predictions:128TEST graphs at checkpoints0/16/32 across five arms and24streams.
+    These49920 rows are dependent; independent units remain streams and shared graph
+    groups. TEST labels never enter the guard or updates.
+
+    8. Record basis-overlap, touched coefficients, dense-anchor work and guard rejection
+    without using them to change the registered algorithm. This is a diagnostic suggested
+    by locally gated KAN work, not a new architecture comparison. Report fixed-threshold
+    coverage trajectories. online_predictions_ready_score requires complete seals,
+    timing/custody and real resume qualification, not benefit.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - online_predictions_ready_score, prediction_seal, prequential_rows, delayed_feedback_rows,
+    retention_prediction_reference, state_hashes, guard_rejections, basis_overlap_rows,
+    touched_coefficient_counts, hard_exit_receipts, ten_bound_contract. Principle:
+    updates can use only released feedback, and speed claims include guards and storage.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9062_v773_sealed_online_streams.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure continuous local spline learning on sealed future streams
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9063_v773_joint_benefit_audit.json
+  estimated_wall_time_min: 55
+  gated_on:
+  - artifact_field: static_predictions_ready_score
+    op: ==
+    upstream: exp9061-sealed-calibrated-decisions
+    value: 1
+  - artifact_field: online_predictions_ready_score
+    op: ==
+    upstream: exp9062-sealed-online-streams
+    value: 1
+  id: exp9063-joint-benefit-audit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Both new prediction producers have exact structured readiness gates
+      and a completed source; original bounds are independently reconstructed without
+      imputing skipped old results.
+    experiment_id: exp9050-joint-benefit-audit
+    retire_if_same_verdict: true
+    verdict: blocked_upstream_retired
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Both producers must seal predictions before
+    TEST truth is opened. A supported null ends this comparison; scheduling completion
+    alone gives no evidence.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/fresh_seal_custody_9042.py; python/carnot/reporting/v772_capstone.py;
+    openspec/change-proposals/v768-spline-protocol.json; openspec/change-proposals/v768-online-spline-protocol.json;
+    results/experiment_9061_v773_sealed_calibrated_decisions.json; results/experiment_9062_v773_sealed_online_streams.json
+
+    TASK:
+
+    Independently reduce the fixed detector and continuous-learning bounds. Deliver
+    results/experiment_9063_v773_joint_benefit_audit.json, primitive evidence under
+    results/raw/experiment_9063_v773_joint_benefit_audit/, and runnable scripts/experiments/experiment_9063_v773_joint_benefit_audit.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Verify original fitted-state hashes, independent seals, label-read schedule
+    and every expected primitive count before opening TEST truth once. Recompute all
+    losses from per-unit probabilities and labels. Missing producer evidence is blocked,
+    failed own validation disqualified; neither becomes a zero numerical result.
+
+    6. Apply all seven detector bounds: spline Brier-improvement lower>0 against prevalence,
+    confidence_logistic, shared_logistic and converged_linear; accepted-error delta
+    upper<=0 against the three linear controls at exactly50percent coverage. Use10000
+    paired graph draws, seed773063, familyalpha0.05 and one-sided tail0.05/7, reranking
+    every draw. All seven must pass for detector_benefit_score=1.
+
+    7. Apply all ten learning bounds: future slots17-32 adaptive-minus-frozen Brier
+    upper<=-0.01, and uppers against bias-only, adaptive-linear and permuted-feedback
+    arms strictly<0. Six retention Brier/error uppers at checkpoints0/16/32 must be<=0.01.
+    Use10000 whole-stream draws, seed773064, familyalpha0.01 and tail0.001. Draw the
+    shared128 retention graph IDs once per bootstrap across arms and histories, independently
+    from stream resampling. All ten must pass for learning_benefit_score=1.
+
+    8. Report ordinary CI95 separately from simultaneous acceptance bounds and conditional-panel
+    diagnostics. Keep every scheduled failure and censoring. Emit detector_rows_ready_score
+    and learning_rows_ready_score on qualified complete numerical reductions even
+    for a null. Release pending final feedback only AFTER scientific scoring for the
+    later cost run. Graph positives remain circular_positive and independent_generalization_score=0.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - detector_rows_ready_score, learning_rows_ready_score, detector_benefit_score,
+    learning_benefit_score, seven_bound_rows, ten_bound_rows, paired_bootstrap_reference,
+    label_open_receipt, feedback_drain_authorization. Principle: numerical completeness
+    and benefit are separate gates; joint criteria cannot be replaced by a favorable
+    subset.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9063_v773_joint_benefit_audit.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Independently reduce the fixed detector and continuous-learning bounds
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_9064_v773_human_energy_pilot.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: human_source_ready_score
+    op: ==
+    upstream: exp9056-human-release-authority
+    value: 1
+  - artifact_field: human_methods_ready_score
+    op: ==
+    upstream: exp9057-human-probe-methods
+    value: 1
+  id: exp9064-human-energy-pilot
+  inference_substrate_class: model_load_no_generation
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: A separately qualified MDH factual-error corpus replaces the unavailable
+      Mu-SHROOM branch. Original human targets, matched features and fixed grouped
+      bounds are prerequisites, not assumed success.
+    experiment_id: exp9037-human-energy-pilot
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The separately qualified MDH pilot is the only
+    proposed path to oracle-distinct evidence in this milestone. It evaluates archived
+    original responses with a mandated local Qwen feature extractor; it is not a benchmark
+    of Qwen-generated answers.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/experiment_7452_v653_source_embeddings.py; python/carnot/reporting/sentence_spline_fit_8334.py;
+    python/carnot/reporting/spline_basis_methods_8986.py; python/carnot/reporting/current_work_receipt.py;
+    results/experiment_9056_v773_human_release_authority.json; results/experiment_9057_v773_human_probe_methods.json
+
+    TASK:
+
+    Test matched energy decisions against independent human factual judgments. Deliver
+    results/experiment_9064_v773_human_energy_pilot.json, primitive evidence under
+    results/raw/experiment_9064_v773_human_energy_pilot/, and runnable scripts/experiments/experiment_9064_v773_human_energy_pilot.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Use unsloth/Qwen3.8-27B-GGUF in MODEL_SPECS and record model/tokenizer/quantization
+    hashes, actual CUDA offload and current invocation counts. Declare model_load_no_generation
+    (2-second floor): embedding prefill only, no generated tokens. No simulation fallback
+    or smoke-model headline. A block before loading reports actual no_model_load separately
+    from planned MODEL_SPECS; never fabricate duration.
+
+    5. Authenticate exact source400groups, original human criterion, unseen roles
+    and frozen method. Hold TEST targets outside the feature/fit process. Preflight/load<=240seconds
+    each; embedding acquisition<=2400seconds with per-batch checkpoints and child
+    progress. Use only the frozen Qwen embedding API and hash recipe; no fallback
+    to generated judgments, another model or text-score proxies. Missing embedding
+    support is blocked, not permission to redefine features.
+
+    6. Compute all original response embeddings under the frozen2048token cap; never
+    silently truncate or drop a group. Fit projected/scaled spline and linear heads
+    on160FITgroups with the frozen optimizer, verify convergence and equal input features,
+    calibrate on40CALgroups, and seal all200TESTgroup probabilities before opening
+    targets. Prevalence is fitted on FIT only. No tuning from TEST support or performance.
+
+    7. Independently reduce the exact four bounds from Exp9057: two Brier improvements,
+    linear accepted-error noninferiority and linear AUROC improvement. Resample prompt/source
+    groups with all arms/responses paired and equal group weights; never treat model/run
+    copies as independent. Use10000 draws, seed773064, one-sided tail0.0125; report
+    ordinary CI95 separately. Preserve per-response losses and group summaries. Test
+    shuffled labels and forbidden-feature controls as sanity checks, never a selection
+    rule.
+
+    8. A positive class requires all four bounds, independent human/source authority,
+    no cheap executable oracle for the asserted factual criterion, passed checks and
+    verifier_is_oracle=false. Otherwise record the supported null or exact block.
+    Set natural_rows_ready_score independently of natural_benefit_score. Report per-domain/generator
+    and individual-annotator sensitivity descriptively, distinguishing factual error,
+    source support and safety. No broad generalization or Qwen-generation claim.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - natural_rows_ready_score, natural_benefit_score, independent_generalization_score,
+    prediction_seal, criterion_mapping, human_authority_reference, source_group_rows,
+    per_response_rows, four_bound_rows, embedding_receipts, fitted_head_states, temperature_choices,
+    control_rows. Principle: original human truth and matched grouped comparisons
+    must travel with an oracle-distinct claim.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9064_v773_human_energy_pilot.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Test matched energy decisions against independent human factual judgments
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9065_v773_complete_service_cost.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: detector_rows_ready_score
+    op: ==
+    upstream: exp9063-joint-benefit-audit
+    value: 1
+  - artifact_field: learning_rows_ready_score
+    op: ==
+    upstream: exp9063-joint-benefit-audit
+    value: 1
+  id: exp9065-complete-service-cost
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Gate on current numerical row readiness rather than benefit; new
+      complete service measurements replace the missing V772 stream and include dense
+      anchor, guard and durable recovery costs.
+    experiment_id: exp9051-complete-service-cost
+    retire_if_same_verdict: true
+    verdict: blocked_upstream_retired
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Sparse coefficient arithmetic does not establish
+    an end-to-end speedup. This cost task runs even after a supported graph null,
+    but deployment requires useful quality.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/online_spline_methods_8988.py; python/carnot/reporting/spline_lifecycle_study_8706.py;
+    research-hardware-wishlist.md; results/experiment_9063_v773_joint_benefit_audit.json;
+    results/experiment_9062_v773_sealed_online_streams.json
+
+    TASK:
+
+    Measure complete spline service costs and supported hardware operations. Deliver
+    results/experiment_9065_v773_complete_service_cost.json, primitive evidence under
+    results/raw/experiment_9065_v773_complete_service_cost/, and runnable scripts/experiments/experiment_9065_v773_complete_service_cost.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Use24 paired fresh-process units, randomized arm order, comparing frozen/adaptive
+    spline and frozen/adaptive converged linear. Replay the qualified graph stream
+    under authorized final feedback drain. Time outside each child process including
+    startup/JIT, reads, graph encoding, basis/scoring, dense anchors, guards, durable
+    writes, restart, feedback drain and shutdown. Linear service must not perform
+    artificial spline work.
+
+    6. Retain outer elapsed times if component attribution is incomplete; never subtract
+    overhead to manufacture speedup. Report cached-response service scope and original
+    Qwen generation cost separately. Compute adaptive-spline/adaptive-linear full-cost
+    ratio with10000paired process bootstrap draws, seed773065, CI95. Recommendation
+    requires detector_benefit_score=1, learning_benefit_score=1 and ratio upper95<=1.
+    A failed quality gate cannot be replaced by kernel speed.
+
+    7. Map measured operations to actual hardware support. CPU owns orchestration/storage;
+    CUDA can batch features or heads. KV260 remains limited to qualified quadratic
+    sampler scope k_max<=5, PolarFire to LinuxCPU, GateMate unchanged physical block,
+    NPU/TSU unqualified. Charge data movement and dense guards. Bound the100x aspiration
+    using nonaccelerable fraction: fraction>=0.01 rules out strictly greater than100x
+    even with ideal acceleration. Unknown attribution stays unknown. No board probe,
+    install, bitstream, purchase or new FPGA task.
+
+    8. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    9. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - cost_rows_ready_score, deployment_recommended_score, per_process_rows, paired_cost_ratio_ci95,
+    component_cost_rows, original_generation_cost_reference, hardware_operation_matrix,
+    nonaccelerable_fraction, ideal_speedup_bound. Principle: complete service cost
+    and measured utility govern deployment.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9065_v773_complete_service_cost.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure complete spline service costs and supported hardware operations
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9066_v773_arc_transfer_evidence.json
+  estimated_wall_time_min: 25
+  gated_on:
+  - artifact_field: arc_new_outcomes_ready_score
+    op: ==
+    upstream: exp9054-branch-contract
+    value: 1
+  id: exp9066-arc-transfer-evidence
+  inference_substrate_class: no_model_load
+  max_turns: 20
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Structured current-frontier gate requires new supported live outcomes;
+      absent support skips synthesis and does not trigger an unchanged inventory rerun.
+    experiment_id: exp9052-arc-transfer-evidence
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. ARC is opportunistic under the November7 directive.
+    No new supported frontier meant no work in V772; administrative readiness must
+    remain independent of this branch.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/arc_supervisor_frontier_8720.py; ops/arc_supervisor_refinement_ledger.json;
+    ops/arc_solve_registry.yaml; results/experiment_9054_v773_branch_contract.json;
+    results/experiment_9041_v772_branch_contract.json
+
+    TASK:
+
+    Assess held-family supervisor transfer only from new live outcomes. Deliver results/experiment_9066_v773_arc_transfer_evidence.json,
+    primitive evidence under results/raw/experiment_9066_v773_arc_transfer_evidence/,
+    and runnable scripts/experiments/experiment_9066_v773_arc_transfer_evidence.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Use only the new receipts frozen by Exp9054 relative to Exp9041. Require30new
+    uncensored episodes, at least three families and both curated arms in each held
+    family. If input hashes or support change, block with exact operands; do not recycle
+    public replays or invent firings.
+
+    6. Freeze held-family folds before reduction. Compare per-episode progress, actions
+    and censoring, cluster uncertainty by episode/family and keep all attempted episodes.
+    Report observational association, not causal policy benefit. Do not add arms,
+    run games, load an LLM or alter the live agent.
+
+    7. Registry-precheck any incidental level credit. Require solve_provenance=live_agent_self_discovery
+    from original runtime evidence; development_proxy and outer_loop_re cannot earn
+    headline credit. This task claims no new game solve and no duplicate public level.
+
+    8. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    9. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - transfer_rows_ready_score, held_family_rows, episode_rows, frontier_delta_rows,
+    support_counts, solve_provenance, association_ci95. Principle: new supported live
+    outcomes are required; replay and observational associations cannot become hidden-game
+    causal claims.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9066_v773_arc_transfer_evidence.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Assess held-family supervisor transfer only from new live outcomes
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_9067_v773_capstone.json
+  estimated_wall_time_min: 40
+  gated_on: []
+  id: exp9067-capstone
+  inference_substrate_class: no_model_load
+  max_turns: 30
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Reconcile a completed-prefix continuation and an independent MDH
+      branch with exact scheduler alternatives; reuse qualified accounting and preserve
+      external blocked status without retry.
+    experiment_id: exp9053-capstone
+    retire_if_same_verdict: true
+    verdict: complete_blocked_declared_gate
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. A complete milestone report can preserve terminal
+    blocked science. Never retry an unchanged external block by calling the capstone
+    partial.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/v772_capstone.py; python/carnot/reporting/roadmap_contract.py;
+    scripts/publication_gate.py; results/experiment_9053_v772_capstone.json; openspec/change-proposals/research-roadmap-v772-preserved-20261112.md;
+    openspec/change-proposals/research-roadmap-v772-queue-preserved-20261112.yaml
+
+    TASK:
+
+    Reconcile fourteen outcomes and close exact unchanged scopes. Deliver results/experiment_9067_v773_capstone.json,
+    primitive evidence under results/raw/experiment_9067_v773_capstone/, and runnable
+    scripts/experiments/experiment_9067_v773_capstone.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Load no LLM: MODEL_SPECS=[], model_specs=[], inference_substrate_class=no_model_load,
+    zero model_invocation_counts. Declare aggregation_from_upstream_artifacts for
+    reductions or verifier_ensemble_against_cached_candidates for head computations;
+    keep trained_head_specs separate. Historical GGUF receipts are references only.
+
+    5. Unconditionally account for all14slots including this one, using exact primaries
+    or recorded scheduler alternatives. Authenticate the complete task contract and
+    all source hashes. Do not invent producer verdicts or absent fields for skipped
+    tasks. Preserve archive lag and source-code drift as distinct observations.
+
+    6. Independently reconstruct available seven graph, ten learning and four human
+    bounds from primitive rows; keep unmeasured criteria unmeasured. Preserve failed
+    Mu-SHROOM authority and the original414/1024 graph result. New graph success stays
+    circular; only qualified human evidence can support the scoped oracle-distinct
+    claim. A natural pilot block cannot block graph accounting or vice versa.
+
+    7. Reduce complete-cost evidence and the exact ARC frontier separately. Call scripts/publication_gate.py
+    --json with progress supervision; retain historical G1/G2/G3/G4, paper_ready and
+    unmet_gates without claiming they certify this new science. No external publication
+    or activation.
+
+    8. Record prior-versus-current exact verdicts and retirement/reopening conditions.
+    A same-verdict rerun retires its unchanged scope; emit retirement records without
+    editing the exclusion manifest. Missing-QID requests remain closed absent authenticated
+    author mapping. Failed400group/human-authority MDH scope needs changed original
+    release bytes, not another download. A complete graph null favors the converged
+    linear head and closes this unchanged comparison. An exhausted fixed100000proposal
+    continuation needs a new preregistered mechanism, not another budget increase.
+    Use blocked for unresolved external science; reconciliation_ready_score can still
+    equal1.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - reconciliation_ready_score, slot_rows, full_contract_rows, seven_bound_rows,
+    ten_bound_rows, four_bound_rows, retirement_scope_rows, continuation_evidence,
+    G1, G2, G3, G4, paper_ready, unmet_gates, publication_scope. Principle: qualified
+    accounting preserves both available evidence and missing science without granting
+    deployment or publication.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9067_v773_capstone.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Reconcile fourteen outcomes and close exact unchanged scopes
+  track: research
