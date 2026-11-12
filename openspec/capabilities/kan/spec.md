@@ -3871,3 +3871,11 @@ heads SHALL meet the frozen convergence criterion. Status: Planned.
 
 Changed graph fits, changed knots, divergent human-head optimization, unequal
 features, TEST-tuned parameters and unmeasured hardware claims SHALL fail checks.
+
+
+Implementation note,2026-11-12,REQ-KAN-V773-MATCHED: Exp9055's prospective roster
+copies the original fitted-state, encoder, scaling, knot, guard and seven/ten bound
+hashes through Exp9042 custody. Construction performs no fitting or head evaluation.
+The role manifest seals640 detector TEST predictions,3840 online predictions and
+46080 retention predictions for Exp9061/9062, with TEST truth reserved for Exp9063
+after both prediction seals. No model or numerical training call is credited.

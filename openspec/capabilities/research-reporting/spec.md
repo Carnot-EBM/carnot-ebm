@@ -113487,3 +113487,49 @@ current invocation scope, original failed evidence and verdict_class. Status: Pl
 Private missing-input, changed-authority and rehashed-tamper checks SHALL reject.
 Real private CLI/cold replay SHALL qualify owned work before publication. External
 blocked inputs SHALL be terminal blocked; only incomplete owned work is partial.
+
+
+### REQ-REPORT-9055-CONTINUATION: Preserve the accepted prefix and fixed population
+
+Exp9055 SHALL authenticate the independently pinned Exp9042 primary, original
+construction ledger, role manifest and preserved history before construction.
+It SHALL recount 414 acceptances,19586 cardinality rejections and block yields
+112/102/107/93. It SHALL retain original objects, IDs and roles without changes.
+Only scan orchestration changes: counter20000 onward uses the same seed expression,
+1024 accepted graphs,100000 total proposals and300 construction seconds.
+Every rejection and durable checkpoint SHALL survive interruption and exact resume.
+Missing inputs and later exposure of an accepted prefix graph SHALL block.
+No model SHALL load. Original fitted states and seven/ten bounds SHALL stay fixed.
+
+#### SCENARIO-REPORT-9055-CAP-RESUME
+
+Private tests SHALL cross counter20000, preserve prefix objects, resume after a
+real child interruption, reject changed ledger/prefix/history and late exposure,
+and distinguish completed construction from terminal budget exhaustion.
+
+#### SCENARIO-REPORT-9055-QUALIFICATION
+
+Freeze owned/direct-consumer scope before measurement. Require scoped pytest,
+100 percent owned statements without exclusions, Ruff check/format, strict mypy,
+explicit spec coverage, private E2E-018/021, foreign CLI and cold replay without
+PYTHONPATH. Unchanged scanners SHALL qualify atomic primary publication.
+Current failed checks SHALL zero readiness. Historical suite debt stays separate.
+Seal Exp9061 detector counts, Exp9062 online/retention counts and Exp9063 authorized
+truth-reduction schedule. TEST truth SHALL remain inaccessible before both seals.
+
+
+Implementation,2026-11-12,REQ-REPORT-9055-CONTINUATION:
+`prospective_roster_9055.py`, `prospective_roster_runner_9055.py` and the Exp9055
+CLI implement deterministic continuation and immutable evidence retention.
+Private tests in `tests/python/test_prospective_roster_9055.py` cover the original
+cap boundary, source authentication, exact prefix preservation, exit73/resume,
+late exposure, changed authority and rehashed aggregate rejection. The CLI freezes
+its validation scope before construction and gates primary publication on actual
+owned receipts and measured statement coverage. Ops and traceability reconciliation
+is delegated to the conductor as explicitly requested for this task.
+
+
+REQ-REPORT-9055-CONTINUATION cursor schema: `continuation_counter` SHALL contain
+`initial`, `last_completed` and `next` integer cursor positions. It is checkpoint
+metadata. `proposal_count` SHALL remain the separately reduced total proposal count.
+This records the cursor/count identity without presenting two scientific metrics.

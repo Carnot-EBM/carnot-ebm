@@ -59381,3 +59381,14 @@ SHALL include guards, anchors, persistence and recovery in service cost. Status:
 Early label reads, state drift after kill/resume, lost pending feedback, omitted
 retention arms and overhead-subtracted speedups SHALL fail. Numerical readiness
 SHALL remain separate from scientific benefit and deployment recommendation.
+
+
+#### SCENARIO-VERIFY-9055-RESUMABLE-SOURCE
+
+Implementation,2026-11-12: Exp9055 retains Exp9042's original pinned ledger and
+replays it against original history. Later public graph identities extend overlap
+authority without rewriting old rejection causes. Any later exposure of an accepted
+prefix graph blocks continuation. Durable production checkpoints bind both prefix
+and history, while immutable invocation copies support foreign-directory cold replay.
+Private exit73/resume, cap crossing, missing-input and rehashed-tamper tests trace
+REQ-VERIFY-V773-PROSPECTIVE and REQ-REPORT-9055-CONTINUATION.
