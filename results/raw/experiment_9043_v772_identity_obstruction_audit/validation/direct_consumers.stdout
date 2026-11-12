@@ -1,0 +1,282 @@
+...........................................F..............F............F [ 79%]
+...................                                                      [100%]
+=================================== FAILURES ===================================
+________________________ test_runner_cli_missing_tamper ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_runner_cli_missing_tamper0')
+
+    def test_runner_cli_missing_tamper(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9015-CUSTODY: real missing-input publication and cold tamper refusal."""
+        output = tmp_path / (e.NAME + ".json")
+        run = cli(tmp_path, "--inputs", str(tmp_path / "missing"), "--output", str(output))
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp9015] phase=start_no_model_load completed=0 pending=0
+E         [exp9015] phase=preconditions_before completed=0 pending=0
+E         [exp9015] phase=roles_frozen_before_labels completed=0 pending=400
+E         [exp9015] phase=measurement_complete completed=0 pending=400
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         {"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_runner_cli_missing_tamper0/experiment_9015_v770_human_disagreement_source.json", "primary_sha256": "sha256:e89413ad8a78641b2a5b070bfac49bac0bbe23112b67af4c6ea7ac8db0c02f54", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_runner_cli_missing_tamper0/raw/experiment_9015_v770_human_disagreement_source/validators/e89413ad8a78641b2a5b070bfac49bac0bbe23112b67af4c6ea7ac8db0c02f54.json"}
+E         [exp9015] phase=complete completed=0 pending=400
+E         /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-no-data-collected
+E           self._warn("No data was collected.", slug="no-data-collected")
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9015_v770_human_disagreement_source.py", line 10, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 0
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-s53ddq_r/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780223.XmHCgyLx' -> '/tmp/carnot-pytest-artifacts-udaappf8/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780223.XmHCgyLx.HNQIp837rWOh'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home...t_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780223.XmHCgyLx.HNQIp837rWOh\'\n').returncode
+
+tests/python/test_human_disagreement_source_9015.py:245: AssertionError
+___________________ test_source_cli_and_unresolved_exposure ____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_source_cli_and_unresolved0')
+
+    def test_source_cli_and_unresolved_exposure(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9015-CUSTODY: original-source CLI replay and exposure denial use private bytes."""
+        manifest = inputs(tmp_path)
+        output = tmp_path / (e.NAME + ".json")
+        run = cli(tmp_path, "--inputs", str(manifest), "--output", str(output))
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp9015] phase=start_no_model_load completed=0 pending=0
+E         [exp9015] phase=preconditions_before completed=0 pending=0
+E         [exp9015] phase=group_public_metadata completed=0 pending=440
+E         [exp9015] phase=group_public_metadata completed=100 pending=340
+E         [exp9015] phase=group_public_metadata completed=200 pending=240
+E         [exp9015] phase=group_public_metadata completed=300 pending=140
+E         [exp9015] phase=group_public_metadata completed=400 pending=40
+E         [exp9015] phase=roles_frozen_before_labels completed=400 pending=0
+E         [exp9015] phase=measurement_complete completed=400 pending=0
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         {"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_source_cli_and_unresolved0/experiment_9015_v770_human_disagreement_source.json", "primary_sha256": "sha256:7947803459314889d7e1768591679d3649052ac5e9c7e5d9058b1d0a791e994f", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_source_cli_and_unresolved0/raw/experiment_9015_v770_human_disagreement_source/validators/7947803459314889d7e1768591679d3649052ac5e9c7e5d9058b1d0a791e994f.json"}
+E         [exp9015] phase=complete completed=400 pending=0
+E         /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-no-data-collected
+E           self._warn("No data was collected.", slug="no-data-collected")
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9015_v770_human_disagreement_source.py", line 10, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 0
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-s53ddq_r/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780330.XzyL8xPx' -> '/tmp/carnot-pytest-artifacts-udaappf8/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780330.XzyL8xPx.HNQIp837rWOh'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home...t_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780330.XzyL8xPx.HNQIp837rWOh\'\n').returncode
+
+tests/python/test_human_disagreement_source_9015.py:424: AssertionError
+_____________________ test_private_cli_missing_and_replay ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_private_cli_missing_and_r0')
+
+    def test_private_cli_missing_and_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9001-CUSTODY: real publication, missing input and rehashed tamper."""
+        manifest = inputs(tmp_path)
+        receipts = tmp_path / "receipts.json"
+        atomic_json(receipts, validation())
+        output = tmp_path / (e.NAME + ".json")
+        run = cli(
+            tmp_path, "--inputs", str(manifest), "--receipts", str(receipts), "--output", str(output)
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp9001] phase=start_no_model_load completed=0 pending=0
+E         [exp9001] phase=preconditions_no_model_load completed=0 pending=0
+E         [exp9001] phase=group_and_select completed=0 pending=0
+E         [exp9001] phase=group_documents completed=0 pending=600
+E         [exp9001] phase=group_documents completed=100 pending=500
+E         [exp9001] phase=group_documents completed=200 pending=400
+E         [exp9001] phase=group_documents completed=300 pending=300
+E         [exp9001] phase=group_documents completed=400 pending=200
+E         [exp9001] phase=group_documents completed=500 pending=100
+E         [exp9001] phase=roles_sealed_before_labels completed=599 pending=1
+E         [exp9001] phase=original_span_audit completed=0 pending=600
+E         [exp9001] phase=measurement_complete completed=599 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp9001] phase=start_no_model_load completed=0 pending=0
+E         [exp9001] phase=group_and_select completed=0 pending=0
+E         [exp9001] phase=group_documents completed=0 pending=600
+E         [exp9001] phase=group_documents completed=100 pending=500
+E         [exp9001] phase=group_documents completed=200 pending=400
+E         [exp9001] phase=group_documents completed=300 pending=300
+E         [exp9001] phase=group_documents completed=400 pending=200
+E         [exp9001] phase=group_documents completed=500 pending=100
+E         [exp9001] phase=roles_sealed_before_labels completed=599 pending=1
+E         [exp9001] phase=original_span_audit completed=0 pending=600
+E         {"passed": true, "replay_passed": true, "primary_sha256": "sha256:04fec2a3a6558e7ae4f14b821db118ecc675ee435cdc19aa8fdadb89d84c48c5"}
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         {
+E           "reports": [
+E             {
+E               "artifact": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_private_cli_missing_and_r0/raw/experiment_9001_v769_human_source_authority/invocations/1794479606871511102/preflight_candidate.json",
+E               "loaded": true,
+E               "exp_id": 9001,
+E               "title": "",
+E               "honest_verdict": "complete_blocked_unseen_source_groups",
+E               "flag_count": 0,
+E               "max_severity": -1,
+E               "flags": [],
+E               "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8"
+E             }
+E           ],
+E           "flagged_count": 0
+E         }
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         
+E         verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+E           No row/verdict contradictions among the artifacts that could be checked.
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp9001] phase=start_no_model_load completed=0 pending=0
+E         [exp9001] phase=group_and_select completed=0 pending=0
+E         [exp9001] phase=group_documents completed=0 pending=600
+E         [exp9001] phase=group_documents completed=100 pending=500
+E         [exp9001] phase=group_documents completed=200 pending=400
+E         [exp9001] phase=group_documents completed=300 pending=300
+E         [exp9001] phase=group_documents completed=400 pending=200
+E         [exp9001] phase=group_documents completed=500 pending=100
+E         [exp9001] phase=roles_sealed_before_labels completed=599 pending=1
+E         [exp9001] phase=original_span_audit completed=0 pending=600
+E         {"passed": true, "replay_passed": true, "primary_sha256": "sha256:9792c8351d9fe5c52c6092a68254404adf4a755c13461c8c0f7a761b09f302da"}
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         {
+E           "reports": [
+E             {
+E               "artifact": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_private_cli_missing_and_r0/raw/experiment_9001_v769_human_source_authority/terminal_candidate.json",
+E               "loaded": true,
+E               "exp_id": 9001,
+E               "title": "",
+E               "honest_verdict": "complete_blocked_unseen_source_groups",
+E               "flag_count": 0,
+E               "max_severity": -1,
+E               "flags": [],
+E               "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8"
+E             }
+E           ],
+E           "flagged_count": 0
+E         }
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         
+E         verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+E           No row/verdict contradictions among the artifacts that could be checked.
+E         {"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_private_cli_missing_and_r0/experiment_9001_v769_human_source_authority.json", "primary_sha256": "sha256:9792c8351d9fe5c52c6092a68254404adf4a755c13461c8c0f7a761b09f302da", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261112T103206-779584-cc6050f9/test_private_cli_missing_and_r0/raw/experiment_9001_v769_human_source_authority/validators/9792c8351d9fe5c52c6092a68254404adf4a755c13461c8c0f7a761b09f302da.json"}
+E         [exp9001] phase=complete completed=599 pending=1
+E         /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-no-data-collected
+E           self._warn("No data was collected.", slug="no-data-collected")
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9001_v769_human_source_authority.py", line 10, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 0
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-s53ddq_r/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780475.XHpGLdRx' -> '/tmp/carnot-pytest-artifacts-udaappf8/raw/experiment_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780475.XHpGLdRx.HNQIp837rWOh'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home...t_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid780475.XHpGLdRx.HNQIp837rWOh\'\n').returncode
+
+tests/python/test_human_source_authority_9001.py:177: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_human_disagreement_source_9015.py::test_runner_cli_missing_tamper
+FAILED tests/python/test_human_disagreement_source_9015.py::test_source_cli_and_unresolved_exposure
+FAILED tests/python/test_human_source_authority_9001.py::test_private_cli_missing_and_replay
+3 failed, 88 passed, 1 warning in 44.83s

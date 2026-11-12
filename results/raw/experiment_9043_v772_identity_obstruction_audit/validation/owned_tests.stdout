@@ -1,0 +1,41 @@
+.............F..                                                         [100%]
+=================================== FAILURES ===================================
+________________ test_private_cli_rejection_replay_and_scanners ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103014-777980-ff10003e/test_private_cli_rejection_rep0')
+
+    def test_private_cli_rejection_replay_and_scanners(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9043-VALIDATION: real child and unchanged validators execute."""
+        assert cli(tmp_path, "--date", "wrong").returncode == 1
+        output = tmp_path / (e.NAME + ".json")
+        assert (
+            cli(tmp_path, "--upstream", str(tmp_path / "missing"), "--output", str(output)).returncode
+            == 1
+        )
+        assert not output.exists()
+        raw = tmp_path / "raw" / e.NAME
+        rejected = raw / "rejected_primary.json"
+        assert json.loads(rejected.read_bytes())["verdict_class"] == "disqualified"
+>       assert cli(tmp_path, "--cold-replay", str(rejected)).returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--par...t_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid779399.XcUiTHTx.HBfh1btDzr5h\'\n').returncode
+E        +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--par...t_9043_v772_identity_obstruction_audit/validation/coverage_units/.coverage.icbfl1.pid779399.XcUiTHTx.HBfh1btDzr5h\'\n') = cli(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103014-777980-ff10003e/test_private_cli_rejection_rep0'), '--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261112T103014-777980-ff10003e/test_private_cli_rejection_rep0/raw/experiment_9043_v772_identity_obstruction_audit/rejected_primary.json')
+E        +      where '/var/tmp/pytest-carnot-ianblenke/20261112T103014-777980-ff10003e/test_private_cli_rejection_rep0/raw/experiment_9043_v772_identity_obstruction_audit/rejected_primary.json' = str(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T103014-777980-ff10003e/test_private_cli_rejection_rep0/raw/experiment_9043_v772_identity_obstruction_audit/rejected_primary.json'))
+
+tests/python/test_identity_obstruction_9043.py:249: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9043] phase=before_private_cli completed=0 pending=1
+[exp9043] phase=after_private_cli completed=1 pending=0
+[exp9043] phase=before_private_cli completed=0 pending=1
+[exp9043] phase=after_private_cli completed=1 pending=0
+[exp9043] phase=before_private_cli completed=0 pending=1
+[exp9043] phase=after_private_cli completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_identity_obstruction_9043.py::test_private_cli_rejection_replay_and_scanners
+1 failed, 15 passed, 1 warning in 38.07s

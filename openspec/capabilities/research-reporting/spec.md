@@ -112652,6 +112652,45 @@ Private tests and real CLI replay SHALL preserve assertions and reject changed
 authority. All scientific controls and original support/effect thresholds SHALL
 remain fixed. Implementation status: Planned.
 
+### REQ-REPORT-9043-V772: Diagnose every retained source identity obstruction offline
+
+The audit SHALL authenticate the Exp9029 primary, metadata manifest and all retained
+HTTP request and response hashes. Historical authority SHALL use the preserved V771
+design, queue and independent full-task digest. No network request, annotation read,
+model load or production parser change is permitted.
+
+#### SCENARIO-REPORT-9043-CLASSIFICATION
+
+Reconstruct all 215 unresolved identities, both Persian release groups and all 213
+historical identities from retained bytes. Preserve all 98 requests, including HTTP429.
+For each identity retain every observation, normalized and redirected titles, namespace,
+pageid presence, missing/invalid markers, property presence and original parser result.
+Assign exactly one cause: malformed/missing receipt, alias/parser omission, missing page,
+existing page without QID, or unresolved-other. Category sums SHALL equal 215.
+Only a valid QID in authenticated bytes which the original parser omits proves a parser
+omission. Such an omission requires a private regression and a proposed change with
+callers; production remains unchanged. Pageids and absent QIDs cannot prove no exposure.
+
+#### SCENARIO-REPORT-9043-CUSTODY
+
+Cold replay SHALL independently recompute classification and strict closure from original
+bytes. Missing input, changed authority and rehashed aggregate tampering SHALL fail closed.
+Exact gate operands distinguish missing files, missing fields and zero values. Diagnosis
+readiness reports complete classification only; source readiness requires the unchanged
+global closure criterion. Each category SHALL specify additional author or metadata
+evidence and whether an identical retry can change the evidence.
+
+#### SCENARIO-REPORT-9043-VALIDATION
+
+Freeze owned and direct-consumer paths before measurement. Require scoped tests, a real
+foreign-directory CLI and replay without PYTHONPATH, private E2E-018/021, Ruff, strict
+mypy, explicit spec coverage and 100 percent newly owned statements with no exclusions.
+Current failures disqualify and zero readiness. Historical failed repository health
+stays separate. Unchanged adversarial and strict row validators qualify atomic primary
+publication. No human-pilot, verifier benefit or downstream speculative repair is claimed.
+Implementation status: implemented in the offline obstruction classifier, publication
+runner and spec-linked private tests. Original source closure remains blocked.
+
 ### REQ-REPORT-9029-V771: Resolve multilingual source identities with bounded resumable metadata
 
 Task `exp9029-source-identity-resolution` SHALL deliver `results/experiment_9029_v771_source_identity_resolution.json` under its frozen V771 protocol. Exp9015 retained a German Wikipedia HTTP429 and incomplete cross-language exposure joins. Labels were deferred. Separate metadata acquisition from label reduction, reuse successful receipts, and resume only unresolved identities with respectful bounded requests.
