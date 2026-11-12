@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.773",
+  "generated_at": "2026-11-12T20:15:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 29.9,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Collect the completed prospective Qwen graph shard A",
+      "duration_minutes": 11.79,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and close exact unchanged scopes",
+      "duration_minutes": 8.55,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Complete the deterministic graph roster without changing its population",
+      "duration_minutes": 4.81,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and preserve V772 failures and frozen methods",
+      "duration_minutes": 4.74,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify MDH original human judgments and unseen prompt groups",
+      "duration_minutes": 0.02,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.773 completed 5 compute-bound experiments (0 synthesis-only) in 29.9 wall-time minutes (30 minutes / 0.5 hours, averaging 6 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 5 completed tasks (all compute_bound: true) were 'Collect the completed prospective Qwen graph shard A' (11.79 minutes / 12min), 'Reconcile fourteen outcomes and close exact unchanged scopes' (8.55 minutes / 9min), 'Complete the deterministic graph roster without changing its population' (4.81 minutes / 5min), 'Bind fourteen tasks and preserve V772 failures and frozen methods' (4.74 minutes / 5min), and 'Qualify MDH original human judgments and unseen prompt groups' (0.02 minutes / 0min). Locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "All 5 completed experiments were compute-bound (0 synthesis-only) across 29.9 wall-time minutes (30 minutes / 0.5 hours, averaging 6 minutes per experiment), led by 'Collect the completed prospective Qwen graph shard A' at 11.79 minutes (12min) and 'Reconcile fourteen outcomes and close exact unchanged scopes' at 8.55 minutes (9min).",
+    "Deterministic graph roster completion and task binding accounted for the remaining notable wall time: 'Complete the deterministic graph roster without changing its population' took 4.81 minutes (5min) and 'Bind fourteen tasks and preserve V772 failures and frozen methods' took 4.74 minutes (5min), while 'Qualify MDH original human judgments and unseen prompt groups' completed in 0.02 minutes (0min).",
+    "The live git-log timing path found 0 commits, triggering disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true), and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or memory telemetry, with locked gpu_idle_on_compute_bound_tasks set to false)."
+  ],
+  "improvements_suggested": [
+    "Batch single-GPU Qwen inference requests and share deterministic graph roster state across 'Collect the completed prospective Qwen graph shard A' (11.79 minutes / 12min) and 'Complete the deterministic graph roster without changing its population' (4.81 minutes / 5min) without engaging DualGPURunner, which is reserved for tasks loading 2+ models in parallel.",
+    "Pre-index and share fourteen-task binding, preserved V772 failure records, and fourteen-outcome reconciliation state between 'Bind fourteen tasks and preserve V772 failures and frozen methods' (4.74 minutes / 5min) and 'Reconcile fourteen outcomes and close exact unchanged scopes' (8.55 minutes / 9min) to reduce the 6-minute per-experiment average.",
+    "Persist explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits, and restore GPU monitor availability during compute-bound execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Batch single-GPU Qwen inference and share deterministic graph roster intermediates across 'Collect the completed prospective Qwen graph shard A' (11.79 minutes / 12min) and 'Complete the deterministic graph roster without changing its population' (4.81 minutes / 5min).",
+    "Cache and reuse fourteen-task binding and V772 failure/method state across 'Bind fourteen tasks and preserve V772 failures and frozen methods' (4.74 minutes / 5min) and 'Reconcile fourteen outcomes and close exact unchanged scopes' (8.55 minutes / 9min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.773 completed 5 compute-bound experiments (0 synthesis-only) in 29.9 wall-time minutes (30 minutes / 0.5 hours, averaging 6 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU state), and no data available this milestone for any compute-bound task loading 2+ models in parallel to warrant DualGPURunner. Batching single-GPU Qwen graph shard A collection (11.79 minutes / 12min) with deterministic graph roster completion (4.81 minutes / 5min), sharing fourteen-task state across the 8.55-minute (9min) reconciliation and 4.74-minute (5min) binding tasks, and persisting direct experiment timestamps will reduce wall time and improve telemetry in the next milestone."
+}

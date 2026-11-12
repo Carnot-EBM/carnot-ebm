@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-12 UTC — Operational retrospective for milestone 2026.11.773
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.773`: updated `results/operational_retro_2026_11_773.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed experiments (all 5 compute-bound, 0 synthesis-only) across 29.9 wall-time minutes (30 minutes / 0.5 hours, averaging 6 minutes per experiment).
+- The 5 completed experiments (all `compute_bound: true`) were: `Collect the completed prospective Qwen graph shard A` (11.79 minutes / 12min), `Reconcile fourteen outcomes and close exact unchanged scopes` (8.55 minutes / 9min), `Complete the deterministic graph roster without changing its population` (4.81 minutes / 5min), `Bind fourteen tasks and preserve V772 failures and frozen methods` (4.74 minutes / 5min), and `Qualify MDH original human judgments and unseen prompt groups` (0.02 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or process telemetry); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.
+- Suggested improvements: batch single-GPU Qwen inference and share deterministic graph roster intermediates across the 11.79-minute (12min) shard A collection and 4.81-minute (5min) roster completion tasks without engaging `DualGPURunner`, cache and share fourteen-task binding, preserved V772 failures/frozen methods, and fourteen-outcome reconciliation state across the 8.55-minute (9min) and 4.74-minute (5min) tasks, persist direct per-experiment timestamps to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability during compute-bound runs.
+
 ## 2026-11-12 UTC — Operational retrospective for milestone 2026.11.772
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.772`: updated `results/operational_retro_2026_11_772.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed experiments (all 5 compute-bound, 0 synthesis-only) across 25.2 wall-time minutes (25 minutes / 0.4 hours, averaging 5 minutes per experiment).
