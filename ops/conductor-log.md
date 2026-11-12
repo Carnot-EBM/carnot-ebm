@@ -21888,3 +21888,4 @@ code |
 | 2026-11-12 10:12 UTC | Freeze fresh graph identities and prediction-befor | OK | 95 passed, 1 warning in 51.76s |
 | 2026-11-12 11:09 UTC | Explain every unresolved natural-source identity f | OK | 97 passed, 1 warning in 36.12s |
 | 2026-11-12 12:03 UTC | Test original human-annotation availability before | OK | 128 passed, 1 warning in 29.22s |
+| 2026-11-12 12:13 UTC | Collect fresh bounded Qwen graph shard A | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9042-fresh-seal-methods.fresh_source_ready_score (actual=0 == expected=1) |
