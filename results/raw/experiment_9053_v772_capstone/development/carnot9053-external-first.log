@@ -1,0 +1,45 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_external_absence_is_accounted_and_terminal ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-5/test_external_absence_is_accou0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2bdd466840>
+
+    def test_external_absence_is_accounted_and_terminal(tmp_path, monkeypatch):
+        """REQ-REPORT-9053-V772: unavailable external science cannot become unfinished accounting."""
+        w = m.collect(tmp_path / "raw", "20261112", tmp_path / "missing_sources")
+        w = receipts(w, tmp_path / "receipts")
+        monkeypatch.setattr(m, "verify_measured", lambda *_: True)
+        v = m.build(w)
+>       assert v["reconciliation_ready_score"] == 1 and v["verdict_class"] == "blocked"
+E       assert (0 == 1)
+
+tests/python/test_v772_capstone_9053.py:259: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9053] phase=preconditions_before completed=0 pending=13
+[exp9053] phase=producer_authenticated completed=1 pending=12
+[exp9053] phase=producer_authenticated completed=2 pending=11
+[exp9053] phase=producer_authenticated completed=3 pending=10
+[exp9053] phase=producer_authenticated completed=4 pending=9
+[exp9053] phase=producer_authenticated completed=5 pending=8
+[exp9053] phase=producer_authenticated completed=6 pending=7
+[exp9053] phase=producer_authenticated completed=7 pending=6
+[exp9053] phase=producer_authenticated completed=8 pending=5
+[exp9053] phase=producer_authenticated completed=9 pending=4
+[exp9053] phase=producer_authenticated completed=10 pending=3
+[exp9053] phase=producer_authenticated completed=11 pending=2
+[exp9053] phase=producer_authenticated completed=12 pending=1
+[exp9053] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9053] phase=after_publication_gate completed=1 pending=0
+[exp9053] phase=preconditions_after completed=13 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v772_capstone_9053.py::test_external_absence_is_accounted_and_terminal
+1 failed, 1 warning in 3.54s

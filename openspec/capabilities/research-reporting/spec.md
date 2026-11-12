@@ -113262,6 +113262,32 @@ under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
 per-unit evidence, exact gate operands, current invocation scope and verdict_class.
 Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
 
+The capstone SHALL authenticate all thirteen complete task objects against the
+independently pinned V772 digest and retained design/actual queue. It SHALL keep
+scheduler verdicts separate from absent producer verdicts, independently recount
+the 414 retained fresh identities, 215 identity obstructions and 2401 annotation
+structure records, and preserve seven detector and ten learning bounds as
+unmeasured when their primaries are absent. Historical publication gates and
+failed repository health SHALL remain separate from current scoped acceptance.
+Complete accounting may be ready while external science is terminal blocked.
+Unchanged A/B reuse and missing-QID acquisition SHALL close; a new graph mechanism
+or preregistered replication, original annotation authority with identity/exposure
+closure, and measured service demand are the respective reopening requirements.
+An original feasibility primary whose source code has changed SHALL retain its
+reported verdict and readiness, with a separate current qualification failure.
+The capstone SHALL recount annotation participation against retained author
+limits without reading span values; a stale structure-ready scalar cannot
+authorize the natural pilot.
+
+#### SCENARIO-REPORT-9053-ACCOUNTING
+
+Private controls SHALL distinguish missing file, missing field and observed zero;
+reject altered full authority, stale receipts and rehashed aggregate tampering;
+and cold-replay the actual CLI outside the checkout without PYTHONPATH. Current
+checks SHALL cover every newly owned statement with zero exclusions and run the
+unchanged scanners and private E2E-018/020/021. No model or protected TEST outcomes
+shall be loaded. Ops and traceability reconciliation remain conductor-owned.
+
 #### SCENARIO-REPORT-9053-V772
 
 Private missing-input, changed-authority and rehashed-tamper controls SHALL
