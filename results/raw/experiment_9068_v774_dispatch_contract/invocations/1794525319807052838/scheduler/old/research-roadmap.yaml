@@ -1,0 +1,324 @@
+milestone: 2026.11.774
+tasks:
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_9058_v773_fresh_corpus_a.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: fresh_source_ready_score
+    op: ==
+    upstream: exp9055-prospective-roster
+    value: 1
+  id: exp9058-fresh-corpus-a
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Original collection was skipped at414/1024 identities. The current
+      Exp9055 gate requires a completed continuation and unchanged nonexposure before
+      any model load.
+    experiment_id: exp9045-fresh-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  - addressed_by: Reuse the qualified Exp9028 serializer; historical receipts remain
+      references and do not become current model calls.
+    experiment_id: exp8990-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_graph_corpus_a
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The original V772 graph collection never ran
+    because its roster was incomplete. Exp9055 must complete the same prospective
+    roster and prove no response exposure before either collector starts.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/graph_source_8931.py; python/carnot/reporting/graph_corpus_a_8961.py;
+    python/carnot/reporting/invocation_provenance_9000.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    results/experiment_9028_v771_historical_provenance_qualification.json; results/experiment_9055_v773_prospective_roster.json
+
+    TASK:
+
+    Collect the completed prospective Qwen graph shard A. Deliver results/experiment_9058_v773_fresh_corpus_a.json,
+    primitive evidence under results/raw/experiment_9058_v773_fresh_corpus_a/, and
+    runnable scripts/experiments/experiment_9058_v773_fresh_corpus_a.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Use unsloth/Qwen3.8-27B-GGUF in MODEL_SPECS and record model/tokenizer/quantization
+    hashes, actual CUDA offload and current invocation counts. Declare model_bounded_generation
+    (10-second floor): every request has a fixed small token budget. No simulation
+    fallback or smoke-model headline. A block before loading reports actual no_model_load
+    separately from planned MODEL_SPECS; never fabricate duration.
+
+    5. Use only the frozen shardA:512 first responses,64CAL/64TEST/384online. Authenticate
+    the full source manifest and all fitted-state hashes. Use the shipped current-versus-historical
+    invocation serializer. Prior observations outside this same authenticated invocation
+    block changed input, even if a response looks unusable.
+
+    6. Load mandated Qwen Q4_K_M on one authorized RTX3090 lease with temperature0,
+    reasoning disabled,16tokens/request, frozen prompt/parser and actual logprobs.
+    Preflight/load each<=240seconds, each request<=30seconds and total collection<=2700seconds.
+    No retry, repair, best-of-N or default-model fallback. Record server executable,
+    tokenizer and GPU offload. Do not use the ARC resident server without its existing
+    lease mechanism.
+
+    7. Checkpoint each completed first response and flush progress at least every16units;
+    supervise child waits continuously. Lost in-flight answers remain censored and
+    never earn a replacement. Preserve scheduled denominator and transport/parser
+    failures. Resume only authenticated remaining units. Collect CAL/TEST/online under
+    the existing truth access policy; primaries expose only identity and transport
+    rows, not nested correctness/confidence/output summaries.
+
+    8. shard_ready_score=1 requires complete original512 transport records, authenticated
+    model and custody receipts, and owned checks; scientific label balance is checked
+    by admission. Stop safely before validation budget. Keep raw responses and truth
+    sidecars private until the independent reducer.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - shard_ready_score, shard_id, first_response_records, model_tokenizer_hashes,
+    actual_offload, per_request_receipts, custody_reference, state_hashes, censoring_rows.
+    Principle: one frozen first attempt is the scientific unit, including failed attempts.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9058_v773_fresh_corpus_a.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect the completed prospective Qwen graph shard A
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_9059_v773_fresh_corpus_b.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: fresh_source_ready_score
+    op: ==
+    upstream: exp9055-prospective-roster
+    value: 1
+  id: exp9059-fresh-corpus-b
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.773
+  model: sonnet
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Original collection was skipped at414/1024 identities. The current
+      Exp9055 gate requires a completed continuation and unchanged nonexposure before
+      any model load.
+    experiment_id: exp9046-fresh-corpus-b
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  - addressed_by: Reuse the qualified Exp9028 serializer; historical receipts remain
+      references and do not become current model calls.
+    experiment_id: exp8990-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_graph_corpus_a
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The original V772 graph collection never ran
+    because its roster was incomplete. Exp9055 must complete the same prospective
+    roster and prove no response exposure before either collector starts.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; openspec/capabilities/kan/spec.md;
+    scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/graph_source_8931.py; python/carnot/reporting/graph_corpus_a_8961.py;
+    python/carnot/reporting/invocation_provenance_9000.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    results/experiment_9028_v771_historical_provenance_qualification.json; results/experiment_9055_v773_prospective_roster.json
+
+    TASK:
+
+    Collect the completed prospective Qwen graph shard B. Deliver results/experiment_9059_v773_fresh_corpus_b.json,
+    primitive evidence under results/raw/experiment_9059_v773_fresh_corpus_b/, and
+    runnable scripts/experiments/experiment_9059_v773_fresh_corpus_b.py.
+
+    CONCRETE STEPS:
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Set PYTHONUNBUFFERED=1
+    and print(..., flush=True). Inside long loops and child waits emit actual completed/pending
+    counts at least every 60 seconds; keep every silence gap below 600 seconds. Poll
+    tool calls for at most 60 seconds. Write any file over about 200 lines in several
+    tool calls of at most about 150 lines, with a progress message between calls.
+    Never pad duration.
+
+    2. PRECONDITIONS: Authenticate input bytes, exact gate fields, environment, free
+    memory and disk before compute. Missing, retired or blocked external inputs are
+    terminal: honest_verdict=complete_blocked_<check>, verdict_class=blocked and gate_check_summary
+    with the actual operand. Only incomplete owned work is partial. Preserve rejected
+    primaries and historical verdicts. No fixtures as measurements.
+
+    3. Before implementation extend the task REQ-* and SCENARIO-* and write failing
+    private tests. Read all callers of shared code. Reuse qualified readers, fits
+    and source helpers. Historical readers must use preserved design/queue bytes and
+    independently pinned digests. Do not weaken validators, old assertions or scientific
+    bounds. Do not edit the active roadmap, conductor or exclusion manifest.
+
+    4. Use unsloth/Qwen3.8-27B-GGUF in MODEL_SPECS and record model/tokenizer/quantization
+    hashes, actual CUDA offload and current invocation counts. Declare model_bounded_generation
+    (10-second floor): every request has a fixed small token budget. No simulation
+    fallback or smoke-model headline. A block before loading reports actual no_model_load
+    separately from planned MODEL_SPECS; never fabricate duration.
+
+    5. Use only the frozen shardB:512 first responses,64CAL/64TEST/384online. Authenticate
+    the full source manifest and all fitted-state hashes. Use the shipped current-versus-historical
+    invocation serializer. Prior observations outside this same authenticated invocation
+    block changed input, even if a response looks unusable.
+
+    6. Load mandated Qwen Q4_K_M on one authorized RTX3090 lease with temperature0,
+    reasoning disabled,16tokens/request, frozen prompt/parser and actual logprobs.
+    Preflight/load each<=240seconds, each request<=30seconds and total collection<=2700seconds.
+    No retry, repair, best-of-N or default-model fallback. Record server executable,
+    tokenizer and GPU offload. Do not use the ARC resident server without its existing
+    lease mechanism.
+
+    7. Checkpoint each completed first response and flush progress at least every16units;
+    supervise child waits continuously. Lost in-flight answers remain censored and
+    never earn a replacement. Preserve scheduled denominator and transport/parser
+    failures. Resume only authenticated remaining units. Collect CAL/TEST/online under
+    the existing truth access policy; primaries expose only identity and transport
+    rows, not nested correctness/confidence/output summaries.
+
+    8. shard_ready_score=1 requires complete original512 transport records, authenticated
+    model and custody receipts, and owned checks; scientific label balance is checked
+    by admission. Stop safely before validation budget. Keep raw responses and truth
+    sidecars private until the independent reducer.
+
+    9. Freeze owned and direct-consumer validation scope before final measurement.
+    Run scoped pytest and real private child CLI/cold replay outside the checkout
+    without PYTHONPATH; Ruff check/format, strict mypy and explicit-path spec coverage.
+    Require 100 percent newly owned statements with zero exclusions. Run private E2E-018/021
+    and missing-input, changed-authority and rehashed-tamper controls; learning also
+    runs E2E-020. Current affected-consumer failures disqualify; historical broad-suite
+    debt stays failed separately under repository_health. Do not run the whole suite
+    per task. Stop measurement by 3300 seconds and reserve 1200 seconds for checks
+    within the 4800-second cap.
+
+    10. Retain primitive per-unit rows and hashes for independent recomputation. Run
+    unchanged adversarial_verify.py and strict verdict_row_consistency_lint.py under
+    progress supervision. Publish through primary_publication only after owned checks
+    pass; failed checks zero readiness. Protect TEST truth and predictions until their
+    authorized reducer. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md without deleting history. No activation or external publication.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. Principle: external incompleteness cannot
+    be fixed by retrying owned work.
+
+    - gate_check_summary: check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    Principle: missing_file, missing_field and observed zero are distinct.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    Principle: executable graph truth cannot establish the no-cheap-oracle north star;
+    graph positives are circular_positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    Principle: current work never inherits historical model-call credit.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    Principle: paired metrics and all scheduled units must be reconstructable; no
+    aggregate-only comparison.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. Principle: retain actual
+    timing and original bytes.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. Principle: current qualification is separate from historical
+    health.
+
+    - shard_ready_score, shard_id, first_response_records, model_tokenizer_hashes,
+    actual_offload, per_request_receipts, custody_reference, state_hashes, censoring_rows.
+    Principle: one frozen first attempt is the scientific unit, including failed attempts.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9059_v773_fresh_corpus_b.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect the completed prospective Qwen graph shard B
+  track: research

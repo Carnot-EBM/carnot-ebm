@@ -1,0 +1,79 @@
+...[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+.before_private_subprocess ('--date', '20261112', '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 llection completed=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_null_graph_corpus_b", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 1 {"passed": false, "replay_passed": false}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 1 {"passed": false, "replay_passed": false}
+ 
+before_private_subprocess ('--date', '20261112', '--input-root', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/absent'), '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 pleted=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_authority_bytes", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/missing/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--date', '20261112', '--input-root', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/altered-authority'), '--fixture-e2e', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 pleted=0 pending=512
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_blocked_authority_bytes", "shard_ready_score": 0}
+ 
+before_private_subprocess ('--cold-replay', PosixPath('/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_private_cli_and_cold_repl0/altered/experiment_9031_v771_graph_corpus_b.json'))
+after_private_subprocess 0 {"passed": true, "replay_passed": true}
+ 
+before_private_subprocess ('--date', 'wrong')
+after_private_subprocess 2                 [--input-root INPUT_ROOT]
+                                              [--fixture-e2e FIXTURE_E2E]
+                                              [--cold-replay COLD_REPLAY]
+experiment_9031_v771_graph_corpus_b.py: error: argument --date: invalid choice: 'wrong' (choose from 20261112)
+
+before_private_subprocess ('--date', '20261112', '--fixture-e2e', PosixPath('/home/ianblenke/github.com/ianblenke/carnot/bad.json'))
+after_private_subprocess 2                                          [--input-root INPUT_ROOT]
+                                              [--fixture-e2e FIXTURE_E2E]
+                                              [--cold-replay COLD_REPLAY]
+experiment_9031_v771_graph_corpus_b.py: error: fixture writes require private scratch
+
+.[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+...[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+[exp8931] phase=owned_validation completed=0 pending=1
+[exp8931] phase=terminal_published completed=0 pending=512
+{"path": "/tmp/carnot-9031-validation-lxb6h8mx/owned_tests/test_production_validation_and0/results/experiment_9031_v771_graph_corpus_b.json", "honest_verdict": "complete_null_graph_corpus_b", "shard_ready_score": 0}
+[exp8931] phase=owned_validation completed=0 pending=1
+[exp8931] phase=owned_checks_failed_primary_unchanged completed=0 pending=1
+.[exp8931] phase=before_B_snapshot completed=0 pending=512
+[exp8931] phase=before_input_authentication completed=0 pending=512
+[exp8931] phase=after_input_authentication completed=0 pending=512
+[exp8931] phase=after_B_collection completed=0 pending=512
+.
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+10 passed, 1 warning in 111.91s (0:01:51)

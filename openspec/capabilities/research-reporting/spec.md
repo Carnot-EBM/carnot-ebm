@@ -113637,3 +113637,44 @@ Implementation note,2026-11-12,REQ-REPORT-9067-V773: the new
 The dated primary records actual current validation receipts and measured owned
 statements. Its reconciliation score qualifies accounting only; original human
 authority and unavailable graph/learning/cost science remain terminal blocked.
+
+### REQ-REPORT-9068-V774: Bind unique dispatch keys and independent readiness
+
+Exp9068 SHALL bind the exact V774 design bytes and fourteen full task objects,
+including prompts, routing and gates, with independently frozen SHA256 pins.
+The prose-only V774 design has no embedded machine contract. Its byte digest
+and the full queue digest SHALL remain separate, explicit authorities. Before
+activation compare staged with staged; after activation use the actual queue.
+All stripped first-50-character title keys SHALL be unique and absent from
+prior OK/FLAGGED keys. Preserve the full V773 design, queue, primaries, original
+producer/test bytes and archive lag. Never change the conductor or manifest.
+Authenticate Exp8987 fitted states, Exp8988 protocol, Exp9028 qualification and
+Exp9055 roster before reduction. Missing sources stop measurement with terminal
+blocked and exact missing-file/field operands. Contract, frozen methods and ARC
+readiness SHALL be independent. ARC requires thirty new uncensored episodes,
+three families and both arms per family beyond Exp9054's retained frontier.
+No model, fit, game, generation, activation or external publication is allowed.
+
+#### SCENARIO-REPORT-9068-V774
+
+The unchanged real selector SHALL select the absent B task when only A is logged
+OK under new keys. The original colliding titles SHALL reproduce the failed
+selection as a negative control. Private fixtures SHALL reject changed prompts,
+routing, gates, order, title keys, design bytes and coordinated rehashing. Missing
+files, missing fields and observed zero SHALL remain distinct. Retain all fourteen
+primitive contract rows and hashes. Only current passed owned and direct-consumer
+checks, private foreign CLI/cold replay, E2E-018/020/021, Ruff, strict mypy, explicit
+spec coverage and 100 percent newly owned statements with zero exclusions qualify
+publication through primary_publication and unchanged terminal scanners. Historical
+repository failures remain separate. Ops reconciliation is conductor-owned.
+
+Implementation,2026-11-12,REQ-REPORT-9068-V774:
+`v774_dispatch_contract.py`, the Exp9068 CLI and its private tests bind the
+separate prose-design and complete-queue digests. The real selector retains the
+old-key failure and selects B under new keys. Current receipts and SQLite
+coverage govern the three independent readiness fields. The unchanged broader
+Python suite was attempted once; its failed,900-second timeout receipt remains
+separate from owned qualification. A test-generated historical synthesis log was
+retained privately and restored to its original bytes. No conductor, roadmap,
+manifest, old assertion, model or protected TEST seal was changed. Operational
+and traceability reconciliation is left to the conductor as requested.

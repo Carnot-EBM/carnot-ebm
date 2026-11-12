@@ -59392,3 +59392,17 @@ prefix graph blocks continuation. Durable production checkpoints bind both prefi
 and history, while immutable invocation copies support foreign-directory cold replay.
 Private exit73/resume, cap crossing, missing-input and rehashed-tamper tests trace
 REQ-VERIFY-V773-PROSPECTIVE and REQ-REPORT-9055-CONTINUATION.
+
+### REQ-VERIFY-9068: Reject forged dispatch custody and readiness
+
+The V774 dispatch receipt SHALL reconstruct summaries from pinned design, full
+queue, retained source operands, actual selector output and current validation.
+A rehashed aggregate, stale receipt, altered source or failed affected consumer
+SHALL fail qualification and zero readiness. Frozen methods confer no new science.
+
+#### SCENARIO-VERIFY-9068-REPLAY
+
+Run the actual CLI outside the checkout without PYTHONPATH. Valid private bytes
+SHALL replay; missing input, changed authority and rehashed readiness SHALL fail.
+Measure all new statements with zero exclusions and preserve unchanged scanner
+and private E2E-018/020/021 receipts before atomic primary publication.

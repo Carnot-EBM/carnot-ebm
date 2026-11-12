@@ -1,0 +1,369 @@
+[exp8984] phase=start_authentication completed=0 pending=14
+[exp8984] phase=publication_gate_before completed=13 pending=1
+[exp7303-validation] before_subprocess publication_gate elapsed_s=0.000 unit=1/1
+[exp7303-validation:publication_gate] {
+[exp7303-validation:publication_gate]   "paper_ready": true,
+[exp7303-validation:publication_gate]   "gates": {
+[exp7303-validation:publication_gate]     "G1": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G2": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G3": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "no retracted phrasings asserted as live claims",
+[exp7303-validation:publication_gate]       "hits": []
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G4": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     }
+[exp7303-validation:publication_gate]   },
+[exp7303-validation:publication_gate]   "unmet_gates": [],
+[exp7303-validation:publication_gate]   "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count."
+[exp7303-validation:publication_gate] }
+[exp7303-validation] after_subprocess publication_gate elapsed_s=0.092 exit=0 unit=1/1
+[exp8984] phase=authentication_complete completed=14 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_explicit_historical_reade0/authority'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_explicit_historical_reade0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 0 ion] after_subprocess strict_rows elapsed_s=0.029 exit=0 unit=3/3
+[exp8984] phase=terminal_validators_after completed=3 pending=0
+{"primary_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_explicit_historical_reade0/experiment_8984_v767_capstone.json", "primary_sha256": "sha256:68c1542555d17bb9ca04588bafd24f4487df86554ef551dc8efa736d496b3265", "sidecar_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_explicit_historical_reade0/raw/experiment_8984_v767_capstone/validators/68c1542555d17bb9ca04588bafd24f4487df86554ef551dc8efa736d496b3265.json"}
+[exp8984] phase=complete completed=14 pending=0
+ 
+[exp9028-test] before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_explicit_historical_reade0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 0 er_paired_graph_bootstrap completed=10000 pending=0
+[exp8967] phase=bootstrap_bounds completed=1 pending=8
+[exp8967] phase=bootstrap_bounds completed=2 pending=7
+[exp8967] phase=bootstrap_bounds completed=3 pending=6
+[exp8967] phase=bootstrap_bounds completed=4 pending=5
+[exp8967] phase=bootstrap_bounds completed=5 pending=4
+[exp8967] phase=bootstrap_bounds completed=6 pending=3
+[exp8967] phase=bootstrap_bounds completed=7 pending=2
+[exp8967] phase=bootstrap_bounds completed=8 pending=1
+[exp8967] phase=bootstrap_bounds completed=9 pending=0
+{"passed": true, "replay_passed": true, "slots": 14}
+ 
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/mutations/missing'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 1 [exp8984] phase=imports_before completed=0 pending=1
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+ 
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/mutations/order'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 1 [exp8984] phase=imports_before completed=0 pending=1
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+ 
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/mutations/prompt'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 1 [exp8984] phase=imports_before completed=0 pending=1
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+ 
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/mutations/rehash'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 1 [exp8984] phase=imports_before completed=0 pending=1
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+ 
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9028-test] before subprocess ('--authority-root', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/successor'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_original_reader_and_child0/experiment_8984_v767_capstone.json'))
+[exp9028-test] after subprocess 1 [exp8984] phase=imports_before completed=0 pending=1
+[exp8984] phase=start completed=0 pending=0
+[exp8984] phase=start_authentication completed=0 pending=14
+{"passed": false, "reason": "task_authority"}
+ 
+.[exp8984] phase=start_authentication completed=0 pending=14
+[exp8984] phase=start_authentication completed=0 pending=14
+.[exp9000] phase=authenticate_retained completed=1 pending=2688
+[exp9000] phase=authenticate_retained completed=251 pending=2438
+[exp9000] phase=authenticate_retained completed=501 pending=2188
+[exp9000] phase=authenticate_retained completed=751 pending=1938
+[exp9000] phase=authenticate_retained completed=1001 pending=1688
+[exp9000] phase=authenticate_retained completed=1251 pending=1438
+[exp9000] phase=authenticate_retained completed=1501 pending=1188
+[exp9000] phase=authenticate_retained completed=1751 pending=938
+[exp9000] phase=authenticate_retained completed=2001 pending=688
+[exp9000] phase=authenticate_retained completed=2251 pending=438
+[exp9000] phase=authenticate_retained completed=2501 pending=188
+[exp9014] phase=historical_custody completed=1 pending=69
+[exp9028] phase=historical_9014_custody completed=1 pending=2922
+[exp9028] phase=historical_9014_custody completed=101 pending=2822
+[exp9028] phase=historical_9014_custody completed=201 pending=2722
+[exp9028] phase=historical_9014_custody completed=301 pending=2622
+[exp9028] phase=historical_9014_custody completed=401 pending=2522
+[exp9028] phase=historical_9014_custody completed=501 pending=2422
+[exp9028] phase=historical_9014_custody completed=601 pending=2322
+[exp9028] phase=historical_9014_custody completed=701 pending=2222
+[exp9028] phase=historical_9014_custody completed=801 pending=2122
+[exp9028] phase=historical_9014_custody completed=901 pending=2022
+[exp9028] phase=historical_9014_custody completed=1001 pending=1922
+[exp9028] phase=historical_9014_custody completed=1101 pending=1822
+[exp9028] phase=historical_9014_custody completed=1201 pending=1722
+[exp9028] phase=historical_9014_custody completed=1301 pending=1622
+[exp9028] phase=historical_9014_custody completed=1401 pending=1522
+[exp9028] phase=historical_9014_custody completed=1501 pending=1422
+[exp9028] phase=historical_9014_custody completed=1601 pending=1322
+[exp9028] phase=historical_9014_custody completed=1701 pending=1222
+[exp9028] phase=historical_9014_custody completed=1801 pending=1122
+[exp9028] phase=historical_9014_custody completed=1901 pending=1022
+[exp9028] phase=historical_9014_custody completed=2001 pending=922
+[exp9028] phase=historical_9014_custody completed=2101 pending=822
+[exp9028] phase=historical_9014_custody completed=2201 pending=722
+[exp9028] phase=historical_9014_custody completed=2301 pending=622
+[exp9028] phase=historical_9014_custody completed=2401 pending=522
+[exp9028] phase=historical_9014_custody completed=2501 pending=422
+[exp9028] phase=historical_9014_custody completed=2601 pending=322
+[exp9028] phase=historical_9014_custody completed=2701 pending=222
+[exp9028] phase=historical_9014_custody completed=2801 pending=122
+[exp9028] phase=historical_9014_custody completed=2901 pending=22
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 0 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": true}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+.[exp9028-test] before subprocess ('--check-receipts', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_receipt_cli_preserves_str0/work.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false}
+ 
+..[exp9028-test] before subprocess ('--date', '20261112', '--from-work', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/source.json'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/published/experiment_9028_v771_historical_provenance_qualification.json'))
+[exp9028-test] after subprocess 0 pending=0
+{"primary_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/published/experiment_9028_v771_historical_provenance_qualification.json", "primary_sha256": "sha256:9f61c7bc1e3a57e791004acda9c28faff243965887e73d42b4098198606dc485", "sidecar_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/published/raw/experiment_9028_v771_historical_provenance_qualification/validators/9f61c7bc1e3a57e791004acda9c28faff243965887e73d42b4098198606dc485.json", "honest_verdict": "complete_disqualified_historical_provenance", "provenance_ready_score": 0}
+ 
+[exp9028-test] before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/published/experiment_9028_v771_historical_provenance_qualification.json'))
+[exp9028-test] after subprocess 0 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": true, "replay_passed": true}
+ 
+[exp9028-test] before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/published/experiment_9028_v771_historical_provenance_qualification.json'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false, "replay_passed": false}
+ 
+[exp9028-test] before subprocess ('--cold-replay', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/absent'))
+[exp9028-test] after subprocess 1 [exp9028] phase=imports_before completed=0 pending=1
+{"passed": false, "replay_passed": false}
+ 
+[exp9028-test] before subprocess ('--date', '20261112', '--from-work', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/source.json'), '--output', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/blocked/experiment_9028_v771_historical_provenance_qualification.json'))
+[exp9028-test] after subprocess 0 mplete completed=1 pending=0
+{"primary_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/blocked/experiment_9028_v771_historical_provenance_qualification.json", "primary_sha256": "sha256:23cef70c1b511a736f4e17154776db777168f086ccad09cd6c440d7674fd56a1", "sidecar_path": "/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/blocked/raw/experiment_9028_v771_historical_provenance_qualification/validators/23cef70c1b511a736f4e17154776db777168f086ccad09cd6c440d7674fd56a1.json", "honest_verdict": "complete_blocked_input_bytes", "provenance_ready_score": 0}
+ 
+[exp9028-test] before subprocess ('--date', 'wrong')
+[exp9028-test] after subprocess 2 [exp9028] phase=imports_before completed=0 pending=1
+ usage: experiment_9028_v771_historical_provenance_qualification.py
+       [-h] [--date DATE] [--output OUTPUT] [--input-root INPUT_ROOT]
+       [--from-work FROM_WORK] [--check-receipts CHECK_RECEIPTS]
+       [--cold-replay COLD_REPLAY]
+experiment_9028_v771_historical_provenance_qualification.py: error: this consumer requires --date 20261112
+
+[exp9028-test] before subprocess ('--date', '20261112', '--from-work', PosixPath('/tmp/carnot-9028-7imuv2vd/owned_tests/test_private_publication_missi0/source.json'), '--output', PosixPath('/home/ianblenke/github.com/ianblenke/carnot/experiment_9028_v771_historical_provenance_qualification.json'))
+[exp9028-test] after subprocess 2 [exp9028] phase=imports_before completed=0 pending=1
+ usage: experiment_9028_v771_historical_provenance_qualification.py
+       [-h] [--date DATE] [--output OUTPUT] [--input-root INPUT_ROOT]
+       [--from-work FROM_WORK] [--check-receipts CHECK_RECEIPTS]
+       [--cold-replay COLD_REPLAY]
+experiment_9028_v771_historical_provenance_qualification.py: error: private replay publication requires output outside the checkout
+
+.[exp9028] phase=preconditions_before completed=0 pending=0
+[exp9028] phase=preconditions_after completed=4 pending=0
+[exp9028] phase=serializer_controls completed=1 pending=4
+[exp9028] phase=serializer_controls completed=2 pending=3
+[exp9028] phase=serializer_controls completed=3 pending=2
+[exp9028] phase=serializer_controls completed=4 pending=1
+[exp9028] phase=serializer_controls completed=5 pending=0
+[exp9028] phase=validation_before completed=0 pending=11
+[exp9028] phase=validation completed=1 pending=10
+[exp9028] phase=validation completed=2 pending=9
+[exp9028] phase=validation completed=3 pending=8
+[exp9028] phase=validation completed=4 pending=7
+[exp9028] phase=validation completed=5 pending=6
+[exp9028] phase=validation completed=6 pending=5
+[exp9028] phase=validation completed=7 pending=4
+[exp9028] phase=validation completed=8 pending=3
+[exp9028] phase=validation completed=9 pending=2
+[exp9028] phase=validation completed=10 pending=1
+[exp9028] phase=validation completed=11 pending=0
+[exp9028] phase=receipt_controls completed=1 pending=8
+[exp9028] phase=receipt_controls completed=2 pending=7
+[exp9028] phase=receipt_controls completed=3 pending=6
+[exp9028] phase=receipt_controls completed=4 pending=5
+[exp9028] phase=receipt_controls completed=5 pending=4
+[exp9028] phase=receipt_controls completed=6 pending=3
+[exp9028] phase=receipt_controls completed=7 pending=2
+[exp9028] phase=receipt_controls completed=8 pending=1
+[exp9028] phase=receipt_controls completed=9 pending=0
+[exp9028] phase=validation_after completed=11 pending=0
+[exp9028] phase=preconditions_before completed=0 pending=0
+[exp9028] phase=preconditions_after completed=4 pending=0
+[exp9028] phase=serializer_controls completed=1 pending=4
+[exp9028] phase=serializer_controls completed=2 pending=3
+[exp9028] phase=serializer_controls completed=3 pending=2
+[exp9028] phase=serializer_controls completed=4 pending=1
+[exp9028] phase=serializer_controls completed=5 pending=0
+[exp9028] phase=validation_before completed=0 pending=11
+[exp9028] phase=validation completed=1 pending=10
+[exp9028] phase=validation completed=2 pending=9
+[exp9028] phase=validation completed=3 pending=8
+[exp9028] phase=validation completed=4 pending=7
+[exp9028] phase=validation completed=5 pending=6
+[exp9028] phase=validation completed=6 pending=5
+[exp9028] phase=validation completed=7 pending=4
+[exp9028] phase=validation completed=8 pending=3
+[exp9028] phase=validation completed=9 pending=2
+[exp9028] phase=validation completed=10 pending=1
+[exp9028] phase=validation completed=11 pending=0
+[exp9028] phase=receipt_controls completed=1 pending=8
+[exp9028] phase=receipt_controls completed=2 pending=7
+[exp9028] phase=receipt_controls completed=3 pending=6
+[exp9028] phase=receipt_controls completed=4 pending=5
+[exp9028] phase=receipt_controls completed=5 pending=4
+[exp9028] phase=receipt_controls completed=6 pending=3
+[exp9028] phase=receipt_controls completed=7 pending=2
+[exp9028] phase=receipt_controls completed=8 pending=1
+[exp9028] phase=receipt_controls completed=9 pending=0
+[exp9028] phase=validation_after completed=11 pending=0
+[exp9028] phase=preconditions_before completed=0 pending=0
+[exp9028] phase=preconditions_after completed=4 pending=0
+[exp9028] phase=validation_before completed=0 pending=11
+[exp9028] phase=validation completed=1 pending=10
+[exp9028] phase=validation completed=2 pending=9
+[exp9028] phase=validation completed=3 pending=8
+[exp9028] phase=validation completed=4 pending=7
+[exp9028] phase=validation completed=5 pending=6
+[exp9028] phase=validation completed=6 pending=5
+[exp9028] phase=validation completed=7 pending=4
+[exp9028] phase=validation completed=8 pending=3
+[exp9028] phase=validation completed=9 pending=2
+[exp9028] phase=validation completed=10 pending=1
+[exp9028] phase=validation completed=11 pending=0
+[exp9028] phase=receipt_controls completed=1 pending=8
+[exp9028] phase=receipt_controls completed=2 pending=7
+[exp9028] phase=receipt_controls completed=3 pending=6
+[exp9028] phase=receipt_controls completed=4 pending=5
+[exp9028] phase=receipt_controls completed=5 pending=4
+[exp9028] phase=receipt_controls completed=6 pending=3
+[exp9028] phase=receipt_controls completed=7 pending=2
+[exp9028] phase=receipt_controls completed=8 pending=1
+[exp9028] phase=receipt_controls completed=9 pending=0
+[exp9028] phase=validation_after completed=11 pending=0
+[exp9028] phase=preconditions_before completed=0 pending=0
+[exp9028] phase=preconditions_after completed=4 pending=0
+.[exp9028] phase=qualification_before completed=0 pending=0
+[exp9028] phase=publication_complete completed=1 pending=0
+{"honest_verdict": "complete_disqualified_historical_provenance", "provenance_ready_score": 0}
+.[exp8971] phase=control_missing completed=1 pending=6
+[exp8971] phase=control_title completed=2 pending=5
+[exp8971] phase=control_order completed=3 pending=4
+[exp8971] phase=control_prompt completed=4 pending=3
+[exp8971] phase=control_gate completed=5 pending=2
+[exp8971] phase=control_path completed=6 pending=1
+[exp8971] phase=control_rehash completed=7 pending=0
+[exp9014] phase=before_authority_valid completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_valid completed=1 pending=0
+[exp9014] phase=after_authority_valid completed=1 pending=0
+[exp9028] phase=authority_controls completed=1 pending=6
+[exp9014] phase=before_authority_missing_file completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_missing_file completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_missing_file completed=1 pending=0
+[exp9014] phase=after_authority_missing_file completed=1 pending=0
+[exp9028] phase=authority_controls completed=2 pending=5
+[exp9014] phase=before_authority_missing completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_missing completed=1 pending=0
+[exp9014] phase=after_authority_missing completed=1 pending=0
+[exp9028] phase=authority_controls completed=3 pending=4
+[exp9014] phase=before_authority_order completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_order completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_order completed=1 pending=0
+[exp9014] phase=after_authority_order completed=1 pending=0
+[exp9028] phase=authority_controls completed=4 pending=3
+[exp9014] phase=before_authority_prompt completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_prompt completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_prompt completed=1 pending=0
+[exp9014] phase=after_authority_prompt completed=1 pending=0
+[exp9028] phase=authority_controls completed=5 pending=2
+[exp9014] phase=before_authority_rehash completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_rehash completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_rehash completed=1 pending=0
+[exp9014] phase=after_authority_rehash completed=1 pending=0
+[exp9028] phase=authority_controls completed=6 pending=1
+[exp9014] phase=before_authority_successor completed=0 pending=1
+[exp8205] phase=before_subprocess_authority_successor completed=0 pending=1
+[exp8205] phase=after_subprocess_authority_successor completed=1 pending=0
+[exp9014] phase=after_authority_successor completed=1 pending=0
+[exp9028] phase=authority_controls completed=7 pending=0
+[exp9028] phase=coverage_fixture completed=1 pending=0
+..
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+23 passed, 1 warning in 181.11s (0:03:01)

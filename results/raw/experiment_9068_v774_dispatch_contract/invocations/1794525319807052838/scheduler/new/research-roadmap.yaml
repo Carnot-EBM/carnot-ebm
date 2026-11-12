@@ -1,0 +1,301 @@
+milestone: 2026.11.774
+tasks:
+- MODEL_SPECS: []
+  deliverable: results/experiment_9069_v774_source_custody.json
+  estimated_wall_time_min: 45
+  gated_on:
+  - artifact_field: frozen_methods_ready_score
+    op: ==
+    upstream: exp9068-dispatch-contract
+    value: 1
+  id: exp9069-source-custody
+  inference_substrate_class: no_model_load
+  max_turns: 100
+  milestone: 2026.11.774
+  model: opus
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Use separately collected V773 A with protected TEST custody, not
+      the exposed V768 A; current exhaustive identity/access joins must establish
+      nonexposure.
+    experiment_id: exp9030-retained-shard-a
+    retire_if_same_verdict: true
+    verdict: complete_blocked_nonexposure_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp9055 completed 1024 identities in 47987 proposals;
+    Exp9058 collected exactly 512 A responses. Preserve those bytes and TEST seals.
+    Unlike exposed V768/V771 A, the V773 publication claims protected custody; verify
+    this, do not assume it.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/fresh_corpus_a_9058.py; python/carnot/reporting/fresh_corpus_runner_9058.py;
+    python/carnot/reporting/fresh_seal_custody_9042.py; python/carnot/reporting/prospective_roster_9055.py;
+    python/carnot/reporting/retained_shard_a_9030.py; results/experiment_9055_v773_prospective_roster.json;
+    results/experiment_9058_v773_fresh_corpus_a.json; results/experiment_9067_v773_capstone.json
+
+    TASK:
+
+    Authenticate sealed A and establish unattempted B. Deliver results/experiment_9069_v774_source_custody.json;
+    implement scripts/experiments/experiment_9069_v774_source_custody.py using existing
+    library code.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS (before all subsequent work): Authenticate exact declared sources,
+    immutable producer hashes, current dependencies and private writable storage before
+    computation. Missing resources produce complete_blocked_<check>, verdict_class=blocked
+    and gate_check_summary, then stop.
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Print
+    within long loops and supervise children with a flushed heartbeat at least every
+    60 seconds; every silent gap must stay below 600 seconds. Write any file over
+    about 200 lines in several tool calls of at most 200 lines, with a progress message
+    between calls; do not construct one huge tool payload.
+
+    2. Before implementation, read all callers of touched code with rg. Confirm the
+    task REQ-REPORT-9069-V774 and SCENARIO-REPORT-9069-V774 in research-reporting/spec.md;
+    extend relevant capability specs and write failing tests first. Reuse qualified
+    helpers. Freeze original producer/test bytes and use private output roots; do
+    not rewrite historical results, tests, assertions or the exclusion manifest to
+    pass.
+
+    3. Authenticate the pinned V773 roster, its 128 CAL/128 TEST/768 online roles,
+    original states and all A request/response receipts. Check the public artifacts,
+    retained capstone projections, invocation manifests and custody access logs for
+    TEST labels or response-derived outcomes. Do not publish TEST contents while checking.
+    Old roster, generation settings, role assignment, first-response budget and seven/ten
+    bounds are immutable.
+
+    4. Search current checkpoint, intent and wire-response inventories for the exact
+    512 B identities. A missing primary alone proves nothing. b_collection_ready_score=1
+    requires positively authenticated no-attempt coverage of all task-owned invocation
+    paths and intact A custody. If any B attempt exists, block this no-attempt plan
+    and name its authority; do not regenerate, silently import, replace or resample.
+    If A TEST was exposed, close this confirmation rather than calling it fresh.
+
+    5. Emit separate a_custody_ready_score and b_collection_ready_score, retained
+    references and a complete identity-level disposition. Mutation controls must catch
+    changed roles, an A TEST disclosure, a B orphan response, a changed tokenizer
+    and a rehashed mismatched source. No LLM load or response parsing into truth occurs.
+
+    6. Freeze owned and direct-consumer validation scope. Run scoped pytest, actual
+    private CLI/cold replay outside the checkout without PYTHONPATH, Ruff check/format,
+    strict mypy and explicit-path spec coverage. Require 100 percent newly owned statements
+    with zero exclusions. Run private E2E-018/021; continuous-learning recovery also
+    runs E2E-020. Preserve broader historical health separately; a current affected-consumer
+    failure disqualifies. Stop scientific work by 3300 seconds and reserve 1200 seconds
+    for validation inside the 4800-second hard cap.
+
+    7. Retain primitive rows and content hashes. Run unchanged adversarial_verify.py
+    and strict verdict_row_consistency_lint.py under progress supervision. Publish
+    the terminal primary through primary_publication only after owned checks pass;
+    failed checks zero readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md. Preserve seals until their named reducer. No activation,
+    external publication or manifest mutation.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. principle: use blocked for unchanged external
+    failure; only incomplete owned work may retry as partial.
+
+    - gate_check_summary: list of check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    principle: record each failed check and distinguish missing_file, missing_field
+    and observed zero, including all blocked verdicts.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    principle: graph truth is executable and graph wins remain circular_positive;
+    human agreement is neither medical correctness nor a general verifier moat.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    principle: separate new computation from cited historical runs and label small-head
+    training separately from an LLM load.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    principle: retain every scheduled unit and paired primitive metrics; repeated
+    rows are not independent samples.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. principle: authenticate
+    input identity and real elapsed work without duration padding.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. principle: qualification of current changed paths is separate
+    from retained historical repository failures.
+
+    - a_custody_ready_score, b_collection_ready_score, retained_a_reference, roster_reference,
+    state_hashes, exposure_inventory, b_attempt_inventory, custody_mutation_rows.
+    principle: reuse is authorized by demonstrated custody, and absence of a publication
+    is not absence of a generation attempt.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9069_v774_source_custody.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: 'Exp9069: Authenticate sealed A and establish unattempted B'
+  track: research
+- MODEL_SPECS:
+  - hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_9071_v774_collect_b.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: b_collection_ready_score
+    op: ==
+    upstream: exp9069-source-custody
+    value: 1
+  - artifact_field: contract_ready_score
+    op: ==
+    upstream: exp9068-dispatch-contract
+    value: 1
+  id: exp9071-collect-b
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.774
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: The roster is now complete; V774 uses unique dispatch titles and
+      checks no prior B attempts. V773 exp9059 has no artifact or verdict, so do not
+      fabricate one.
+    experiment_id: exp9046-fresh-corpus-b
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. The V773 B task was skipped under the same completion
+    key as A. Exp9069 must authenticate no B attempts and intact A custody. The new
+    title starts with a unique ID; preserve the completed source and original scientific
+    protocol.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; research-program.md; ops/north-star.md; ops/e2e-test-plan.md;
+    ops/exclusion_manifest.yaml; research-references.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    python/carnot/reporting/fresh_corpus_a_9058.py; python/carnot/reporting/fresh_corpus_runner_9058.py;
+    python/carnot/reporting/graph_corpus_b_9031.py; python/carnot/reporting/fresh_seal_custody_9042.py;
+    python/carnot/inference/graph_corpus_runtime_8961.py; python/carnot/inference/sota_models.py;
+    results/experiment_9058_v773_fresh_corpus_a.json
+
+    TASK:
+
+    Collect only the missing sealed Qwen shard B. Deliver results/experiment_9071_v774_collect_b.json;
+    implement scripts/experiments/experiment_9071_v774_collect_b.py using existing
+    library code.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS (before all subsequent work): Check Exp9069 b_collection_ready_score==1,
+    Exp9068 contract_ready_score==1, exact B roster and local cached mandated GGUF
+    with its own tokenizer. Check the existing GPU lease, executable llama.cpp runtime,
+    actual CUDA device and private custody space. Any missing resource yields complete_blocked_<resource>,
+    verdict_class=blocked and gate_check_summary before load; no CPU smoke fallback
+    for this result.
+
+    1. Emit a flushed progress line at each phase boundary and before and after every
+    model load, generation, benchmark and subprocess that can take minutes. Print
+    within long loops and supervise children with a flushed heartbeat at least every
+    60 seconds; every silent gap must stay below 600 seconds. Write any file over
+    about 200 lines in several tool calls of at most 200 lines, with a progress message
+    between calls; do not construct one huge tool payload.
+
+    2. Before implementation, read all callers of touched code with rg. Confirm the
+    task REQ-REPORT-9071-V774 and SCENARIO-REPORT-9071-V774 in research-reporting/spec.md;
+    extend relevant capability specs and write failing tests first. Reuse qualified
+    helpers. Freeze original producer/test bytes and use private output roots; do
+    not rewrite historical results, tests, assertions or the exclusion manifest to
+    pass.
+
+    3. Reuse the qualified collector and custody code for exactly the roster B IDs:
+    512 first responses, 64 CAL, 64 TEST and 384 online. Change only task identity,
+    shard selector, new authority input and authorized future reducer IDs. Keep the
+    old authentication behavior for historical replays. Preserve temperature zero,
+    seed 764031, top_p 1, 16 output tokens, reasoning disabled and original logprobs/parser.
+    No retry, repair, best-of-N, substitute graph or model fallback.
+
+    4. Lease one RTX 3090 under the existing resource policy. Require cached unsloth/Qwen3.8-27B-GGUF
+    Q4_K_M, exact tokenizer/GGUF hashes matching A and actual CUDA offload evidence
+    before generation. Bound preflight and load to 240 seconds each, each request
+    to 30 seconds and collection to 2700 seconds. Checkpoint every intent and completion.
+    Record failed/in-flight slots as censored; only the same authenticated invocation
+    can resume without requesting a second response.
+
+    5. Keep response payloads and TEST truth private. Publish identity, transport
+    and cost primitives only. Set inference_substrate=live_llm_inference and inference_substrate_class=model_bounded_generation
+    (10-second floor), never model_full_generation or padded duration. shard_b_ready_score=1
+    requires all fixed slots accounted and original transport/custody checks; quality/support
+    is the admission task responsibility. Test orphan-response rejection, cross-shard
+    duplicates, wrong state hash and TEST projection leaks.
+
+    6. Freeze owned and direct-consumer validation scope. Run scoped pytest, actual
+    private CLI/cold replay outside the checkout without PYTHONPATH, Ruff check/format,
+    strict mypy and explicit-path spec coverage. Require 100 percent newly owned statements
+    with zero exclusions. Run private E2E-018/021; continuous-learning recovery also
+    runs E2E-020. Preserve broader historical health separately; a current affected-consumer
+    failure disqualifies. Stop scientific work by 3300 seconds and reserve 1200 seconds
+    for validation inside the 4800-second hard cap.
+
+    7. Retain primitive rows and content hashes. Run unchanged adversarial_verify.py
+    and strict verdict_row_consistency_lint.py under progress supervision. Publish
+    the terminal primary through primary_publication only after owned checks pass;
+    failed checks zero readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md
+    and ops/changelog.md. Preserve seals until their named reducer. No activation,
+    external publication or manifest mutation.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null
+    | blocked | disqualified | partial. principle: use blocked for unchanged external
+    failure; only incomplete owned work may retry as partial.
+
+    - gate_check_summary: list of check/upstream/path/sha256/artifact_field/op/expected/observed/passed.
+    principle: record each failed check and distinguish missing_file, missing_field
+    and observed zero, including all blocked verdicts.
+
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score.
+    principle: graph truth is executable and graph wins remain circular_positive;
+    human agreement is neither medical correctness nor a general verifier moat.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, trained_head_specs,
+    model_invocation_counts, cited_upstream_artifacts: experiment_id/fields_imported/sha256.
+    principle: separate new computation from cited historical runs and label small-head
+    training separately from an LLM load.
+
+    - rows: unit_id/group_id/arm/condition/status/metric/value/numerator/denominator/exclusion_reason;
+    intended_count/completed_count/failed_count/censored_count/excluded_count/independent_count.
+    principle: retain every scheduled unit and paired primitive metrics; repeated
+    rows are not independent samples.
+
+    - run_date, duration_s, random_seed, reproducibility_checksum, raw_shard_hashes,
+    code_config_hashes, phase_spans, preconditions_checked. principle: authenticate
+    input identity and real elapsed work without duration padding.
+
+    - required_checks_passed, validation_scope_manifest, validation_receipts, owned_statement_coverage,
+    repository_health. principle: qualification of current changed paths is separate
+    from retained historical repository failures.
+
+    - shard_b_ready_score, roster_reference, custody_reference, per_request_receipts,
+    censoring_rows, actual_offload, model_tokenizer_hashes, generator_settings, resource_lease.
+    principle: successful collection means authenticated first responses, not a detector
+    benefit or permission to expose TEST truth.
+
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_9071_v774_collect_b.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: 'Exp9071: Collect only the missing sealed Qwen shard B'
+  track: research

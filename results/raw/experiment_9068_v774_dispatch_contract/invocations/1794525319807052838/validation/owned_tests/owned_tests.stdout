@@ -1,0 +1,82 @@
+........[exp9068] phase=preconditions_before completed=0 pending=0
+[exp9068] phase=authenticate_and_freeze completed=1 pending=856
+[exp9068] phase=authenticate_and_freeze completed=101 pending=756
+[exp9068] phase=authenticate_and_freeze completed=201 pending=656
+[exp9068] phase=authenticate_and_freeze completed=301 pending=556
+[exp9068] phase=authenticate_and_freeze completed=401 pending=456
+[exp9068] phase=authenticate_and_freeze completed=501 pending=356
+[exp9068] phase=authenticate_and_freeze completed=601 pending=256
+[exp9068] phase=authenticate_and_freeze completed=701 pending=156
+[exp9068] phase=authenticate_and_freeze completed=801 pending=56
+[exp9068] phase=preconditions_after completed=1723 pending=0
+[exp9068] phase=reduction_before completed=0 pending=0
+[exp9068] phase=reduction_after completed=14 pending=0
+..........[exp9068] phase=preconditions_before completed=0 pending=0
+[exp9068] phase=authenticate_and_freeze completed=1 pending=95
+[exp9068] phase=preconditions_after completed=148 pending=51
+.[test9068] child_before ('--from-work', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/work.json'), '--output', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/experiment_9068_v774_dispatch_contract.json'))
+[test9068] child_after 0 rict_rows completed=1 pending=0
+[exp9068] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/experiment_9068_v774_dispatch_contract.json", "primary_sha256": "sha256:81df6a6ab012306a10e68480596ff907b310f3d055ba375f62ad5e9a5e7c5ac7", "sidecar_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/raw/experiment_9068_v774_dispatch_contract/validators/81df6a6ab012306a10e68480596ff907b310f3d055ba375f62ad5e9a5e7c5ac7.json", "honest_verdict": "complete_disqualified_v774_dispatch_contract"}
+ 
+[test9068] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/experiment_9068_v774_dispatch_contract.json'))
+[test9068] child_after 0 {"passed": true, "replay_passed": true}
+ 2026-11-12 18:16:22,786 [conductor] All 2 research tasks completed or exhausted. Nothing to do.
+
+[test9068] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/experiment_9068_v774_dispatch_contract.json'))
+[test9068] child_after 1 {"passed": false, "replay_passed": false, "reason": "aggregate_drift"}
+ 2026-11-12 18:16:38,191 [conductor] All 2 research tasks completed or exhausted. Nothing to do.
+
+[test9068] child_before ('--date', 'bad')
+[test9068] child_after 2  usage: experiment_9068_v774_dispatch_contract.py [-h] [--date DATE]
+                                                 [--root ROOT]
+                                                 [--output OUTPUT]
+                                                 [--cold-replay COLD_REPLAY]
+                                                 [--from-work FROM_WORK]
+experiment_9068_v774_dispatch_contract.py: error: this contract requires --date 20261112
+
+[test9068] child_before ('--from-work', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/work.json'))
+[test9068] child_after 2  usage: experiment_9068_v774_dispatch_contract.py [-h] [--date DATE]
+                                                 [--root ROOT]
+                                                 [--output OUTPUT]
+                                                 [--cold-replay COLD_REPLAY]
+                                                 [--from-work FROM_WORK]
+experiment_9068_v774_dispatch_contract.py: error: private work publication requires output outside the checkout
+
+[test9068] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/absent'))
+[test9068] child_after 1 {"passed": false, "replay_passed": false, "reason": "[Errno 2] No such file or directory: '/var/tmp/carnot9068-yt38rgkq/owned_tests/test_foreign_cli_and_rehashed_0/absent'"}
+ 
+....[exp9068] phase=validation_before completed=0 pending=0
+[exp9068] phase=validation_after completed=0 pending=0
+[exp9068] phase=publication_before completed=0 pending=0
+[exp9068] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_main_current_qualificatio0/accepted/experiment_9068_v774_dispatch_contract.json", "primary_sha256": "sha256:323aaaeddb59a0b57b82aa23c33557d84bce1bd50d6331d2f62b280dac8a94a2", "sidecar_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_main_current_qualificatio0/accepted/raw/experiment_9068_v774_dispatch_contract/validators/323aaaeddb59a0b57b82aa23c33557d84bce1bd50d6331d2f62b280dac8a94a2.json", "honest_verdict": "complete_null_v774_dispatch_contract"}
+[exp9068] phase=validation_before completed=0 pending=0
+[exp9068] phase=validation_after completed=0 pending=0
+[exp9068] phase=publication_disqualified completed=0 pending=1
+.[test9068] child_before ('--root', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_actual_missing_input_cli0/absent'), '--output', PosixPath('/var/tmp/carnot9068-yt38rgkq/owned_tests/test_actual_missing_input_cli0/experiment_9068_v774_dispatch_contract.json'))
+[test9068] child_after 0 8] phase=after_strict_rows completed=1 pending=0
+[exp9068] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_actual_missing_input_cli0/experiment_9068_v774_dispatch_contract.json", "primary_sha256": "sha256:c05af5167faa806ce93165693f01a01cad6a39bf6d88e56684252bdae0f3b9d7", "sidecar_path": "/var/tmp/carnot9068-yt38rgkq/owned_tests/test_actual_missing_input_cli0/raw/experiment_9068_v774_dispatch_contract/validators/c05af5167faa806ce93165693f01a01cad6a39bf6d88e56684252bdae0f3b9d7.json", "honest_verdict": "complete_blocked_source_bytes"}
+ 
+.[exp9068] phase=preconditions_before completed=0 pending=0
+[exp9068] phase=authenticate_and_freeze completed=1 pending=856
+[exp9068] phase=authenticate_and_freeze completed=101 pending=756
+[exp9068] phase=authenticate_and_freeze completed=201 pending=656
+[exp9068] phase=authenticate_and_freeze completed=301 pending=556
+[exp9068] phase=authenticate_and_freeze completed=401 pending=456
+[exp9068] phase=authenticate_and_freeze completed=501 pending=356
+[exp9068] phase=authenticate_and_freeze completed=601 pending=256
+[exp9068] phase=authenticate_and_freeze completed=701 pending=156
+[exp9068] phase=authenticate_and_freeze completed=801 pending=56
+[exp9068] phase=preconditions_after completed=1723 pending=0
+[exp9068] phase=reduction_before completed=0 pending=0
+[exp9068] phase=reduction_after completed=14 pending=0
+..
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+27 passed, 1 warning in 129.58s (0:02:09)
