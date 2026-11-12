@@ -21913,3 +21913,4 @@ code |
 | 2026-11-12 19:20 UTC | Independently reduce the fixed detector and contin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9061-sealed-calibrated-decisions, exp9062-sealed-online-streams) |
 | 2026-11-12 19:20 UTC | Test matched energy decisions against independent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9057-human-probe-methods) |
 | 2026-11-12 19:20 UTC | Measure complete spline service costs and supporte | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9063-joint-benefit-audit, exp9063-joint-benefit-audit) |
+| 2026-11-12 19:27 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9054-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
