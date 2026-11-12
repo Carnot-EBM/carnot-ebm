@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-11-12 UTC — Exp9044 participation authority repair
+
+- Preserve nested annotator IDs independently of span schema validity; enforce
+  the retained FAQ's language-specific count limits and retain mismatch counts.
+  Oversized rosters require original assignment/completion authority.
+- Preserve every original test/helper body and add nine regression cases.
+  All 214 selected tests pass, including private E2E-018/021 and repair gates;
+  all 226 owned statements are covered with zero exclusions. Scoped Ruff,
+  formatting, strict mypy and spec tracing pass; conductor bytes are unchanged.
+- Retain the earlier publication as historical evidence, with its readiness
+  claim explicitly superseded in the research note. No source experiment rerun
+  or full-suite pass is claimed. Global tracing retains 1,142 unrelated failures.
+
 ## 2026-11-12 UTC — Operational retrospective for milestone 2026.11.771
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.771`: updated `results/operational_retro_2026_11_771.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 6 completed experiments (all 6 compute-bound, 0 synthesis-only) across 49.7 wall-time minutes (50 minutes / 0.8 hours, averaging 8 minutes per experiment).

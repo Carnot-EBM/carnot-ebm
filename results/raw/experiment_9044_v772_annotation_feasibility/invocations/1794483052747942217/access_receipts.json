@@ -1,0 +1,36 @@
+{
+  "rows": [
+    {
+      "columns_read": [
+        "id",
+        "lang",
+        "annotations.list.element.annotator_id"
+      ],
+      "label_values_read": false,
+      "record_count": 499,
+      "reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9015_v770_human_disagreement_source/release/all/validation-00000-of-00001.parquet",
+        "sha256": "sha256:049650111c8948ddeac579d00396f117d9b441463b4b964544d5e57e9619572a"
+      },
+      "schema": "id: string\nlang: string\nmodel_input: string\nmodel_output_text: string\nmodel_id: string\nsoft_labels: list<element: struct<start: int64, prob: double, end: int64>>\n  child 0, element: struct<start: int64, prob: double, end: int64>\n      child 0, start: int64\n      child 1, prob: double\n      child 2, end: int64\nhard_labels: list<element: list<element: int64>>\n  child 0, element: list<element: int64>\n      child 0, element: int64\nmodel_output_tokens: list<element: string>\n  child 0, element: string\nmodel_output_logits: list<element: double>\n  child 0, element: double\nwikipedia_url: string\nannotations: list<element: struct<annotator_id: string, labels: list<element: list<element: int64>>>>\n  child 0, element: struct<annotator_id: string, labels: list<element: list<element: int64>>>\n      child 0, annotator_id: string\n      child 1, labels: list<element: list<element: int64>>\n          child 0, element: list<element: int64>\n              child 0, element: int64\n-- schema metadata --\nhuggingface: '{\"info\": {\"features\": {\"id\": {\"dtype\": \"string\", \"_type\": \"' + 941",
+      "span_schema_present": true,
+      "split": "validation"
+    },
+    {
+      "columns_read": [
+        "id",
+        "lang",
+        "annotations.list.element.annotator_id"
+      ],
+      "label_values_read": false,
+      "record_count": 1902,
+      "reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9015_v770_human_disagreement_source/release/all/test-00000-of-00001.parquet",
+        "sha256": "sha256:6d5a2bffc0cdc753ce7f98b48609706f7cb911b846c87a71f75a5cdade7229f7"
+      },
+      "schema": "id: string\nlang: string\nmodel_input: string\nmodel_output_text: string\nmodel_id: string\nsoft_labels: list<element: struct<start: int64, prob: double, end: int64>>\n  child 0, element: struct<start: int64, prob: double, end: int64>\n      child 0, start: int64\n      child 1, prob: double\n      child 2, end: int64\nhard_labels: list<element: list<element: int64>>\n  child 0, element: list<element: int64>\n      child 0, element: int64\nmodel_output_tokens: list<element: string>\n  child 0, element: string\nmodel_output_logits: list<element: double>\n  child 0, element: double\nwikipedia_url: string\nannotations: list<element: struct<annotator_id: string, labels: list<element: list<element: int64>>>>\n  child 0, element: struct<annotator_id: string, labels: list<element: list<element: int64>>>\n      child 0, annotator_id: string\n      child 1, labels: list<element: list<element: int64>>\n          child 0, element: list<element: int64>\n              child 0, element: int64\n-- schema metadata --\nhuggingface: '{\"info\": {\"features\": {\"id\": {\"dtype\": \"string\", \"_type\": \"' + 941",
+      "span_schema_present": true,
+      "split": "test"
+    }
+  ]
+}

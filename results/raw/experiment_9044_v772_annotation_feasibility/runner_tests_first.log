@@ -1,0 +1,114 @@
+..................F..........F.                                          [100%]
+=================================== FAILURES ===================================
+_______________________ test_private_cli_and_cold_replay _______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T111838-794149-eca495a5/test_private_cli_and_cold_repl0')
+
+    def test_private_cli_and_cold_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9044-REPLAY: missing authority and rehashed tampering are honest."""
+        manifest = release(tmp_path)
+        output = tmp_path / (e.NAME + ".json")
+        run = cli(tmp_path, "--inputs", str(manifest), "--output", str(output))
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python: can't open file '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9044_v772_annotation_feasibility.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...nke/carnot/scripts/experiments/experiment_9044_v772_annotation_feasibility.py': [Errno 2] No such file or directory\n").returncode
+
+tests/python/test_annotation_feasibility_9044.py:176: AssertionError
+______________________ test_build_and_rehashed_primitive _______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T111838-794149-eca495a5/test_build_and_rehashed_primit0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa358c5f410>
+
+    def test_build_and_rehashed_primitive(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-9044-REPLAY: independently repeat ID reads, not aggregate trust."""
+        from carnot.reporting import annotation_feasibility_runner_9044 as r
+    
+        manifest = release(tmp_path)
+        scope, validation = receipt_fixture(tmp_path, monkeypatch)
+        output = tmp_path / (e.NAME + ".json")
+        reference = r.measure(manifest, output, "20261112", scope)
+        value = r.build(reference, validation)
+        assert value["verdict_class"] == "blocked" and value["required_checks_passed"]
+        assert all(v == 0 for v in value["model_invocation_counts"].values())
+        atomic_json(output, value)
+        assert r.replay(output)["replay_passed"]
+        primitive = json.loads(Path(reference["path"]).read_bytes())
+        primitive["reduction"]["annotation_schema_rows"][0]["annotator_count"] = 99
+        atomic_json(Path(reference["path"]), primitive)
+        value["primitive_reference"] = e.ref(Path(reference["path"]))
+        atomic_json(output, value)
+        with pytest.raises(ValueError, match="reduction"):
+>           r.replay(output)
+
+tests/python/test_annotation_feasibility_9044.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T111838-794149-eca495a5/test_build_and_rehashed_primit0/experiment_9044_v772_annotation_feasibility.json')
+
+    def replay(path: Path) -> Json:
+        """Re-read only original IDs and rederive the full artifact to reject rehashed summaries."""
+        value = json.loads(path.read_bytes())
+        primitive = read_ref(value["primitive_reference"])
+        for reference in (
+            value["source_artifact_hashes"] + value["raw_shard_hashes"] + value["code_config_hashes"]
+        ):
+            if e.ref(Path(reference["path"])) != reference:
+>               raise ValueError("operand_hash")
+E               ValueError: operand_hash
+
+python/carnot/reporting/annotation_feasibility_runner_9044.py:304: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T111838-794149-eca495a5/test_build_and_rehashed_primit0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa358c5f410>
+
+    def test_build_and_rehashed_primitive(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-9044-REPLAY: independently repeat ID reads, not aggregate trust."""
+        from carnot.reporting import annotation_feasibility_runner_9044 as r
+    
+        manifest = release(tmp_path)
+        scope, validation = receipt_fixture(tmp_path, monkeypatch)
+        output = tmp_path / (e.NAME + ".json")
+        reference = r.measure(manifest, output, "20261112", scope)
+        value = r.build(reference, validation)
+        assert value["verdict_class"] == "blocked" and value["required_checks_passed"]
+        assert all(v == 0 for v in value["model_invocation_counts"].values())
+        atomic_json(output, value)
+        assert r.replay(output)["replay_passed"]
+        primitive = json.loads(Path(reference["path"]).read_bytes())
+        primitive["reduction"]["annotation_schema_rows"][0]["annotator_count"] = 99
+        atomic_json(Path(reference["path"]), primitive)
+        value["primitive_reference"] = e.ref(Path(reference["path"]))
+        atomic_json(output, value)
+>       with pytest.raises(ValueError, match="reduction"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'reduction'
+E         Actual message: 'operand_hash'
+
+tests/python/test_annotation_feasibility_9044.py:284: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9044] phase=preconditions_before completed=0 pending=0
+[exp9044] phase=preconditions_after completed=7 pending=0
+[exp9044] phase=before_id_projection_validation completed=0 pending=0
+[exp9044] phase=after_id_projection_validation completed=2 pending=0
+[exp9044] phase=before_id_projection_test completed=0 pending=0
+[exp9044] phase=after_id_projection_test completed=2 pending=0
+[exp9044] phase=measurement_complete completed=4 pending=0
+[exp9044] phase=before_id_projection_validation completed=0 pending=0
+[exp9044] phase=after_id_projection_validation completed=2 pending=0
+[exp9044] phase=before_id_projection_test completed=0 pending=0
+[exp9044] phase=after_id_projection_test completed=2 pending=0
+=============================== warnings summary ===============================
+tests/python/test_annotation_feasibility_9044.py::test_receipt_policy[valid]
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_annotation_feasibility_9044.py::test_private_cli_and_cold_replay
+FAILED tests/python/test_annotation_feasibility_9044.py::test_build_and_rehashed_primitive
+2 failed, 29 passed, 1 warning in 9.01s

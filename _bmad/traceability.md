@@ -1,5 +1,7 @@
 # Carnot — Traceability Matrix
 
+**Last Updated:** 2026-11-12 (Exp9044 participation repair only)
+
 ## Exp8929 health reuse and compute provenance repair — 2026-11-08 UTC
 
 **Last Updated:** 2026-11-08 (Exp8929 repair only)
@@ -4911,7 +4913,7 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-REPORT-9041-V772; SCENARIO-REPORT-9041-V772 | `exp9041-branch-contract` | `results/experiment_9041_v772_branch_contract.json` | Planned |
 | REQ-REPORT-9042-V772; SCENARIO-REPORT-9042-V772 | `exp9042-fresh-seal-methods` | `results/experiment_9042_v772_fresh_seal_methods.json` | Planned |
 | REQ-REPORT-9043-V772; SCENARIO-REPORT-9043-V772 | `exp9043-identity-obstruction-audit` | `results/experiment_9043_v772_identity_obstruction_audit.json` | Planned |
-| REQ-REPORT-9044-V772; SCENARIO-REPORT-9044-V772 | `exp9044-annotation-feasibility` | `results/experiment_9044_v772_annotation_feasibility.json` | Planned |
+| REQ-REPORT-9044-V772; SCENARIO-REPORT-9044-V772; SCENARIO-REPORT-9044-STRUCTURE; SCENARIO-REPORT-9044-REPLAY | `exp9044-annotation-feasibility` | `results/experiment_9044_v772_annotation_feasibility.json`; `tests/python/test_annotation_feasibility_9044.py` | Implementation verified: 214 selected tests, 226/226 owned statements; participation authority blocked; retained publication predates repair |
 | REQ-REPORT-9045-V772; SCENARIO-REPORT-9045-V772 | `exp9045-fresh-corpus-a` | `results/experiment_9045_v772_fresh_corpus_a.json` | Planned |
 | REQ-REPORT-9046-V772; SCENARIO-REPORT-9046-V772 | `exp9046-fresh-corpus-b` | `results/experiment_9046_v772_fresh_corpus_b.json` | Planned |
 | REQ-REPORT-9047-V772; SCENARIO-REPORT-9047-V772 | `exp9047-sealed-corpus-admission` | `results/experiment_9047_v772_sealed_corpus_admission.json` | Planned |

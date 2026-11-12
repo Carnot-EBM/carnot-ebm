@@ -1,5 +1,23 @@
 # Carnot — Operational Status
 
+## 2026-11-12 UTC — Exp9044 participation authority repair
+
+**Last Updated:** 2026-11-12 (Exp9044 participation repair only)
+
+ID-only projection now preserves rosters even when span schema is invalid.
+Rosters exceeding the retained FAQ limits (EN/ZH 12, DE 4, others 3) block
+annotation readiness with `original_participation_authority`; structural rows
+retain the IDs, documented limits and mismatch counts without reading outcomes.
+
+All 128 affected-subset tests and 86 consumer, private E2E-018/021 and repair-gate
+tests pass. Coverage is 226/226 owned statements with zero exclusions; scoped
+Ruff, formatting, strict mypy and spec tracing pass. All 15 original test/helper
+ASTs and conductor bytes are preserved. Global spec tracing retains 1,142
+unrelated missing references; architecture freshness still dates to 2026-10-11.
+The full repository suite and source experiment
+publication were not repeated; existing publication/receipts predate this fix.
+Evidence: `/var/tmp/carnot-9044-repair-myktzux7/`.
+
 ## 2026-11-12 UTC — Milestone 2026.11.771 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_771.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 6 completed compute-bound experiments (0 synthesis-only) across 49.7 wall-time minutes (50 minutes / 0.8 hours, averaging 8 minutes per experiment), led by qualifying provenance with immutable historical test authority (13.65 min / 14min), authenticating retained shard A without new generation or revised labels (11.56 min / 12min), reconciling fourteen outcomes and separating graph and independent-label claims (10.66 min / 11min), completing the frozen bounded Qwen source with shard B (9.69 min / 10min), and binding fourteen tasks and preserving V769 failures and frozen scientific methods (2.47 min / 2min), with no data available this milestone for the individual task name or duration of the remaining completed compute-bound experiment. Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: parallelize and cache immutable historical test authority provenance and retained shard A authentication checks across the 13.65-minute (14min) and 11.56-minute (12min) tasks, batch single-GPU Qwen inference requests in the 9.69-minute (10min) shard B completion task, cache and share fourteen-task binding and outcome-reconciliation state across the 10.66-minute (11min) and 2.47-minute (2min) tasks, persist direct experiment timestamps, and restore GPU monitor availability.

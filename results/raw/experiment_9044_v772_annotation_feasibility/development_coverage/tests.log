@@ -1,0 +1,75 @@
+..................F..................                                    [100%]
+=================================== FAILURES ===================================
+_______________________ test_private_cli_and_cold_replay _______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T112106-795527-bbef2779/test_private_cli_and_cold_repl0')
+
+    def test_private_cli_and_cold_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9044-REPLAY: missing authority and rehashed tampering are honest."""
+        manifest = release(tmp_path)
+        output = tmp_path / (e.NAME + ".json")
+        run = cli(tmp_path, "--inputs", str(manifest), "--output", str(output))
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp9044] phase=start_no_model_load completed=0 pending=0
+E         [exp9044] phase=preconditions_before completed=0 pending=0
+E         [exp9044] phase=preconditions_after completed=7 pending=0
+E         [exp9044] phase=before_id_projection_validation completed=0 pending=0
+E         [exp9044] phase=after_id_projection_validation completed=2 pending=0
+E         [exp9044] phase=before_id_projection_test completed=0 pending=0
+E         [exp9044] phase=after_id_projection_test completed=2 pending=0
+E         [exp9044] phase=measurement_complete completed=4 pending=0
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         {"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261112T112106-795527-bbef2779/test_private_cli_and_cold_repl0/experiment_9044_v772_annotation_feasibility.json", "primary_sha256": "sha256:91e25e7cb262b101376af50862a06822c14ce0785ddb76f3db5ce8305f50f9f6", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261112T112106-795527-bbef2779/test_private_cli_and_cold_repl0/raw/experiment_9044_v772_annotation_feasibility/validators/91e25e7cb262b101376af50862a06822c14ce0785ddb76f3db5ce8305f50f9f6.json"}
+E         [exp9044] phase=complete completed=4 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9044_v772_annotation_feasibility.py", line 10, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 0
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-81cgyog8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9044_v772_annotation_feasibility/development_coverage/.coverage.icbfl1.pid795834.XCzlKIVx' -> '/tmp/carnot-pytest-artifacts-97vm2s5_/raw/experiment_9044_v772_annotation_feasibility/development_coverage/.coverage.icbfl1.pid795834.XCzlKIVx.HFLal269KfKh'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home...experiment_9044_v772_annotation_feasibility/development_coverage/.coverage.icbfl1.pid795834.XCzlKIVx.HFLal269KfKh\'\n').returncode
+
+tests/python/test_annotation_feasibility_9044.py:176: AssertionError
+=============================== warnings summary ===============================
+tests/python/test_annotation_feasibility_9044.py::test_receipt_policy[valid]
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_annotation_feasibility_9044.py::test_private_cli_and_cold_replay
+1 failed, 36 passed, 1 warning in 12.78s

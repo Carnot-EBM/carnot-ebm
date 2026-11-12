@@ -1,0 +1,50 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_roster_is_not_completed_judgments ____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261112T113304-800862-477e1064/test_roster_is_not_completed_j0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f57cf40ffe0>
+
+    def test_roster_is_not_completed_judgments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-9044-STRUCTURE: a language roster cannot certify response judgments."""
+        manifest = release(tmp_path)
+        info = json.loads(manifest.read_bytes())
+        p = Path(info["files"]["test"]["path"])
+        pq.write_table(
+            pa.Table.from_pylist(
+                [
+                    dict(
+                        id="roster",
+                        lang="EN",
+                        annotations=[dict(annotator_id=str(j), labels=[]) for j in range(95)],
+                    )
+                ]
+            ),
+            p,
+        )
+        info["files"]["test"] = e.ref(p)
+        info["scope"] = "author_release"
+        license_path = Path(info["files"]["license"]["path"])
+        license_path.write_text("Creative Commons")
+        info["files"]["license"] = e.ref(license_path)
+        monkeypatch.setattr(
+            e, "PINNED", {k: v["sha256"].split(":")[1] for k, v in info["files"].items()}
+        )
+        atomic_json(manifest, info)
+        result = e.inspect(manifest)
+        assert result["annotation_structure_ready_score"] == 0
+>       assert result["missing_authority"][-1]["check"] == "original_participation_authority"
+E       AssertionError: assert 'original_ind...ual_judgments' == 'original_par...ion_authority'
+E         
+E         - original_participation_authority
+E         + original_individual_judgments
+
+tests/python/test_annotation_feasibility_9044.py:426: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9044] phase=before_id_projection_validation completed=0 pending=0
+[exp9044] phase=after_id_projection_validation completed=2 pending=0
+[exp9044] phase=before_id_projection_test completed=0 pending=0
+[exp9044] phase=after_id_projection_test completed=1 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_annotation_feasibility_9044.py::test_roster_is_not_completed_judgments
+1 failed, 37 deselected in 2.52s

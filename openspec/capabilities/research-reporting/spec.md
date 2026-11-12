@@ -113085,6 +113085,48 @@ unchanged. New code SHALL require tests before implementation. Status: Planned.
 
 ### REQ-REPORT-9044-V772: Test original human-annotation availability before another natural pilot
 
+Implementation contract (2026-11-12): authenticate the retained author release,
+revision, license, FAQ instructions and independent V771 design/queue digests.
+Read only record IDs, languages and the nested original annotator-ID leaf across
+all official validation/test records. Inspect span types in schema metadata;
+never read TEST span values, counts, membership, disagreement or correctness.
+Retain one structural row per accessed record and exact projected column paths.
+Three distinct nonempty original pseudonymous IDs are required per record;
+soft labels, hard unions and copied synthetic annotations cannot qualify.
+The original context-support criterion maps to the fraction of original people
+marking any span, then majority at >=0.5; it does not establish factual truth.
+Missing original uncertainty/comment fields remain explicitly unavailable.
+Keep salt v770-human-v1,160 FIT/40 CAL validation groups,200 TEST groups,
+source-disjoint unseen eligibility and class floors5/5/20 unchanged. No cohort
+is selected and no outcome support is assessed here. Structure readiness can
+qualify independently, but natural readiness remains zero pending source closure,
+frozen cohort and label support. Missing external evidence is terminal blocked.
+
+#### SCENARIO-REPORT-9044-STRUCTURE
+
+Private fixtures prove nested ID-only projection, missing/duplicate/empty IDs,
+missing span schema and aggregate-only rejection. Private Unicode offset and
+disjoint-span examples retain the original response-vote rule. Actual access
+receipts enumerate every official record without outcomes or response text.
+If released ID rosters exceed the original documented per-record annotator
+counts, distinct IDs alone SHALL NOT qualify original completed judgments.
+Use the retained FAQ's upper bounds: 12 for English/Chinese, 4 for German,
+and 3 for other languages, with case-insensitive language codes. Keep projecting
+the original ID leaf when it exists even if the span schema is invalid or empty;
+span schema validity and documented participation counts are independent checks.
+Retain every structural row and the mismatch counts; block annotation readiness
+pending original assignment/completion authority that distinguishes an unmarked
+response from an unassigned or unfinished judgment. Do not infer participation
+from nonempty spans or open TEST values to repair missing provenance.
+
+#### SCENARIO-REPORT-9044-REPLAY
+
+Private child CLI and foreign-directory cold replay without PYTHONPATH accept
+valid metadata and reject missing inputs, changed authority and rehashed
+aggregate tampering. Freeze owned and direct-consumer scope before measurement;
+require normal-exit checks, strict scanners and100 percent newly owned statements
+with zero exclusions. Historical broad-suite failures remain failed separately.
+
 Task `exp9044-annotation-feasibility` SHALL produce `results/experiment_9044_v772_annotation_feasibility.json`
 under the full V772 prompt and unchanged scientific thresholds. It SHALL retain
 per-unit evidence, exact gate operands, current invocation scope and verdict_class.
@@ -113095,7 +113137,11 @@ Its task-specific REQUIRED ARTIFACT FIELDS SHALL define every downstream gate.
 Private missing-input, changed-authority and rehashed-tamper controls SHALL
 reject. Scoped checks and real CLI cold replay SHALL qualify owned work; external
 missing evidence SHALL be terminal blocked. Historical failed claims SHALL remain
-unchanged. New code SHALL require tests before implementation. Status: Planned.
+unchanged. New code SHALL require tests before implementation. Status: Implemented
+and verified privately (2026-11-12): 128 affected-subset tests and 86 consumer,
+E2E-018/021 and repair-gate tests pass; 226/226 owned statements, zero exclusions.
+Participation authority remains an external block; the retained publication
+predates this repair and does not qualify current annotation readiness.
 
 ### REQ-REPORT-9045-V772: Collect fresh bounded Qwen graph shard A
 
