@@ -21907,3 +21907,9 @@ code |
 | 2026-11-12 18:53 UTC | Collect the completed prospective Qwen graph shard | OK | 91 passed, 1 warning in 17.59s |
 | 2026-11-12 19:01 UTC | Admit the full graph corpus without exposing TEST  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp9059-fresh-corpus-b.shard_ready_score (upstream artifact not found for task id 'exp9059-fresh-corpus-b') |
 | 2026-11-12 19:09 UTC | Admit the full graph corpus without exposing TEST  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp9059-fresh-corpus-b.shard_ready_score (upstream artifact not found for task id 'exp9059-fresh-corpus-b') |
+| 2026-11-12 19:18 UTC | Admit the full graph corpus without exposing TEST  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp9059-fresh-corpus-b.shard_ready_score (upstream artifact not found for task id 'exp9059-fresh-corpus-b') |
+| 2026-11-12 19:20 UTC | Seal calibrated graph decisions under the original | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9060-sealed-corpus-admission) |
+| 2026-11-12 19:20 UTC | Measure continuous local spline learning on sealed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9060-sealed-corpus-admission) |
+| 2026-11-12 19:20 UTC | Independently reduce the fixed detector and contin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9061-sealed-calibrated-decisions, exp9062-sealed-online-streams) |
+| 2026-11-12 19:20 UTC | Test matched energy decisions against independent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9057-human-probe-methods) |
+| 2026-11-12 19:20 UTC | Measure complete spline service costs and supporte | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9063-joint-benefit-audit, exp9063-joint-benefit-audit) |
