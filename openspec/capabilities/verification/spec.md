@@ -59436,3 +59436,16 @@ Implementation,2026-11-13: private Exp9070 tests reject denied feature fields,
 identity mutations, duplicate sections, changed source bytes and rehashed replay
 summaries. Original author targets remain sealed. Owned qualification cannot
 override missing family lineage or unknown historical exposure.
+
+### REQ-VERIFY-9079-V774: Hardware accounting does not establish verifier benefit
+
+Hardware mapping SHALL retain graph-oracle circularity and human-label limits.
+Missing source bytes, missing fields and observed zero SHALL remain distinct.
+Private cold replay SHALL rehash retained inputs and recompute operation mapping.
+No historical clock, arithmetic-only ratio or vendor efficiency estimate SHALL
+establish current end-to-end acceleration or justify procurement.
+
+#### SCENARIO-VERIFY-9079-V774
+
+Requirement-linked tests SHALL reject changed retained sources, rehashed reduction
+substitutions, invalid measured timing partitions and failed owned validation.

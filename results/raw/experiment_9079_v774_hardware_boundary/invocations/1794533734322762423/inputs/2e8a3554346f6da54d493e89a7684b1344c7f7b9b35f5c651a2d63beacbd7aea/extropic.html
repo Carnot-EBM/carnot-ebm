@@ -1,0 +1,1770 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function () {
+  var dir = location.pathname;
+  if (!dir.endsWith('/')) {
+    var cut = dir.lastIndexOf('/') + 1;
+    dir = dir.slice(cut).indexOf('.') > -1 ? dir.slice(0, cut) : dir + '/';
+  }
+  document.write('<base href="' + dir + '">');
+})();
+</script>
+<title>From One to One Billion: Torx, Thermalizers, and Z1 - Extropic</title>
+<meta name="description" content="Introducing Torx, Thermalizers, and Z1.">
+<link rel="canonical" href="https://extropic.ai/writing/from-one-to-one-billion/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Extropic">
+<meta property="og:url" content="https://extropic.ai/writing/from-one-to-one-billion/">
+<meta property="og:title" content="From One to One Billion">
+<meta property="og:description" content="Introducing Torx, Thermalizers, and Z1.">
+<meta property="og:image" content="https://extropic.ai/writing/from-one-to-one-billion/assets/og-z1.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="From One to One Billion">
+<meta name="twitter:description" content="Introducing Torx, Thermalizers, and Z1.">
+<meta name="twitter:image" content="https://extropic.ai/writing/from-one-to-one-billion/assets/og-z1.png">
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-FbI3Pa1lfeYQiAW8TqEsv.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<link rel="preload" href="fonts/kessler.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/suisse.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="fonts/suissemono.otf" as="font" type="font/otf" crossorigin>
+<style>
+  /* ============ Extropic brand tokens (extracted from extropic.ai) ============ */
+  @font-face { font-family: 'Kessler'; src: url(fonts/kessler.woff2) format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Suisse'; src: url(fonts/suisse.otf) format('opentype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'SuisseMono'; src: url(fonts/suissemono.otf) format('opentype'); font-weight: 400; font-display: swap; }
+
+  :root {
+    --ground: #1C0101;          /* extropic deep brown */
+    --ground-2: #250503;
+    --ink: #FFF1C8;             /* extropic solar */
+    --ink-80: rgba(255,241,200,.84);
+    --ink-60: rgba(255,241,200,.62);
+    --ink-40: rgba(255,241,200,.40);
+    --gold: #F5D54C;            /* extropic gold */
+    --copper: #903001;          /* extropic copper */
+    --copper-bright: #C1541D;
+    --rule: rgba(255,241,200,.16);
+    --rule-soft: rgba(255,241,200,.09);
+    --plate: #FFFFFF;
+    --serif: 'Kessler', Georgia, serif;
+    --sans: 'Suisse', 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'SuisseMono', 'SF Mono', Menlo, monospace;
+    color-scheme: dark;
+  }
+  /* Brand mock commits to Extropic's single dark world in both viewer themes. */
+  html, body { background: var(--ground) !important; margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--ink-80);
+    font-size: 18px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--gold); color: var(--ground); }
+  a { color: var(--ink); text-decoration: underline; text-decoration-color: rgba(245,213,76,.55); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--gold); text-decoration-color: var(--gold); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative; min-height: 94vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 148px 28px 110px; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% 108%, rgba(144,48,1,.55), transparent 62%),
+      radial-gradient(ellipse 60% 40% at 50% 118%, rgba(245,213,76,.14), transparent 55%),
+      radial-gradient(rgba(255,241,200,.055) 1px, transparent 1.5px);
+    background-size: auto, auto, 26px 26px;
+  }
+  .hero-inner { position: relative; max-width: 1120px; width: 100%; }
+  .hero-meta {
+    display: flex; justify-content: space-between; gap: 16px;
+    max-width: 760px; margin: 0 auto 42px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-80);
+  }
+  h1.hero-title {
+    max-width: 1080px; margin: 0 auto 34px;
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(44px, 7.2vw, 104px);
+    line-height: .96; letter-spacing: -0.04em;
+    color: var(--ink); text-wrap: balance;
+  }
+  /* hero ambience (Seth 07-19c): the TITLE is plain ink, no gradient, no
+     sheen. The shimmer lives in the BACKGROUND: .hero-bg::after is a warm
+     sun glow low behind the horizon that slowly breathes (opacity + rise)
+     in the no-preference block below. Reduced motion: static glow. */
+  .hero-bg::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 78% 52% at 50% 106%, rgba(196,84,10,.72), transparent 66%),
+      radial-gradient(ellipse 40% 30% at 50% 110%, rgba(245,213,76,.46), transparent 60%);
+    opacity: .6; transform-origin: 50% 114%;
+  }
+  /* horizon floor: the glow (static + breathing layers alike) melts into
+     the page ground BEFORE the hero's bottom edge, so no hard clipped seam
+     shifts as the sun breathes (Seth 07-19e "dark bar"). Sits above both
+     bg layers, below .hero-inner (which is position:relative). */
+  .hero::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30vh;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(28,1,1,0) 0%, rgba(28,1,1,.42) 66%, #1C0101 97%);
+  }
+  .hero-deck {
+    max-width: 720px; margin: 0 auto;
+    font-size: clamp(18px, 2vw, 24px); line-height: 1.45; color: var(--ink-60);
+    text-wrap: balance;
+  }
+  .hero-scroll { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--ink-40); text-transform: uppercase; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-inner { animation: rise .9s ease-out both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    /* sun breathing: a slow warm swell from below the horizon; nothing
+       sweeps across the glyphs. Period 9s: a real sunrise swell, dim ember
+       at the trough, full warm horizon at the peak. */
+    .hero-bg::after { animation: sunbreathe 9s ease-in-out infinite; }
+    @keyframes sunbreathe {
+      0%, 100% { opacity: .10; transform: scale(.96); }
+      50%      { opacity: 1;   transform: scale(1.10); }
+    }
+  }
+
+  /* ============ Article layout ============ */
+  .article { max-width: 704px; margin: 0 auto; padding: 26px 24px 0; }
+  .article p { margin: 0 0 28px; }
+  .article em { font-style: italic; color: var(--ink); }
+  .lede-word {
+    float: left; font-family: var(--serif); font-size: clamp(74px, 7vw, 96px);
+    line-height: .74; letter-spacing: -.07em; color: var(--ink);
+    margin: .16em 16px 0 0;
+  }
+  @media (max-width: 620px) {
+    .lede-word { font-size: 72px; margin-right: 13px; }
+  }
+  .breakout { max-width: 900px; margin-left: auto; margin-right: auto; padding: 0 24px; }
+
+  .section-head { margin: 72px 0 26px; border-top: 1px solid var(--rule); padding-top: 26px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 12px;
+  }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(31px, 4.6vw, 42px);
+    line-height: 1.12; letter-spacing: -0.015em; color: var(--ink); margin: 0; text-wrap: balance; }
+
+  /* the article's opening heading sits right under the hero: no rule, no
+     72px gap (Notion 08-04: "The Looming Energy Wall") */
+  .section-head--first { margin-top: 0; border-top: none; padding-top: 0; }
+
+  /* ============ Announcement index ============ */
+  .launch-index { margin: 46px 0 8px; border-top: 1px solid var(--rule); }
+  .launch-index-label {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold); margin: 0; padding: 22px 0 10px;
+  }
+  .launch-index ul { list-style: none; margin: 0; padding: 0; }
+  .launch-index li { margin: 0; }
+  .launch-index a {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 24px;
+    padding: 13px 0; border-bottom: 1px solid var(--rule-soft); text-decoration: none;
+  }
+  .launch-index-name { font-family: var(--serif); font-size: 18px; color: var(--ink); }
+  .launch-index-desc {
+    font-family: var(--mono); font-size: 10.5px; line-height: 1.45; letter-spacing: .06em;
+    text-transform: uppercase; text-align: right; color: var(--ink-60);
+  }
+  .launch-index a:hover .launch-index-name,
+  .launch-index a:focus-visible .launch-index-name { color: var(--gold); }
+  .section-head[id] { scroll-margin-top: 76px; }
+  @media (max-width: 620px) {
+    .launch-index a { display: block; }
+    .launch-index-name, .launch-index-desc { display: block; text-align: left; }
+    .launch-index-desc { margin-top: 4px; }
+  }
+
+  /* ============ Figures ============ */
+  figure { margin: 46px 0; }
+  .plate { background: var(--plate); border-radius: 2px; padding: 18px; line-height: 0; }
+  .plate img { width: 100%; height: auto; display: block; }
+  figcaption {
+    font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-60);
+    padding: 14px 4px 0; max-width: 704px; /* left edge rides the figure edge, published-post style */
+  }
+  figcaption .fig-no { color: var(--gold); }
+  .recap-visual {
+    position: relative;
+    width: min(732px, calc(100vw - 48px));
+    margin: 48px 0 48px calc(50% - min(366px, 50vw - 24px));
+  }
+  .recap-visual-frame {
+    position: relative; overflow: hidden; aspect-ratio: 16 / 9;
+  }
+  .recap-visual video, .recap-visual img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+  }
+  .recap-visual--blend video, .recap-visual--blend img { mix-blend-mode: screen; }
+  .recap-visual--xtr {
+    width: min(440px, calc(100vw - 112px));
+    margin-left: calc(50% - min(220px, 50vw - 56px));
+  }
+  .recap-visual--xtr .recap-visual-frame { overflow: visible; }
+  .recap-visual--xtr img {
+    object-fit: contain;
+    filter: drop-shadow(0 18px 22px rgba(0,0,0,.58));
+  }
+  .recap-visual figcaption { max-width: 704px; }
+  @media (max-width: 719px) {
+    .recap-visual { width: calc(100vw - 48px); margin: 40px 0 40px calc(50% - 50vw + 24px); }
+    .recap-visual--xtr { width: calc(100vw - 112px); margin-left: calc(50% - 50vw + 56px); }
+  }
+  .embed-slot figcaption {
+    max-width: 100%; box-sizing: border-box; white-space: normal; overflow-wrap: anywhere;
+  }
+  .diagram-frame { border: 1px solid var(--rule); border-radius: 2px; padding: 26px 18px; background: var(--ground-2); overflow-x: auto; }
+  .diagram-frame svg { width: 100%; min-width: 640px; height: auto; display: block; }
+
+  /* horizontal-scroll affordance for dense figures on small screens */
+  .frame-wrap { position: relative; }
+  .frame-wrap::after { content: ""; position: absolute; top: 1px; bottom: 1px; right: 1px; width: 54px; pointer-events: none; display: none; border-radius: 2px; }
+  .frame-wrap.fade-dark::after { background: linear-gradient(to right, rgba(37,5,3,0), #250503 88%); }
+  .frame-wrap.fade-light::after { background: linear-gradient(to right, rgba(255,255,255,0), #FFFFFF 88%); }
+  .scroll-hint { display: none; font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-40); text-align: right; margin-top: 8px; }
+  @media (max-width: 700px) {
+    /* no sideways scrolling on phones: dense figures scale to fit instead */
+    .diagram-frame svg { min-width: 0; }
+    .diagram-frame { overflow-x: visible; }
+  }
+
+  /* SVG text roles */
+  .svg-name { font-family: var(--serif); fill: var(--ink); }
+  .svg-desc { font-family: var(--mono); fill: rgba(255,241,200,.58); letter-spacing: .06em; }
+  .svg-chip-dark { font-family: var(--mono); fill: #1C0101; letter-spacing: .05em; }
+  .svg-chip-gold { font-family: var(--mono); fill: #F5D54C; letter-spacing: .05em; }
+  .stack-link { cursor: pointer; text-decoration: none; }
+  .stack-link rect, .stack-link text { transition: fill .16s ease, stroke .16s ease; }
+  .stack-link-outline:hover rect, .stack-link-outline:focus-visible rect { fill: rgba(245,213,76,.12); }
+  .stack-link-outline:hover text, .stack-link-outline:focus-visible text { fill: #FFF1C8; }
+  .stack-link-filled:hover rect, .stack-link-filled:focus-visible rect { fill: #FFF1C8; }
+  .stack-link:focus-visible { outline: none; }
+  .stack-link:focus-visible rect { stroke: #FFF1C8; stroke-width: 2; }
+  .svg-z1 { font-family: var(--serif); }
+  .narrow-plate { max-width: 640px; margin-left: auto; margin-right: auto; }
+
+  /* ============ Explainer ============ */
+  details.explainer { border: 1px solid var(--rule); border-radius: 2px; background: rgba(255,241,200,.028); margin: 40px 0; }
+  details.explainer summary {
+    cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 14px;
+    padding: 20px 24px; font-family: var(--mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold);
+  }
+  details.explainer summary::-webkit-details-marker { display: none; }
+  details.explainer summary .ex-label { white-space: nowrap; }
+  details.explainer summary::before { content: "+"; font-size: 16px; line-height: 1; color: var(--gold); }
+  details.explainer[open] summary::before { content: "\2212"; }
+  details.explainer summary .ex-title { color: var(--ink); letter-spacing: .02em; text-transform: none; font-size: 14.5px; }
+  .explainer-body { padding: 2px 26px 12px; border-top: 1px solid var(--rule-soft); }
+  .explainer-body p { font-size: 16.5px; line-height: 1.7; color: var(--ink-80); margin: 20px 0; }
+  @media (max-width: 620px) {
+    details.explainer summary { display: block; padding: 18px 20px; }
+    details.explainer summary::before { margin-right: 10px; }
+    details.explainer summary .ex-title { display: block; margin-top: 8px; }
+  }
+
+  /* restored Z1 spec bullets */
+  .article ul.z1list { list-style: none; margin: 0 0 28px; padding: 0; }
+  .article ul.z1list li { position: relative; padding: 0 0 12px 26px; }
+  .article ul.z1list li::before { content: ""; position: absolute; left: 2px; top: 12px; width: 7px; height: 7px; background: var(--gold); }
+
+  /* ============ Z1 systems summary card ============
+     Gill 08-04: "make this a nice card or something" (on every summary row).
+     A bordered datasheet: header strip, the chip's three physics numbers,
+     then a 2x2 ledger of the systems. All rules are hairlines from the house
+     ramp; the warm corner glows are alpha over the page ground, matching the
+     embedded pieces. */
+  .z1-card {
+    border: 1px solid var(--rule); border-radius: 2px;
+    background:
+      radial-gradient(ellipse 64% 88% at 6% 0%, rgba(150,58,2,.10) 0%, rgba(150,58,2,0) 62%),
+      radial-gradient(ellipse 66% 90% at 96% 100%, rgba(70,14,2,.10) 0%, rgba(70,14,2,0) 66%);
+  }
+  .z1-card-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 18px;
+    padding: 18px 28px; border-bottom: 1px solid var(--rule);
+  }
+  .z1-card-head .eyebrow { margin: 0; }
+  .z1-card-tag {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-40);
+  }
+  .z1-card-zone {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--ink-40);
+    padding: 16px 28px 0;
+  }
+  .z1-card-chip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .z1-card-chip > div { padding: 12px 28px 22px; min-width: 0; }
+  .z1-card-chip > div + div { border-left: 1px solid var(--rule-soft); }
+  .z1-card-sys { display: grid; grid-template-columns: 1fr 1fr; }
+  .z1-card-sys > div { padding: 12px 28px 24px; min-width: 0; }
+  .z1-card-sys > div:nth-child(even) { border-left: 1px solid var(--rule-soft); }
+  .z1-card-sys > div:nth-child(n+3) { border-top: 1px solid var(--rule-soft); }
+  .z1-cell-name {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink); margin-top: 10px;
+  }
+  .z1-cell-desc {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink-40); margin-top: 5px; line-height: 1.55;
+  }
+  .spec-val { font-family: var(--serif); font-size: clamp(24px, 2.6vw, 34px); color: var(--gold); line-height: 1.05; white-space: nowrap; }
+  .spec-label { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-60); margin-top: 8px; line-height: 1.55; }
+  /* form-factor rows: compact text lines (Seth 07-19: the SVG outline
+     drawings are cut; the four numbers carry the panel) */
+  .z1-forms { display: grid; gap: 13px; }
+  .form-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 28px; }
+  .form-name { font-family: var(--mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .form-desc { font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-60); text-align: right; }
+  .z1-hardware { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: center; column-gap: clamp(12px, 3vw, 44px); margin: 46px 0 44px; }
+  .z1-shot { position: relative; min-width: 0; }
+  .z1-shot img { display: block; width: 100%; height: 320px; object-fit: contain; }
+  .z1-shot-cap { margin-top: 10px; }
+  .z1-shot-cap .form-name { display: block; }
+  .z1-shot-cap .form-desc { display: block; text-align: left; margin-top: 5px; max-width: 34ch; }
+  @keyframes z1WakeLight { 0% { opacity: 0; } 36% { opacity: .48; } 100% { opacity: .3; } }
+  @keyframes z1CardWakeLight { 0% { opacity: 0; } 30% { opacity: .68; } 100% { opacity: .44; } }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .z1-shot, .z1-ext {
+      --z1-rx: 0deg; --z1-ry: 0deg; --z1-lift: 0px; --z1-scale: 1;
+      --z1-gx: 50%; --z1-gy: 50%; perspective: 900px;
+    }
+    .z1-shot.is-live { --z1-lift: -6px; --z1-scale: 1.015; }
+    .z1-shot--card.is-live { --z1-lift: -8px; --z1-scale: 1.025; }
+    .z1-shot > img {
+      transform: translateY(var(--z1-lift)) rotateX(var(--z1-rx)) rotateY(var(--z1-ry)) scale(var(--z1-scale));
+      transform-origin: 50% 50%; transition: transform .55s cubic-bezier(.16,1,.3,1), filter .4s ease;
+      will-change: transform, filter;
+    }
+    .z1-shot.is-live > img {
+      filter: brightness(1.04) drop-shadow(0 12px 18px rgba(0,0,0,.34)) drop-shadow(0 0 13px rgba(245,213,76,.11));
+    }
+    .z1-shot--card.is-live > img:not(.z1-shot-glare) {
+      filter: brightness(1.08) saturate(1.06) drop-shadow(0 16px 22px rgba(0,0,0,.42)) drop-shadow(0 0 20px rgba(245,213,76,.2));
+    }
+    .z1-shot > img.z1-shot-glare {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0;
+      filter: brightness(1.38) saturate(1.18); mix-blend-mode: screen;
+      -webkit-mask-image: radial-gradient(circle 32% at var(--z1-gx) var(--z1-gy), #000 0%, rgba(0,0,0,.82) 32%, transparent 72%);
+      mask-image: radial-gradient(circle 32% at var(--z1-gx) var(--z1-gy), #000 0%, rgba(0,0,0,.82) 32%, transparent 72%);
+      transition: opacity .24s ease, transform .55s cubic-bezier(.16,1,.3,1);
+    }
+    .z1-shot--card > img.z1-shot-glare {
+      filter: brightness(1.58) saturate(1.3);
+      -webkit-mask-image: radial-gradient(circle 38% at var(--z1-gx) var(--z1-gy), #000 0%, rgba(0,0,0,.88) 38%, transparent 76%);
+      mask-image: radial-gradient(circle 38% at var(--z1-gx) var(--z1-gy), #000 0%, rgba(0,0,0,.88) 38%, transparent 76%);
+    }
+    .z1-shot.is-live > img.z1-shot-glare { animation: z1WakeLight .72s cubic-bezier(.16,1,.3,1) both; }
+    .z1-shot--card.is-live > img.z1-shot-glare { animation-name: z1CardWakeLight; animation-duration: .82s; }
+  }
+  @keyframes z1Card { 0% { opacity: 0; translate: 0 26px; } 34% { opacity: 1; } 100% { opacity: 1; translate: 0 -18px; } }
+  .z1-ext { position: relative; isolation: isolate; margin: 40px 0; }
+  .z1-ext img {
+    display: block; position: relative; z-index: 1;
+    width: min(76%, 680px); height: auto; margin-inline: auto; object-fit: contain;
+  }
+  .z1-ext .z1-shot-cap {
+    position: relative; z-index: 1;
+    width: min(76%, 680px); margin: 4px auto 0;
+  }
+  /* The sealed card's alpha channel defines its hover glow. This keeps the
+     light tight to the product silhouette instead of drawing a rectangular
+     gradient panel behind the image. */
+  @media (hover: hover) and (pointer: fine) {
+    .z1-ext img {
+      transition: filter .45s ease;
+    }
+    .z1-ext:hover img {
+      filter: brightness(1.08) saturate(1.07)
+        drop-shadow(0 20px 30px rgba(0,0,0,.42))
+        drop-shadow(0 0 18px rgba(255,224,140,.34))
+        drop-shadow(0 0 42px rgba(245,213,76,.20))
+        drop-shadow(0 8px 72px rgba(210,82,5,.18));
+    }
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .z1-ext img {
+      transform: translateY(var(--z1-lift)) rotateX(var(--z1-rx)) rotateY(var(--z1-ry)) scale(var(--z1-scale));
+      transform-origin: 50% 50%;
+      transition: transform .55s cubic-bezier(.16,1,.3,1), filter .45s ease;
+      will-change: transform, filter;
+    }
+  }
+  @keyframes z1Stick { 0% { opacity: 0; translate: 0 40px; } 38% { opacity: 1; } 100% { opacity: 1; translate: 0 -36px; } }
+  @keyframes z1Fade { 0% { opacity: 0; } 45% { opacity: 1; } 100% { opacity: 1; } }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .z1-shot { opacity: 0; animation: z1Card linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    }
+  }
+  @media (max-width: 760px) {
+    .z1-hardware { grid-template-columns: 1fr; row-gap: 40px; margin: 34px 0 40px; }
+    .z1-shot img { height: 240px; }
+    .z1-shot-cap { margin-top: 12px; }
+    .z1-ext img, .z1-ext .z1-shot-cap { width: 88%; }
+  }
+  @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .z1-shot, .z1-shot--stick { animation-name: z1Fade; }
+    }
+  }
+  /* Card at phone widths: the chip trio and the systems ledger both go
+     single-column (the 1,000,000,000+ numeral is nowrap by design), cell
+     borders rotate from left-rules to top-rules. */
+  @media (max-width: 760px) {
+    .z1-card-chip { grid-template-columns: 1fr; }
+    .z1-card-chip > div + div { border-left: none; border-top: 1px solid var(--rule-soft); }
+    .z1-card-sys { grid-template-columns: 1fr; }
+    .z1-card-sys > div:nth-child(even) { border-left: none; }
+    .z1-card-sys > div:nth-child(n+2) { border-top: 1px solid var(--rule-soft); }
+    .z1-card-head, .z1-card-zone, .z1-card-chip > div, .z1-card-sys > div { padding-left: 20px; padding-right: 20px; }
+    .spec-val { font-size: clamp(20px, 7.2vw, 34px); }
+  }
+
+  /* ============ Roadmap ============ */
+  .roadmap { border: 1px solid var(--rule); border-radius: 2px; margin: 40px 0 8px; }
+  .roadmap-row { display: grid; grid-template-columns: 218px 1fr; gap: 20px; padding: 20px 26px; border-top: 1px solid var(--rule-soft); align-items: baseline; }
+  .roadmap-row:first-child { border-top: none; }
+  .roadmap-when { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+  .roadmap-what { font-size: 16.5px; color: var(--ink-80); line-height: 1.6; }
+  @media (max-width: 640px) { .roadmap-row { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ============ CTA ============ */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 14px; margin: 4px 0 40px; }
+  .btn {
+    font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink); background: var(--copper); border: 1px solid rgba(255,241,200,.22);
+    padding: 15px 22px 14px; border-radius: 2px; text-decoration: none; display: inline-block;
+  }
+  .btn:hover { background: var(--gold); color: var(--ground); }
+  .btn.ghost { background: transparent; border-color: rgba(255,241,200,.35); color: var(--ink); }
+  .btn.ghost:hover { background: var(--gold); color: var(--ground); border-color: var(--gold); }
+  .closer { font-family: var(--serif); font-size: clamp(30px, 4.6vw, 44px); line-height: 1.15; color: var(--gold); margin: 64px 0 30px; text-wrap: balance; }
+
+  /* ============ Live embeds (lazy same-origin iframes) ============
+     Sized per the published-post figure idiom (extropic.ai/writing): figures sit
+     inline at the prose column with a hairline warm rule; embeds get a modest
+     breakout (~11% wider than the prose column) and a height clamp so figure +
+     caption always fit one viewport with prose visible around them. */
+  .embed-slot { margin: 46px 0; }
+  .embed-wrap { max-width: 780px; }
+  /* the z1 floorplan slot: the piece composes side-by-side only >900px of
+     iframe width, so its iframe renders at a fixed 904x600 and scales down
+     into the figure box. The scale is RESPONSIVE (Seth 07-19e): the box
+     keeps the 904:600 aspect and the harness sets --es = boxWidth/904 on
+     resize, so the piece is exactly box-sized and centered at EVERY window
+     width (the old hardcoded .8097 only fit a 732px box and overflowed
+     right on narrower windows, hiding the ledger and killing centering).
+     data-mount-min keeps it poster+overlay when the box would be narrower. */
+  .embed-box.embed-scale { height: auto; aspect-ratio: 904 / 600; }
+  .embed-box.embed-scale iframe {
+    width: 904px; height: 600px; transform: scale(var(--es, .8097)); transform-origin: 0 0;
+  }
+  .embed-box {
+    position: relative; height: var(--embed-h, min(66vh, 580px)); min-height: 340px;
+    background: var(--ground); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden;
+  }
+  .embed-box iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+    background: var(--ground); opacity: 0; transition: opacity .7s cubic-bezier(.16,1,.3,1);
+  }
+  .embed-box.is-live iframe { opacity: 1; }
+  .embed-poster { position: absolute; inset: 0; display: block; margin: 0; opacity: 1; transition: opacity .7s cubic-bezier(.16,1,.3,1); }
+  .embed-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .embed-box.is-live .embed-poster { opacity: 0; }
+  .embed-shim { position: absolute; inset: 0; z-index: 3; touch-action: pan-y; }
+  .embed-box.is-live .embed-shim { cursor: pointer; }
+  /* mobile tap-to-play: below 720px the box only ever shows the poster plus
+     a TAP TO PLAY affordance (injected by JS -- no-JS and reduced-motion keep
+     the plain static poster); the tap opens the piece full-screen (below) */
+  .embed-tap {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 4;
+    display: none; align-items: center; gap: 9px; white-space: nowrap; pointer-events: none;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold); background: rgba(28,1,1,.74); border: 1px solid rgba(245,213,76,.5);
+    border-radius: 2px; padding: 9px 14px 8px;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  .embed-tap::before {
+    content: ""; width: 0; height: 0;
+    border-left: 7px solid var(--gold); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent;
+  }
+  @media (max-width: 719px) {
+    .embed-box { height: auto; min-height: 0; aspect-ratio: 4 / 3; }
+    /* the scaled z1 floorplan poster carries edge-to-edge annotation text;
+       give its box the poster's own aspect so nothing crops to half-words */
+    .embed-box.embed-scale { aspect-ratio: 904 / 600; }
+    .embed-box.tap-armed:not(.is-active) .embed-tap { display: flex; }
+  }
+  .embed-box.tap-only.tap-armed:not(.is-active) .embed-tap { display: flex; }
+
+
+  /* ============ Scroll-scrub tracks (data-scrolly-vh slots) ============
+     The tall track scrolls; the FIGURE-SCALE box pins centered in the
+     viewport and scroll progress drives the piece via postMessage scrub.
+     Never full-bleed (Seth 07-18: assets keep figure width), never wheel
+     hijacking: position:sticky only. Mobile + reduced motion collapse to
+     the plain slot. */
+  .scrolly-track { position: relative; }
+  /* Completion-collapse shrinks a track that sits ABOVE the viewport; CSS
+     scroll anchoring would rewind scrollY for that shrink ON TOP of the
+     harness's own compensation (double-adjust = the page yanks backward,
+     ScrollSettle 07-19). The anchor node lives in the viewport BELOW the
+     track, so suppression must sit on the scroller, not the track. Nothing
+     else on the page mutates layout above the viewport (embed boxes are
+     fixed-height), so page-wide is safe. */
+  html { overflow-anchor: none; }
+  .embed-slot[data-scrolly-vh] .scrolly-pin {
+    position: sticky;
+    top: calc((100vh - var(--embed-h, min(66vh, 580px))) / 2);
+    top: calc((100svh - var(--embed-h, min(66vh, 580px))) / 2);
+  }
+  .embed-box.driving iframe { pointer-events: none; }
+  @media (max-width: 719px), (prefers-reduced-motion: reduce) {
+    .scrolly-track { height: auto !important; }
+    .embed-slot[data-scrolly-vh] .scrolly-pin { position: relative; top: auto; }
+  }
+
+  /* ============ Scrub rail (one per scrolly slot, injected by JS) ============
+     The page-side twin of one-to-a-billion's internal scale rail: a hairline
+     warm rule with a small gold diamond riding the slot's scrub progress t.
+     Passive readout while scroll drives the pin; dragging it (or arrow keys)
+     pins the piece through the same postMessage plumbing the scroll uses.
+     Hidden on mobile, under reduced motion, and on poster-only (overlay)
+     slots, where the tap affordance stays instead. */
+  .scrub-rail {
+    position: relative; display: none; height: 25px; margin-top: 11px;
+    cursor: ew-resize; touch-action: none;
+  }
+  .embed-slot.rail-on .scrub-rail { display: block; }
+  .scrub-rail::before {  /* track: hairline warm rule on the page ground */
+    content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 1px;
+    background: var(--rule-soft);
+  }
+  .scrub-rail .rail-fill {
+    position: absolute; left: 0; top: 12px; height: 1px; width: 0;
+    background: rgba(245,213,76,.45);
+  }
+  .scrub-rail .rail-thumb {
+    position: absolute; top: 12.5px; left: 0; width: 9px; height: 9px;
+    margin: -4.5px 0 0 -4.5px; transform: rotate(45deg);
+    background: var(--gold); box-shadow: 0 0 10px rgba(245,213,76,.45);
+  }
+  .scrub-rail:hover .rail-thumb, .scrub-rail:focus-visible .rail-thumb {
+    box-shadow: 0 0 14px rgba(245,213,76,.75);
+  }
+  .scrub-rail:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* ============ First-pin scroll cue ============
+     A quiet, specific prompt centered below the first figure's scrub rail.
+     It resolves into the rail as soon as the reader advances the story. */
+  .scrolly-pin { position: relative; }
+  .first-pin-cue {
+    position: absolute; top: calc(var(--embed-h, min(66vh, 580px)) + 38px); left: 50%;
+    display: flex; align-items: center; gap: 10px; white-space: nowrap; pointer-events: none;
+    font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: .16em;
+    text-transform: uppercase; color: rgba(255,241,200,.68);
+    opacity: 1; transform: translateX(-50%);
+    transition: opacity .45s ease, transform .45s cubic-bezier(.16,1,.3,1);
+  }
+  .first-pin-cue::after {
+    content: ""; width: 7px; height: 7px; border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold); transform: rotate(45deg) translate(-2px,-2px);
+    animation: first-cue-down 1.6s ease-in-out infinite;
+  }
+  @keyframes first-cue-down {
+    0%, 100% { transform: rotate(45deg) translate(-2px,-2px); opacity: .65; }
+    50% { transform: rotate(45deg) translate(1px,1px); opacity: 1; }
+  }
+  .first-pin-cue.resolved { opacity: 0; transform: translate(-50%,4px); }
+  @media (max-width: 719px) {
+    .first-pin-cue { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .first-pin-cue { display: none; }
+  }
+
+  /* ============ Mobile full-screen overlay ============
+     Below 720px a tap opens the piece in a fixed 100dvh layer so squat
+     article boxes never squeeze a layout. Close: 44px gold X, swipe down
+     from the top strip, or the back button. */
+  .embed-overlay {
+    position: fixed; inset: 0; z-index: 200; display: none;
+    height: 100vh; height: 100dvh; background: var(--ground);
+    touch-action: none; overscroll-behavior: contain;
+  }
+  .embed-overlay.open { display: block; }
+  .embed-overlay iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+    background: var(--ground); opacity: 0; transition: opacity .6s cubic-bezier(.16,1,.3,1);
+  }
+  .embed-overlay.is-live iframe { opacity: 1; }
+  .overlay-poster {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    opacity: .5; transition: opacity .6s cubic-bezier(.16,1,.3,1);
+  }
+  .embed-overlay.is-live .overlay-poster { opacity: 0; }
+  .overlay-grab { position: absolute; top: 0; left: 0; right: 68px; height: 56px; z-index: 5; touch-action: none; }
+  .overlay-close {
+    position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 12px; z-index: 6;
+    width: 44px; height: 44px; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); background: rgba(28,1,1,.74);
+    border: 1px solid rgba(245,213,76,.55); border-radius: 2px;
+    font-family: var(--mono); font-size: 18px; line-height: 1;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  .overlay-close:hover { background: var(--gold); color: var(--ground); }
+  html.overlay-lock, html.overlay-lock body { overflow: hidden; overscroll-behavior: none; }
+
+  /* ============ Closer ============ */
+  .closer-wrap { max-width: 704px; margin: 24px auto 0; padding: 106px 24px 120px; }
+  .closer-wrap .closer { margin: 0; }
+  .closer-wrap .btn-row { margin: 42px 0 0; flex-wrap: nowrap; }
+  .closer-wrap .resource-btn {
+    width: 208px; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; letter-spacing: .05em; white-space: nowrap;
+    color: var(--ink); background: rgba(255,241,200,.02); border-color: rgba(255,241,200,.3);
+    transition: color .18s ease, background-color .18s ease, border-color .18s ease,
+      transform .18s ease, box-shadow .18s ease;
+  }
+  .closer-wrap .resource-btn:hover {
+    color: var(--gold); background: rgba(245,214,76,.06); border-color: rgba(245,214,76,.68);
+    transform: translateY(-2px); box-shadow: 0 8px 28px rgba(144,48,1,.16);
+  }
+  .closer-wrap .resource-btn:active { transform: translateY(0); box-shadow: none; }
+  @media (max-width: 640px) {
+    .closer-wrap .btn-row { flex-direction: column; }
+    .closer-wrap .resource-btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .closer-wrap .resource-btn { transition: none; }
+    .closer-wrap .resource-btn:hover { transform: none; }
+  }
+
+</style>
+<!-- xc:head -->
+<link rel="stylesheet" href="assets/chrome/chrome.css">
+<script defer src="assets/chrome/chrome.js"></script>
+<!-- /xc:head -->
+</head>
+<body>
+<!-- xc:header -->
+<header class="xc-header" data-xc-header>
+  <div class="xc-header-inner">
+    <div class="xc-header-scrim"></div>
+    <div class="xc-header-row">
+      <a class="xc-logo" aria-label="Go to Homepage" href="https://extropic.ai/"><img src="assets/chrome/wordmark.webp?v=20260804" alt="Extropic" width="160" height="14" decoding="async"></a>
+      <div class="xc-pills">
+        <a href="https://extropic.ai/hardware">Hardware</a>
+        <a href="https://extropic.ai/software">Software</a>
+        <a href="https://extropic.ai/writing">Writing</a>
+        <a href="https://extropic.ai/about">About</a>
+        <a href="https://extropic.ai/about#careers">Careers</a>
+      </div>
+      <div class="xc-mobile" data-xc-mobile>
+        <button class="xc-menu-btn" aria-label="Open menu" aria-expanded="false" data-xc-menu-btn>
+          <img src="assets/chrome/logo-mark.webp" alt="logo" width="100" height="100">
+        </button>
+        <div class="xc-menu">
+          <div class="xc-menu-inner">
+            <div class="xc-menu-links">
+              <a href="https://extropic.ai/hardware"><p class="xc-menu-num">01</p><h2 class="xc-menu-title">Hardware</h2></a>
+              <a href="https://extropic.ai/software"><p class="xc-menu-num">02</p><h2 class="xc-menu-title">Software</h2></a>
+              <a href="https://extropic.ai/writing"><p class="xc-menu-num">03</p><h2 class="xc-menu-title">Writing</h2></a>
+              <a href="https://extropic.ai/about"><p class="xc-menu-num">04</p><h2 class="xc-menu-title">About</h2></a>
+              <a href="https://extropic.ai/about#careers"><p class="xc-menu-num">05</p><h2 class="xc-menu-title">Careers</h2></a>
+            </div>
+            <div class="xc-menu-foot">
+              <p>EXTROPIC CORPORATION</p>
+              <p>2025</p>
+            </div>
+          </div>
+        </div>
+        <div class="xc-overlay" data-xc-overlay></div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- /xc:header -->
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-meta"><span>Summer 2026</span><span>Announcement</span></div>
+    <h1 class="hero-title">From One to One Billion</h1>
+    <p class="hero-deck">Introducing Torx, Thermalizers, and Z1.</p>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</header>
+
+<main>
+  <div class="article">
+
+
+    <div class="section-head section-head--first">
+      <h2>The Looming Energy Wall</h2>
+    </div>
+
+    <p><span class="lede-word">AI</span> is entering an era of seemingly smooth exponential acceleration. Models keep scaling and are emerging as multi-trillion-parameter behemoths with Fields Medal-level mathematical intelligence. Data centers are multiplying, stacking seemingly endless rows of GPUs while burning ever more power. AI labs are locked in a race to scale, where the only variables that seem to matter are digital compute, energy, and capital. The whole industry is past an inflection point, and the momentum feels quasi-unstoppable.</p>
+
+    <p>And yet, something still feels off. Our intuition tells us the story is still incomplete. Brute-force scaling today&rsquo;s digital, deterministic hardware to unfathomable scale for inherently probabilistic algorithms cannot be the endgame. Compute costs have ballooned because building enormous data centers requires land and energy that are increasingly difficult to secure. The market&rsquo;s insatiable appetite for intelligence keeps straining the supply chain and demanding exponential gains from the current paradigm.</p>
+
+    <p>Beyond data centers, physical intelligence does not have nearly enough compute density to run capable robots entirely on local compute. Space-based compute clusters are being proposed to alleviate pressure on terrestrial data centers, while relying on designs with radiators and solar panels the size of football fields. AR wearables with sufficient compute power look comical and still cannot reach a form factor dense enough to be both powerful and appealing to consumers.</p>
+
+    <p>In all cases, we are hitting a physical limit: the thermodynamic limits of AI scaling under the digital paradigm. If we continue with the status quo, the apparently exponential curve will bend and local progress will plateau. For artificial intelligence to fulfill its promise, we need a non-incremental gain in the density of intelligence. We need a fundamental paradigm shift in how we make silicon think.</p>
+
+    <p>Our very existence, that of biological general intelligence, is proof that a better way forward can exist. One that is far removed from digital computation. One that harnesses the inherent randomness in nature. And one that is far more parameter, data, and power efficient.</p>
+
+    <p>At Extropic, we are pioneering this paradigm. We are taking guidance from thermodynamic physics and nature to design a new form of computing, from the electrons up. By leaving conventional bits behind and <a href="https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware">embracing probabilistic primitives such as pbits</a>, we carved a new path that promises more intelligence per watt, per square millimeter, and per second.</p>
+
+    <p>It has been a multi-year journey to reinvent computation for an era dominated by AI. It has been a few months since you last heard from us, and today we have updates to share across our entire thermodynamic computing stack.</p>
+
+    <div class="section-head" id="full-stack-update">
+      <h2>Thermodynamic Full-stack Update</h2>
+    </div>
+
+    <nav class="launch-index" aria-label="Announcement sections">
+      <p class="launch-index-label">Announced today</p>
+      <ul>
+        <li><a href="#torx"><span class="launch-index-name">Torx</span><span class="launch-index-desc">High-level stochastic differentiable programming</span></a></li>
+        <li><a href="#thermalizers"><span class="launch-index-name">Thermalizers</span><span class="launch-index-desc">Preview of our upcoming compilation library</span></a></li>
+        <li><a href="#open-stack"><span class="launch-index-name">Early access API</span><span class="launch-index-desc">Early access to a GPU simulator for Torx and THRML</span></a></li>
+        <li><a href="#z1"><span class="launch-index-name">Z1 chip &amp; systems</span><span class="launch-index-desc">Chip tapeout, thermo compute sticks, and accelerator cards</span></a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="breakout">
+    <figure>
+      <div class="frame-wrap fade-dark">
+        <div class="diagram-frame">
+          <svg id="stackfig" viewBox="0 0 840 648" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The thermodynamic programming stack: Torx compiles through Thermalizers to THRML, which executes on thermodynamic hardware or digital GPU simulators">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#C1541D"/>
+    </marker>
+    <marker id="arrDim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="rgba(255,241,200,0.45)"/>
+    </marker>
+    <filter id="fxGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="3.2" flood-color="#F5D54C" flood-opacity="0.85"/>
+    </filter>
+  </defs>
+
+  <g id="logical-stack">
+    <rect x="32" y="24" width="776" height="104" fill="rgba(255,241,200,0.045)" stroke="rgba(255,241,200,0.4)" stroke-width="1.2"/>
+    <text x="56" y="68" class="svg-name" font-size="24">Torx</text>
+    <text x="56" y="108" class="svg-desc" font-size="11.5">STOCHASTIC DIFFERENTIABLE PROGRAMS</text>
+    <a class="stack-link stack-link-filled" href="https://torx.ai" target="_blank" rel="noopener noreferrer" aria-label="Open Torx">
+      <rect x="600" y="36" width="184" height="24" fill="#F5D54C"/>
+      <text x="692" y="51" class="svg-chip-dark" font-size="9.5" text-anchor="middle">OPEN SOURCE</text>
+    </a>
+    <a class="stack-link stack-link-outline" href="https://arxiv.org/abs/2608.01612" target="_blank" rel="noopener noreferrer" aria-label="Read the Torx paper on arXiv">
+      <rect x="600" y="68" width="184" height="24" fill="none" stroke="#F5D54C" stroke-width="1"/>
+      <text x="692" y="83" class="svg-chip-gold" font-size="9.5" text-anchor="middle">READ ON ARXIV</text>
+    </a>
+
+    <path d="M420,128 L420,170" stroke="#C1541D" stroke-width="1.6" marker-end="url(#arr)"/>
+
+    <rect x="32" y="176" width="776" height="104" fill="rgba(255,241,200,0.045)" stroke="rgba(255,241,200,0.4)" stroke-width="1.2"/>
+    <text x="56" y="220" class="svg-name" font-size="24">Thermalizers</text>
+    <text x="56" y="260" class="svg-desc" font-size="11.5">VARIATIONAL COMPILER: KERNELS TO ENERGY-BASED MODELS</text>
+    <a class="stack-link stack-link-outline" href="https://arxiv.org/abs/2608.01615" target="_blank" rel="noopener noreferrer" aria-label="Read the Thermalizers paper on arXiv">
+      <rect x="600" y="188" width="184" height="24" fill="none" stroke="#F5D54C" stroke-width="1"/>
+      <text x="692" y="203" class="svg-chip-gold" font-size="9.5" text-anchor="middle">READ ON ARXIV</text>
+    </a>
+    <rect x="600" y="220" width="184" height="24" fill="none" stroke="rgba(255,241,200,0.35)" stroke-width="1"/>
+    <text x="692" y="235" class="svg-chip-gold" font-size="9" text-anchor="middle" opacity="0.75">LIBRARY COMING SOON</text>
+
+    <path d="M420,280 L420,322" stroke="#C1541D" stroke-width="1.6" marker-end="url(#arr)"/>
+
+    <rect x="32" y="328" width="776" height="104" fill="rgba(255,241,200,0.045)" stroke="rgba(255,241,200,0.4)" stroke-width="1.2"/>
+    <text x="56" y="372" class="svg-name" font-size="24">THRML</text>
+    <text x="56" y="412" class="svg-desc" font-size="11.5">HYPERGRAPHICAL MODELS, CLOSE TO THE METAL</text>
+    <a class="stack-link stack-link-filled" href="https://docs.thrml.ai/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Open the THRML documentation">
+      <rect x="600" y="344" width="184" height="24" fill="#F5D54C"/>
+      <text x="692" y="359" class="svg-chip-dark" font-size="9.5" text-anchor="middle">LIVE SINCE FALL 2025</text>
+    </a>
+  </g>
+
+  <g id="execution-backends">
+    <path d="M420,432 L420,456 L288,456 L288,482" fill="none" stroke="#C1541D" stroke-width="1.6" marker-end="url(#arr)"/>
+    <path d="M420,456 L688,456 L688,482" fill="none" stroke="rgba(255,241,200,0.45)" stroke-width="1.3" stroke-dasharray="5 5" marker-end="url(#arrDim)"/>
+    <circle cx="420" cy="456" r="3" fill="#F5D54C" opacity="0.72"/>
+    <text x="32" y="476" class="svg-desc" font-size="10.5">EXECUTION BACKENDS</text>
+
+    <rect x="32" y="488" width="512" height="136" fill="rgba(144,48,1,0.13)" stroke="rgba(255,241,200,0.4)" stroke-width="1.2"/>
+    <text x="56" y="514" class="svg-desc" font-size="10.5">THERMODYNAMIC HARDWARE</text>
+    <rect x="56" y="530" width="224" height="70" fill="rgba(28,1,1,0.55)" stroke="rgba(255,241,200,0.3)" stroke-width="1"/>
+    <text x="76" y="558" class="svg-name" font-size="18">XTR-0</text>
+    <text x="76" y="586" class="svg-chip-gold" font-size="8.5">WITH EARLY ADOPTERS NOW</text>
+    <rect x="296" y="530" width="224" height="70" fill="rgba(28,1,1,0.55)" stroke="rgba(255,241,200,0.3)" stroke-width="1"/>
+    <text x="316" y="558" class="svg-name" font-size="18">Z1</text>
+    <text x="316" y="586" class="svg-chip-gold" font-size="8.5">TAPEOUT, EARLY ACCESS 2027</text>
+
+    <rect x="568" y="488" width="240" height="136" fill="rgba(255,241,200,0.045)" stroke="rgba(255,241,200,0.4)" stroke-width="1.2"/>
+    <text x="592" y="514" class="svg-desc" font-size="10.5">DIGITAL HARDWARE</text>
+    <text x="592" y="548" class="svg-name" font-size="18">GPU Simulators</text>
+    <a class="stack-link stack-link-filled" href="https://extropic.dev" target="_blank" rel="noopener noreferrer" aria-label="Open the Extropic compute API">
+      <rect x="592" y="560" width="192" height="24" fill="#F5D54C"/>
+      <text x="688" y="575" class="svg-chip-dark" font-size="8.5" text-anchor="middle">EARLY-ACCESS API</text>
+    </a>
+    <text x="592" y="608" class="svg-desc" font-size="7.8">HIGH-PERFORMANCE Z1 SIMULATION</text>
+  </g>
+
+  <g fill="none" stroke-linecap="round" pointer-events="none" filter="url(#fxGlow)">
+    <rect id="fxb0" x="32" y="24" width="776" height="104" stroke="#F5D54C" stroke-width="1.8" opacity="0"/>
+    <path id="fxw0" d="M420,128 L420,170" pathLength="100" stroke="#F5D54C" stroke-width="3.2" stroke-dasharray="34 100" stroke-dashoffset="34" opacity="0"/>
+    <rect id="fxb1" x="32" y="176" width="776" height="104" stroke="#F5D54C" stroke-width="1.8" opacity="0"/>
+    <path id="fxw1" d="M420,280 L420,322" pathLength="100" stroke="#F5D54C" stroke-width="3.2" stroke-dasharray="34 100" stroke-dashoffset="34" opacity="0"/>
+    <rect id="fxb2" x="32" y="328" width="776" height="104" stroke="#F5D54C" stroke-width="1.8" opacity="0"/>
+    <path id="fxw2" d="M420,432 L420,456 L288,456 L288,482" pathLength="100" stroke="#F5D54C" stroke-width="3.2" stroke-dasharray="34 100" stroke-dashoffset="34" opacity="0"/>
+    <path id="fxw3" d="M420,456 L688,456 L688,482" pathLength="100" stroke="#F5D54C" stroke-width="3.2" stroke-dasharray="34 100" stroke-dashoffset="34" opacity="0"/>
+    <rect id="fxb3" x="32" y="488" width="512" height="136" stroke="#F5D54C" stroke-width="1.8" opacity="0"/>
+    <rect id="fxb4" x="568" y="488" width="240" height="136" stroke="#F5D54C" stroke-width="1.8" opacity="0"/>
+  </g>
+</svg>
+
+        </div>
+      </div>
+      <div class="scroll-hint">Scroll sideways &rarr;</div>
+      <figcaption><span class="fig-no">FIG. 01</span> &nbsp;Our thermodynamic computing stack. Click on a box to jump to corresponding section.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <div class="section-head" id="recap">
+      <p class="eyebrow">Recap</p>
+      <h2>Recap: From Zero to One</h2>
+    </div>
+
+    <p>Last fall, we <a href="https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one">announced X0</a>, our first silicon thermodynamic chip, and with it the world&rsquo;s first desktop probabilistic computer, XTR-0. X0 demonstrated our novel probabilistic primitives in silicon: pbits, tiny circuits that turn the thermal noise of ordinary transistors into programmable randomness, using orders of magnitude less energy to generate a sample than conventional approaches. Those primitives are the building blocks of every chip we make, current and future.</p>
+    <figure class="recap-visual recap-visual--blend">
+      <div class="recap-visual-frame">
+        <video class="recap-video" muted loop playsinline preload="none" poster="assets/recap/primitives-family.webp" aria-label="Four probabilistic primitives animate as state traces and probability distributions">
+          <source src="assets/recap/primitives-family.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption><span class="fig-no">PRIMITIVES</span> &nbsp;The probabilistic family: pbit, pdit, pmode, and pmog, each pairing a sampled state with its distribution.</figcaption>
+    </figure>
+
+    <p>We didn&rsquo;t stop at silicon. We manufactured dozens of <a href="https://extropic.ai/writing/inside-x0-and-xtr-0">XTR-0</a> systems, our desktop experimental platform built around X0, and shipped them to early adopters who are playing with our probabilistic primitives and running the first thermodynamic programs on real hardware. We also built an XTR-0 cluster for scientific and enterprise users to remotely experiment with more than a handful of primitives, forming the first thermodynamic computing proto-cloud.</p>
+
+    <p><a href="https://extropic.ai/writing/inside-x0-and-xtr-0">XTR-0</a> is a reprogrammable stochastic processor that extends beyond energy-based model sampling. To let users explore this broader space, we created <a href="#torx">Torx</a>, which we cover below.</p>
+    <figure class="recap-visual recap-visual--xtr">
+      <div class="recap-visual-frame">
+        <img src="assets/recap/xtr0-hero-transparent.webp" loading="lazy" decoding="async" alt="The gold and near-black XTR-0 desktop experimental platform">
+      </div>
+      <figcaption><span class="fig-no">XTR-0</span> &nbsp;Extropic&rsquo;s desktop experimental platform, built around X0 and shipped to early adopters.</figcaption>
+    </figure>
+
+    <p>With our fall release, we open sourced THRML, our library for thermodynamic hypergraphical models, which lets developers experiment with thermodynamic programming close to the metal, on hardware or in simulation.</p>
+    <figure class="recap-visual recap-visual--blend">
+      <div class="recap-visual-frame">
+        <video class="recap-video" muted loop playsinline preload="none" poster="assets/recap/factor-graph.webp" aria-label="A THRML factor graph animates through variables and energy-based factors">
+          <source src="assets/recap/factor-graph.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption><span class="fig-no">THRML</span> &nbsp;A thermodynamic factor graph: variables connected through energy-based factors, close to the hardware&rsquo;s native model.</figcaption>
+    </figure>
+
+    <p>We published papers applying THRML to generative modeling and drug discovery, both showing that a Z1-like chip can achieve several orders of magnitude greater energy efficiency than GPUs.</p>
+    <figure class="recap-visual recap-visual--blend">
+      <div class="recap-visual-frame">
+        <video class="recap-video" muted loop playsinline preload="none" poster="assets/recap/dtm-denoise.webp" aria-label="A denoising thermodynamic model progressively turns a sampled image into a structured digit">
+          <source src="assets/recap/dtm-denoise.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption><span class="fig-no">DTM</span> &nbsp;A denoising thermodynamic model turns a sampled image into a structured digit.</figcaption>
+    </figure>
+
+
+    <p>With X0, we took thermodynamic computing from zero to one. Now it&rsquo;s time to turn it up from one to one billion.</p>
+  </div>
+
+  <div class="breakout embed-wrap">
+    <figure class="embed-slot" data-embed="interactive/one-to-a-billion.html" data-scrolly-vh="2.5" data-title="From 1 to one billion pbits, visualized. Systems hierarchy from pbit, pbit neighborhood, Z1 core, chip, card, and billion-pbit cluster.">
+      <div class="scrolly-track">
+      <div class="scrolly-pin">
+      <div class="embed-box">
+        <picture class="embed-poster">
+          <img src="assets/posters/one-to-a-billion.webp" loading="lazy" decoding="async" alt="A single probabilistic bit rendered as a flickering 1-and-0 glyph, the opening frame of a live zoom from one pbit out to a billion-pbit cluster">
+        </picture>
+        <div class="embed-shim" aria-hidden="true"></div>
+      </div>
+      </div>
+      </div>
+      <figcaption><span class="fig-no">FIG. 02</span> &nbsp;From 1 to one billion pbits, visualized. Systems hierarchy from pbit, pbit neighborhood, Z1 core, chip, card, and billion-pbit cluster.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+
+    <div class="section-head" id="torx">
+      <p class="eyebrow">Software: released today</p>
+      <h2>Torx: a stochastic differentiable programming framework</h2>
+    </div>
+
+    <p>Before we get to the hardware, let&rsquo;s talk software.</p>
+
+    <p>We heard you after our last launch. &ldquo;Cool alien computer, but how am I supposed to program this thing?&rdquo; Fair enough. So we built new layers of our stack, inspired by the deep learning frameworks you know and love, to make thermodynamic programming feel... less alien.</p>
+
+    <p>Recall that deep learning conquered software because it let us write parameterized hypotheses over programs, then search that space with gradient descent. As Andrej Karpathy has argued, gradient descent can be a better programmer than you. We&rsquo;re now extending that same philosophy to stochastic devices.</p>
+
+    <p>Today we&rsquo;re releasing <strong>Torx</strong>, our new open-source framework for general stochastic differentiable programming, going beyond strictly thermodynamic programs. In classical differentiable programming, you arrange modular parameterized functions into a directed acyclic graph. Torx lets you build the same kind of graph, but the nodes are stochastic transition kernels.</p>
+
+  </div>
+
+  <div class="breakout embed-wrap">
+    <figure class="embed-slot" data-embed="interactive/kernel-flow.html" data-scrolly-vh="2" data-title="A stochastic transition kernel K(y|x) visualized as a path integral: sampled trajectories carrying probability mass from an input distribution to an output distribution">
+      <div class="scrolly-track">
+      <div class="scrolly-pin">
+      <div class="embed-box">
+        <picture class="embed-poster">
+          <img src="assets/posters/kernel-flow.webp" loading="lazy" decoding="async" alt="A stochastic transition kernel drawn as a bundle of sampled gold trajectories carrying probability mass from an input distribution on the left to an output distribution on the right">
+        </picture>
+        <div class="embed-shim" aria-hidden="true"></div>
+      </div>
+      </div>
+      </div>
+      <figcaption><span class="fig-no">FIG. 03</span> &nbsp;The Torx primitive: a stochastic transition kernel K(y|x) visualized as a path integral.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <p>Each stochastic transition kernel can have trainable parameters optimized with gradient-based methods. The kernels act as distributions over functions, which we call factors, and can be wired in series and parallel to form a directed acyclic graph. We call these Parameterized Stochastic Circuits, or Directed Factor Graphs. The result is a modular probabilistic program with depth and a natural notion of flow, trainable end-to-end with your favorite optimizer.</p>
+  </div>
+
+  <div class="breakout">
+    <figure class="recap-visual recap-visual--blend">
+      <div class="recap-visual-frame">
+        <video class="recap-video" muted loop playsinline preload="none" poster="assets/recap/psc-circuit.webp" aria-label="A large parameterized stochastic circuit routes sampled states through a directed graph of transition kernels">
+          <source src="assets/recap/psc-circuit.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption><span class="fig-no">PSC</span> &nbsp;A parameterized stochastic circuit wires transition kernels into a modular probabilistic program.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+
+    <p>This framework is directly analogous to differentiable programming frameworks like PyTorch or TensorFlow, on which the foundational breakthroughs of modern deep learning were built. Torx extends that approach to deep differentiable stochastic programs, and Thermalizers will support compiling these abstract programs onto thermodynamic hardware.</p>
+
+    <p>To put it simply: Torx is to THRML what PyTorch is to CUDA.</p>
+
+    <p>Torx is hardware agnostic. It can run on stochastic processing units of all kinds, from our very own XTR-0 today, to our next chip Z1, and beyond.</p>
+
+    <p>The <a href="https://arxiv.org/abs/2608.01612">whitepaper we&rsquo;re releasing today</a> walks through a wide array of worked examples to get you started with stochastic differentiable programming. It even features experimental results from implementations of Torx programs on XTR-0.</p>
+
+    <p>To get started, explore the docs, code, and examples at <a href="https://docs.torx.ai">docs.torx.ai</a> and on <a href="https://github.com/extropic-ai/torx">GitHub</a>.</p>
+
+    <div class="section-head" id="thermalizers">
+      <p class="eyebrow">Software: whitepaper today</p>
+      <h2>Thermalizers: a compiler of stochastic programs onto thermodynamic hardware</h2>
+    </div>
+
+    <p>A framework for writing stochastic programs raises the obvious next question: how do those programs actually reach the hardware? That&rsquo;s the job of <strong>Thermalizers</strong>, our upcoming thermodynamic compilation library, whose <a href="https://arxiv.org/abs/2608.01615">whitepaper</a> we&rsquo;re also releasing today.</p>
+
+    <p>Thermalizers compiles arbitrary Torx programs onto thermodynamic devices like Z1, bridging Torx and THRML and completing our thermodynamic programming stack. It works by variationally compiling each stochastic transition kernel in your program into hardware-aware energy-based models over input and output variables. The result is a directed graph of THRML models that maps directly onto our hardware, executing your program via in-memory, pipeline-parallel sampling. The whitepaper also introduces training refinements that keep compilation error under control as programs get deep.</p>
+  </div>
+
+  <div class="breakout embed-wrap">
+    <figure class="embed-slot" data-embed="interactive/the-lowering.html" data-scrolly-vh="3" data-title="The lowering: a variational kernel compiled down to a two-pbit gate, a live circuit, a Boltzmann machine, and the Z1 coupler fabric">
+      <div class="scrolly-track">
+      <div class="scrolly-pin">
+      <div class="embed-box">
+        <picture class="embed-poster">
+          <img src="assets/posters/the-lowering.webp" loading="lazy" decoding="async" alt="A Boltzmann machine of gold pbit spins seated into a 4x4 block of the Z1 chip's coupler fabric, the final frame of the lowering journey from variational kernel to hardware">
+        </picture>
+        <div class="embed-shim" aria-hidden="true"></div>
+      </div>
+      </div>
+      </div>
+      <figcaption><span class="fig-no">FIG. 04</span> &nbsp;One stochastic kernel variationally compiled and embedded into thermodynamic hardware fabric.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <p>What this means in practice: anyone can take a general, high-level stochastic program and map it onto thermodynamic hardware without ever touching low-level device details. For the right workloads, this can deliver up to 10,000x greater energy efficiency than GPUs.</p>
+  </div>
+
+  <div class="article">
+
+
+    <p>Read the Thermalizers paper on <a href="https://arxiv.org/abs/2608.01615">arXiv</a>, and watch <a href="https://github.com/extropic-ai">our GitHub</a> for the open-source release in the coming weeks.</p>
+
+    <div class="section-head" id="z1">
+      <p class="eyebrow">Hardware: revealed today</p>
+      <h2>Z1: our first scaled up thermodynamic chip</h2>
+    </div>
+
+    <p>Scaled up probabilistic software ate the world. Now it&rsquo;s time for probabilistic hardware to scale. Three years ago we set out to scale our systems 1000x year over year.</p>
+
+    <p>Today we can finally share more about our progress on this journey. Introducing our newest generation of systems, based on a new chip: <strong>Z1</strong>.</p>
+  </div>
+
+  <div class="breakout embed-wrap">
+    <figure class="embed-slot" style="--embed-h: 486px" data-embed="interactive/z1-die-concept-b.html" data-scrolly-vh="2" data-mount-min="780" data-title="The Z1 die assembling: 8 cores, 269,568 pbits, an open-horseshoe coupling chain">
+      <div class="scrolly-track">
+      <div class="scrolly-pin">
+      <div class="embed-box embed-scale">
+        <picture class="embed-poster">
+          <img src="assets/posters/z1-die-concept-b.webp" loading="lazy" decoding="async" alt="An annotated Z1 floorplan: eight cores of pbits inside the sub-12 mm die outline, beside a spec ledger reading 269,568 pbits, over 50 MHz, under one watt">
+        </picture>
+        <div class="embed-shim" aria-hidden="true"></div>
+      </div>
+      </div>
+      </div>
+      <figcaption><span class="fig-no">FIG. 05</span> &nbsp;The Z1 die: eight cores, 269,568 pbits, 215,904 coupling parameters, &gt;50 MHz sampling rate, &lt;1 W.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <p>Z1 comprises over a quarter million pbits arranged in a sparse graph. It samples from an energy-based model known in the literature as an Ising model, and each pbit is directly connected to sixteen of its neighbors. The chip executes a chromatic <a href="https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware">Gibbs sampling algorithm</a> in-situ to generate samples from the thermal equilibrium state of that Ising model, at a sampling rate of over 50 MHz. Z1 fits 269,000 pbits on a chip that consumes less than one watt and measures less than twelve millimeters per side. That density is possible because a TSU stores and processes information in place, greatly lowering the energetic losses that are usually due to the long-range communication needed to shuttle bits to memory and back in traditional Von Neumann architectures.</p>
+
+    <div class="section-head" id="z1-systems">
+      <h2>Z1 Systems: Compute Stick, Accelerator Cards, Cluster</h2>
+    </div>
+
+    <p>In order for Z1 to be applicable both at the edge and in the datacenter, we plan to make Z1 systems available in several form factors. First, an edge-ready Z1 thermo compute stick: two Z1 chips, over half a million pbits, fitting in an M.2 stick form factor. We aim to enable low-power applications at the edge such as next-generation augmented reality and physical intelligence of all kinds.</p>
+
+    <p>For the heaviest probabilistic workloads, we&rsquo;re also building Z1 accelerator cards. These pack over 4 million pbits each via 16 Z1 chips, packaged in a standard PCIe form factor for workstations and servers. These cards can be slotted right alongside your other favorite accelerators and open up early explorations of AI workloads on heterogeneous thermo-classical compute.</p>
+  </div>
+
+  <div class="breakout">
+    <figure>
+      <div class="z1-card">
+        <div class="z1-card-head">
+          <p class="eyebrow">Z1 systems summary</p>
+          <span class="z1-card-tag">Summer 2026</span>
+        </div>
+        <div class="z1-card-zone">Z1 chip</div>
+        <div class="z1-card-chip">
+          <div><div class="spec-val">269,000</div><div class="spec-label">pbits in a sparse graph, 16-neighbor connectivity</div></div>
+          <div><div class="spec-val">&gt;50 MHz</div><div class="spec-label">Sampling rate</div></div>
+          <div><div class="spec-val">&lt;1 W</div><div class="spec-label">Power consumption</div></div>
+        </div>
+        <div class="z1-card-zone">Systems</div>
+        <div class="z1-card-sys">
+          <div><div class="spec-val">500,000+</div><div class="z1-cell-name">M.2 Thermo Compute Stick</div><div class="z1-cell-desc">pbits, for edge applications</div></div>
+          <div><div class="spec-val">4,000,000+</div><div class="z1-cell-name">PCIe Thermo Accelerator Card</div><div class="z1-cell-desc">pbits, for servers and workstations</div></div>
+          <div><div class="spec-val">1,000,000,000+</div><div class="z1-cell-name">Thermo Compute Cluster</div><div class="z1-cell-desc">pbits, in one coherent cluster</div></div>
+          <div><div class="spec-val">2027</div><div class="z1-cell-name">Early access</div><div class="z1-cell-desc">Z1 sticks, cards, and clusters</div></div>
+        </div>
+      </div>
+      <div class="z1-hardware">
+        <div class="z1-shot z1-shot--stick">
+          <img src="assets/z1-stick.webp" loading="lazy" decoding="async" alt="An Extropic M.2 thermo compute stick: a slim near-black board carrying two gold-marked Z1 chips and memory packages on copper traces">
+          <div class="z1-shot-cap"><span class="form-name">Z1 Thermodynamic Accelerator stick</span><span class="form-desc">over 500,000 pbits for edge applications</span></div>
+        </div>
+        <div class="z1-shot z1-shot--card">
+          <img src="assets/z1-card.webp" loading="lazy" decoding="async" alt="An Extropic PCIe card seen from above: a near-black board tiled with gold-marked Z1 modules around a central Extropic controller, gold edge connector at the bottom">
+          <div class="z1-shot-cap"><span class="form-name">Z1 Thermodynamic Accelerator Card board</span><span class="form-desc">over 4,000,000 pbits for servers and workstations</span></div>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="article">
+
+    <p>If scaling deep learning over the past several years has taught us anything, it&rsquo;s that there are many emergent properties of differentiable programs that can only be observed empirically when systems reach sufficient scale. So to enable Thermo AI algorithms research at greater scale, we are building the world&rsquo;s first large-scale thermodynamic computing cluster in 2027.</p>
+
+    <p>This gets us from one to one billion: the world&rsquo;s first billion-pbit cluster will be built with Z1 accelerator cards.</p>
+
+    <p>Now that Z1 is finally taped out, we plan on making Z1 cards, sticks, and clusters ready for early access in 2027.</p>
+  </div>
+
+  <div class="breakout">
+    <div class="z1-ext">
+      <img src="assets/z1-card-ext.webp" loading="lazy" decoding="async" alt="The sealed Extropic Z1 PCIe card: a polished gold organic lattice shroud over a matte near-black body, with a perforated gold honeycomb bracket">
+      <div class="z1-shot-cap"><span class="form-name">Z1 Thermodynamic Accelerator Card exterior</span><span class="form-desc">biomorphic design for bio-inspired hardware</span></div>
+    </div>
+  </div>
+
+  <div class="article">
+
+    <div class="section-head" id="open-stack">
+      <p class="eyebrow">Platform: live today</p>
+      <h2>Join the Thermo AI algorithmic rebellion</h2>
+    </div>
+
+    <p>The world urgently needs more energy-efficient AI. This requires energy-efficient hardware and a great algorithmic migration to this new substrate.</p>
+
+    <p>To address this, we&rsquo;re building the thermodynamic intelligence stack from the ground up, with haste. Today, we&rsquo;ve open sourced more of our software tools to catalyze collaboration with the broader AI community, and hasten the migration of models to the more power-efficient thermodynamic computing substrate.</p>
+
+    <p>Developers can start experimenting with these new forms of programming with Torx and THRML, and start designing stochastic and thermodynamic algorithms today, to be ready for the devices to be widely available tomorrow.</p>
+
+    <p>To further accelerate algorithmic progress, we&rsquo;re opening up an early-access simulator API that runs Torx and THRML programs on high-performance GPU simulators. This will enable you and your favorite agents to iterate faster on your thermo AI research ideas.</p>
+
+    <p>Over time, <a href="https://extropic.dev" target="_blank" rel="noopener noreferrer">this API</a> will grow to include higher-performance digital hardware accelerators, more tools for agentic research, and eventually, access to our first Z1 clusters.</p>
+
+  </div>
+
+  <div class="article">
+
+    <p>If you are a developer or hacker who wants to be part of the next cycle of AI research, now is the time to join our rebellion.</p>
+
+    <p>We are in the foothills of thermodynamic general intelligence.</p>
+
+    <p>We want you to come climb this next peak with us.</p>
+
+  </div>
+
+  <section class="closer-wrap">
+    <p class="closer">Join us on our journey to build the ultimate substrate for intelligence.</p>
+    <div class="btn-row">
+      <a class="btn resource-btn" href="https://docs.torx.ai" target="_blank" rel="noopener noreferrer">Get Torx &rarr;</a>
+      <a class="btn resource-btn" href="https://arxiv.org/abs/2608.01615" target="_blank" rel="noopener noreferrer">Read Thermalizers &rarr;</a>
+      <a class="btn resource-btn" href="https://extropic.dev" target="_blank" rel="noopener noreferrer">Try the API &rarr;</a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(() => {
+'use strict';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const smallView = matchMedia('(max-width: 719px)');
+const EASE = 'cubic-bezier(.16,1,.3,1)';
+
+const recapVideos = document.querySelectorAll('.recap-video');
+if (REDUCED) {
+  recapVideos.forEach(video => {
+    video.pause();
+    video.currentTime = 0;
+  });
+} else if ('IntersectionObserver' in window) {
+  const recapObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.readyState === HTMLMediaElement.HAVE_NOTHING) entry.target.load();
+        entry.target.play().catch(() => {});
+      } else {
+        entry.target.pause();
+      }
+    });
+  }, { rootMargin: '320px 0px', threshold: .01 });
+  recapVideos.forEach(video => recapObserver.observe(video));
+} else {
+  recapVideos.forEach(video => video.play().catch(() => {}));
+}
+
+/* ============ 1. Embed harness: lazy same-origin iframes, one live piece ============
+   Poster is the default markup (no-JS / reduced-motion stay static).
+   Desktop (>=720px): a host IntersectionObserver with a 150% rootMargin marks
+   slots "near"; the near slot closest to the viewport center gets the single
+   live iframe. A live sim holds its frame until it has fully left the viewport
+   (figure-scale boxes put two slots on screen within one scroll; the centered
+   one must win, but a visible sim never pops back to its poster). The iframe
+   sits under a shim (touch-action: pan-y) until the reader deliberately
+   presses it, so page scroll is never hijacked.
+   Mobile (<720px): never auto-mount, never mount inline. Each poster carries
+   a TAP TO PLAY affordance; the tap opens the piece in a full-screen fixed
+   overlay (module 1b below) so a squat article box never squeezes a layout.
+   'click' never fires for a scroll pan, so page pan-y stays intact over
+   posters. */
+const slots = Array.from(document.querySelectorAll('.embed-slot')).map(fig => ({
+  fig,
+  box: fig.querySelector('.embed-box'),
+  shim: fig.querySelector('.embed-shim'),
+  src: fig.dataset.embed,
+  title: fig.dataset.title || 'Interactive figure',
+  minW: +fig.dataset.mountMin || 0,   // below this viewport width: poster + tap-to-play overlay
+  frame: null,
+  near: false,
+}));
+const overlayOnly = s => smallView.matches || (s.minW && innerWidth < s.minW);
+let live = null;
+
+function unmount(s) {
+  if (s.frame) { s.frame.remove(); s.frame = null; }
+  s.box.classList.remove('is-live', 'is-active');
+  s.shim.hidden = false;
+  if (live === s) live = null;
+}
+function mount(s, activate) {
+  if (live === s) return;
+  for (const o of slots) if (o !== s && o.frame) unmount(o); // budget: never more than one
+  const f = document.createElement('iframe');
+  f.title = s.title;
+  f.setAttribute('scrolling', 'no');
+  f.addEventListener('load', () => { if (s.frame === f) s.box.classList.add('is-live'); });
+  f.src = s.src;
+  s.box.insertBefore(f, s.shim);
+  s.frame = f;
+  live = s;
+  if (activate) { s.box.classList.add('is-active'); s.shim.hidden = true; }
+}
+
+let raf = 0;
+function scan() {
+  if (raf) return;
+  raf = requestAnimationFrame(() => {
+    raf = 0;
+    if (REDUCED) { for (const s of slots) unmount(s); return; }
+    if (smallView.matches) {
+      // overlay world: inline frames never live on mobile (a stray one can
+      // only be a desktop auto-mount left over from a resize/rotation)
+      if (live) unmount(live);
+      for (const s of slots) s.box.classList.toggle('tap-only', false);
+      return;
+    }
+    for (const s of slots) s.box.classList.toggle('tap-only', overlayOnly(s));
+    if (live && overlayOnly(live)) unmount(live);
+    const vh = innerHeight;
+    /* scrolly slots: rank by the PIN BOX (dead-center while stuck), and trust
+       a direct box-rect check over the fig-level IO flag -- the 4-6 viewport
+       track can outgrow the observer's expanded root, and a near flicker must
+       never cost a pinned piece its iframe */
+    const boxNear = s => { const r = s.box.getBoundingClientRect();
+      return r.bottom > -vh && r.top < vh * 2; };
+    const isNear = s => s.near || (s.fig.dataset.scrollyVh != null && boxNear(s));
+    let best = null, bd = Infinity;
+    for (const s of slots) {
+      if (!isNear(s) || overlayOnly(s)) continue;
+      const r = s.box.getBoundingClientRect();
+      const d = Math.abs((r.top + r.bottom) / 2 - vh / 2);
+      if (d < bd) { bd = d; best = s; }
+    }
+    /* a scrolly pin that is actively driving NEVER loses its iframe */
+    const driving = live && live.box.classList.contains('driving');
+    if (!best) { if (live && !driving) unmount(live); return; }
+    if (!live) { mount(best); return; }
+    if (live === best || driving) return;
+    const r = live.box.getBoundingClientRect();
+    /* ...and a pin that STARTS driving claims the iframe immediately, even if
+       the previous piece is still partially on screen */
+    if (!isNear(live) || r.bottom <= 0 || r.top >= vh
+        || best.box.classList.contains('driving')) mount(best);
+  });
+}
+
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) {
+    const s = slots.find(s => s.fig === e.target);
+    if (s) s.near = e.isIntersecting;
+  }
+  scan();
+}, { rootMargin: '150% 0px 150% 0px' });
+
+if (!REDUCED && slots.length) {
+  for (const s of slots) io.observe(s.fig);
+  addEventListener('scroll', scan, { passive: true });
+  addEventListener('resize', scan);
+  smallView.addEventListener('change', scan);
+}
+
+function activate(s) {
+  if (REDUCED) return;
+  if (overlayOnly(s)) { openOverlay(s); return; }        // mobile / too-narrow slot: full-screen overlay
+  if (!s.frame) return;                                  // desktop: only the IO mounts
+  if (!s.box.classList.contains('is-live')) return;      // still loading
+  s.box.classList.add('is-active');
+  s.shim.hidden = true;
+  try { s.frame.contentWindow.focus(); } catch (e) { /* cross-origin fallback: none needed */ }
+}
+for (const s of slots) {
+  if (!REDUCED) {                                        // no-JS / reduced-motion: plain poster
+    const t = document.createElement('div');
+    t.className = 'embed-tap';
+    t.textContent = 'Tap to play';
+    s.box.appendChild(t);
+    s.box.classList.add('tap-armed');
+  }
+  s.shim.addEventListener('pointerdown', e => {          // deliberate press: desktop handoff
+    if (e.pointerType !== 'touch') activate(s);
+  });
+  s.shim.addEventListener('click', () => activate(s));   // tap (never fires on scroll pans)
+}
+
+/* ============ 1b. Mobile full-screen overlay ============
+   One overlay at a time (the layer covers the page, and opening unmounts any
+   inline frame, so the one-live budget holds trivially). Body scroll locked
+   with the fixed-body technique so iOS never rubber-bands the page under it.
+   Close paths: 44px gold X, swipe down from the top strip, Escape, or the
+   back button; open pushes a history entry and every close funnels through
+   it so the stack stays consistent. */
+const ov = document.createElement('div');
+ov.className = 'embed-overlay';
+ov.innerHTML = '<div class="overlay-grab" aria-hidden="true"></div>' +
+  '<button class="overlay-close" type="button" aria-label="Close interactive figure">&#10005;</button>';
+document.body.appendChild(ov);
+const ovGrab = ov.firstChild, ovClose = ov.lastChild;
+let ovSlot = null, ovFrame = null, ovPoster = null, ovPushed = false, ovLockY = 0;
+
+function ovTeardown() {                                  // DOM teardown (single exit)
+  if (!ovSlot) return;
+  if (ovFrame) { ovFrame.remove(); ovFrame = null; }
+  if (ovPoster) { ovPoster.remove(); ovPoster = null; }
+  ov.classList.remove('open', 'is-live');
+  ov.style.transform = '';
+  document.documentElement.classList.remove('overlay-lock');
+  const b = document.body.style;
+  b.position = b.top = b.left = b.right = b.width = '';
+  scrollTo(0, ovLockY);
+  ovSlot = null;
+}
+function closeOverlay() {                                // user intent (X / swipe / Escape)
+  if (!ovSlot) return;
+  if (ovPushed) { ovPushed = false; history.back(); }    // popstate finishes the job
+  else ovTeardown();
+}
+addEventListener('popstate', () => { ovPushed = false; ovTeardown(); });
+
+function openOverlay(s) {
+  if (ovSlot) return;
+  for (const o of slots) if (o.frame) unmount(o);        // budget: never more than one
+  ovSlot = s;
+  const pimg = s.box.querySelector('.embed-poster img'); // poster backdrop while loading
+  if (pimg) {
+    ovPoster = document.createElement('img');
+    ovPoster.className = 'overlay-poster';
+    ovPoster.alt = '';
+    ovPoster.src = pimg.currentSrc || pimg.src;
+    ov.prepend(ovPoster);
+  }
+  const f = document.createElement('iframe');
+  f.title = s.title;
+  f.setAttribute('scrolling', 'no');
+  f.addEventListener('load', () => { if (ovFrame === f) ov.classList.add('is-live'); });
+  f.src = s.src;
+  ov.insertBefore(f, ovGrab);
+  ovFrame = f;
+  ovLockY = scrollY;                                     // scroll lock (iOS-safe fixed body)
+  const b = document.body.style;
+  b.position = 'fixed'; b.top = -ovLockY + 'px'; b.left = '0'; b.right = '0'; b.width = '100%';
+  document.documentElement.classList.add('overlay-lock');
+  ov.classList.add('open');
+  try { history.pushState({ embedOverlay: 1 }, ''); ovPushed = true; } catch (e) { ovPushed = false; }
+  ovClose.focus({ preventScroll: true });
+}
+
+ovClose.addEventListener('click', closeOverlay);
+addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+smallView.addEventListener('change', () => { if (!smallView.matches) closeOverlay(); });
+
+let ovDragY = null;                                      // swipe down from the top strip
+ovGrab.addEventListener('pointerdown', e => {
+  ovDragY = e.clientY;
+  ovGrab.setPointerCapture(e.pointerId);
+});
+ovGrab.addEventListener('pointermove', e => {
+  if (ovDragY == null) return;
+  const dy = Math.max(0, e.clientY - ovDragY);
+  ov.style.transform = dy > 2 ? 'translateY(' + dy + 'px)' : '';
+});
+const ovDragEnd = e => {
+  if (ovDragY == null) return;
+  const dy = e.clientY - ovDragY;
+  ovDragY = null;
+  ov.style.transform = '';
+  if (dy > 90) closeOverlay();
+};
+ovGrab.addEventListener('pointerup', ovDragEnd);
+ovGrab.addEventListener('pointercancel', () => { ovDragY = null; ov.style.transform = ''; });
+
+// read-only QA hook
+window.__embeds = () => slots.map(s => ({
+  src: s.src.split('/').pop(),
+  near: s.near,
+  mounted: !!s.frame,
+  live: s.box.classList.contains('is-live'),
+  active: s.box.classList.contains('is-active'),
+  overlay: ovSlot === s
+}));
+
+/* ============ 1c. Scroll-scrub for data-scrolly-vh slots ============
+   While the sticky figure-scale pin is stuck, scroll progress drives the
+   piece via {type:'scrub', t}. Unpinning at COMPLETION posts the boundary
+   scrub t=1 then {type:'scrub-hold'}: the piece latches its settled end
+   state for good -- no attract restart, no story replay (Seth 07-19: a
+   released piece re-running its whole animation read as a duplicate). Any
+   frame the harness later remounts for a completed slot boots into its
+   attract loop, so the tick re-pins it to the held end state immediately.
+   Unpinning mid-story posts scrub t=0 + scrub-release (attract resumes and
+   the track keeps the live back-and-forth scrub). Composes with the
+   harness: only posts to a mounted is-live frame; never touches wheel or
+   touch events. Mobile (<720px) + reduced motion: tracks collapse via CSS
+   and this module leaves them alone.
+   End dwell (Seth 07-19): each track carries a TAIL beat of extra scroll
+   AFTER t reaches 1.0 -- progress maps over the pre-tail span and clamps at
+   1, so the finished piece sits pinned on screen for ~a third of a viewport
+   of scroll before it unpins. */
+const TAIL = 0.35; /* viewports of pinned dwell after t reaches 1 */
+const scrolly = slots.filter(s => s.fig.dataset.scrollyVh).map(s => ({
+  s, track: s.fig.querySelector('.scrolly-track'),
+  vh: parseFloat(s.fig.dataset.scrollyVh) || 4,
+  engaged: false, cur: 0, sent: -1, done: false, collapsed: false, held: null,
+}));
+const bigView = matchMedia('(min-width: 720px)');
+function sizeTracks() {
+  /* a track only stretches when the slot can actually mount inline: below a
+     slot's data-mount-min (z1: 780) it is poster + overlay, and a 4-6
+     viewport track around a static poster is dead scroll distance. A
+     COMPLETED track (scrubbed to t=1 once) stays collapsed for good: the
+     morph is a first-read flourish, afterwards the figure is a plain embed. */
+  for (const y of scrolly) {
+    y.track.style.height = (bigView.matches && !REDUCED && !y.collapsed && !overlayOnly(y.s))
+      ? (1 + y.vh + TAIL) * 100 + 'vh' : '';
+    /* the scrub rail lives wherever the slot can mount inline; poster-only
+       (overlay) slots keep the tap affordance instead */
+    y.s.fig.classList.toggle('rail-on', bigView.matches && !REDUCED && !overlayOnly(y.s));
+  }
+}
+/* responsive embed-scale (Seth 07-19e): fixed-canvas pieces (904x600) scale
+   to the box's real width so they are exactly box-sized and centered at
+   every window width; --embed-h follows so the sticky-pin centering math
+   uses the true height. */
+function sizeScaled() {
+  for (const box of document.querySelectorAll('.embed-box.embed-scale')) {
+    const w = box.clientWidth;
+    if (!w) continue;
+    box.style.setProperty('--es', (w / 904).toFixed(4));
+    const fig = box.closest('.embed-slot');
+    if (fig) fig.style.setProperty('--embed-h', Math.round(w * 600 / 904) + 'px');
+  }
+}
+sizeScaled();
+addEventListener('resize', sizeScaled);
+sizeTracks();
+bigView.addEventListener('change', sizeTracks);
+addEventListener('resize', sizeTracks);
+/* ============ 1e. First-pin scroll cue ============
+   Normal motion names the figure's zoom behavior. Reduced motion keeps the
+   navigation affordance but describes only the page action it can perform. */
+let firstCue = null;
+if (scrolly.length) {
+  firstCue = document.createElement('div');
+  firstCue.className = 'first-pin-cue';
+  firstCue.setAttribute('aria-hidden', 'true');
+  firstCue.textContent = REDUCED ? 'Scroll down to continue' : 'Scroll down to zoom out';
+  scrolly[0].s.fig.querySelector('.scrolly-pin').appendChild(firstCue);
+}
+if (scrolly.length && !REDUCED) {
+  let lastTs = 0;
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const post = (y, m) => { const f = y.s.frame;
+    if (f && y.s.box.classList.contains('is-live')) f.contentWindow.postMessage(m, location.origin); };
+  /* pin a (re)mounted frame of a completed slot to its held end state */
+  const holdEnd = y => { y.cur = y.sent = 1; const f = y.s.frame;
+    if (f && y.s.box.classList.contains('is-live')) {
+      post(y, { type: 'scrub', t: 1 }); post(y, { type: 'scrub-hold' }); y.held = f;
+    } };
+  /* scroll-idle gate for the deferred completion-collapse (ScrollSettle
+     07-19): collapsing while trackpad momentum ticks were still in flight
+     put the height change + compensation in a race with the browser
+     applying wheel deltas (and with scroll anchoring, see the CSS note) --
+     the page visibly yanked backward right after a section completed.
+     Collapse now waits for >=150ms of input silence. */
+  let lastInput = 0;
+  const noteInput = () => { lastInput = performance.now(); };
+  addEventListener('scroll', noteInput, { passive: true });
+  addEventListener('wheel', noteInput, { passive: true });
+
+  /* ============ 1d. Scrub rails ============
+     One slim rail under every inline scrolly box (injected here, so no-JS
+     and reduced motion never see one): a passive readout of the slot's
+     scrub t while the scroll drives, and a drag/keyboard scrubber that
+     pins the piece through the SAME post()/holdEnd() plumbing the track
+     scroll uses. Dragging a HELD (completed) slot replays by scrubbing:
+     scrub-release unlatches first (pieces pin their render under
+     hold), the very next scrub re-pins before a frame renders, and
+     letting go re-latches the end state -- the no-replay rule holds,
+     attract never restarts in the post. */
+  const drawRail = (y, t) => {
+    if (Math.abs(t - y.railT) < 0.001) return;
+    y.railT = t;
+    y.thumb.style.left = y.fill.style.width = (t * 100) + '%';
+    y.rail.setAttribute('aria-valuenow', Math.round(t * 100));
+  };
+  const railGoto = (y, t) => {           /* one scrub through the shared plumbing */
+    if (!y.s.frame && !overlayOnly(y.s)) mount(y.s);
+    y.cur = y.sent = t;
+    post(y, { type: 'scrub', t });
+    drawRail(y, t);
+  };
+  const railSettle = y => {              /* letting go: same completion/hold path scroll uses */
+    if (y.done || y.cur >= 0.995) { y.done = true; holdEnd(y); drawRail(y, 1); }
+  };
+  for (const y of scrolly) {
+    const rail = document.createElement('div');
+    rail.className = 'scrub-rail';
+    rail.setAttribute('role', 'slider');
+    rail.setAttribute('tabindex', '0');
+    rail.setAttribute('aria-label', 'Scrub: ' + y.s.title);
+    rail.setAttribute('aria-valuemin', '0');
+    rail.setAttribute('aria-valuemax', '100');
+    rail.innerHTML = '<div class="rail-fill"></div><div class="rail-thumb"></div>';
+    y.s.box.after(rail);
+    y.rail = rail; y.fill = rail.firstChild; y.thumb = rail.lastChild;
+    y.railT = -1; y.drag = false;
+    drawRail(y, 0);
+    const at = e => { const r = rail.getBoundingClientRect();
+      return clamp01((e.clientX - r.left) / Math.max(1, r.width)); };
+    rail.addEventListener('pointerdown', e => {
+      y.drag = true;
+      y.s.box.classList.add('driving');  /* an actively scrubbed pin keeps its iframe */
+      rail.setPointerCapture(e.pointerId);
+      if (y.done) post(y, { type: 'scrub-release' });  /* unlatch a held piece */
+      railGoto(y, at(e));
+    });
+    rail.addEventListener('pointermove', e => { if (y.drag) railGoto(y, at(e)); });
+    const drop = () => {
+      if (!y.drag) return;
+      y.drag = false;
+      if (!y.engaged) y.s.box.classList.remove('driving');
+      railSettle(y);
+    };
+    rail.addEventListener('pointerup', drop);
+    rail.addEventListener('pointercancel', drop);
+    rail.addEventListener('keydown', e => {
+      const STEP = { ArrowRight: .05, ArrowUp: .05, ArrowLeft: -.05, ArrowDown: -.05 }[e.key];
+      const t = STEP != null ? clamp01(y.cur + STEP)
+        : e.key === 'Home' ? 0 : e.key === 'End' ? 1 : null;
+      if (t == null) return;
+      e.preventDefault();
+      if (y.done) post(y, { type: 'scrub-release' });
+      railGoto(y, t);
+      /* keyboard has no pointerup: settle (completion, or the re-hold of a
+         replayed held slot) lands after a beat of key silence */
+      clearTimeout(y.keyT);
+      y.keyT = setTimeout(() => { if (!y.drag) railSettle(y); }, 1400);
+    });
+  }
+
+  let cueDone = false;
+  (function tick(ts) {
+    const dt = Math.min(0.05, lastTs ? (ts - lastTs) / 1000 : 0.016); lastTs = ts;
+    if (bigView.matches) { for (const y of scrolly) {
+      /* a fresh live frame never attracts in the post: pin it at the slot's
+         current story position the moment it loads (t=0 pre-engage, the
+         drag t mid-rail-scrub), so engaging never visibly resets a playing
+         attract loop (Seth 07-19). Completed slots are re-held below. */
+      if (y.s.frame && y.s.frame !== y.primed && y.s.box.classList.contains('is-live')) {
+        y.primed = y.s.frame; y.sent = y.cur;
+        post(y, { type: 'scrub', t: y.cur });
+      }
+      if (y.drag) continue;              /* the rail owns the slot mid-drag */
+      drawRail(y, y.cur);
+      if (y.done) {
+        /* completed: never pins/drives again (scroll-back-up rule); a fresh
+           iframe would replay its attract loop from t=0, so re-hold it */
+        if (y.s.frame !== y.held) holdEnd(y);
+        /* completion-collapse, DEFERRED: only when the track is BOTH fully
+           out of the viewport AND scrolling has been idle >=150ms. Until
+           then the completed track keeps its height (the held piece just
+           sits pinned at the end of its track; plain scrolling). Then
+           collapse + compensate in one frame while nothing moves: if the
+           removed height sits ABOVE the viewport, restore the track
+           bottom's MEASURED viewport position (a no-op if the engine
+           already anchor-adjusted), so content below never shifts. */
+        if (!y.collapsed) {
+          const r = y.track.getBoundingClientRect();
+          if ((r.bottom <= 0 || r.top >= innerHeight) && performance.now() - lastInput >= 150) {
+            y.collapsed = true;
+            const above = r.bottom <= 0, b0 = r.bottom;
+            y.track.style.height = '';
+            if (above) {
+              const d = y.track.getBoundingClientRect().bottom - b0;
+              if (d) scrollTo(0, scrollY + d);
+            }
+          }
+        }
+        continue;
+      }
+      const r = y.track.getBoundingClientRect();
+      const p = clamp01(-r.top / Math.max(1, r.height - innerHeight * (1 + TAIL)));
+      const engaged = r.top <= 1 && r.bottom >= innerHeight - 1;
+      if (engaged) {
+        if (!y.engaged) { y.engaged = true; y.s.box.classList.add('driving'); }
+        /* chase: k=16 tracks real scroll closely (the stories span only
+           (vh-1) viewports, so a laggy ease eats whole beats); k=40 in the
+           end dwell so t closes on 1.0 while the pin is still on screen. */
+        y.cur += (p - y.cur) * (1 - Math.exp(-(p >= 0.995 ? 40 : 16) * dt));
+        if (Math.abs(p - y.cur) < 8e-4) y.cur = p;
+        if (Math.abs(y.cur - y.sent) > 4e-4) { post(y, { type: 'scrub', t: y.cur }); y.sent = y.cur; }
+      } else if (y.engaged) {
+        y.engaged = false; y.s.box.classList.remove('driving');
+        const t = p >= 0.5 ? 1 : 0;
+        y.cur = y.sent = t;
+        if (t === 1) { y.done = true; holdEnd(y); }   /* final beat lands + holds */
+        else { post(y, { type: 'scrub', t: 0 }); }  /* pin at story start; never
+          resume attract in the post (abandoned pieces sit at t=0, Seth 07-19) */
+      }
+    }
+    /* The prompt yields permanently to the rail/thumb once progress is real. */
+    if (!cueDone && (scrolly[0].done || scrolly[0].cur > 0.002)) {
+      cueDone = true;
+      firstCue.classList.add('resolved');
+      setTimeout(() => firstCue.remove(), 500);
+    }
+    }
+    requestAnimationFrame(tick);
+  })(0);
+  // read-only QA hook (mirrors __embeds)
+  window.__scrolly = () => scrolly.map(y => ({
+    src: y.s.src.split('/').pop(), vh: y.vh,
+    engaged: y.engaged, done: y.done, collapsed: y.collapsed, held: !!y.held,
+    cur: y.cur, rail: y.railT, trackH: Math.round(y.track.getBoundingClientRect().height),
+    driving: y.s.box.classList.contains('driving'),
+  }));
+}
+
+
+/* ============ 2. FIG 01 living stack: one pulse descends every ~6s ============ */
+const stack = document.getElementById('stackfig');
+if (stack && !REDUCED && stack.querySelector('#fxw0') && 'animate' in stack) {
+  const el = id => stack.querySelector('#' + id);
+  const glow = (id, at, peak, dur) => el(id).animate(
+    [{ opacity: 0 }, { opacity: peak, offset: .18 }, { opacity: 0 }],
+    { duration: dur, delay: at, easing: 'ease-out' });
+  const wire = (id, at) => el(id).animate(
+    [{ strokeDashoffset: 34, opacity: 0 },
+     { strokeDashoffset: 14, opacity: 1, offset: .18 },
+     { strokeDashoffset: -78, opacity: 1, offset: .82 },
+     { strokeDashoffset: -100, opacity: 0 }],
+    { duration: 620, delay: at, easing: EASE });
+  const beat = () => {
+    glow('fxb0', 0, .85, 1150);    // Torx
+    wire('fxw0', 260);
+    glow('fxb1', 700, .8, 1100);   // Thermalizers
+    wire('fxw1', 950);
+    glow('fxb2', 1390, .8, 1100);  // THRML
+    wire('fxw2', 1640);             // physical execution branch
+    wire('fxw3', 1640);             // simulated execution branch
+    glow('fxb3', 2080, .72, 1500); // thermodynamic hardware
+    glow('fxb4', 2080, .72, 1500); // GPU simulators through the API
+  };
+  let timer = 0, inView = false;
+  const loop = () => { if (!inView || document.hidden) return; beat(); timer = setTimeout(loop, 6000); };
+  new IntersectionObserver(es => {
+    for (const e of es) {
+      inView = e.isIntersecting;
+      clearTimeout(timer);
+      if (inView && !document.hidden) timer = setTimeout(loop, 400);
+    }
+  }, { threshold: 0.35 }).observe(stack);
+  document.addEventListener('visibilitychange', () => {
+    clearTimeout(timer);
+    if (!document.hidden && inView) timer = setTimeout(loop, 400);
+  });
+}
+
+if (!REDUCED && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  document.querySelectorAll('.z1-shot, .z1-ext').forEach(shot => {
+    const image = shot.querySelector(':scope > img');
+    if (!image) return;
+    const isExt = shot.classList.contains('z1-ext');
+    const isCard = shot.classList.contains('z1-shot--card');
+    if (!isExt) {
+      const glare = image.cloneNode(false);
+      glare.className = 'z1-shot-glare';
+      glare.alt = '';
+      glare.setAttribute('aria-hidden', 'true');
+      shot.insertBefore(glare, shot.querySelector('.z1-shot-cap'));
+    }
+    let tiltRaf = 0;
+    shot.addEventListener('pointerenter', () => {
+      shot.classList.add('is-live');
+    });
+    shot.addEventListener('pointermove', event => {
+      const box = image.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (event.clientX - box.left) / box.width));
+      const y = Math.max(0, Math.min(1, (event.clientY - box.top) / box.height));
+      cancelAnimationFrame(tiltRaf);
+      tiltRaf = requestAnimationFrame(() => {
+        const range = isExt ? 4 : (isCard ? 5.4 : 4);
+        shot.style.setProperty('--z1-rx', ((.5 - y) * range).toFixed(2) + 'deg');
+        shot.style.setProperty('--z1-ry', ((x - .5) * range).toFixed(2) + 'deg');
+        shot.style.setProperty('--z1-lift', isExt ? '-10px' : (isCard ? '-8px' : '-6px'));
+        shot.style.setProperty('--z1-scale', isExt ? '1.028' : (isCard ? '1.025' : '1.015'));
+        shot.style.setProperty('--z1-gx', (x * 100).toFixed(1) + '%');
+        shot.style.setProperty('--z1-gy', (y * 100).toFixed(1) + '%');
+      });
+    });
+    const reset = () => {
+      cancelAnimationFrame(tiltRaf);
+      shot.classList.remove('is-live');
+      shot.style.removeProperty('--z1-rx');
+      shot.style.removeProperty('--z1-ry');
+      shot.style.removeProperty('--z1-lift');
+      shot.style.removeProperty('--z1-scale');
+      shot.style.removeProperty('--z1-gx');
+      shot.style.removeProperty('--z1-gy');
+    };
+    shot.addEventListener('pointerleave', reset);
+    shot.addEventListener('pointercancel', reset);
+  });
+}
+})();
+</script>
+<!-- xc:footer -->
+<div class="xc-footwrap">
+  <iframe title="Symbols Background" src="https://playground.asimovcollective.com/47-emergent-gradient" class="xc-foot-iframe" loading="lazy"></iframe>
+  <div class="xc-foot-glyphs"></div>
+  <footer class="xc-footer">
+    <div class="xc-footer-inner">
+      <div class="xc-foot-links">
+        <p><a href="https://extropic.ai/hardware">Hardware</a></p>
+        <p><a href="https://extropic.ai/software">Software</a></p>
+        <p><a href="https://extropic.ai/writing">Writing</a></p>
+        <p><a href="https://extropic.ai/about">About</a></p>
+        <p><a href="https://extropic.ai/about#careers">Careers</a></p>
+      </div>
+      <div class="xc-foot-bottom">
+        <div class="xc-foot-legal">
+          <p>Extropic Corp.</p>
+          <p>&copy;2026 All rights reserved</p>
+        </div>
+        <div class="xc-foot-right">
+          <div class="xc-news" data-xc-news>
+            <div class="xc-news-cover" data-xc-news-cover>
+              <p>Stay Thermodynamically Informed</p>
+            </div>
+            <form class="xc-news-form" data-xc-news-form>
+              <input class="xc-news-input" type="email" placeholder="Email address" required>
+              <div class="xc-news-divider"></div>
+              <button class="xc-news-btn" type="submit">Submit</button>
+            </form>
+          </div>
+          <div class="xc-foot-terms">
+            <p><a rel="noopener noreferrer" target="_blank" href="mailto:contact@extropic.ai">Contact Us</a></p>
+            <p><a href="https://extropic.ai/privacy-policy">Privacy Policy</a></p>
+            <p><a href="https://extropic.ai/terms-of-service">Terms of Service</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- /xc:footer -->
+</body>
+</html>

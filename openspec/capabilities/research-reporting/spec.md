@@ -113779,3 +113779,34 @@ Owned statement coverage is205/205, with zero exclusions. Exact validation
 receipts and the separate broad-suite health record remain bound to the primary.
 No model, head, activation or external publication is claimed.
 Ops/status/traceability reconciliation remains delegated to the conductor.
+
+### REQ-REPORT-9079-V774: Workload-specific hardware feasibility
+
+Authenticate exact source bytes, dependencies and private storage before reduction.
+Read available Exp9078 operation rows and Exp9073 feature receipts independently.
+Neither branch must succeed. Preserve missing_file, missing_field and observed zero
+as distinct failed checks. Missing science emits complete_blocked_<check> with
+zero readiness and complete unavailable-evidence rows. Historical evidence remains
+historical. Map basis scoring, coefficient/accumulator updates, dense anchors,
+guard replay, durable recovery and Qwen embeddings to CPU, leased RTX3090,
+KV260, PolarFire and GateMate. Unsupported work has unknown cost, never zero.
+KV260 retains quadratic sampling with k_max<=5. PolarFire retains CPU-only Linux
+dispatch. GateMate retains its exact historical0xffffffff physical/JTAG blocker.
+No board probe, toolchain change, purchase or unchanged bring-up is scheduled.
+
+#### SCENARIO-REPORT-9079-V774
+
+Write failing requirement-linked tests first. Freeze producer, source and test
+bytes in private storage. When complete disjoint timings exist, report the
+nonaccelerable fraction f over complete service, uncertainty and ideal1/f bound.
+f>=0.01 prevents strictly more than100x. Include startup and transfers. Missing
+operands yield null bounds. Literature and vendor estimates are not local timings.
+Qualify owned statements at100 percent with zero exclusions. Run scoped tests,
+current consumers, private CLI/cold replay without PYTHONPATH, Ruff check/format,
+strict mypy, explicit-path spec tracing and private E2E-018/020/021. Retain one
+broad Python-suite health observation separately. Unchanged adversarial and strict
+row scanners precede primary_publication. Failed owned checks zero readiness.
+Graph truth is executable; graph wins remain circular_positive. Human agreement
+is neither medical correctness nor general verifier evidence. Load no model or
+head. Preserve historical artifacts, tests, assertions, exclusion manifest and
+seals. Ops/status/traceability reconciliation belongs to the conductor.

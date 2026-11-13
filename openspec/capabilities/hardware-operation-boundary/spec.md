@@ -196,3 +196,18 @@ do not define a board wire format. Unknown component costs remain unknown.
 One unavailable producer does not erase the other producer's paid rows. An
 honestly validated compatibility map is null without measured physical gain;
 all new cost evidence absent is blocked, and failed owned checks disqualify.
+
+## REQ-VERIFY-9079-V774: Preserve operation and device boundaries
+
+The current spline update uses NumPy float64 coefficients, accumulators and
+initial anchors; sparse basis support does not remove dense anchoring, clipping,
+guard evaluation or persistence. Qwen features require a separately qualified
+encoder runtime. Existing KV260 quadratic sampling, PolarFire CPU dispatch and
+GateMate physical blocking cannot supply these missing implementations or clocks.
+
+### SCENARIO-VERIFY-9079-V774
+
+Retain one row per backend and operation, exact historical authority hashes,
+state and transfer needs, and acquisition conditions. Cold replay rehashes every
+retained operand and recomputes the reduction. Changed or missing bytes and
+rehashed aggregate tampering fail. No unsupported operation has a measured zero.
