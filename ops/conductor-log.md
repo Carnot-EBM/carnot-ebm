@@ -21944,3 +21944,5 @@ code |
 | 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 1: OPEN 7 days: CLAIM_OVE |
 | 2026-11-13 00:24 UTC | Exp9069: Authenticate sealed A and establish unatt | OK | 92 passed, 1 warning in 19.39s |
 | 2026-11-13 01:03 UTC | Exp9070: Qualify MDHJudgments and freeze human-tar | OK | 102 passed, 1 warning in 15.00s |
+| 2026-11-13 01:13 UTC | Exp9071: Collect only the missing sealed Qwen shar | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9069-source-custody.b_collection_ready_score (actual=0 == expected=1) |
+| 2026-11-13 01:15 UTC | Exp9072: Join the complete corpus behind the truth | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9071-collect-b) |
