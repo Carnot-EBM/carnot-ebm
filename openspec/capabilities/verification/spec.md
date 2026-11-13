@@ -59449,3 +59449,23 @@ establish current end-to-end acceleration or justify procurement.
 
 Requirement-linked tests SHALL reject changed retained sources, rehashed reduction
 substitutions, invalid measured timing partitions and failed owned validation.
+
+### REQ-VERIFY-9081-V774: Rehashed accounting cannot create science
+
+Cold replay SHALL authenticate pinned authority and original producer bytes,
+reconstruct fourteen slots and recompute all owned summaries. Altered source,
+receipt, code, bound or verdict SHALL fail qualification. Missing measurements
+stay unmeasured; complete external blocking SHALL never become partial.
+
+#### SCENARIO-VERIFY-9081-V774
+
+Private tests SHALL reject missing input, changed source, rehashed aggregate,
+stale/failed receipt and changed full task objects. Measure100 percent new
+statements with zero exclusions. Historical FoVer readiness grants no current
+science or external publication. Preserve original tests and historical records.
+
+Implementation,2026-11-13,REQ-VERIFY-9081-V774: six private tests exercise missing
+sources, changed full objects and pins, rehashed bounds, checksum changes,
+publication-gate substitution and failed owned validation. Current consumers,
+private E2E-018/020/021, cold replay and unchanged scanners pass. Owned statement
+coverage is250/250 with zero exclusions. Broad failed health remains separate.

@@ -113810,3 +113810,57 @@ Graph truth is executable; graph wins remain circular_positive. Human agreement
 is neither medical correctness nor general verifier evidence. Load no model or
 head. Preserve historical artifacts, tests, assertions, exclusion manifest and
 seals. Ops/status/traceability reconciliation belongs to the conductor.
+
+### REQ-REPORT-9081-V774: Fourteen exact outcomes preserve independent limits
+
+Before reduction, authenticate the activated or staged full task authority,
+immutable producer and scheduler bytes, dependencies and private writable storage.
+A missing required resource emits complete_blocked_<check> and stops reduction.
+Account for exactly Exp9068 through Exp9081, including the capstone. Preserve
+actual alternative paths and schemas, missing files, missing fields, observed zero,
+retired upstream dispositions and title-only completion as distinct evidence.
+Retain original producer and test bytes. Never rewrite historical determinations.
+
+Recount available seven detector, ten learning and three selected human-panel
+bounds from qualified paired primitives and seals. Missing predictions remain
+unmeasured. Human bounds retain original adjudication, full-linear control and
+base-question-family denominators. Graph truth remains executable and circular;
+human agreement establishes neither medical truth nor broad verifier benefit.
+Hardware feasibility and exact ARC frontier remain separate. Run publication_gate
+with progress supervision and preserve G1/G2/G3/G4, paper_ready and unmet_gates
+under historical_FoVer publication_scope only.
+
+Retain exact original/current verdicts, changed mechanisms and reopening evidence.
+Retire unchanged same-verdict scopes by decision only. MDH-Bench needs new original
+judgments; MDHJudgments support cannot improve by relaxing cohort rules. A fully
+measured graph null favors converged linear and ends this frozen comparison.
+New graph sampling requires a distinct hypothesis. Complete qualified accounting
+sets reconciliation_ready_score=1 even when external science is blocked. Only
+unfinished owned accounting may be partial. No activation or manifest mutation.
+
+#### SCENARIO-REPORT-9081-V774
+
+Write failing tests before implementation. Freeze owned and affected consumer
+scope. Run real private CLI/cold replay without PYTHONPATH, scoped pytest, Ruff
+check/format, strict mypy, explicit-path spec coverage and private E2E-018/020/021.
+Require100 percent new statements with zero exclusions. Retain broad repository
+health separately. Run unchanged adversarial and strict row scanners before
+primary_publication. Failed owned checks zero readiness. Retain primitive hashes,
+real phase timings and progress heartbeats. Ops and BMAD reconciliation belong
+to the conductor. Status: Planned.
+
+Implementation,2026-11-13,REQ-REPORT-9081-V774: the standalone capstone and
+`v774_capstone.py` account for fourteen pinned full objects and preserve actual
+scheduler alternatives. Custody/access authority, human construction-family
+lineage and exposure closure remain blocked. B has no qualified collection
+artifact. Seven detector, ten learning and three original adjudication-panel
+bounds remain unmeasured. Exact ARC delta has zero new supported episodes;
+hardware feasibility and historical FoVer gates confer no current science.
+Six requirement-linked tests, unchanged consumers, private E2E-018/020/021,
+Ruff, strict mypy, explicit spec tracing and250/250 owned statements with zero
+exclusions pass. Private cold replay and unchanged terminal scanners pass.
+The bounded broad suite retains46 failures and13 errors separately from owned
+qualification. Its historical log side effect was preserved and restored.
+No activation, manifest mutation or external publication occurred. Ops and BMAD
+updates remain assigned to the conductor. Status: implemented and qualified
+accounting; externally blocked science.

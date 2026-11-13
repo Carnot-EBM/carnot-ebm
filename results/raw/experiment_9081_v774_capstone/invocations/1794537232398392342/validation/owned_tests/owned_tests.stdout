@@ -1,0 +1,102 @@
+[exp9081] phase=preconditions_before completed=0 pending=0
+[exp9081] phase=source_authentication completed=1 pending=29
+[exp9081] phase=source_authentication completed=2 pending=28
+[exp9081] phase=source_authentication completed=3 pending=27
+[exp9081] phase=source_authentication completed=4 pending=26
+[exp9081] phase=source_authentication completed=5 pending=25
+[exp9081] phase=source_authentication completed=6 pending=24
+[exp9081] phase=source_authentication completed=7 pending=23
+[exp9081] phase=source_authentication completed=8 pending=22
+[exp9081] phase=source_authentication completed=9 pending=21
+[exp9081] phase=source_authentication completed=10 pending=20
+[exp9081] phase=source_authentication completed=11 pending=19
+[exp9081] phase=source_authentication completed=12 pending=18
+[exp9081] phase=source_authentication completed=13 pending=17
+[exp9081] phase=source_authentication completed=14 pending=16
+[exp9081] phase=source_authentication completed=15 pending=15
+[exp9081] phase=source_authentication completed=16 pending=14
+[exp9081] phase=source_authentication completed=17 pending=13
+[exp9081] phase=source_authentication completed=18 pending=12
+[exp9081] phase=source_authentication completed=19 pending=11
+[exp9081] phase=source_authentication completed=20 pending=10
+[exp9081] phase=source_authentication completed=21 pending=9
+[exp9081] phase=source_authentication completed=22 pending=8
+[exp9081] phase=source_authentication completed=23 pending=7
+[exp9081] phase=source_authentication completed=24 pending=6
+[exp9081] phase=source_authentication completed=25 pending=5
+[exp9081] phase=source_authentication completed=26 pending=4
+[exp9081] phase=source_authentication completed=27 pending=3
+[exp9081] phase=source_authentication completed=28 pending=2
+[exp9081] phase=source_authentication completed=29 pending=1
+[exp9081] phase=source_authentication completed=30 pending=0
+[exp9081] phase=primitive_authentication completed=1 pending=268
+[exp9081] phase=primitive_authentication completed=51 pending=218
+[exp9081] phase=primitive_authentication completed=101 pending=168
+[exp9081] phase=primitive_authentication completed=151 pending=118
+[exp9081] phase=primitive_authentication completed=201 pending=68
+[exp9081] phase=primitive_authentication completed=251 pending=18
+[exp9081] phase=publication_gate_before completed=0 pending=0
+[exp9014] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9014] phase=after_publication_gate completed=1 pending=0
+[exp9081] phase=publication_gate_after completed=0 pending=0
+[exp9081] phase=preconditions_after completed=311 pending=0
+[exp9081] phase=reduction_before completed=0 pending=0
+[exp9081] phase=reduction_after completed=14 pending=0
+.[test9081] foreign_cli_before
+[test9081] foreign_cli_after 0
+.{"passed": false, "replay_passed": false, "reason": "checksum_drift"}
+.[exp9081] phase=preconditions_before completed=0 pending=0
+[exp9081] phase=source_authentication completed=1 pending=29
+[exp9081] phase=source_authentication completed=2 pending=28
+[exp9081] phase=source_authentication completed=3 pending=27
+[exp9081] phase=source_authentication completed=4 pending=26
+[exp9081] phase=source_authentication completed=5 pending=25
+[exp9081] phase=source_authentication completed=6 pending=24
+[exp9081] phase=source_authentication completed=7 pending=23
+[exp9081] phase=source_authentication completed=8 pending=22
+[exp9081] phase=source_authentication completed=9 pending=21
+[exp9081] phase=source_authentication completed=10 pending=20
+[exp9081] phase=source_authentication completed=11 pending=19
+[exp9081] phase=source_authentication completed=12 pending=18
+[exp9081] phase=source_authentication completed=13 pending=17
+[exp9081] phase=source_authentication completed=14 pending=16
+[exp9081] phase=source_authentication completed=15 pending=15
+[exp9081] phase=source_authentication completed=16 pending=14
+[exp9081] phase=source_authentication completed=17 pending=13
+[exp9081] phase=source_authentication completed=18 pending=12
+[exp9081] phase=source_authentication completed=19 pending=11
+[exp9081] phase=source_authentication completed=20 pending=10
+[exp9081] phase=source_authentication completed=21 pending=9
+[exp9081] phase=source_authentication completed=22 pending=8
+[exp9081] phase=source_authentication completed=23 pending=7
+[exp9081] phase=source_authentication completed=24 pending=6
+[exp9081] phase=source_authentication completed=25 pending=5
+[exp9081] phase=source_authentication completed=26 pending=4
+[exp9081] phase=source_authentication completed=27 pending=3
+[exp9081] phase=source_authentication completed=28 pending=2
+[exp9081] phase=source_authentication completed=29 pending=1
+[exp9081] phase=source_authentication completed=30 pending=0
+[exp9081] phase=preconditions_after completed=41 pending=30
+.{"passed": false, "reason": "owned_validation"}
+[exp9081] phase=owned_validation_before completed=0 pending=0
+[exp9081] phase=owned_validation_after completed=0 pending=0
+[exp9081] phase=complete completed=14 pending=0
+{"passed": true}
+[exp9081] phase=owned_validation_before completed=0 pending=0
+[exp9081] phase=owned_validation_after completed=0 pending=0
+{"passed": false, "reason": "terminal_checks"}
+[exp9081] phase=imports_before completed=0 pending=1
+.[exp9081] phase=before_private_check completed=0 pending=1
+[exp8205] phase=before_subprocess_private_check completed=0 pending=1
+[exp8205] phase=after_subprocess_private_check completed=1 pending=0
+[exp9081] phase=after_private_check completed=1 pending=0
+.
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+6 passed, 1 warning in 48.52s

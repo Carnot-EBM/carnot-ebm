@@ -1,0 +1,1156 @@
+# Carnot — Architecture
+
+## V764 planned evidence boundary — 2026-11-08
+
+V764 stages fourteen tasks, Exp8930–Exp8943. It implements no runtime change
+during planning. Independent BFS final-answer truth stays outside the learned
+detector's two response-confidence features. Fresh graph seeds define all
+training, calibration and evaluation roles. The paired depth control can stop
+collection; the separate CPU learning branch continues independently.
+
+Continuous learning tests compatible replay of released train feedback in the
+existing signed energy head. Uniform replay and repeated-current updates use
+the same memory, label and two-gradient budgets. Operational guards never see
+untouched research retention. Complete durable-service outer clocks measure
+the changed work without the failed inline observer. Hardware component
+fractions remain unknown. ARC stays suspended; Qwen weights stay frozen.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V763 is unchanged.
+
+## Planned V756 evidence and learning boundaries — 2026-11-04
+
+The thirteen-task V756 plan retains the existing causal template store, small
+energy head and live ARC agent. Complete original replay must qualify before
+an opt-in normalized categorical objective can run. A linear-energy control
+stays visible. Predictions precede delayed feedback; atomic updates include
+verified template additions and state acknowledgments.
+
+Independent calibration support is measured at the world level. Ordered exact
+witness checks are evaluated for cost at retained decision quality; encoded
+truth remains circular evidence. Complete adaptation cost uses the already
+qualified store independently of new learning benefit. Optional Qwen generation
+and ARC analysis require new authenticated external evidence. Hardware mappings
+retain actual per-operation support. This describes planned work only; no
+runtime behavior, native speedup or scientific result is newly established.
+
+## Planned V737 revision and evidence boundaries — 2026-10-16
+
+The twelve-task plan preserves the small energy head, resident workers and live
+ARC agent. A qualified current count-validator receipt feeds an explicit new
+accounting adapter. Historical readers retain their original pins. The validator
+algorithm and shared publication checks do not change under this plan.
+
+Fixed delayed-feedback learning, retention and complete resident cost follow
+their own readiness fields. The HalluTruthQA release audit remains separate from
+the exposed learning corpus. Optional bounded Qwen3.8 generation requires changed
+causal CUDA evidence. Actual ARC publication closure precedes the four-game live
+panel. Hardware evidence remains operation-specific. This is staged research,
+not deployed behavior or a new scientific result.
+
+## Planned V735 evidence boundaries — 2026-10-15
+
+The thirteen-task staged plan retains the existing learner and live agent.
+It proposes immutable primitive snapshots before each native candidate and
+measured test-node partitions under original historical authority. Exact ARC
+statement execution remains required despite coverage-report normalization.
+Neither change relaxes shared validators or clears historical quarantines.
+
+A separate HALLMARK release audit evaluates label admissibility. Constructed
+citation labels cannot establish independent sentence-verification truth.
+Continuous small-head updates retain sealed predictions before delayed feedback.
+Complete native inference includes feature extraction and startup. Optional
+CUDA and physical board evidence do not gate independent CPU branches.
+This describes planned work, not deployed behavior or a scientific result.
+
+**Last Reconciled:** 2026-10-11
+
+## Planned V734 qualification boundary — 2026-10-15
+
+The staged twelve-task V734 plan retains the current architecture. Original
+learning test families get isolated sealed authority; event accounting qualifies
+before causal energy-head training. Native parity qualifies the real loaded
+extension and private CLI before timing the complete nine-input inference path.
+ARC terminal replay and real child coverage qualify before a new application
+panel. No new learner, source refit, hidden solver or hardware backend is implied.
+
+Prediction sealing precedes delayed label release, and atomic update commits
+advance state and feedback acknowledgments together. Complete native inference
+includes feature extraction, scaling, offset, residual evaluation, normalization,
+typed decisions, serialization and startup; feedback/durable storage remain
+outside that specific boundary. Independent gate branches keep optional CUDA
+and board absence from blocking CPU evidence. This section is planned, not a
+claim of deployed behavior. Older planned vNEXT links below are historical.
+
+Exp8084 publication custody was reviewed for SCENARIO-REPORT-8084-WORKER-OUTPUT.
+The seal worker owns its explicit output independently of the primary publisher.
+The publisher retains its existing-terminal guard and validates prospective
+bytes before atomic replacement. Repair revalidation retains original primitive
+evidence, archives the previous primary, and binds current code and validation
+logs to the published result. The source grouping and numerical methods are
+unchanged; the cohort remains blocked by its original history and pool operands.
+
+## Planned V724 qualification boundary — 2026-10-10
+
+The next milestone stages fourteen tasks, Exp8402–Exp8415, in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. It keeps the existing direct sparse head and
+PyO3 kernel. Historical authority is supplied through independently sealed
+family receipts, so mutable current roadmap files cannot stand in for original
+consumer inputs. Missing historical authority remains explicitly missing.
+
+The proposed complete-service boundary includes feature gathering, typed
+prediction, causal delayed feedback, sparse coefficient writes, serialization,
+file/directory fsync and response. Matched Python/native costs include the
+feedback tail drain and distinguish scheduled attempts from applied updates.
+Durable trajectory equivalence is separate from beneficial online learning.
+Released-label criterion analysis is retrospective; strict independent
+question custody remains a separate gate. The Qwen canary requires changed
+CUDA evidence, and board mappings retain actual supported-operation limits.
+
+These are planned checks, not deployed changes or new scientific results.
+The active V723 roadmap and historical protocols are preserved.
+
+## Overview
+
+Carnot is a dual-language (Rust + Python/JAX) Energy Based Model framework organized as a Cargo workspace with a companion Python package. The Rust side provides performance-critical compute; the Python side provides JAX-based research workflows and exposes Rust internals via PyO3.
+
+*Position Paper Note:* See `docs/position_paper_nexus.md` for the latest strategic roadmap and architectural updates related to Phase 3 hardware acceleration and verification pipelines.
+
+## System Architecture
+
+```
+carnot/
+├── crates/                    # Rust workspace
+│   ├── carnot-core/           # Core energy function traits, types
+│   ├── carnot-boltzmann/      # Large-tier EBM
+│   ├── carnot-gibbs/          # Medium-tier EBM
+│   ├── carnot-ising/          # Small-tier EBM
+│   ├── carnot-samplers/       # MCMC samplers (Langevin, HMC)
+│   ├── carnot-training/       # Training algorithms (CD, SM, NCE)
+│   └── carnot-python/         # PyO3 bindings
+├── python/
+│   └── carnot/                # Python package
+│       ├── core/              # JAX energy functions
+│       ├── models/            # Boltzmann, Gibbs, Ising in JAX
+│       ├── phase3/            # Phase 3 seed — bridging Ising to Kona continuous latent space
+│       │   ├── continuous_ebm.py  # ContinuousEBM, sample_continuous, sample_langevin,
+│       │   │                  #   sample_energy_matching, compare_samplers, compare_minima
+│       │   │                  #   (Exp 435a baseline; Exp 446 Langevin+EnergyMatching)
+│       │   └── __init__.py    # Exports all 8 public symbols
+│       ├── samplers/          # JAX MCMC samplers
+│       │   ├── parallel_ising.py  # Parallel Ising Gibbs (checkerboard, annealing, thrml-compatible)
+│       │   └── backend.py     # SamplerBackend protocol (CPU, TSU stub)
+│       ├── training/          # JAX training loops
+│       ├── pipeline/          # Production verify-repair pipeline (Exp 74-75)
+│       │   ├── extract.py     # ConstraintExtractor: Arithmetic, Code, Logic, NL, Auto
+│       │   ├── verify_repair.py  # VerifyRepairPipeline — main user API
+│       │   ├── errors.py      # CarnotError hierarchy, timeouts, degradation
+│       │   ├── env_autofix.py # EnvironmentAutoFix — self-inject CARNOT_FORCE_LIVE (RETRO-022)
+│       │   ├── experiment_watchdog.py  # ExperimentTimeoutWatchdog — hard wall-clock cap (RETRO-003)
+│       │   └── long_run_executor.py   # LongRunBenchmarkExecutor — batched checkpoint-resume (RETRO-026)
+│       ├── mcp/               # Production MCP server (Exp 76)
+│       │   └── server.py      # verify_llm_output, verify_and_repair, health_check
+│       ├── verify/            # ComposedEnergy, ConstraintTerm, repair
+│       ├── inference/         # EBM loader, composite scorer, LLM solver
+│       └── bindings/          # PyO3 bridge to Rust
+├── crates/carnot-constraints/ # Rust constraint verification (Exp 70)
+├── examples/                  # 5 integration examples (Exp 79)
+├── tests/
+│   ├── rust/                  # Rust integration tests
+│   ├── python/                # Python/pytest tests (21,955 items collected; 3 import errors pending)
+│   └── integration/           # Full pipeline integration tests (Exp 81)
+├── openspec/                  # Capability specs
+├── _bmad/                     # Strategic docs
+├── ops/                       # Operational docs
+├── epics/                     # Epics and stories
+├── research-program.md        # Declarative research goals and priorities
+├── research-references.md     # Technologies and ideas for future milestones
+├── research-roadmap.yaml      # Active research roadmap
+└── research-complete.yaml     # Completed research milestones (113 archived through 2026.04.103)
+```
+
+## ARC-AGI-3 Harness Architecture
+
+The current north-star architecture is a live ARC-AGI-3 hidden-game discovery agent, not a public-game replay package. `ops/north-star.md` defines the two first-class metrics as live solve-rate / official score and action/compute efficiency. Public-game replay depth remains useful development evidence, but the scored competition path is the live `E3AgentPolicy` cascade in `python/carnot/agentic/arc_competition_agent.py`.
+
+The architecture has two distinct but coupled execution paths:
+
+| Path | Entry point | Purpose | Claim boundary |
+|---|---|---|---|
+| Offline development twin | `scripts/arc_loop_solve.py` | Runs deterministic no-quota public environments, adaptered verifier-routed solves, adapter-free first contact, checkpoint refresh, and reproducibility capture. | Development proxy unless the result comes from live-agent self-discovery and passes the reproduction gate. |
+| Scored live cascade | `E3AgentPolicy` via the submitted competition kernel | Runs the hidden-game `choose_action` / `is_done` loop with exploration, routing, DSL/world-model induction, trust energy for hidden-state world models, optional active probes, and model-planned execution. | Authoritative hidden leaderboard path; the registry records a current scored baseline of `0.08`, while replay scorecards are not leaderboard evidence. |
+
+Exp7708 adds a bounded qualification path through the same scored
+`make_carnot_agent` wrapper. The runner freezes two public SDK games, withholds
+stored routes and per-game adapters, and records actual observations and SDK
+transitions on scripted CPU fixtures. Its private validation uses temporary
+paths outside `results/`; raw logs, cold reduction, and terminal readers bind
+the published receipt. This path establishes fixture readiness only and grants
+no live solve credit or hidden-game benefit claim.
+
+The shared search substrate is verifier-routed best-first exploration. `python/carnot/agentic/arc_graph_explore.py` provides adapter-free graph exploration with salience/candidate ordering, A*-style frontier priority, goal-energy hooks, action-effect frontier priority, MAP frontier seeding, QD sequence injection, and move-pruner hooks. `python/carnot/agentic/arc_solver_kit.py` provides the durable `OfflineSolver`: adaptered best-first search ordered by a hand or learned verifier, fresh-env branching for non-idempotent reset games, reusable primitive operators, and `reproduce()` as the executable reproduction gate. A solve only counts when the captured action labels replay through this gate.
+
+`ops/arc_solve_registry.yaml` is the knowledge-capture mechanism. It records general gotchas, reusable primitive operators, per-game mechanics, dead ends, learned verifier checkpoints, reproduction artifacts, and live-submission provenance. As of the current registry it reports `reproducible_total_levels: 69` and `reproducible_total_games: 24`; those totals are a development proxy, not a substitute for the live hidden score. The registry also preserves the practical gotchas that make the architecture work: level progress lives on frames, fresh-env replay is required for some games, coordinates must be derived from the environment, animation/facing can be state, and same-action level transitions must be counted only through the reproduction gate.
+
+This division is intentional: the offline twin is where mechanisms are made reproducible and reusable; the `E3AgentPolicy` cascade is where those mechanisms are tested as a hidden-game runtime discovery process.
+
+## Key Design Decisions
+
+### DD-01: Cargo Workspace
+Each logical component is a separate crate for compile-time isolation, independent versioning, and clear dependency boundaries.
+
+### DD-02: Trait-Based Core
+`carnot-core` defines traits (`EnergyFunction`, `Sampler`, `Trainer`) that all tiers implement. This enables generic algorithms over any tier.
+
+### DD-03: JAX for Python
+JAX is chosen over PyTorch for the Python side because JAX is the first-class citizen of EBM research — its functional transform model (vmap, grad, jit) maps naturally to energy function composition.
+
+### DD-04: PyO3 Bindings
+A dedicated `carnot-python` crate exposes Rust implementations to Python via PyO3/maturin, enabling researchers to use Rust performance from familiar Python workflows.
+
+### DD-05: Tier Separation
+Each tier (Boltzmann, Gibbs, Ising) is a separate crate/module to enable independent development, testing, and deployment. Users can depend on only the tier they need.
+
+### DD-06: Autoresearch Two-Phase Loop
+
+Self-improvement is structured as two phases running inside the research conductor:
+
+1. **JAX Prototype Phase.** An agent (currently a local Qwen 3 variant, orchestrated via the ZeroClaw / agntcy.org framework) proposes EBM improvements — architecture tweaks, noise schedules, activation functions — and runs them in an isolated Python/JAX sandbox. Evaluation is done against the energy landscape on a held-out validation split, so "success" is an objective energy delta, not a subjective judgment.
+2. **Rust Transpilation Phase.** Proven JAX improvements are translated to Rust, benchmarked for wall-clock performance, and auto-merged only if they pass both math equivalence (Rust vs. JAX produce equal energies bit-for-bit on the same seed) and performance baselines.
+
+**Safety guardrails baked into the loop:** immutable validation data (the held-out set cannot be overwritten by a run), hard wall-clock and memory timeouts per hypothesis (see `ExperimentTimeoutWatchdog`), and rollback energy thresholds that refuse to merge any change that worsens held-out energy.
+
+**Why this structure works for Carnot specifically:** the dual Rust + JAX layout is uniquely suited to this loop — JAX for fast math experimentation with `vmap`/`grad`/`jit`, Rust for production performance validation and deployability. Crucially, the EBM itself provides a mathematical ground truth for evaluating proposed improvements, so the loop does not need a human judge in the critical path. The IPC path between the Python orchestrator and the Rust EBM is still open (options: gRPC, shared memory, PyO3 direct) — the decision is deferred until the transpilation phase is exercised on a real improvement candidate.
+
+This design decision is what makes REQ-AUTO-* (autonomous self-learning) a first-class requirement rather than an afterthought. Phase 3 — the open-source EBM/EBT foundation model — depends on this loop compounding.
+
+## PHASE D Lifecycle And Retirement
+
+PHASE D was commissioned on 2026-06-30 as the off-ARC distributional-energy verifier-moat program: LoRA-EBM holistic scoring, uPRM-style generated-text/logprob process rewards, EBRM-style post-hoc reward refinement, and closely equivalent distributional-energy rankers against genuine tuned self-consistency on headroom-present reasoning corpora.
+
+The lifecycle is now closed. Across seven milestones the external generated-text/logprob scorer family produced null or marginal evidence rather than a decision-grade verifier moat over tuned self-consistency. `ops/exclusion_manifest.yaml` records `phase_d_external_text_scorer_retired_exp5163_v474`, with Exp 5163 as the terminal continuation and Exp 5170 as the retirement record. `ops/verifier_gaps.md` records the 2026-07-02 retirement note and the MuSR residual: headroom existed, but the clean EBRM arm tied tuned self-consistency with delta `0.0`, CI95 including zero, and McNemar `p=1.0`.
+
+The formal retirement date is 2026-07-02/03. Future reruns of this external-text scorer construction class require an operator override citing a genuinely different mechanism. The retirement is deliberately narrow: hidden-state/internal-representation verifiers, ARC oracle-distinct verifier work, and the FoVer production ensemble are explicitly outside the retired scope.
+
+Architecturally, PHASE D retired one mechanism class, not the verifier thesis. The lesson carried forward is that a fluent generated-text/logprob reranker is insufficient as a moat unless it beats matched tuned self-consistency under paired confidence intervals and survives the circularity/oracle-distinctness checks.
+
+## Hidden-State Verifier Research Frontier
+
+Hidden-state/internal-representation verifiers are the current live verifier-research frontier precisely because they are not the retired PHASE D mechanism. They score or steer a generator's internal representations rather than reranking generated text/logprobs after the fact. `ops/verifier_gaps.md` explicitly preserves TrajSelector-style hidden-state scoring and VerifySteer/PHSV-class internal-representation probes as sanctioned open mechanisms.
+
+The current evidence is honest and still open. Exp 5200 (`results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json`) produced a negative MMLU-Pro hidden-state probe result: the trained probe did not beat tuned self-consistency and left oracle-recoverable candidates unselected. The gap entry keeps the missing discriminator live: a candidate-internal correctness signal that separates correct traces from dense wrong-answer clusters, potentially requiring a stronger supervised probe or transformer-layer sweep once practical `output_hidden_states` access is available.
+
+For ARC, this frontier connects to two open architectural gaps:
+
+| Gap | Current status | Architectural implication |
+|---|---|---|
+| `GAP-4891` | Goal detection improved through relational target-match, but Stage-2/3/4 did not bank new levels; the binding wall is trajectory enumeration/generation. | Verifier energy can identify goal-shaped states, but the harness still needs a generator/search process that enumerates the winning trajectory. |
+| `GAP-4` | Same-shape rule-application consistency has a preliminary positive via execution/program-synthesis verification, but the result is not yet statistically/decentralization complete. | The strongest selector signal is rule execution: induce a program from demos, execute it on test input, and gate candidate promotion by exact or graded consistency. |
+
+The hidden-state program therefore remains architecturally distinct from PHASE D and is still a live path toward an oracle-distinct verifier moat, but it is not yet a production claim.
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Core compute (Rust) | Rust stable, ndarray, rayon |
+| Core compute (Python) | Python 3.11+, JAX, Flax/NNX |
+| Bindings | PyO3, maturin |
+| Testing (Rust) | cargo test, cargo-tarpaulin |
+| Testing (Python) | pytest, pytest-cov |
+| Linting (Rust) | rustfmt, clippy |
+| Linting (Python) | ruff, mypy |
+| Pre-commit | pre-commit framework |
+| CI | GitHub Actions |
+
+## Data Flow
+
+```
+Training:
+  Data → Sampler(energy_fn) → Gradient Estimator → Parameter Update → Model
+
+Inference:
+  Model + Noise → MCMC Sampler(energy_fn) → Samples
+```
+
+## Cross-Cutting Concerns
+
+- **Logging**: `tracing` (Rust), `logging` (Python)
+- **Serialization**: `serde` (Rust), `safetensors` (both)
+- **Numerics**: `f32` default, `f64` configurable
+- **Parallelism**: `rayon` (Rust), `jax.pmap` (Python)
+
+## thrml Integration
+
+The `parallel_ising.py` sampler provides a `parallel_sample_states` function that wraps thrml's `IsingEBM` interface. It extracts coupling matrices and biases from an `IsingEBM` instance and runs the parallel checkerboard Gibbs sampler (with optional simulated annealing) as a drop-in replacement for thrml's built-in sampling — achieving 183x speedup on CPU at 100 variables and 572x at 500 variables.
+
+## Verification Pipeline Tiers
+
+The LLM output verification pipeline still uses a cascade architecture where cheaper tiers run first. The current `python/carnot/pipeline/verify_repair.py` path has expanded since the 2026-05-16 table; the current operational view is:
+
+| Tier | Name | Class / hook | Runtime role | Short-circuit / certificate behavior |
+|---|---|---|---|---|
+| Pre-IR | Typed + semantic grounding | `extract_typed_reasoning`, `SemanticGroundingVerifier`, `SemanticVerifierV2` | Extract typed reasoning and semantic evidence before cheap gates. | Adds semantic constraints/certificate fields; no fast-path by itself. |
+| 0 | Pipeline JEPA fast path | `jepa_fast_path_predictor` / `JEPA_FAST_PATH` | Predicts low violation probability from response features before extraction. | `verified=True`, `skipped=True` when below threshold. |
+| 0 | Per-call JEPA fast path | `jepa_predictor` / `FAST_PATH` | Embeds the first response tokens and skips full verification when domain risk is low. | `verified=True`, `skipped=True` when max risk is below threshold. |
+| 0 advisory | HalluField / semantic energy / StreamingCoT / spectral | `HalluFieldDetector`, `semantic_energy_probe`, `tier_0g_streaming_cot`, `tier_0h_spectral` | Records thermodynamic, semantic, streaming, and spectral instability signals. | Advisory certificate only. |
+| 0 violation fast path | ThinkProbe | `CarnotThinkProbe` / `THINK_PROBE_FAST_PATH` | Generative 3-step CoT verdict. | Returns a violation immediately when the probe is confident the response is incorrect. |
+| 0 clean fast path | NUP | `NUPProbeV4` / `NUP_PROBE_FAST_PATH` | Contrastive energy probe for cheap likely-correct responses. | `verified=True`, `skipped=True` when risk is below threshold. |
+| Router | ODAR | `FreeEnergyRouter` / `ODAR_FAST_PATH` | Fuses cheap Tier-0 evidence with expected-free-energy routing. | Fast-paths low-risk cases; missing evidence falls through. |
+| Hot path | Rust arithmetic/logic | `RustVerifyPipeline` | Optional arithmetic/logic verifier when the configured domain is supported. | Falls back to Python on unsupported domains or errors. |
+| Core | Constraint extraction + Ising | `AutoExtractor`, `ComposedEnergy`, metadata energy | Main verification pass over static, learned, retrieved, injected, and semantic constraints. | Produces `VerificationResult` violations and energy certificate. |
+| Memory additions | Constraint memory/template/embedding | `ConstraintMemory`, `ConstraintTemplateLibrary`, `EmbeddingConstraintStore`, `IsingConstraintInjector` | Adds learned/retrieved constraints and optional spin-bias injection. | Additive only; static constraints are not removed. |
+| Post-core advisory | CASAL / InterWhen / AND-compose | `CASALTier`, `InterwhenMonitor`, `and_compose_k5` | Continuous-attribute, mid-stream arithmetic, and k=5 ensemble certificates. | Advisory certificate only; does not override `verified`. |
+
+Historical 2026-05-16 table preserved below for provenance:
+
+| Tier | Name | Class | Cost | Signal Source | Skip Condition |
+|------|------|-------|------|---------------|----------------|
+| 0a | CarnotThinkProbe | `CarnotThinkProbe` | ~0 ms (CI stub) / ~50-200 ms (GPU) | Generative 3-step CoT verdict (ThinkPRM, arXiv 2504.16828) | `verdict == 'incorrect'` → skip all downstream (fast-path violation) |
+| 0b | SpilledEnergyDetector | `SpilledEnergyDetector` | ~0 ms (text hash) | Per-token logit-discrepancy (arXiv 2602.18671) | `high_spill_fraction <= threshold` (confident model) |
+| 0c | NUP Probe v4 | `NUPProbeV4` | ~0 ms (bigram dot product) | Contrastive energy probe; max E(incorrect)-E(correct) gap (Exp 523, AUC=1.0) | `score(response) <= nup_probe_threshold` (low energy = likely correct) |
+| 0d | HallucinationBasinDetector | `HallucinationBasinDetector` | ~0 ms | Latent-space basin depth via finite-difference perturbation (Exp 521, arXiv 2604.04743) | `basin_risk_score <= basin_threshold` (deep basin = stable reasoning) |
+| 0e | HalluField | `HalluFieldDetector` | ~1 ms (CPU) | Token-path ensemble partition-function variance (arXiv 2509.10753); thermodynamic instability signal orthogonal to Tiers 0b/0d | Advisory signal: `is_unstable` recorded in certificate; no short-circuit (Exp 571, AUC=0.97 synthetic) |
+| 1 | SinkProbe | `SinkProbe` | ~0 ms (attention reuse) | Attention sink concentration (arXiv 2604.10697) | `mean_sink_score >= sink_threshold` |
+| 2 | SC-Energy | `SCEnergyEnergyAdapter` | ~1 ms (CPU, no GPU required) | SetConsistency energy: contrastive TF-IDF + 2-layer MLP trained on coherent vs incoherent CoT pairs (AUROC >= 0.75, Exp 944/969, deployed 2026-04-28); VJEPA v2 available as explicit fallback override | `coherent_score >= sc_threshold` (high score = coherent) |
+<!-- Tier 2 updated: SC-Energy (SCEnergyEnergyAdapter, AUROC>=0.75) replaces VJEPA v2 as default Tier 2 OOD detector (Exp 1001, milestone .78, 2026-04-28); VJEPA v2 (OOD AUC=0.9211, Exp 884) remains available as explicit override via _load_jepa_model() -->
+<!-- Tier 2 history: VJEPA v2 ood_auc=0.9211 (Exp 884, milestone .68, 2026-04-26); prior Tier 2 was EORMModel (55M-param CoT energy reward model, trained in Exps 340/341/355/359) -->
+| 2.5 | SymCodeVerifier | `SymCodeVerifier` | ~1-5 ms/step (regex) / ~100-500 ms/step (LLM) | Executable Python verification of CoT arithmetic; distribution-invariant (Exp 619, AUC=0.804 live) | `detection_score == 0.0` (no arithmetic violations) |
+| 2.6 | HermesVerifierAdapter (candidate) | `HermesVerifierAdapter` | ~1-5 ms/step (CI regex) / ~100-500 ms/step (LLM) | HERMES step-boundary feedback loop (arXiv 2511.18760): LLMAsExtractorV1 translator + SymCodeVerifier prover + correction hint injection before next step (Exp 633, CPU prototype) | `prover_verdict == 'correct'` for all steps |
+| 2.7 | CausalReasoningVerifier | `CausalReasoningVerifier` | ~1 ms/step-pair (regex) | Causal entailment checking across CoT step boundaries (arXiv 2601.21210): orthogonal to Tier 2.5 arithmetic checking. Detects "correct arithmetic, wrong carry-forward" errors. (Exp 642, causal_recall=0.36 > baseline=0.12) | `any_violation(response) == False` |
+| 3 | Ising | `VerifyRepairPipeline` | ~0.006 ms/constraint | Full constraint verification | Always runs if tiers 0-2 pass |
+
+ Tier 2 updated to SC-Energy (SCEnergyEnergyAdapter, AUROC>=0.75) by Exp 1001 on 2026-04-28; prior Tier 2 was VJEPA v2 (VariationalJEPAPredictor, OOD AUC=0.9211, Exp 884, 2026-04-25); prior to that was EORMModel (55M-param CoT energy reward model, Exps 340/341/355/359). Each tier returns early if it can clear the response, avoiding subsequent more expensive tiers. Tier 0a (CarnotThinkProbe) was added in Exp 444 (arXiv 2504.16828, ThinkPRM). Tier 0b was added in Exp 433 (arXiv 2602.18671, ICLR 2026). Tiers 0c and 0d were wired in Exp 530 (REQ-VERIFY-111, REQ-VERIFY-112). Tier 0e (HalluField) was added in Exp 571 (arXiv 2509.10753) as an advisory thermodynamic instability signal. Tiers 1-3 were designed in Exps 346-348/360. Tier 2.5 (SymCodeVerifier) was added in Exp 619 (REQ-VERIFY-122, AUC=0.804 live). Tier 2.6 (HermesVerifierAdapter, candidate) was prototyped in Exp 633 (REQ-VERIFY-136, arXiv 2511.18760 HERMES) as a step-boundary feedback adapter using LLMAsExtractorV1 + SymCodeVerifier. Tier 2.7 (CausalReasoningVerifier) was added in Exp 642 (REQ-VERIFY-139, arXiv 2601.21210) as an orthogonal causal-break detector checking numeric carry-forward across step boundaries.
+
+CarnotThinkProbe is optional in VerifyRepairPipeline.verify() — pass `think_probe=CarnotThinkProbe(llm_caller=caller)` to enable. When enabled: if verdict='incorrect', returns VerificationResult(verified=False, mode='THINK_PROBE_FAST_PATH', skipped=True) without running Ising. CI stub (llm_caller=None, the default) returns 'uncertain' and falls through to Ising.
+
+## KAN Fast-Path Tier — KAEMEnergy (Exp 447)
+
+`python/carnot/models/kaem_energy.py` adds a **KAEMEnergy** model that replaces the iterative Ising/Gibbs MCMC inner loop with exact inverse-transform sampling (arXiv 2506.14167, June 2025).
+
+| Component | Class | Key property |
+|-----------|-------|--------------|
+| Per-variable splines | `UnivariateKAEMLayer` | Energy = sum_i e_i(x_i); variables are independent under Gibbs distribution |
+| Marginal CDF | `marginal_cdf(var_idx, x)` | Numerical integration (trapezoidal, 256-point grid) |
+| Exact sampling | `sample_exact(n_samples, rng_key)` | Inverse-transform via binary search on precomputed CDF table; O(log 256) per variable |
+| Full model | `KAEMEnergy` | energy() / sample() / fit(); no MCMC required |
+| Benchmark | `benchmark_kaem_vs_mcmc` | Wall-clock comparison vs ParallelIsingSampler; returns speedup_ratio |
+
+**Why this matters:** The Kolmogorov-Arnold theorem decomposes the energy into univariate per-variable terms. Each marginal CDF can be computed and inverted in closed form — no burn-in, no autocorrelation. Target speedup: 10-100x for sub-100-variable problems. Hardware path: bisection is pure arithmetic, FPGA-native. Exported from `carnot.models.__init__`.
+
+Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029.
+
+## Asymptotic Hardware Mandate (Phase 2 → Phase 3)
+
+**Core insight:** Hardware acceleration via the continuous-to-Ising transpiler is **not a performance optimisation** for the EBM verifier. It is a **mathematical requirement** for self-distillation to avoid divergent sample budgets as the model converges.
+
+### The stochastic bottleneck
+
+In a deterministic framework, error contracts geometrically. With finite-sample noise from MCMC (PT-PCD / Gibbs), the variance scales as $\sigma^2 \tau_{\text{int}} / N$ where $\tau_{\text{int}}$ is integrated autocorrelation time. To maintain strict contractivity (signal exceeds noise floor):
+
+$$
+N > \frac{\sigma^2 \, T \, \tau_{\text{int}}}{2 \, \Phi \, \delta_t}
+$$
+
+where $T$ = filter temperature, $\Phi$ = structural restorative force in $L^2(\mu_P)$, $\delta_t$ = current model error. Derivation in `docs/research-notes/zenil-alpha-verifier-derivation.md`.
+
+### Implications
+
+1. **Asymptotic divergence.** As $\delta_t \to 0$, required $N$ diverges to infinity.
+2. **Phase-transition blowup.** At critical points in the energy landscape, $\tau_{\text{int}} \to \infty$, further exploding $N$.
+3. **The Phase 2 mandate.** CPU/GPU caps at $\sim 10^6$ samples/sec — sufficient for $\delta_t \gtrsim 10^{-3}$. Phase 3 foundation-model regime requires $\delta_t \to 10^{-9}$ or beyond, which mathematically forbids the $10^6$ ceiling.
+
+### Hardware path
+
+| Phase | Hardware | Samples/sec | Convergence depth |
+|-------|----------|-------------|-------------------|
+| 1 | CPU / ROCm | $10^6$ | $\delta_t \gtrsim 10^{-3}$ |
+| 2 | KV260 / FPGA Ising | $10^9$ | $\delta_t \gtrsim 10^{-6}$ |
+| 2+ | Extropic XTR-0 (TSU) | $10^{11}$–$10^{12}$ | $\delta_t \gtrsim 10^{-9}$ |
+| 3 | photonic / Ising-machine cluster | $\gtrsim 10^{13}$ | foundation-model regime |
+
+### Sampler-Optimization Decision Record
+
+SpecAnn rejected for Phase 3 inference-time argmin. Rationale: (a)
+HUBO→QUBO reduction injects gadgets+penalties that fracture SpecAnn's spectral
+homotopy path; (b) phase-transition level-crossings during training force
+catastrophic cold-restarts; (c) three-paper composition
+(SpecAnn+BRAIN+MCMC Layers) triggers Gadget-Induced Mean-Field Collapse (Deep
+Think DT-COMPOSITION (f), 2026-05-08). Carnot retains existing
+Gibbs-heuristic argmin on unreduced HUBO energy.
+
+### Active hardware tracks (Exp 1460)
+
+As of the 20260507 scope-reduction decision, Carnot keeps exactly three
+active hardware tracks. "Active" means a milestone may spend work on the
+track now without adding another speculative branch; it does not imply
+that hardware execution has happened.
+
+### 2026-07-03 Hardware Continuity Update
+
+The current hardware state is narrower than the Exp 1460 portfolio table:
+
+| Board | Current status | Architectural implication |
+|---|---|---|
+| KV260 | Near-terminal / terminal-continuity board. Exp 5201 checked it by SSH only (`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true`) and recorded a hash-verified smoke with no speedup claim. | Keep as the sovereignty-story anchor for edge deployability and hardware-energy-evaluator continuity, but do not infer speedup or inspect host block devices as a KV260 precondition. |
+| PolarFire | Reachable by SSH and hash-verified smoke in Exp 5201, but `polarfire_workload_validated=false`; the terminal bar remains an end-to-end Carnot dispatch run. | Opportunistic continuity only; reachability is not a terminal workload claim. |
+| GateMate | Blocked on DirtyJTAG / GM1Ax IDCODE detection. Exp 5201 narrowed the failure to `jtag_protocol_level`: USB enumeration, permissions, tool version, and 100 kHz..15 MHz clock-rate hypotheses were mechanically eliminated; the leading untested physical hypothesis is cable/port/JTAG-side wiring or board power. | Keep the blocker visible, but do not burn milestones on repeated identical `openFPGALoader -c dirtyJtag --detect` runs without a new operator-side physical angle. |
+
+The historical Exp 1460 active/deferred tables remain below as portfolio provenance; the dated row above is the current operational state.
+
+| Active track | Current scope | Claim boundary |
+|---|---|---|
+| Dual RTX 3090 CUDA local SOTA runtime repair | Repair the local GGUF/llama.cpp CUDA runtime for cached Qwen/Gemma models visible in Exp 1442. | No live SOTA inference claim until a smoke run records `usable_response=true` on the target runtime. |
+| KV260/FPGA Discrete SB RTL lint and simulation | Continue source-level RTL, Verilator/Icarus/Yosys lint, and simulator evidence from Exp 1451. | No KV260 board, bitfile, or latency claim until Vivado synthesis, bitfile flashing, and board commands are captured. |
+| THRML/Extropic TSU compatibility simulation | Keep TSU readiness at the THRML/JAX compatibility, sampler-interface parity, and CPU-simulation layer. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim until an authenticated hardware run is captured. |
+
+### Deferred hardware tracks (Exp 1460)
+
+These tracks remain architecturally relevant but are out of active scope
+until their reopen condition is met.
+
+| Deferred track | Reason deferred | Reopen condition |
+|---|---|---|
+| KV260 board execution and latency claims | Vivado is absent, no bitfile was produced, and no board commands ran. | Vivado synthesis produces a bitfile, `CARNOT_KV260_BITFILE` points to it, and a KV260/PYNQ board run records real latency. |
+| AMD Strix/XDNA NPU acceleration | VitisAI and IRON paths remain blocked by missing packages or wheels. | `mlir-aie` or AMD's VitisAI onnxruntime wheel is installed and a local NPU benchmark reports real speedup. |
+| Extropic Z1/XTR-0 hardware execution | No local Extropic hardware or authenticated execution transcript exists. | Carnot has early-access credentials or hardware and a THRML/SDK run records model, device, latency, and sample-quality evidence. |
+| Photonic or optical Ising-machine substrates | No local optical hardware or provider run exists. | A concrete photonic provider, simulator-to-hardware API, or collaborator run can evaluate Carnot Ising cases. |
+| D-Wave QPU cloud experiments | Cloud QPU access is not the current blocker for repair/runtime evidence. | A specific Ising/QUBO benchmark cannot be answered by CPU, GPU, or KV260 simulation and a Leap token plus budget are available. |
+| Large production FPGA boards | Production FPGA purchases do not help until the KV260 RTL path closes. | KV260 lint, synthesis, and board execution produce a measured sampler result that justifies larger fabric. |
+| RX 7900 XTX Thunderbolt eGPU path | The local CUDA RTX 3090 pair is currently more ready for SOTA runtime repair. | The RTX CUDA path is exhausted or ROCm/JAX on the eGPU is connected and verified with a real Carnot benchmark. |
+
+### Mitigations against $\tau_{\text{int}}$ blowup
+
+The continuous-to-Ising transpiler ships three structural mitigations against autocorrelation explosion at phase transitions:
+
+- **Gray-code visible-spin encoder** (`python/carnot/hardware/transpiler/gray_code.py`): Hamming-distance-1 between adjacent quantization cells eliminates artificial barriers from binary-encoding cliffs.
+- **Persistent Parallel Tempering with replica exchange** (`python/carnot/hardware/transpiler/distill.py`): high-T mode discovery bridges to low-T precision via swap acceptance.
+- **In-loop $\tau_{\text{int}}$ diagnostics** (`python/carnot/hardware/transpiler/diagnostics.py`): explicit autocorrelation tracking flags mixing degradation before contractivity is lost.
+
+### Decentralisation-respecting consequence
+
+This argument compounds with rule 5 (hardware portability as political requirement). Sovereign access to high-throughput EBM sampling is a *prerequisite* for sovereign Phase 3 training, not an optional accelerator. Carnot's KV260/Extropic/photonic tracks are sovereignty infrastructure on this argument.
+
+Cross-refs:
+- `docs/research-notes/zenil-alpha-verifier-derivation.md` (full derivation)
+- `memory/project_zenil_alpha_grounding.md`
+- `research-references.md` → "Zenil 2026 self-improvement limits"
+- `openspec/change-proposals/continuous-to-ising-transpiler.md` (Phase 2 module)
+
+## Phase-3 → Phase-7 Defence-Layer Stack
+
+**Last reconciled:** 2026-04-29 (after a six-round Deep Think
+derivation chain). Canonical reference for the active architectural
+defence layers. Publication framing in
+`docs/position-paper-outline.md`; per-round derivations in
+`docs/research-notes/*-deep-think-*.md`.
+
+### Stack overview
+
+| Phase | Threat | Mechanism | Status |
+|---|---|---|---|
+| 3 | Static specification gaming | Rotation defence + AND-composition + transversality | Closed-form bounds |
+| 4 | Concept drift | Factorized per-verifier curriculum + UCM + DVS | Closed-form bounds |
+| 5 | Detection latency | Predictive Local Linear Trend UCM | Information-Action Bottleneck |
+| 6 | Whip Attack + Shadow Boundary | Multi-scale half-octave ensemble + $\theta_F^*$-rejection + Manifold Substitution | Closed-form bounds |
+| 7 (proposed) | Cyclic Recurrence (FIFO Churn Gap) | Continuum memory (Hope-inspired) | Pending Deep Think Round-7 |
+
+### Key closed-form theorems (canonical)
+
+**Round-12 (corrected) saturation** (under $Z_t < 1$ normalization):
+$\delta_\infty = C_Z \cdot \|\nu_0^\perp\|$, $C_Z = \prod_t Z_t^{-1} > 1$.
+
+**Curriculum exponential gain:** $\Delta C_Z \propto \exp(\|\nu_0^\parallel\|^2)$.
+
+**DVS quality threshold:** $\Lambda^* = Z_{k+1}$.
+
+**PAC-Bayes audit budget:** $K^* = \tilde{O}((d+\log(1/\delta))/Z_{k+1}^2)$.
+
+**Information-Action Bottleneck (Phase-5):**
+$\Delta_{\text{lat}}^{\min} = \dot{\rho}(\tau_{\text{action}} - \tau^*)^+ + z\sigma_{\text{pred}}(\tau^*)$.
+
+**Optimal LLT window:** $W^* = (72 \sigma_{\hat{\rho}}^2/\ddot{\rho}^2)^{1/5}$.
+
+**Phase-6 multi-scale parameters:**
+- Spacing $b^* = \sqrt{2}$ (half-octave; dyadic leaks 68% Whip evasion)
+- Per-scale confidence $z_{1-\delta_m}^* \approx \sqrt{C - 2\ln(W_m)}$ (looser at longer scales)
+- Base $W_0^* = (12 z_0^2 \sigma_{\hat{\rho}}^2 / (f_s \dot{\rho}_{\max}^2))^{1/3}$
+
+**Geometric transversality floor:**
+$\theta_F^* \approx k \sigma_{\max} \sqrt{\tau_1 / \tau_{\text{mix-budget}}}$
+— linear in $k\sigma_{\max}$, not inverse.
+
+**Phase-6 saturation:**
+$\delta_\infty^{\text{Phase-6}} = C_Z [\Delta_{\text{churn}} + (12 z_0^2 \sigma_{\hat{\rho}}^2 \dot{\rho}_{\max}/f_s)^{1/3} + z_{M-1}^* \sigma_{\text{pred}}(W_{M-1})]$.
+
+### Hardware portability theorem
+
+> *"Provided individual verifier constraint manifolds intersect
+> transversally ($\theta_F > 0$), Carnot's parallel-tempered
+> AND-composition architecture guarantees strictly polynomial MCMC
+> sampling latency across discrete FPGA Glauber dynamics, continuous
+> thermodynamic samplers, and optical photonic substrates."*
+
+Substrate-specific deployment:
+
+| Substrate | Max $k$ | Topology | Bit-width |
+|---|---|---|---|
+| KV260 / VU9P FPGA | 4–5 | Parallel PT-SB chains | 8–16 bit/chain |
+| Extropic XTR-0 | 15+ | Continuous thermodynamic | Analog (no $\kappa$) |
+| Photonic Ising | 15+ | Optical interference | Speed-of-light additive |
+
+**Round-9's $k=15$ was hardware-infeasible on single-chain FPGA.**
+Geodesic-convexity is *not* preserved under AND-composition;
+heterogeneous strictness creates $\kappa = \sigma_{\max}/\sigma_{\min}$
+ill-conditioning. Pivot: $k\leq 5$ + Manifold-Substitution + PT-SB
+parallel chains on FPGA; $k=15$ acceptable on Extropic / photonic.
+
+### Operational implications
+
+1. **KV260 experiments target $k_{\max} = 5$** (re-scope before
+   FPGA prototype tape-out).
+2. **DVS enforces three acceptance criteria** ($\Lambda^*$, $K^*$,
+   $\theta_F^*$).
+3. **Manifold Substitution** replaces FIFO eviction when $\theta_F^*$
+   check fails (zero audit inflation).
+4. **UCM is multi-scale** — single-window predictive UCM is *worse
+   than reactive* against slow-stealth.
+5. **Curriculum schedule smoothed** near bang-bang $\sqrt{C}$ to
+   avoid first-order phase transition's exponential re-mixing.
+
+### Cross-refs
+
+- `docs/position-paper-outline.md` — publication framing
+- `docs/research-notes/concept-drift-deep-think-results.md` (Round-13)
+- `docs/research-notes/round12-renormalization-deep-think-results.md`
+- `docs/research-notes/dvs-quality-curriculum-deep-think-results.md`
+- `docs/research-notes/predictive-ucm-deep-think-results.md`
+- `docs/research-notes/and-composition-mixing-deep-think-results.md`
+- `docs/research-notes/phase6-ensemble-thetaF-deep-think-results.md`
+- `docs/research-notes/phase7-continuum-memory-deep-think-prompt.md` (capstone, pending)
+- `docs/research-notes/nested-learning-hope-relevance.md`
+
+## V576 Independent Capstone Evidence (2026-08-26)
+
+**Former evidence date:** 2026-07-03. The architecture record was stale before
+this reconciliation. Exp6615 now binds it to the terminal V576 row evidence.
+
+The capstone uses a CPU-only artifact replay. It does not call an LLM. It does
+not repeat a scientific experiment. Exact verifiers adjudicate source claims,
+but audit completion does not create a positive science claim.
+
+- The two-level decoding path is blocked. No eligible family reached a
+  row-complete treatment comparison.
+- The live invariant projector is reachable through the stored live import
+  path. Its exact next-frame effect is null against both controls. This is not
+  an ARC game, level, or leaderboard solve.
+- The spectral k-block sampler has partial CPU software evidence and Python/Rust
+  parity. It has no FPGA, TSU, PIMI, SpecAnn, or hardware-performance evidence.
+- The invariant-memory lifecycle passes its stored conformance checks. The
+  prospective online arm has zero held-future benefit against both controls.
+  The source verdict field is disqualified because it is outside the closed
+  verdict enum.
+
+The architecture keeps oracle, archive, toy, software, hardware, and
+publication boundaries separate. The Exp6615 artifact preserves missing and
+blocked branches and records all same-roadmap gate contracts.
+
+## 2026-10-11 — Planned V725 criterion and admission study
+
+V725 stages thirteen experiments. It adapts the existing nine-input sparse energy
+head to an explicitly retrospective human-factuality target. Whole-question
+roles separate fitting, tuning and evaluation within the already exposed release.
+The learning experiment admits fixed-size blocks of delayed feedback and compares
+FIFO with randomized admission under equal capacity.
+
+The old direct durable store accepts five inputs and34 coefficients. V725's
+nine-input109-coefficient learner therefore requires its own small block
+checkpoint and causal replay checks. Only atomic write/sync primitives are reused;
+old recovery certification does not transfer. Native cost measurement continues
+on the old qualified five-input workload as a separate deployment branch.
+
+A supplied causal CUDA repair receipt gates the bounded mandated-Qwen canary.
+ARC uses newly qualified supervisor receipts. Hardware work preserves actual
+board operation limits. These are planned checks, not deployed capabilities.
+
+## 2026-10-11 — V726 executable criterion and feedback plan
+
+The preceding V725 section describes intentions. Only four tasks activated;
+its authority mismatch blocked the scientific chain. V726 stages fourteen
+matching tasks (Exp8429–Exp8442), with the full contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and staged queue in
+`research-roadmap-next.yaml`. The active V725 queue is preserved.
+
+The proposed nine-input energy head uses released human labels for exposed
+retrospective decisions. Its checkpoint qualification is a separate prerequisite
+for bounded online feedback. Two transactions per block seal predictions and
+then commit released updates. Recovery distinguishes a sealed checkpoint from
+an already committed updated block, using stable acknowledgment IDs.
+
+Native proof reuse is deferred because the existing consumer expects a different
+metric name. Complete qualified Python clocks instead support disjoint arithmetic
+attribution and conditional acceleration ceilings. No ceiling certifies a native
+or FPGA speedup. Current Qwen generation remains a separately gated bounded canary.
+Live ARC evidence and board readers preserve their actual support and operations.
+These are planned experiments; no new serving capability is deployed here.
+
+## V730 proposed research boundary — 2026-10-13
+
+Planned only: fourteen tasks Exp8485–Exp8498, four phases, defined by the complete
+`openspec/change-proposals/research-roadmap-vNEXT.md` / `research-roadmap-next.yaml`
+contract. A qualified nine-input/109-coefficient science head and13-coefficient
+scalar control feed source-information and delayed proper-loss comparisons.
+A separate five-input service experiment tests stable-file append publication
+against the snapshot transition oracle with fsync-before-ack and full clocks.
+Neither changes the production store merely by being planned.
+
+Optional bounded Qwen3.8-27B evidence/paraphrase calls require changed CUDA
+repair evidence. A model-free reachable ARC panel requires actual original-branch
+coverage qualification. Board operation mapping remains an evidence reader;
+KV260/PolarFire/GateMate deployment limits do not change. Independent source,
+learning and service readiness gates prevent optional hardware absence from
+blocking CPU science. The unconditional capstone preserves all external blocks
+and unchanged G1–G4. See REQ-REPORT-V730-PLAN/STUDIES/LIVE; no new architecture
+component is claimed implemented by this planning update.
+
+## V732 proposed execution and action-effect boundary — 2026-10-14
+
+V732 stages fourteen matching tasks, Exp8512–Exp8525. Its complete design and
+queue replace V731's incomplete planning document without repairing old authority.
+Original V726/V730 family readers remain the source of historical data eligibility.
+The separately sealed V731 numerical methods remain unchanged. Fixed fit/tune
+optimization curves are diagnostic only; test comparisons and final fits stay fixed.
+
+The learning branch qualifies a new immutable publication before causal Brier
+updates and retention measurement. Service work qualifies the explicit store
+import before fresh complete append clocks. The ARC branch adds direct receipts
+at the reachable supervisor application site, verifies observation parity, then
+collects fresh model-free adapter-withheld episodes. Selection and actual effects
+remain distinct. Optional bounded Qwen3.8 generation still needs changed CUDA
+repair evidence. Board operation limits remain unchanged. These are planned
+experiments; no serving behavior or hardware support is deployed by this update.
+
+## V733 proposed decision, learning and inference boundary — 2026-10-14
+
+V733 stages fourteen experiments, Exp8526–Exp8539, in four phases. It retains
+original V732 identity-Brier and delayed proper-loss protocols after explicit
+source diagnostic and independent update-accounting qualification. Original V726
+heads remain the initial state for online learning and the native cost branch.
+A new nine-input109-coefficient Rust residual evaluator keeps normalization and
+typed policy in Python, with finite parity and counted threshold fallbacks.
+Complete cached-request inference includes features, binding, policy, response
+serialization and startup. It does not reuse the five-input append speed claim.
+
+The live ARC proposal adds opt-in runtime capability eligibility without changing
+curated arm order or game-specific knowledge. A matched adapter-withheld panel
+measures actual disabled calls separately from progress. The bounded mandated
+Qwen canary remains conditional on changed CUDA evidence. Board operation and
+physical recovery limits remain explicit. These are planned studies; no new
+runtime component, deployment or scientific benefit is implemented by this plan.
+
+## Planned V738 evidence and execution boundaries — 2026-10-16
+
+V738 stages eleven tasks, Exp8591–Exp8601. It retains the current small energy
+head, resident Python/native workers and live ARC agent. An isolated runner
+clock qualifies orchestration without changing numerical timing or derivatives.
+An authenticated head descriptor qualifies real CPU inference provenance through
+unchanged validators. Fresh scientific measurements follow those separate gates.
+The V737 learning and cost artifacts remain disqualified.
+
+The fixed delayed-feedback protocol seals predictions before updates and keeps
+retention labels out of training. Complete resident costs include setup, features,
+transport and shutdown. MedExpert annotation assistance and selection are audited
+before any new evaluation. V737 ARC action receipts support cross-game outcome
+analysis; zero resolved outcomes do not authorize a policy change or repeat panel.
+The optional Qwen canary requires changed CUDA evidence and explicit current
+validator custody. Board support stays operation-specific. These are planned
+studies, not implementation, deployment or new scientific findings.
+
+## Planned V741 execution and installation boundaries — 2026-10-17
+
+V741 stages thirteen experiments, Exp8627–Exp8639, in four phases. Per-child raw
+coverage snapshots qualify the existing delayed-feedback learner. The numerical
+head, original causal protocol and historical failures remain unchanged.
+
+A separate streaming lexical reducer tests complete source processing on exposed
+Trivia+ data. It preserves old-domain features and does not feed a new input
+representation into the learning or deployment branch. Missing judge confidence
+remains missing. Complete input coverage does not certify semantic entailment.
+
+The measured lean worker gains an opt-in installed-package entry with lazy exports.
+Public import contracts and all affected integration surfaces must qualify before
+fresh installed/private cost measurement. The small checkpoint retains its research
+scope; packaging does not establish independent calibration. The ARC branch records
+fresh real redirect horizons with unchanged actions and adapter-withheld games.
+Optional CUDA generation remains conditional. Hardware costs stay operation-specific.
+These are planned changes, not implemented behavior or new scientific results.
+
+## Planned V743 execution boundaries — 2026-10-18
+
+V743 stages fourteen experiments, Exp8653–Exp8666, in four phases. The existing
+nine-input small head and fixed delayed-feedback protocol remain unchanged.
+Original learning execution is partitioned into core and deadline cohorts with
+separate task budgets; the complete original test and semantic union still gates
+training. Source/config/input changes invalidate cross-task receipt reuse.
+
+Streaming qualification separates historical custody-driver authority from
+current execution and actual consumer coverage. Installed qualification gives
+historical fixtures privately owned result inputs so cleanup preserves the
+tracked-results guard. Complete-source features stay outside the current learner
+and installed-cost workload. These independent gates precede fixed studies.
+
+Actual SDK payload/context correction precedes the unchanged adapter-withheld
+ARC provenance panel. Policy, horizons and solve credit remain unchanged.
+Optional bounded Qwen3.8 generation requires causal CUDA evidence. Hardware
+mapping uses only qualified complete costs and actual supported operations.
+This is planned work, not deployed behavior or a new scientific result.
+
+## Planned V744 execution boundaries — 2026-11-01 UTC
+
+Milestone 2026.11.744 stages fourteen tasks, Exp8667–Exp8680. The original
+39-node core and 25-node deadline cohorts run against frozen transitive source
+bundles before any delayed-feedback learning. Fresh source identity, the full
+64-node union and original semantic controls qualify the existing nine-input,
+109-coefficient typed-decision head; no generator weights change.
+
+An independent constructed relation study tests whether complete eight-feature
+lexical evidence loses role, negation or temporal information. It does not feed
+new inputs into the historical learner. The installed protocol gains a planned
+bounded batch operation using its existing vectorized evaluator, with equal-work
+complete costs and same-batch native speed claims kept separate.
+
+The live ARC boundary assigns one owner to each step observation while retaining
+conflict checks, original assertions and actions. A fresh adapter-withheld panel
+measures horizon support and censoring, with no new solve credit. Optional bounded
+Qwen3.8 generation requires changed authenticated runtime evidence. Hardware
+mapping and capstone readers run independently of blocked scientific branches.
+All changes here are planned; V744 implementation and results remain pending.
+
+## Planned V745 evidence boundaries — 2026-11-01
+
+V745 stages fourteen tasks, Exp8681–Exp8694, in four phases. Immutable report
+construction qualifies fresh methods before the original frozen learning cohorts.
+The existing nine-input head and delayed-feedback objective remain unchanged.
+Independent future-loss and joint-retention audits qualify any learning claim.
+
+Structured-world SQL controls expose relational information lost by lexical
+features. A separate bounded Qwen canary measures source-to-record fidelity;
+query execution cannot certify extraction. Installed batching reuses the current
+vectorized evaluator and retains equal-work complete costs.
+
+A CPU integer emulator tests local spline arithmetic, with host nonlinear and
+storage work explicit. It changes no production numerical path. Board support
+remains operation-specific. The qualified, fully censored ARC panel stays closed;
+its new ledger supports one supervisor continuation decision without another run.
+All items here are planned studies, not implemented capabilities or new findings.
+
+## Planned V747 evidence boundaries — 2026-11-02 UTC
+
+V747 stages fourteen tasks, Exp8709–Exp8722, in four phases. Invocation-owned
+clocks repair the original causal publication path without replacing historical
+measurement timestamps. A freshly sealed original39+25-node union releases the
+unchanged delayed-feedback head study and independent future-loss/retention audit.
+
+The eight-feature lexical collision study runs separately from the unavailable
+nine-input head comparison. Structured-record verification receives explicit
+valid-alternative and perturbation controls, inspired by VerifierBench and
+ReLoop. A bounded Qwen3.8-27B canary measures translation fidelity only after
+current runtime authority qualifies; exact query execution alone proves neither
+extraction nor natural-language correctness.
+
+Installed batching preserves original import assertions through child isolation
+and reports matched complete costs. An opt-in Rust/PyO3 fixed-point kernel tests
+exact parity with the qualified CPU lifecycle. Host nonlinear, dense and durable
+work remains visible. Board support is operation-specific. The closed ARC panel
+stays closed; a new-event reader can finish immediately with an empty-delta null.
+Independent branches and unconditional readers limit cascading gate failures.
+These are planned studies, not new runtime behavior or implemented capabilities.
+
+
+## Planned V748 execution and cost boundaries — 2026-11-02
+
+V748 stages fourteen tasks, Exp8723–Exp8736. Collection validates complete node
+inventories before scratch allocation. Current invocation clocks and the original
+39+25-node union qualify the existing nine-input delayed-feedback learner.
+Scientific objectives, data, durability and retention thresholds stay fixed.
+
+The relational branch compares two five-probe schedules, with valid alternatives
+and unknown evidence. A separate48-call Qwen3.8 support-score pilot requires an
+externally repaired CUDA runtime and real logits. It supplies no natural-language
+extraction result or missing historical generator probabilities.
+
+An opt-in resident PyO3 state object preserves the qualified fixed-point kernel
+while reducing full-state JSON transport. Exact parity and restart precede full
+lifecycle timing at equal durability. Installed inference receives non-overlapping
+cost attribution, not a new throughput claim. ARC reads only new live outcomes.
+Hardware support stays operation-specific. Independent branches and an
+unconditional capstone preserve results when another prerequisite is blocked.
+These are planned studies; no production behavior changes in this planning task.
+
+## Planned V749 execution and feature ownership — 2026-11-02
+
+V749 retains the nine-input, 109-coefficient learner and original delayed-label
+objective. Its deadline-smoke diagnostic measures the failed child before any
+repair. The original execution union can reuse normally exited child evidence
+only with matching source, test, fixture and configuration identities.
+Scientific learning and retention remain behind complete execution qualification.
+
+An opt-in installed path will share one validated request feature vector between
+scoring and its digest. Request-local ownership and all existing rejection
+semantics precede matched Python/native timing. Separate fixed integer lifecycle
+windows preserve per-feedback durability; omitted prefix costs forbid full-run
+service claims. Verifier probes stay frozen before new composition-defect tests.
+
+ARC work reads only new live outcomes. Hardware mapping targets KV260, PolarFire
+and GateMate without inferring device execution. No generator weights, live ARC
+policy, shared validator or conductor change is part of this plan. This describes
+planned research, not a deployed capability. The twelve-task contract is in
+openspec/change-proposals/research-roadmap-vNEXT.md and research-roadmap-next.yaml.
+
+## Planned V750 execution and evidence boundaries — 2026-11-02
+
+V750 stages fourteen tasks, Exp8749–Exp8762. Historical test inputs move to
+private archived roots. New scoped qualification retains all original checks
+and records repository health separately. Old disqualified primaries and
+shared validators remain intact. An unprofiled control distinguishes original
+deadline work from observer failure before any new learning execution.
+
+The nine-input, 109-coefficient head and delayed-feedback protocol stay fixed.
+Verifier transfer adds paired equivalent representations with independent
+truth evaluation. Existing feature reuse gets new installed qualification
+before matched full-process timing. Ordinary durable windows include actual
+restart; constructed threshold states remain separate from natural events.
+
+ARC work tests censoring and arm overlap on private copies of reachable
+supervisor evidence. It changes no live policy. Hardware readers keep causal
+learning, installed inference and ordinary-window cost boundaries separate.
+KV260, PolarFire and GateMate retain their actual operation limits. This is
+planned research, not a deployed change or scientific result.
+
+## V750 reconciliation implementation — 2026-11-03
+
+Exp8762 reuses the retained capstone driver and historical reducer. New pinned
+V750 primitives supply verifier transfer/surface and complete-process feature
+cost reductions. Methods custody and scheduling do not create scientific cases.
+Exact authenticated health diagnostics remain separate from scoped acceptance.
+Learning benefit, retention, ordinary durable costs and physical acceleration
+have no admitted V750 result. Old producer bytes and quarantine decisions remain
+unchanged. The V750 design is preserved in its dated archive; no next activation
+or deployment is part of this change. Conductor owns ops and traceability updates.
+
+## Planned V754 research boundaries — 2026-11-04
+
+The thirteen-task staged plan qualifies the concrete November 4 original-child
+and JSON-admission repairs under immutable V752/V753 authorities. Evidence
+methods and durable-cost studies remain independent roots; GPU and ARC absence
+do not block CPU learning. The original primary verdicts remain unchanged.
+
+The new causal template store and small Gibbs energy policy freeze within-query
+reads, seal predictions before delayed feedback, and commit additions between
+queries. A separate consensus challenge tests shared wrong answers using new
+constructed worlds. The optional Qwen3.8-27B canary is bounded generation.
+Observer-qualified complete costs feed compatible-operation acceleration bounds.
+This is proposed work, not an implementation change or scientific promotion.
+
+## Planned V755 decision and adaptation boundaries — 2026-11-04
+
+V755 stages thirteen tasks, Exp8814–Exp8826, after the qualified V754 causal
+store showed no future benefit. A bounded feature/optimization diagnostic must
+show a matched-budget improvement before an opt-in exactly normalized
+categorical-energy objective enters the same transactional store. Within-query
+state stays frozen; delayed verified labels permit between-query template and
+weight commits. Generator weights and the default old objective remain intact.
+
+A separate evidence branch seals graph-structure splits and calibration-only
+threshold selection. It measures useful decisive coverage at fixed risk, with
+whole-world uncertainty and explicit constructed/exact-oracle claim boundaries.
+The Qwen3.8 source-span canary requires authenticated runtime changes. ARC reads
+only newly admitted live supervisor outcomes and performs no hidden-game solve.
+
+Complete adaptation cost uses parent clocks around durable work, with restart
+and tail drain. Rejected component clocks cannot feed hardware fractions.
+KV260, PolarFire and GateMate retain operation-specific limits; the map runs
+even when another branch is blocked. Independent CPU methods have no global
+CUDA or contract-producer gate. These are planned studies, not deployed changes.
+
+## Planned V757 execution and sampling boundaries — 2026-11-05
+
+V757 stages thirteen tasks, Exp8840–Exp8852, in four phases. Original causal-store
+execution qualifies before a bounded24-stream delayed-feedback study. Frozen
+and adaptive linear controls remain visible beside the categorical head. The
+independent audit measures future loss, actual template use and untouched
+retention. The generator and live ARC policy receive no training changes.
+
+A fixed constructed population is frozen before independent with-replacement
+calibration and evaluation draws. Certificate availability and conditional
+failure remain separate from served error; the claim is limited to that
+population. A separate opt-in predicate index must preserve complete witness
+semantics before its full request cost is measured. Template occupancy costs
+retain durable writes, restart and delayed-feedback tail drain.
+
+New authenticated CUDA evidence gates bounded Qwen3.8 source extraction. New
+applied live outcomes gate ARC analysis. Per-board mappings preserve KV260,
+PolarFire and GateMate limits. The capstone accounts for every primary or skip.
+These are planned studies only, not deployed behavior or scientific results.
+
+## Planned V758 learning and installed verification boundaries — 2026-11-05
+
+The thirteen-task plan, Exp8853–Exp8865, uses the qualified linear energy head
+and causal store. Six matched arms isolate calibration, template additions and
+delay. Predictions precede feedback. Untouched retention and true-label controls
+must qualify alongside future loss. Generator weights remain fixed.
+
+A separate fixed-population diagnostic gates independent rule selection and
+certification at equal total label cost. Census feasibility is exposed evidence,
+not a selected production rule. The installed indexed evaluator remains opt-in
+and preserves exact witness, request ownership and operation-budget semantics.
+Complete cold/resident and durable costs precede any native or physical claim.
+
+Only changed authenticated CUDA evidence releases the bounded Qwen3.8 canary.
+The November 5 operator suspension removes ARC tasks. Independent CPU branches
+retain their own input gates. Hardware mapping and capstone readers run without
+a global scientific gate. This section describes planned work only.
+
+## Planned V760 information and cost boundaries — 2026-11-06
+
+V760 stages thirteen tasks, Exp8878–Exp8890, in four phases. Fresh qualification
+of the shipped diagnosis repair precedes genuinely distinct query structures
+and equal-admission, equal-label-multiset learning controls. The existing linear
+energy head and causal store remain; sealed predictions precede delayed updates.
+Untouched retention and an independent audit separate correct-label value from
+generic query-template activation. Generator weights remain frozen.
+
+Independent finite-look risk certification tests label cost using explicit
+family error allocation. A source/view challenge distinguishes exact visible
+entailment from fidelity to complete source evidence. Complete-request clocks
+must qualify their observer overhead before contributing hardware fractions;
+new adaptation costs include durable commits, restart and tail drain.
+
+Only authenticated changed CUDA evidence releases the bounded Qwen3.8 canary.
+ARC tasks remain suspended. Board mapping retains KV260, PolarFire and GateMate
+operation limits, and capstone readers retain missing branch evidence. These
+are planned studies, not deployed behavior or scientific findings. The original
+truncated V759 design and complete active queue are preserved separately.
+
+## Planned V761 feature and evidence boundaries — 2026-11-06
+
+The staged thirteen-task plan retains the causal template store, linear energy
+head and exact witness evaluator. Two development-frozen relational features
+retain explicit refutation and local binding overlap. Eight matched causal arms
+separate feature information, correct labels and template admission. Prediction
+sealing, delayed feedback, atomic acknowledgment and untouched retention remain.
+
+Independent risk work adds shared final certificate tests to early stopping.
+An opt-in wrapper separates record decisions, caller-owned typed-source coverage
+and unknown natural-text semantics. Buffered non-overlapping phase clocks must
+qualify before complete-cost attribution. Hardware mappings retain actual board
+limits and unknown fractions. Optional bounded Qwen generation needs new causal
+CUDA evidence. ARC remains suspended. This is planned work only; no runtime
+behavior, learning gain, source fidelity or physical speedup is newly established.
+
+## V762 proposed research boundary — 2026-11-07
+
+Planned, not implemented: keep the signed small energy head and introduce
+separate candidate/committed states, bounded released-feedback training, an
+operational held-out promotion guard and immutable development anchors. Untouched
+research retention never enters those guards. A development gate precedes the
+fresh24-stream scientific run; durable service costs remain independently useful.
+
+Retain the seven-policy common-final certificate and qualify only a refusal that
+cannot remove any future pass under the remaining finite budget. Audit RAGTruth++
+original/revised annotation dependence before an optional24-call mandated Qwen
+canary. Authenticate original observer operands from retained execution bundles
+before the frozen request benchmark. No new sampler, ARC work, hardware probe,
+conductor change or generator training is proposed. Full design and exact13-task
+contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+## V763 planned boundary — 2026-11-08
+
+V763 proposes thirteen tasks, Exp8917–Exp8929; no new path is implemented here.
+The operator-directed fifty-question graph pilot uses frozen Qwen on GPU 0 and
+BFS final-answer labels. It does not create step labels or train a detector.
+GPU 1 is detached. An optional natural-source canary follows actual validated
+pilot inference and keeps original/revised annotation criteria separate.
+
+The continuous-learning change is an opt-in fast/slow candidate optimizer in
+the existing signed-energy memory store. It preserves delayed feedback,
+promotion guards and untouched retention. The verification-cost change requests
+labels only for the union of unresolved accepting policies while preserving
+their original certificate decisions. The timing change moves observer
+allocations outside measured requests; qualification retains the original
+overhead ceiling. Historical durable costs remain distinct from new optimizer
+operation counts. Hardware fractions require qualified complete-service clocks.
+
+The full architecture, exact gates and thirteen-task execution contract are in
+`openspec/change-proposals/research-roadmap-vNEXT.md`. ARC remains suspended.
+
+## V765 planned boundary — 2026-11-09
+
+V765 proposes thirteen tasks, Exp8944–Exp8956; this planning change implements
+no runtime behavior. The graph source keeps the original shortest-distance
+question but conditions random graphs on equal nonzero k2/k3 answer-set sizes.
+A fresh paired depth gate precedes two independent source shards. Exact graph
+truth remains separate from response-confidence features. The existing small
+Gibbs/logistic calibration methods train only after corpus custody and support
+qualify. Results apply to the restricted graph population, not general text.
+
+The independent continuous-learning branch replaces signature-distance replay
+with released-TRAIN-label gradient alignment in the existing signed energy
+head. Candidate and committed states, delayed feedback, promotion guards,
+untouched retention and exact restart remain. All prior benefit/retention
+conditions remain, with an additional signature-replay contrast. Generator
+weights and the suspended ARC agent remain untouched.
+
+Whole durable-service clocks include gradient scans and compare both matched
+research work and ordinary current-update service without artificial scans.
+GPU/NPU batching is a possible future path; no qualified accelerator, removable
+fraction or service speedup is asserted. KV 260 sampler, PolarFire CPU and
+GateMate physical limits remain. The unconditional capstone preserves all
+thirteen outcomes and separates methods readiness from scientific benefit.
+
+## V766 planned evidence boundary — 2026-11-09
+
+V766 proposes fourteen tasks, Exp8957–Exp8970, without implementing runtime
+behavior. It adds raw graph context to learned energy scoring while isolating
+BFS truth from inference. All 320 V765 answers become exposed development;
+1024 new bounded Qwen answers have frozen calibration/test/online roles.
+The graph-energy arm must beat both confidence and same-encoder logistic controls.
+
+The continuous-learning branch updates only a two-scalar calibration adapter
+from delayed real-response labels. Predictions precede feedback; development
+guards, untouched retention and exact restart remain separate. The synthetic
+gradient-replay mechanism stays closed under its original eleven-bound result.
+Whole-service clocks include graph work, guard evaluation and durable recovery.
+No Rust or accelerator speedup is assumed. The November7 ARC suspension lift
+restores one opportunistic task, gated on newly supported live supervisor events.
+The oracle-distinct verifier remains the north star; graph-domain gains alone
+cannot establish verification where no cheap exact oracle exists.
+
+## Planned V767 representation and evidence boundaries — 2026-11-10
+
+The staged fourteen-task plan freezes one learned graph representation before
+comparing energy and linear heads. A fixed development gate precedes fresh Qwen
+collection. Original graph roles, oracle exclusion and all five detector bounds
+remain intact. Small conditional head updates use sealed predictions and delayed
+feedback. An online linear control joins the previous benefit/retention bounds.
+Encoder, scaling and generator weights remain fixed.
+
+AuthenHallu source access and annotation eligibility form an independent branch.
+Released dialogue IDs alone do not establish usable natural-language evidence.
+Complete service costs include raw graph encoding and durable feedback for both
+compared model families. ARC analysis requires new supported live receipts.
+These are planned experiments, not deployed behavior or new scientific results.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V766 remains unchanged.
+
+## Planned V768 coefficient and evidence boundaries — 2026-11-10
+
+V768 proposes fourteen tasks, Exp8985–Exp8998. No runtime behavior changes here.
+It replaces the failed hidden graph-energy head with fixed cubic basis functions
+and a convex binary log-loss coefficient fit. The three historical logistic
+encoders remain frozen. A converged linear comparator receives the same fitting
+standard. Collection preserves all previous development criteria and adds the
+optimized-linear comparison. Fresh confirmation retains five prior bounds and
+adds two against that stronger control.
+
+Continuous learning changes only fixed-basis coefficients and AdaGrad state.
+Predictions precede released labels. Historical promotion guards and untouched
+research retention remain separate. Numerical fit readiness can qualify online
+methods even when the offline collection gate fails. Complete service costs
+include graph encoding, dense anchors, guards, durable recovery and shutdown.
+The operation map makes no claim that existing sampler fabric trains splines.
+
+An independent RAGognize audit distinguishes accessible original responses from
+independent label authority. Model-generated golden answers cannot be silently
+promoted to human truth. The prior denied AuthenHallu access attempt remains
+closed without changed authorization. ARC analysis requires new supported live
+receipts. The unconditional capstone preserves absent science as terminal blocked.
+Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed queue: `research-roadmap-next.yaml`; active V767 is unchanged.
+
+## V769 planned evidence and learning boundary — 2026-11-11
+
+V769 stages fourteen tasks, Exp8999–Exp9012; no runtime change is implemented.
+Preserve V768's admitted convex spline and delayed AdaGrad methods. Correct the
+shared producer's current-versus-cited invocation serialization, then audit
+retained A observations independently and collect only the missing B identities.
+The rejected Exp8990 primary remains unchanged. All seven detector bounds and
+ten learning bounds remain; online temperature stays 1 under the qualified
+objective, separate from offline temperature calibration. Complete service cost
+includes encoding, dense guards, durable updates and recovery.
+
+The independent natural branch audits original human RAGTruth labels, source
+exposure and 600 fixed groups. It freezes a no-generation Qwen representation
+pilot and matched spline/linear/lexical controls before execution. This is a
+conditional source-relative test, not an automatic extension of graph evidence
+or a claim that human annotations are infallible. Qwen weights remain frozen.
+ARC analysis requires newly supported live outcomes. Hardware scope is unchanged.
+
+Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed execution: `research-roadmap-next.yaml`. The overview's October 11
+reconciliation date is historical; this addition records planning only.
+
+## V771 planned evidence boundaries — 2026-11-11
+
+V771 stages fourteen tasks, Exp9027–Exp9040; planning changes no runtime behavior.
+Historical V767 consumer tests must use immutable original authority while keeping
+their existing assertions and strict receipt checks. The graph branch reuses the
+frozen V768 spline, original 1024 source identities and unchanged seven detector
+and ten continuous-learning bounds after current provenance qualification.
+
+The independent natural branch separates checkpointed source-identity acquisition
+from original human-label qualification. Complete multilingual and historical
+exposure joins precede the same 400-group cohort and matched Qwen-feature heads.
+New annotator-disagreement sensitivities are descriptive and do not alter primary
+bounds. Prediction sealing precedes delayed feedback; untouched retention labels
+never enter guards or updates. Qwen weights, spline knots and live ARC policy stay
+fixed. Complete CPU service costs precede any proposed accelerator implementation.
+ARC analysis requires new supported live outcomes and remains opportunistic.
+
+Design and full task contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`. V770 design/queue bytes are
+preserved separately; the active queue and conductor are unchanged.
+
+## V772 planned evidence boundary — 2026-11-12
+
+The proposed milestone has thirteen tasks, Exp9041–Exp9053. Exp9028 already
+qualified historical provenance; no further repair is proposed. Exp9030's
+published TEST outcomes and Exp9031's already-observed B identities require a
+new graph evaluation population. Preserve the admitted spline/linear states,
+construct disjoint source identities and separate detector views from truth.
+Both static and continuous-learning predictions seal before final TEST reduction.
+The original seven detector and ten learning bounds remain fixed.
+
+Natural-label work is two independent feasibility studies: classify retained
+missing-identity responses and check original annotator/criterion authority.
+Neither relaxes source closure or authorizes the deferred embedding pilot.
+The online path retains delayed feedback, immutable retention, rollback and exact
+resume. Complete service cost precedes any hardware recommendation. ARC analysis
+requires new supported live outcomes. Qwen weights and public defaults remain fixed.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`. Full V771 design/queue bytes are
+preserved separately. This reconciles the planned boundary only; the overview's
+October 11 date is not a new verification of the whole runtime architecture.
+
+## V773 planned evidence boundary — 2026-11-12
+
+V773 stages fourteen tasks, Exp9054–Exp9067. Planning changes no runtime behavior.
+The complete V772 design and queue are preserved before replacing vNEXT.
+
+The graph source continues the same 414-object prefix after the measured rejection
+sampler exhausted 20000 proposals. A fixed 100000-total/300-second limit preserves
+population, roles and original seven/ten bounds. Collection cannot run before all
+1024 identities and absence of responses qualify. Static and online producers seal
+predictions separately; the independent reducer opens TEST truth only after both.
+
+A separate MDH source branch authenticates original human factual-error labels,
+release dates, 400 independent groups and exposure. It then freezes matched small
+heads before Qwen embedding work. Archived responses are not current Qwen generation.
+Graph success remains circular; only qualified human evidence may support a scoped
+oracle-distinct result. Failed old Mu-SHROOM authority remains unchanged.
+
+Continuous learning keeps the admitted five-arm delayed-update protocol. Full cost
+includes guards, anchors, durable storage and recovery. No new board operation,
+bitstream, generator training, product default or external publication is proposed.
+ARC remains a structured new-outcome-gated slot; capstone accounting is unconditional.
