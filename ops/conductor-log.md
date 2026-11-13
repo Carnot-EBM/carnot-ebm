@@ -21955,3 +21955,12 @@ code |
 | 2026-11-13 02:01 UTC | Exp9079: Map current verifier work to supported ha | OK | 90 passed, 1 warning in 16.42s |
 | 2026-11-13 02:11 UTC | Exp9080: Assess held-family ARC transfer from new  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9068-dispatch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
 | 2026-11-13 02:54 UTC | Exp9081: Reconcile fourteen outcomes and exact con | OK | 87 passed, 1 warning in 23.96s |
+| 2026-11-13 03:47 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | timeout after 720s |
+| 2026-11-13 04:17 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-13 04:57 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-13 05:12 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-11-13 05:35 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-11-13 05:50 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-13 06:50 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-11-13 08:11 UTC | Plan next milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: manager: faile |
+| 2026-11-13 08:14 UTC | Stop-authority receipt STALE | WARN | receipt 322 min old (janitor cadence is 30) |
