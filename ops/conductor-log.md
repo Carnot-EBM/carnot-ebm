@@ -21953,3 +21953,4 @@ code |
 | 2026-11-13 01:24 UTC | Exp9077: Test matched heads against original human | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9073-human-features) |
 | 2026-11-13 01:24 UTC | Exp9078: Measure complete paired learning service | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9076-graph-benefit, exp9076-graph-benefit) |
 | 2026-11-13 02:01 UTC | Exp9079: Map current verifier work to supported ha | OK | 90 passed, 1 warning in 16.42s |
+| 2026-11-13 02:11 UTC | Exp9080: Assess held-family ARC transfer from new  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9068-dispatch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
