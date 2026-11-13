@@ -113678,3 +113678,38 @@ separate from owned qualification. A test-generated historical synthesis log was
 retained privately and restored to its original bytes. No conductor, roadmap,
 manifest, old assertion, model or protected TEST seal was changed. Operational
 and traceability reconciliation is left to the conductor as requested.
+
+### REQ-REPORT-9069-V774: Authenticate retained A and unattempted B
+
+Exp9069 SHALL pin the original Exp9055 roster, Exp9058 transport authority and
+Exp9067 projections before reduction. Preserve all original producer/test bytes,
+1024 identities,128 CAL/128 TEST/768 online roles, state hashes, generation
+settings, first-response budget and seven/ten bounds. Hash retained responses
+without deriving truth. Inventory public projections, custody access logs and
+all task-owned checkpoint/intent/wire-response paths. Absence of a B primary or
+pending checkpoint entries alone SHALL NOT authorize collection. A readiness
+requires authenticated complete access coverage; B readiness additionally
+requires authenticated complete no-attempt coverage. Missing authority SHALL
+produce complete_blocked_<check> with typed missing-file/field operands, zero
+readiness and every scheduled identity retained. Exposed A closes confirmation;
+any B attempt blocks this no-attempt plan and names its authority. No model,
+fit, generation, truth parsing, activation or external publication is allowed.
+
+#### SCENARIO-REPORT-9069-V774
+
+Private controls SHALL reject changed roles, A TEST disclosure, orphan B
+responses, changed tokenizer and a rehashed mismatched source. Freeze owned and
+direct-consumer checks, retain private primitive hashes, and require100 percent
+new statement coverage with zero exclusions. Run real foreign-directory CLI and
+cold replay without PYTHONPATH, private E2E-018/021, scoped pytest, Ruff/format,
+strict mypy and explicit-path spec coverage. Retain the single bounded full-suite
+health receipt separately. Unchanged adversarial and strict row validators SHALL
+precede atomic primary_publication. Failed owned checks zero both readiness
+fields. Ops/status/changelog/traceability reconciliation is conductor-owned.
+
+Implementation,2026-11-12,REQ-REPORT-9069-V774: the source-custody module,
+private runner and requested CLI preserve original sources and all1024 identity
+slots. They distinguish authenticated transport from missing complete custody
+and invocation coverage. The dated primary binds current validation receipts,
+statement measurements, mutation controls and unchanged terminal validators.
+Operational and traceability reconciliation remains conductor-owned.

@@ -59406,3 +59406,13 @@ Run the actual CLI outside the checkout without PYTHONPATH. Valid private bytes
 SHALL replay; missing input, changed authority and rehashed readiness SHALL fail.
 Measure all new statements with zero exclusions and preserve unchanged scanner
 and private E2E-018/020/021 receipts before atomic primary publication.
+
+### REQ-VERIFY-9069-V774: Custody authority is stronger than file absence
+
+Exp9069 SHALL distinguish observed pending B identities from authenticated
+coverage of every invocation path. Missing access or inventory authority blocks
+readiness without asserting exposure or an attempt. Private mutation controls
+SHALL detect changed roles, TEST disclosure, orphan wire responses, tokenizer
+drift and coordinated rehashing against independently pinned original sources.
+Measure all new statements, including real private CLI/cold replay, with zero
+coverage exclusions. Preserve historical assertions and TEST seals.
