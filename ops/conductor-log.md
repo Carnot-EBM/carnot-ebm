@@ -21946,3 +21946,9 @@ code |
 | 2026-11-13 01:03 UTC | Exp9070: Qualify MDHJudgments and freeze human-tar | OK | 102 passed, 1 warning in 15.00s |
 | 2026-11-13 01:13 UTC | Exp9071: Collect only the missing sealed Qwen shar | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9069-source-custody.b_collection_ready_score (actual=0 == expected=1) |
 | 2026-11-13 01:15 UTC | Exp9072: Join the complete corpus behind the truth | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9071-collect-b) |
+| 2026-11-13 01:22 UTC | Exp9073: Capture label-blind Qwen features for hum | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9070-adjudication-methods.human_source_ready_score (actual=0 == expected=1) |
+| 2026-11-13 01:24 UTC | Exp9074: Seal the five frozen graph decision arms | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9072-sealed-admission) |
+| 2026-11-13 01:24 UTC | Exp9075: Measure delayed continuous spline learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9072-sealed-admission) |
+| 2026-11-13 01:24 UTC | Exp9076: Independently reduce all frozen graph and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9074-static-seal, exp9075-online-seal) |
+| 2026-11-13 01:24 UTC | Exp9077: Test matched heads against original human | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9073-human-features) |
+| 2026-11-13 01:24 UTC | Exp9078: Measure complete paired learning service | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9076-graph-benefit, exp9076-graph-benefit) |
