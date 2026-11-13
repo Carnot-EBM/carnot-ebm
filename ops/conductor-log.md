@@ -21919,3 +21919,27 @@ code |
 | 2026-11-12 22:26 UTC | Plan milestone 2026.11.774 | OK | 14 tasks proposed |
 | 2026-11-12 22:47 UTC | Milestone 2026.11.774 activated | OK | 14 tasks queued |
 | 2026-11-12 23:37 UTC | Exp9068: Bind unique dispatch keys and the V774 co | OK | 108 passed, 1 warning in 82.85s (0:01:22) |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on harnes |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 9: OPEN 63 days: SI |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 9: OPEN 63 days: SILENT_NON_F |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 9: OPEN 63 days: SILENT_NO |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 9: OPEN 63 da |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 9: OPEN 63 days: |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 8: OPEN 56 days: |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_novelty_proposal_ablation_overclaim age-week 7: OPE |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_proposal_filter_coverage_up age-week 7: OPEN 49 d |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim age-wee |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_perception_overclaim age-week 7: OPEN 49 days: SILE |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_world_model_trust_pass age-week 7: OPEN 49 days:  |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_changing_correct_evidence age-week 7: OPEN 49 days: |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_s2_schema_signal age-week 7: OPEN 49 days: SILENT_NO |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_engine_selection_game_rows age-week 7: OPEN 49 days: SIL |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_candidate_outcome_values age-week 7: OPEN 49 days: SILEN |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 7: OPEN 49 days |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_top_level_metric age-week 5: OPEN 35 days:  |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_metric_pair age-week 5: OPEN 35 days: SILEN |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_multilevel_solve_rate age-week 5: OPEN 35 d |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_all_true age-week 5: OPEN 35 days: SILENT_NON |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_generation_coverage_up age-week 5: OPEN 35 days:  |
+| 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 1: OPEN 7 days: CLAIM_OVE |
+| 2026-11-13 00:24 UTC | Exp9069: Authenticate sealed A and establish unatt | OK | 92 passed, 1 warning in 19.39s |
