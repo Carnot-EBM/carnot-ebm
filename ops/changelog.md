@@ -23711,3 +23711,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-12: Exp9068: Bind unique dispatch keys and the V774 contract (⚠️ Research Finding) — honest_verdict=complete_null_v774_dispatch_contract; results/experiment_9068_v774_dispatch_contract.json
 - 2026-11-13: Exp9069: Authenticate sealed A and establish unattempted B (⚠️ Blocked) — honest_verdict=complete_blocked_a_access_coverage; results/experiment_9069_v774_source_custody.json
 - 2026-11-13: Exp9070: Qualify MDHJudgments and freeze human-target methods (⚠️ Blocked) — honest_verdict=complete_blocked_base_question_family_authority; results/experiment_9070_v774_adjudication_methods.json
+- 2026-11-13: Exp9079: Map current verifier work to supported hardware (⚠️ Blocked) — honest_verdict=complete_blocked_current_cost; results/experiment_9079_v774_hardware_boundary.json
