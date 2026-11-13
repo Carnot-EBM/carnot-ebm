@@ -21972,3 +21972,11 @@ code |
 | 2026-11-13 12:01 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-13 13:01 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
 | 2026-11-13 14:22 UTC | Plan next milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: manager: faile |
+| 2026-11-13 15:58 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-11-13 16:28 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-13 17:08 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-13 17:23 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-11-13 17:46 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-11-13 18:02 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-13 19:02 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-11-13 20:23 UTC | Plan next milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: manager: faile |
