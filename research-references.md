@@ -56736,3 +56736,17 @@ Exp9056 found no original individual judgments or original factual-error
 instructions, and only 396 candidate groups, in MDH-Bench. That unchanged release
 stays closed. MDHJudgments is a different author release and a different,
 adjudication-conditioned estimand. It needs its own authority and exposure check.
+## 2026-11-13 — V774 adjudication methods update ingested
+
+The prior V774 scan is ingested in
+`docs/research-notes/v774-adjudication-methods.md`, REQ-REPORT-9070-V774.
+The focused update retrieved primary versions of
+[Beyond Majority Vote](https://arxiv.org/html/2609.03953v1),
+[What Hallucinations Have We Measured?](https://arxiv.org/html/2610.38520v1),
+[Weakly Supervised Distillation](https://arxiv.org/html/2604.06277v2) and
+[Continual Calibration](https://arxiv.org/html/2604.23987v1).
+The [pinned author release](https://github.com/isi-vista/mdhjudgments/tree/30d9349a2a8d6a7395681cfbd23cc8116af5a2da)
+supplies five separately retained annotation exports. Their exact response and
+section join does not authenticate cross-template base-question lineage or
+close prior exposure. Targets remain sealed. Semantic Scholar returned429 on
+both attempts. No missing annotations or independent people counts are inferred.

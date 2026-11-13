@@ -6795,3 +6795,12 @@ are in `results/raw/experiment_8986_v768_spline_basis_methods/methods/`.
 The adaptation fixes spline features and optimizes only convex coefficients.
 It uses an equally optimized linear control and exact graph permutations.
 This is not KAC RBF training, an FPGA reproduction or a conformal guarantee.
+## 2026-11-13 — V774 adjudication methods ingested
+
+REQ-REPORT-9070-V774: ingested the recorded V774 scan and a focused primary-paper
+update covering adjudication, target taxonomy, strong linear probes, weak
+supervision and calibration. See
+`docs/research-notes/v774-adjudication-methods.md`. Semantic Scholar returned429
+twice. Pinned MDHJudgments bytes are retained privately. Independent family
+construction and exposure closure remain unknown. Human targets stay sealed;
+no model or head was loaded. MDH-Bench remains closed.

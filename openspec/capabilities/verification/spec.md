@@ -59416,3 +59416,23 @@ SHALL detect changed roles, TEST disclosure, orphan wire responses, tokenizer
 drift and coordinated rehashing against independently pinned original sources.
 Measure all new statements, including real private CLI/cold replay, with zero
 coverage exclusions. Preserve historical assertions and TEST seals.
+### REQ-VERIFY-9070-V774: Unknown family authority cannot become human readiness
+
+An exact five-release response/section join is necessary but does not prove
+base-question independence. Exp9070 SHALL distinguish candidate question keys
+from author-authenticated construction families. Missing construction lineage
+or incomplete exposure closure blocks protected targets and fold allocation.
+Cold replay SHALL recheck exact input hashes and recompute metadata reduction;
+rehashed aggregate tampering SHALL fail. Human agreement is not medical truth.
+
+#### SCENARIO-VERIFY-9070-V774
+
+Private tests SHALL exercise missing source bytes, altered pinned bytes,
+mismatched response/section IDs, duplicate sections, denied target fields,
+generator metadata, changed replay aggregates and failed validation receipts.
+Every blocked result SHALL include the failed path/hash/field/comparison.
+
+Implementation,2026-11-13: private Exp9070 tests reject denied feature fields,
+identity mutations, duplicate sections, changed source bytes and rehashed replay
+summaries. Original author targets remain sealed. Owned qualification cannot
+override missing family lineage or unknown historical exposure.

@@ -113713,3 +113713,69 @@ slots. They distinguish authenticated transport from missing complete custody
 and invocation coverage. The dated primary binds current validation receipts,
 statement measurements, mutation controls and unchanged terminal validators.
 Operational and traceability reconciliation remains conductor-owned.
+### REQ-REPORT-9070-V774: Qualify separate adjudication authority before human targets
+
+Exp9070 SHALL retain revision `30d9349a2a8d6a7395681cfbd23cc8116af5a2da`
+of MDHJudgments: README, DATA_LICENSE, model/conversion code and five original
+annotation files. Git blob identity and SHA256 SHALL bind retained bytes.
+Inspect the retained Exp9056 failure and exposure ledger before acquisition.
+MDH-Bench stays closed. Missing resources or unknown family/exposure authority
+SHALL produce `complete_blocked_<check>` with every failed operand recorded.
+A measured insufficient eligible cohort SHALL instead be terminal null.
+
+Join exact response IDs, question/answer bytes, section IDs and section ordering
+across all five files before interpreting judgments. Reject mismatched IDs and
+duplicate sections. Author construction metadata must authenticate base-question
+families across templates, generators and related sections. An ID-prefix guess
+or exact question match alone SHALL NOT certify independent families. Retain
+every section and every uncertain exclusion. Do not expose target values if
+family or prior-exposure closure is unknown. Anonymous IDs do not count people.
+
+Freeze the two-definitive-medical-pass panel and original judgment mapping:
+major/minor factual errors map to1; no_hallucination maps to0;
+needs_research and unresolved judgments remain unknown. LLM candidates stay
+separate. Freeze five hash-ordered round-robin folds with salt v774-mdhj-v1,
+at least60 independent families and12 per test fold. Every fifth remaining
+hash-ordered group is CAL; other groups are FIT. Each class needs five groups
+in FIT and CAL. Never reshuffle by outcome or inherit the failed400-group scope.
+
+Freeze mean-pooled final-layer Qwen Q4_K_M question/full-response embeddings,
+explicit section offsets,4096-token limit without truncation, Gaussian32-d
+projection seed774070 and FIT-only scaling to[-3,3]. Exclude references, judge
+identity, explanation, evidence, labels and generator metadata. Compare
+prevalence, full ridge logistic, projected ridge logistic and additive cubic
+spline energy. Ridge0.01 excludes intercept; knots[-3,-2,-1,0,1,2,3]; convergence
+requires gradient infinity norm<=1e-6 in2000 iterations. CAL temperatures are
+[0.5,1,2,4], ascending ties; typed accept/reject thresholds are0.1/0.9.
+
+Train soft-target log loss. Evaluate group-balanced Brier separately against
+both original medical judgments. Predeclare paired family bootstrap10000 draws,
+seed774077, three improvement bounds with one-sided tail0.05/3, all strictly
+positive for scoped benefit. Report CI95 separately. Intervals condition on
+frozen out-of-fold predictions. First-pass/fact-checker comparisons on common
+overlap are descriptive. This methods task loads no model and trains no head.
+
+#### SCENARIO-REPORT-9070-V774
+
+Private requirement-linked tests SHALL precede implementation. They SHALL reject
+denied labels, mismatched IDs, duplicate sections and generator-metadata input.
+Missing files, missing fields and observed zero SHALL remain distinct. Real
+foreign-directory CLI/cold replay without PYTHONPATH, current direct consumers,
+E2E-018/021, Ruff check/format, strict mypy, explicit-path spec coverage and
+100 percent new statements with zero exclusions SHALL qualify owned work.
+Run the broad Python suite once and retain its health separately. Unchanged
+adversarial and strict row scanners SHALL precede primary_publication. Failed
+owned checks zero readiness. Preserve historical results/tests and exclusion
+manifest bytes. No activation, external publication, conductor change or
+model load. Ops/status/traceability reconciliation belongs to the conductor.
+
+Implementation,2026-11-13: `adjudication_methods_9070.py`, its publication runner,
+the Exp9070 CLI and21 private requirement-linked tests implement this audit.
+The exact five-release join retains541 responses and4,377 excluded sections.
+Base-question construction authority and prior-exposure closure remain unknown.
+Targets and folds stay sealed. All36 current consumer tests and25 private
+E2E-018/021 cases pass. Ruff, strict mypy and explicit spec tracing pass.
+Owned statement coverage is205/205, with zero exclusions. Exact validation
+receipts and the separate broad-suite health record remain bound to the primary.
+No model, head, activation or external publication is claimed.
+Ops/status/traceability reconciliation remains delegated to the conductor.
