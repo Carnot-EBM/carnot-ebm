@@ -21943,3 +21943,4 @@ code |
 | 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_generation_coverage_up age-week 5: OPEN 35 days:  |
 | 2026-11-13 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 1: OPEN 7 days: CLAIM_OVE |
 | 2026-11-13 00:24 UTC | Exp9069: Authenticate sealed A and establish unatt | OK | 92 passed, 1 warning in 19.39s |
+| 2026-11-13 01:03 UTC | Exp9070: Qualify MDHJudgments and freeze human-tar | OK | 102 passed, 1 warning in 15.00s |
