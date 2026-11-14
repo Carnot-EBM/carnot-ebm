@@ -21989,3 +21989,35 @@ code |
 | 2026-11-14 01:05 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
 | 2026-11-14 01:08 UTC | Plan next milestone | FAIL | Codex CLI error: iled: error sending request for url (https://chatgpt.com/bac |
 | 2026-11-14 01:10 UTC | Stop-authority receipt STALE | WARN | receipt 1339 min old (janitor cadence is 30) |
+| 2026-11-14 02:44 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-11-14 03:14 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-14 03:54 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-14 04:09 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-11-14 04:32 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 10: OPEN 70 days: C |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 10: OPEN 70 days: SILENT_NON_FIRING on  |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 9: OP |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 9: OPEN 6 |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 9: OPEN 63 days: SIL |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 8: OPEN 56 days: REAL_ |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 8: OPEN 56 days: SILEN |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 8: OPEN 56 days: SILENT_NON_FI |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 7: OPEN 5 |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_draws_selection_conclusion age-week 7: OPEN 49 days: SIL |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_engine_selection_candidate_diversity age-week 7: OP |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_world_model_trust_degeneracy age-week 7: OPEN 49 da |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_arc_outer_loop_calibration_solve age-week 7: OPEN 49  |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_arc_outer_loop_solve age-week 7: OPEN 49 days: SILE |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_verify_artifact_impl age-week 7: OPEN 49 days: SILENT_NO |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::verify_artifact age-week 7: OPEN 49 days: SILENT_NON_FIRI |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::sweep_milestone_range age-week 7: OPEN 49 days: SILENT_NO |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_live_model age-week 7: OPEN 49 days: SILENT_NON_F |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::backfill_stamps age-week 7: OPEN 49 days: SILENT_NON_FIRI |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::main age-week 7: OPEN 49 days: SILENT_NON_FIRING on adver |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 7: OPEN 49 |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_marker age-week 4: OPEN 28 days: REA |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_4381_biprm_detector_localization_abstention.json age-week 1: OPEN 7 d |
+| 2026-11-14 04:32 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8897_v761_source_bound_decisions.json age-week 1: OPEN 7 days: CLAIM_ |
+| 2026-11-14 04:47 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-14 05:47 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-11-14 07:09 UTC | Plan next milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: manager: faile |
