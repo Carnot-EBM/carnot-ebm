@@ -21980,3 +21980,12 @@ code |
 | 2026-11-13 18:02 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-13 19:02 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
 | 2026-11-13 20:23 UTC | Plan next milestone | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: manager: faile |
+| 2026-11-13 22:01 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-11-13 22:31 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-13 23:11 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-13 23:26 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-11-13 23:48 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-11-14 00:05 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-14 01:05 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-11-14 01:08 UTC | Plan next milestone | FAIL | Codex CLI error: iled: error sending request for url (https://chatgpt.com/bac |
+| 2026-11-14 01:10 UTC | Stop-authority receipt STALE | WARN | receipt 1339 min old (janitor cadence is 30) |
