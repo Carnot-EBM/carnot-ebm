@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.776",
+  "generated_at": "2026-11-15T18:51:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 30.8,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes",
+      "duration_minutes": 18.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9107: Measure fixed Qwen factual-decision probabilities on the same human pan",
+      "duration_minutes": 5.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exp9109: Reconcile fourteen outcomes and decide the human verification continuat",
+      "duration_minutes": 3.95,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9098: Qualify frozen Qwen hidden states and decision logits on fixed texts",
+      "duration_minutes": 3.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exp9099: Freeze causal human coefficient updates and exact recovery",
+      "duration_minutes": 0.29,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.776 completed 6 experiments (2 compute-bound, 4 synthesis-only) in 30.8 wall-time minutes (31 minutes / 0.5 hours, averaging 5 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). The 2 compute-bound experiments were Exp9107: Measure fixed Qwen factual-decision probabilities on the same human pan (5.05 minutes / 5min) and Exp9098: Qualify frozen Qwen hidden states and decision logits on fixed texts (3.1 minutes / 3min), while overall wall time was led by synthesis-only Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes (18.36 minutes / 18min), with synthesis-only Exp9109: Reconcile fourteen outcomes and decide the human verification continuat (3.95 minutes / 4min) and Exp9099: Freeze causal human coefficient updates and exact recovery (0.29 minutes / 0min) rounding out the top 5 slowest tasks (no data available this milestone for the exact ID, name, or duration of the fourth synthesis-only task). The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "Synthesis-only contract binding and outcome reconciliation accounted for the largest share of the 30.8-minute (31 minutes / 0.5 hours, 5 minutes average per experiment) milestone wall time: Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes took 18.36 minutes (18min) and Exp9109: Reconcile fourteen outcomes and decide the human verification continuat took 3.95 minutes (4min), whereas synthesis-only Exp9099: Freeze causal human coefficient updates and exact recovery took 0.29 minutes (0min) and no data is available this milestone for the exact ID, task name, or duration of the fourth synthesis-only experiment (which finished at or below 0.29 minutes / 0min).",
+    "Among the 2 compute-bound experiments, Exp9107: Measure fixed Qwen factual-decision probabilities on the same human pan took 5.05 minutes (5min) and Exp9098: Qualify frozen Qwen hidden states and decision logits on fixed texts took 3.1 minutes (3min) for sequential single-model Qwen hidden-state, decision-logit, and factual-decision probability evaluation; locked gpu_idle_on_compute_bound_tasks is false.",
+    "The live git-log timing path found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 6 completed experiments.",
+    "The GPU STATE block reported 'GPU monitor not available', providing no telemetry for GPU utilization, memory, or hardware state during the 2 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse fourteen-task binding state, preserved V775 outcomes, and fourteen-outcome reconciliation artifacts between synthesis-only Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes (18.36 minutes / 18min) and Exp9109: Reconcile fourteen outcomes and decide the human verification continuat (3.95 minutes / 4min).",
+    "Share and reuse frozen Qwen hidden states and decision logits on fixed texts between the 2 single-model compute-bound tasks — Exp9098: Qualify frozen Qwen hidden states and decision logits on fixed texts (3.1 minutes / 3min) and Exp9107: Measure fixed Qwen factual-decision probabilities on the same human pan (5.05 minutes / 5min) — without engaging DualGPURunner.",
+    "Persist direct per-experiment start and completion timestamps in result receipts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry before compute-bound tasks execute while keeping DualGPURunner scoped strictly to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and share fourteen-task contract binding, preserved V775 outcomes, and fourteen-outcome reconciliation state across synthesis-only Exp9096 (18.36 minutes / 18min) and Exp9109 (3.95 minutes / 4min).",
+    "Reuse frozen Qwen hidden-state and decision-logit outputs across single-GPU compute-bound Exp9098 (3.1 minutes / 3min) and Exp9107 (5.05 minutes / 5min) without engaging DualGPURunner.",
+    "Persist direct per-experiment execution timestamps to eliminate disk-mtime fallback (0 commits in live git-log) and restore GPU monitor telemetry for the 2 compute-bound tasks."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "Wall time in milestone 2026.11.776 (30.8 minutes / 31 minutes / 0.5 hours across 6 completed experiments, averaging 5 minutes per experiment) was led by synthesis-only task binding in Exp9096 (18.36 minutes / 18min) and outcome reconciliation in Exp9109 (3.95 minutes / 4min), alongside the 2 single-model Qwen compute-bound tasks Exp9107 (5.05 minutes / 5min) and Exp9098 (3.1 minutes / 3min), while Exp9099 (0.29 minutes / 0min) and the fourth synthesis-only task (no data available this milestone for its exact ID or duration) were sub-minute. Caching shared fourteen-task binding and reconciliation artifacts, reusing frozen Qwen hidden states and decision logits across Exp9098 and Exp9107 without engaging DualGPURunner, persisting direct experiment timestamps to avoid disk-mtime fallback on 0 git-log commits, and restoring GPU monitor telemetry are the highest-leverage improvements for the next milestone."
+}
