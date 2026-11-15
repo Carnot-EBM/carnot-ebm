@@ -114702,8 +114702,14 @@ The active queue, conductor, historical primaries and exclusions stay unchanged.
 
 ### REQ-REPORT-9110-V777
 
-Proposed: Bind fourteen tasks and retain authenticated human methods. Deliver `results/experiment_9110_v777_contract.json`.
+Bind fourteen tasks and retain authenticated human methods. Deliver `results/experiment_9110_v777_contract.json`.
 The full task protocol and acceptance gates in the V777 design are normative.
+Authenticate the complete Exp9097/9099 closure through Exp9109's pinned retained
+snapshots, including original producer code, evaluator labels and qid rosters;
+never substitute mutable checkout code. Recompute all fourteen V776 outcomes
+from retained primitives. Freeze static, online, signal, cost and separate V777
+energy protocols before outcomes. Require current owned checks and 100 percent
+new statement coverage without exclusions before any readiness score is one.
 Required producer fields: contract_ready_score, source_ready_score, online_methods_ready_score: separate integer0/1 fields; full_task_objects, canonical_task_hash, authority_snapshots, previous_outcome_rows, source_manifest_reference, evaluator_label_reference, shard_a_roster_reference, shard_b_roster_reference, static_protocol_reference, online_protocol_reference, energy_protocol_reference, closed_scope_rows, archive_lag.
 
 ### SCENARIO-REPORT-9110-V777
@@ -114711,6 +114717,10 @@ Required producer fields: contract_ready_score, source_ready_score, online_metho
 Use the task's positive and rejecting controls, original source roles and
 private CLI/cold replay checks; missing external inputs terminate blocked.
 Preserve all measured rows and validate every aggregate before publication.
+Reject full-object, order, dispatch-key, gate, source-byte and rehashed aggregate
+tampering. Distinguish missing files, missing fields and observed zero. Retain
+900 rows/300 qids, TRAIN150/CAL50/TEST100 with three siblings, actual A2 only;
+retain eight padding failures, logits readiness and the quarantined judge.
 
 ### REQ-REPORT-9111-V777
 

@@ -1,0 +1,88 @@
+..........[exp9110] phase=preconditions_before completed=0 pending=0
+[exp9110] phase=authenticate_and_freeze completed=1 pending=610
+[exp9110] phase=authenticate_and_freeze completed=26 pending=585
+[exp9110] phase=authenticate_and_freeze completed=51 pending=560
+[exp9110] phase=authenticate_and_freeze completed=76 pending=535
+[exp9110] phase=authenticate_and_freeze completed=101 pending=510
+[exp9110] phase=authenticate_and_freeze completed=126 pending=485
+[exp9110] phase=authenticate_and_freeze completed=151 pending=460
+[exp9110] phase=authenticate_and_freeze completed=176 pending=435
+[exp9110] phase=authenticate_and_freeze completed=201 pending=410
+[exp9110] phase=authenticate_and_freeze completed=226 pending=385
+[exp9110] phase=authenticate_and_freeze completed=251 pending=360
+[exp9110] phase=authenticate_and_freeze completed=276 pending=335
+[exp9110] phase=authenticate_and_freeze completed=301 pending=310
+[exp9110] phase=authenticate_and_freeze completed=326 pending=285
+[exp9110] phase=authenticate_and_freeze completed=351 pending=260
+[exp9110] phase=authenticate_and_freeze completed=376 pending=235
+[exp9110] phase=authenticate_and_freeze completed=401 pending=210
+[exp9110] phase=authenticate_and_freeze completed=426 pending=185
+[exp9110] phase=authenticate_and_freeze completed=451 pending=160
+[exp9110] phase=authenticate_and_freeze completed=476 pending=135
+[exp9110] phase=authenticate_and_freeze completed=501 pending=110
+[exp9110] phase=authenticate_and_freeze completed=526 pending=85
+[exp9110] phase=authenticate_and_freeze completed=551 pending=60
+[exp9110] phase=authenticate_and_freeze completed=576 pending=35
+[exp9110] phase=authenticate_and_freeze completed=601 pending=10
+[exp9110] phase=preconditions_after completed=625 pending=0
+[exp9110] phase=reduction_before completed=0 pending=0
+[exp9110] phase=reduction_after completed=14 pending=0
+.[exp9110] phase=preconditions_before completed=0 pending=0
+[exp9110] phase=authenticate_and_freeze completed=1 pending=76
+[exp9110] phase=authenticate_and_freeze completed=26 pending=51
+[exp9110] phase=authenticate_and_freeze completed=51 pending=26
+[exp9110] phase=authenticate_and_freeze completed=76 pending=1
+[exp9110] phase=preconditions_after completed=85 pending=76
+..........[test9110] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/source.json'), '--output', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/experiment_9110_v777_contract.json'))
+[test9110] child_after 0 se=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/experiment_9110_v777_contract.json", "primary_sha256": "sha256:914e5eb6033ba0252779260813794505136ea029026dadf2b04dc01c5cb84c88", "sidecar_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/raw/experiment_9110_v777_contract/validators/914e5eb6033ba0252779260813794505136ea029026dadf2b04dc01c5cb84c88.json", "honest_verdict": "complete_disqualified_v777_contract"}
+ 
+[test9110] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/experiment_9110_v777_contract.json'))
+[test9110] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9110] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/experiment_9110_v777_contract.json'))
+[test9110] child_after 1 {"passed": false, "replay_passed": false, "reason": "aggregate_drift"}
+ 
+[exp9110] phase=preconditions_before completed=0 pending=0
+[exp9110] phase=authenticate_and_freeze completed=1 pending=76
+[exp9110] phase=authenticate_and_freeze completed=26 pending=51
+[exp9110] phase=authenticate_and_freeze completed=51 pending=26
+[exp9110] phase=authenticate_and_freeze completed=76 pending=1
+[exp9110] phase=preconditions_after completed=85 pending=76
+[test9110] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/source.json'), '--output', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/blocked/experiment_9110_v777_contract.json'))
+[test9110] child_after 0 ication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/blocked/experiment_9110_v777_contract.json", "primary_sha256": "sha256:15c2605fcf0276cddd0a1e0a1957ccb9b097434774d3e52c3f25185d738ec910", "sidecar_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/blocked/raw/experiment_9110_v777_contract/validators/15c2605fcf0276cddd0a1e0a1957ccb9b097434774d3e52c3f25185d738ec910.json", "honest_verdict": "complete_blocked_authority"}
+ 
+[test9110] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/blocked/experiment_9110_v777_contract.json'))
+[test9110] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9110] child_before ('--date', 'bad')
+[test9110] child_after 2  usage: experiment_9110_v777_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9110_v777_contract.py: error: this contract requires --date 20261115
+
+[test9110] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-6zqa25ru/owned_tests/test_foreign_cli0/source.json'))
+[test9110] child_after 2  usage: experiment_9110_v777_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9110_v777_contract.py: error: private work publication requires output outside the checkout
+
+.....[exp9110] phase=validation_before completed=0 pending=0
+[exp9110] phase=validation_after completed=0 pending=0
+[exp9110] phase=publication_before completed=0 pending=0
+[exp9110] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_orchestration0/experiment_9110_v777_contract.json", "primary_sha256": "sha256:a6e45bb94c67e44d09fb472697757cd18481965fd1967674619fdf3890245e74", "sidecar_path": "/var/tmp/carnot9096-6zqa25ru/owned_tests/test_orchestration0/raw/experiment_9110_v777_contract/validators/a6e45bb94c67e44d09fb472697757cd18481965fd1967674619fdf3890245e74.json", "honest_verdict": "complete_null_v777_contract"}
+[exp9110] phase=validation_before completed=0 pending=0
+[exp9110] phase=validation_after completed=0 pending=0
+[exp9110] phase=publication_disqualified completed=0 pending=1
+........
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+34 passed, 1 warning in 85.53s (0:01:25)
