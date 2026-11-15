@@ -22104,3 +22104,4 @@ code |
 | 2026-11-15 21:07 UTC | Plan milestone 2026.11.777 | OK | 14 tasks proposed |
 | 2026-11-15 21:22 UTC | Milestone 2026.11.777 activated | OK | 14 tasks queued |
 | 2026-11-15 22:10 UTC | Exp9110: Bind fourteen tasks and retain authentica | OK | 115 passed, 1 warning in 68.55s (0:01:08) |
+| 2026-11-15 23:51 UTC | Exp9111: Qualify forward-only receipts and structu | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 135 passed, 1 warning in 124.63s (0:02:04) |
