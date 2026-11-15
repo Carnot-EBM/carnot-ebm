@@ -22072,3 +22072,4 @@ code |
 | 2026-11-15 03:48 UTC | Exp9082: Freeze fourteen tasks and unchanged scien | OK | 117 passed, 1 warning in 120.85s (0:02:00) |
 | 2026-11-15 04:53 UTC | Exp9083: Qualify enforced custody before freezing  | OK | 95 passed, 1 warning in 13.31s |
 | 2026-11-15 05:46 UTC | Exp9084: Freeze an exposed-human embedding compari | OK | 102 passed, 1 warning in 18.91s |
+| 2026-11-15 05:56 UTC | Exp9085: Collect first-attempt graph shard A under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9083-prospective-custody.custody_ready_score (actual=0 == expected=1) |
