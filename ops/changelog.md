@@ -23781,3 +23781,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
   All LLM tasks declare actual no-generation work and the mandated cached model.
 - Add proposed requirements, traceability and architecture boundaries. No runtime
   implementation, activation, new scientific result, conductor change or push.
+- 2026-11-15: Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes (⚠️ Research Finding) — honest_verdict=complete_null_v776_contract; results/experiment_9096_v776_contract.json
