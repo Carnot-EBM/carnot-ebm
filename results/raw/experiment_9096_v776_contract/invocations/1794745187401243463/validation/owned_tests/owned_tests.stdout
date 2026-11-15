@@ -1,0 +1,121 @@
+..........[exp9096] phase=preconditions_before completed=0 pending=0
+[exp9096] phase=authenticate_and_freeze completed=1 pending=248
+[exp9096] phase=authenticate_and_freeze completed=26 pending=223
+[exp9096] phase=authenticate_and_freeze completed=51 pending=198
+[exp9096] phase=authenticate_and_freeze completed=76 pending=173
+[exp9096] phase=authenticate_and_freeze completed=101 pending=148
+[exp9096] phase=authenticate_and_freeze completed=126 pending=123
+[exp9096] phase=authenticate_and_freeze completed=151 pending=98
+[exp9096] phase=authenticate_and_freeze completed=176 pending=73
+[exp9096] phase=authenticate_and_freeze completed=201 pending=48
+[exp9096] phase=authenticate_and_freeze completed=226 pending=23
+[exp9096] phase=preconditions_after completed=263 pending=0
+[exp9096] phase=reduction_before completed=0 pending=0
+[exp9096] phase=reduction_after completed=14 pending=0
+.[exp9096] phase=preconditions_before completed=0 pending=0
+[exp9096] phase=authenticate_and_freeze completed=1 pending=69
+[exp9096] phase=authenticate_and_freeze completed=26 pending=44
+[exp9096] phase=authenticate_and_freeze completed=51 pending=19
+[exp9096] phase=preconditions_after completed=78 pending=69
+..........[test9096] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/source.json'), '--output', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/experiment_9096_v776_contract.json'))
+[test9096] child_after 0 ict_rows completed=1 pending=0
+[exp9096] phase=after_strict_rows completed=1 pending=0
+[exp9096] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/experiment_9096_v776_contract.json", "primary_sha256": "sha256:c0cd25f59d1c6397dfa8f6342ad4864dc092db95a201f9719b5d7afc541aae96", "sidecar_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/raw/experiment_9096_v776_contract/validators/c0cd25f59d1c6397dfa8f6342ad4864dc092db95a201f9719b5d7afc541aae96.json", "honest_verdict": "complete_disqualified_v776_contract"}
+ 
+[test9096] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/experiment_9096_v776_contract.json'))
+[test9096] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9096] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/experiment_9096_v776_contract.json'))
+[test9096] child_after 1 {"passed": false, "replay_passed": false, "reason": "aggregate_drift"}
+ 
+[exp9096] phase=preconditions_before completed=0 pending=0
+[exp9096] phase=authenticate_and_freeze completed=1 pending=69
+[exp9096] phase=authenticate_and_freeze completed=26 pending=44
+[exp9096] phase=authenticate_and_freeze completed=51 pending=19
+[exp9096] phase=preconditions_after completed=78 pending=69
+[test9096] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/source.json'), '--output', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/blocked/experiment_9096_v776_contract.json'))
+[test9096] child_after 0 s completed=1 pending=0
+[exp9096] phase=after_strict_rows completed=1 pending=0
+[exp9096] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/blocked/experiment_9096_v776_contract.json", "primary_sha256": "sha256:24ae530f06f235d27527b17107649d9f2f4c42dcdc1d27638077a0f8ac9ba461", "sidecar_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/blocked/raw/experiment_9096_v776_contract/validators/24ae530f06f235d27527b17107649d9f2f4c42dcdc1d27638077a0f8ac9ba461.json", "honest_verdict": "complete_blocked_authority"}
+ 
+[test9096] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/blocked/experiment_9096_v776_contract.json'))
+[test9096] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9096] child_before ('--date', 'bad')
+[test9096] child_after 2  usage: experiment_9096_v776_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9096_v776_contract.py: error: this contract requires --date 20261115
+
+[test9096] child_before ('--from-work', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/source.json'))
+[test9096] child_after 2  usage: experiment_9096_v776_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9096_v776_contract.py: error: private work publication requires output outside the checkout
+
+[test9096] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/absent'))
+[test9096] child_after 1 {"passed": false, "replay_passed": false, "reason": "[Errno 2] No such file or directory: '/var/tmp/carnot9096-htonx6xi/owned_tests/test_foreign_cli0/absent'"}
+ 
+........[exp9096] phase=validation_before completed=0 pending=0
+[exp9096] phase=validation_after completed=0 pending=0
+[exp9096] phase=publication_before completed=0 pending=0
+[exp9096] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_orchestration0/experiment_9096_v776_contract.json", "primary_sha256": "sha256:72dac575db83f16018821dcfd71fbe9559bda1a40d01d45687f537fe8a28d748", "sidecar_path": "/var/tmp/carnot9096-htonx6xi/owned_tests/test_orchestration0/raw/experiment_9096_v776_contract/validators/72dac575db83f16018821dcfd71fbe9559bda1a40d01d45687f537fe8a28d748.json", "honest_verdict": "complete_null_v776_contract"}
+[exp9096] phase=validation_before completed=0 pending=0
+[exp9096] phase=validation_after completed=0 pending=0
+[exp9096] phase=publication_disqualified completed=0 pending=1
+[exp9096] phase=validation_before completed=0 pending=0
+[exp9096] phase=validation_after completed=0 pending=0
+[exp9096] phase=publication_disqualified completed=0 pending=1
+F..
+=================================== FAILURES ===================================
+______________________________ test_orchestration ______________________________
+
+work = {'activation_receipts': [], 'end_ns': 45121237695184, 'evidence_raw': '/var/tmp/carnot9096-htonx6xi/owned_tests/contract90960/raw', 'frozen_ns': 45118143245556, ...}
+tmp_path = PosixPath('/var/tmp/carnot9096-htonx6xi/owned_tests/test_orchestration0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feb5944ed50>
+
+    def test_orchestration(work, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-9096-V776-VALIDATION: every frozen command runs once."""
+        calls = []
+        monkeypatch.setattr(
+            c.validation, "run_check", lambda spec, *_: calls.append(spec.name) or dict(passed=False)
+        )
+        monkeypatch.setattr(
+            c.previous, "validate", lambda _: dict(receipts=[], coverage=dict(complete=False))
+        )
+        assert not c.validate(work)["coverage"]["complete"]
+        changed = qualify(work, tmp_path, monkeypatch)
+        monkeypatch.setattr(c, "collect", lambda *_: deepcopy(changed))
+        monkeypatch.setattr(c, "validate", lambda _: changed["validation"])
+        monkeypatch.setattr(c, "terminal", lambda *_: dict(passed=True))
+        output = tmp_path / (c.NAME + ".json")
+        assert c.main(["--output", str(output)]) == 0
+        assert calls == ["global_python_suite"]
+        assert json.loads(output.read_bytes())["contract_ready_score"] == 1
+        assert not json.loads(output.read_bytes())["repository_health"]["passed"]
+        monkeypatch.setattr(c, "validate", lambda _: dict(receipts=[], coverage=dict(complete=False)))
+        assert c.main(["--output", str(output)]) == 1
+        monkeypatch.setattr(c.time, "monotonic_ns", lambda: changed["start_ns"] + 3301_000_000_000)
+        with pytest.raises(TimeoutError, match="measurement_deadline"):
+            c.main(["--output", str(output)])
+        times = iter([changed["start_ns"], changed["start_ns"] + 4801_000_000_000])
+        monkeypatch.setattr(c.time, "monotonic_ns", lambda: next(times))
+>       with pytest.raises(TimeoutError, match="hard_deadline"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'TimeoutError'>
+
+tests/python/test_v776_contract_9096.py:266: Failed
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v776_contract_9096.py::test_orchestration - Failed: ...
+1 failed, 31 passed, 1 warning in 93.38s (0:01:33)

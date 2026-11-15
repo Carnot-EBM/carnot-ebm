@@ -114297,6 +114297,36 @@ Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
 
+Execution contract, frozen 2026-11-15: compare all fourteen full task objects,
+including prompts, routing, substrates and gates, with the visible table and
+embedded JSON. Bind staged authority before activation and active authority
+after activation. Permit only the existing brace encoding. Require ordered
+Exp9096–Exp9109, unique dispatch keys, unused IDs and earlier producers that
+declare each gated field in REQUIRED ARTIFACT FIELDS.
+
+Authenticate original V775 design, queue, capstone and retained primitive bytes
+before reduction. Preserve all fourteen outcomes, absent declared primaries,
+scheduler alternatives, custody fixture success, topology block, human hash
+mismatch, cost inventory null and CPU susceptibility result. Recompute reported
+inventories from retained unit rows. Never repin a historical producer.
+
+Freeze the unchanged Exp9084 static protocol and separate online, signal-control,
+judge and timing protocols before dependent work. Keep the seven/ten graph bounds
+deferred unchanged, GAP-ORACLE-DISTINCT and GAP-DETECTOR-AUROC-4208 open, and LPHB
+exposed development. ARC registry/frontier reads establish context only.
+
+#### SCENARIO-REPORT-9096-V776-VALIDATION
+
+Owned tests, direct consumers, E2E-018/020/021, strict mypy, Ruff, explicit-path
+spec coverage and 100 percent owned statement coverage with zero exclusions
+SHALL use commands frozen before reduction. Current normal exits, exact scope,
+code hashes and retained logs qualify administrative readiness only. A failed
+affected check disqualifies readiness. Run the full Python suite once and retain
+broader historical failures separately. Private real CLI success, external block,
+cold replay and rehashed tamper controls run outside the checkout without
+PYTHONPATH. Unchanged adversarial and strict row scanners gate atomic publication.
+No model load, generation, training, activation or external publication occurs.
+
 ### REQ-REPORT-9097-V776: Authenticate original human producer bytes and retained question roles
 
 Task `exp9097-human-authority` SHALL produce `results/experiment_9097_v776_human_authority.json` using
