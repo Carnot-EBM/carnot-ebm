@@ -113935,6 +113935,33 @@ SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_c
 **SCENARIO-REPORT-9084-V775:** Positive private controls qualify actual readiness;
 missing external operands block terminally, tampering fails, and valid nulls retain rows.
 
+Implementation contract, frozen 2026-11-15: authenticate the original LPHB
+commit c2cf053567d5ae458656ee0e420509e35d73406d, dictionary, labels, retained
+producer hashes and V726 partition before dependent work. Inventory all900
+responses and300 qid groups, including the actual A2 subset, before exclusions.
+Preserve all known exposure and historical failure records. A changed producer
+hash is an explicit external block; authentic author bytes may still support an
+independent inventory. Missing files and fields differ from observed zero.
+
+Freeze question/answer-only features, embedded-tokenizer right truncation at
+256/768 tokens, mean final-layer pooling, separate L2 normalization, TRAIN-only
+center/scale, seed775084 Gaussian27 projection and TRAIN-only clipped[-1,1]
+scaling. Freeze six arms, shared projected features, whole-qid TRAIN donor
+derangement, proper logloss with0.01 ridge excluding intercept and verified
+gradient convergence. Freeze CAL temperatures[0.5,1,2,4], ascending ties,
+accept<=0.1/reject>=0.9 and10000 paired qid draws seed775092 with half-coverage
+reranking within each draw. These are conditional exposed-development intervals.
+This methods task SHALL load no model and train no head. Future extraction must
+retain exact runtime/tokenizer hashes, full token counts, masks and coefficients.
+Only authentic sources and passing frozen owned checks qualify readiness1.
+
+Tests SHALL exercise valid parser/label controls, prohibited-field invariance,
+partition incompatibility, missing inputs, producer drift, failed validation and
+rehashed summary tampering. Require100 percent owned statements without
+exclusions, direct consumers, private CLI success/block/cold replay, E2E-018/021,
+Ruff, strict mypy, explicit spec tracing and unchanged terminal scanners.
+The conductor owns ops and traceability reconciliation. No roadmap activation.
+
 ### REQ-REPORT-9085-V775: Collect first-attempt graph shard A under custody
 
 Status: proposed, not executed. Task `exp9085-collect-a` SHALL produce
