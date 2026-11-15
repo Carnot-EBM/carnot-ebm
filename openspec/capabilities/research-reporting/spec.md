@@ -114610,6 +114610,30 @@ Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
 
+#### SCENARIO-REPORT-9109-V776-ACCOUNTING (2026-11-15 protocol freeze)
+
+Authenticate Exp9096's complete ordered task objects and each consumed immutable
+source before reduction. Account for Exp9096 through Exp9109 exactly once.
+Keep declared primaries, scheduler alternatives, missing files, missing fields,
+observed zeros, verdicts and readiness separate. Missing external science is a
+terminal block; completed administrative accounting may still have readiness1.
+Recompute source groups, runtime outcomes and fixed judge metrics from retained
+rows. Disqualified judge scores are diagnostic only. Preserve absent six-arm,
+future-benefit, retention, semantic-control and complete-cost measurements as
+nulls. Preserve Exp8435's null, graph seven/ten bounds and CPU susceptibility
+without rerunning their mechanisms. Apply each prior retirement condition only
+to its named scope and actual prior verdict; make recommendations only.
+
+#### SCENARIO-REPORT-9109-V776-REPLAY (2026-11-15 protocol freeze)
+
+Freeze commands before reduction. Require all owned and direct-consumer checks,
+100 percent newly owned statements with zero exclusions, Ruff, strict mypy and
+explicit-path spec coverage. Real private CLI success/block/rehashed-tamper and
+foreign cold replay must run without PYTHONPATH. Preserve historical suite
+failures separately. G1-G4 retain historical FoVer scope. No model is loaded;
+current invocation counts and independent generalization stay zero. No queue,
+manifest, historical producer, public default or conductor is modified.
+
 #### REQ-REPORT-9107-V776 execution contract (2026-11-15)
 
 Authenticate Exp9097 source_ready_score=1 and Exp9098 logits_ready_score=1
