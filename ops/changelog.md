@@ -23801,3 +23801,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - The full private CLI passes all eight frozen commands, both unchanged artifact
   checkers, publication and cold replay without `PYTHONPATH`, with zero model
   loads. Preserve a concurrent anomaly-log append reported by the test guard.
+- 2026-11-15: Exp9107: Measure fixed Qwen factual-decision probabilities on the same human panel (⚠️ Research Finding) — honest_verdict=complete_disqualified_artifact_checks; results/experiment_9107_v776_qwen_judge.json
