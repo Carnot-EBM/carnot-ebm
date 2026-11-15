@@ -114170,3 +114170,65 @@ Scientific service operands remain unavailable; task and qualification counts
 are separate from scientific request denominators. Validation receipts in the
 primary qualify readiness; ops/status/traceability reconciliation is delegated
 to the conductor by the task instruction.
+
+### REQ-REPORT-9094-V775-NUMERICS: Freeze an equal-energy CPU mechanism diagnostic
+
+The implementation of REQ-REPORT-9094-V775 SHALL use authenticated arXiv
+2611.14727v1 equations 6–8, 23, 32 and 36. It SHALL retain 32 independent
+4-hidden/2-output cases with seeds 775094–775125, K=1, W=N(0,1)/4,
+fields 1+incident absolute-weight sums, alpha=[0,.25,.5,.75,1] and equal
+second-harmonic strengths [.1,1,10]. Each case SHALL use the next six normal
+RNG draws after W as a normalized phase direction, then the next two as a
+normalized independent output loss-gradient probe q. The independent physical
+force is -q; its displacement solves H dz=-q. No physical loss is substituted
+for that probe. Offsets are [0,.001,.01,.1]; beta=[1e-4,1e-3,1e-2].
+
+Before measurements, tests SHALL check energy gradients, full Hessians and
+mixed energy differences. The central step is 1e-4, derivative absolute
+error <=1e-6, binary energy error <=1e-10. All 64 binary configurations
+SHALL retain configuration identity and stability across all arms. Inverse
+claims require lambda_min>1e-6, with no ridge. Mixed curvature and independently
+forced hidden response at alpha=.5 SHALL be <=1e-10; endpoint responses SHALL
+exceed 1e-10. A zero cosine squared-loss force at binary phases SHALL be
+reported separately. Newton solves use a fixed 20-iteration cap and 1e-14
+residual target; success requires residual<=1e-12 and positive perturbed
+curvature. Absolute displacement errors, errors/beta and descriptive adjacent
+log slopes SHALL be retained, including floating-point floors. No significance
+or generalization claim is authorized.
+
+#### SCENARIO-REPORT-9094-V775-NUMERICS
+
+Finite differences agree under frozen tolerances, unstable and failed solver
+rows remain visible, and a deliberately altered equation fails the mechanism
+gate without changing tolerances. Tests SHALL reference this requirement.
+
+### REQ-REPORT-9094-V775-PROVENANCE: Publish only checked primitive reductions
+
+Sources, producer byte hashes, exact gate fields, private storage and validation
+commands SHALL be frozen before dependent measurements. Missing or altered
+primary inputs SHALL produce complete_blocked_<check>, with missing_file,
+missing_field and observed zero distinguished. The operation map SHALL still
+complete without usable Exp9093 service costs. It SHALL separate BFS truth,
+spline/linear arithmetic and host durability from hypothetical Ising sampling,
+physical learning and fixed-point basis updates. GPU0 is local inference
+hardware; GPU1 is reserved; KV260 remains k_max<=5, PolarFire Fmax is prior
+only, and Extropic/Kona are vendor claims without local measured access.
+
+#### SCENARIO-REPORT-9094-V775-PROVENANCE
+
+Actual private CLI success, missing-source block, byte tampering, rehashed
+aggregate tampering and cold replay SHALL run outside the checkout without
+PYTHONPATH. Readiness requires exact frozen command/log receipts, 100 percent
+newly owned statements with zero exclusions, scoped Ruff/format/strict mypy,
+explicit-path spec coverage, direct publication/current-receipt consumers and
+E2E-018/020/021. The full Python suite SHALL run once and preserve historical
+failures separately. Unchanged adversarial and strict-row scanners SHALL pass
+before primary_publication exposes the primary. Current LLM invocations are
+zero; historical provenance remains separate. This is CPU numerical evidence
+only, with no device dispatch, inference-speed, joule or generator-benefit claim.
+
+Oracle scope clarification for REQ-REPORT-9094-V775-PROVENANCE: a successful
+exact numerical diagnostic SHALL keep `verifier_is_oracle=true` and use
+`verdict_class=circular_positive`. It does not qualify an independent verifier
+or physical learning benefit. The unchanged adversarial scanner enforces this
+classification before the primary becomes visible.
