@@ -114437,11 +114437,58 @@ Task `exp9099-online-methods` SHALL produce `results/experiment_9099_v776_online
 the frozen design and complete task prompt. It SHALL retain per-unit rows,
 verdict_class, exact gate diagnostics, actual substrate and validation receipts.
 
+The separate exploratory human protocol SHALL rank original TRAIN qids by
+SHA256(`v776-online` + original qid), initialize on the first100, and freeze ten
+disjoint five-qid streams from the remaining50. Original CAL50 and TEST100 remain
+guard and retention. Seed776099 donors SHALL come only from initialization qids,
+preserving original sibling order. Static150 fits and the historical graph
+learner SHALL remain unchanged. Initialization refits the inherited27-dimensional
+transform and fixed217-column spline basis using only initialization groups.
+
+Five single-vector arms SHALL use fixed temperature1, proper binary logloss,
+L2=0.01, inherited convergence checks, clipped anchored AdaGrad (learning rate
+0.05, epsilon1e-8, zero accumulator, no intercept anchor). Bias-only zeros other
+gradient coordinates. Every three-sibling proposal SHALL be guarded against its
+arm's initial state on all150 CAL rows (Brier increase<=0.005, error increase<=0).
+Rejection SHALL restore both coefficients and accumulator and acknowledge labels.
+
+Every group's fifteen predictions SHALL be durable before the previous group's
+labels are released. Final feedback SHALL drain after all predictions. Retention
+predictions SHALL be sealed without exposing retention labels to the learner.
+Each stream SHALL reset to identical initial states. Recovery SHALL preserve
+parameters, accumulators, pending feedback, acknowledgments and prediction rows.
+
+Before measurement the protocol SHALL freeze four future Brier improvement
+lower bounds>0 and retention Brier/error upper bounds<=0.005/0, using10000 paired
+stream-bootstrap draws, seed776105 and one-sided tail0.05/6. Future scoring covers
+groups2–5 (40 unique qids); repeated retention uses100 unique qids. Ten streams
+have limited power and intervals condition on the fixed fit, guard and retention.
+CPU fixtures qualify mechanics only and SHALL NOT imply scientific benefit.
+
 #### SCENARIO-REPORT-9099-V776
 
 Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
+
+Positive-learning and seeded no-signal fixtures SHALL exercise actual updates.
+Future-label and sibling-leak controls SHALL preserve predictions before release;
+duplicate acknowledgment SHALL have no second effect; donors SHALL never consume
+future truth. Real child exits73 before prediction fsync, after feedback receipt
+and during atomic state replacement SHALL resume exactly. Owned checks SHALL
+include100-percent new statement coverage with zero exclusions, strict mypy,
+Ruff, explicit-path spec coverage, direct consumers and private E2E-018/020/021
+success/block/cold replay/rehashed-tamper refusal from outside the checkout without
+PYTHONPATH. Failed affected checks SHALL disqualify readiness. External missing
+inputs SHALL produce terminal blocked results with exact gate operands.
+
+Implementation receipt (2026-11-15): separate `human_online_9099` learner and
+`online_methods_9099` reporting modules preserve the historical graph interface.
+The14 owned controls and63 direct-consumer tests pass. All486 newly owned
+statements are covered with zero exclusions; Ruff, strict mypy, explicit-path
+spec coverage and E2E-018/020/021 pass. The broad repository suite reached its
+600-second deadline with failures and remains separate health debt. Human
+benefit bounds remain unmeasured; methods qualification is not a scientific win.
 
 ### REQ-REPORT-9100-V776: Extract frozen human representations in shard A
 
