@@ -22080,3 +22080,4 @@ code |
 | 2026-11-15 06:17 UTC | Exp9090: Train delayed-feedback decisions with exa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9087-sealed-admission) |
 | 2026-11-15 06:17 UTC | Exp9091: Independently reduce frozen detector and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9089-static-seal, exp9090-online-seal, exp9087-sealed-admission) |
 | 2026-11-15 06:17 UTC | Exp9092: Train and audit exposed-human typed energ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9088-human-embeddings) |
+| 2026-11-15 07:14 UTC | Exp9093: Account for complete and censored service | OK | 94 passed, 1 warning in 16.46s |
