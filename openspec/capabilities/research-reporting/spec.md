@@ -114044,11 +114044,39 @@ missing external operands block terminally, tampering fails, and valid nulls ret
 
 ### REQ-REPORT-9095-V775: Reconcile fourteen outcomes and close unchanged comparisons
 
-Status: proposed, not executed. Task `exp9095-capstone` SHALL produce
+Status: implemented; terminal receipts record validation. Task `exp9095-capstone` SHALL produce
 `results/experiment_9095_v775_capstone.json` under its exact V775 prompt, evidence and acceptance contract.
 SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
 **SCENARIO-REPORT-9095-V775:** Positive private controls qualify actual readiness;
 missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+Execution contract, 2026-11-15: the ungated reducer SHALL enumerate exp9082
+through exp9095 in original order, compare complete active/design task objects
+and unique dispatch keys, and authenticate fixed primary bytes and producer
+bindings. Missing primary, authenticated scheduler alternative, unstarted work,
+terminal null and measured evidence SHALL remain distinct. Historical producer
+drift SHALL remain visible without erasing authenticated sibling results.
+Missing staged YAML after activation SHALL be recorded, never reconstructed.
+
+The reducer SHALL recompute exposed LPHB counts, interval-union costs and the
+32-case susceptibility summary from hashed primitive rows. Unavailable graph
+predictions SHALL leave all seven detector and ten online bounds unmeasured.
+Graph truth is an executable oracle; LPHB is exposed development. Independent
+generalization SHALL remain zero. Reconciliation readiness SHALL be an integer
+gate separate from terminal blocked scientific readiness. Repeated custody
+failure SHALL recommend retirement pending enforceable new prerequisites,
+without modifying the exclusion manifest. Each branch SHALL name a concrete
+next decision and the evidence needed to reopen it. The original archive and
+stable historical FoVer G1/G2/G3/G4 publication gate SHALL remain separate.
+
+Tests SHALL precede implementation and cover exact gate zero/missing states,
+positive/private publication, source and aggregate tampering, cold replay,
+validation failure, null closure and primitive/aggregate agreement. Freeze
+owned/direct-consumer commands before reduction; require 100 percent new
+statements with zero exclusions, Ruff, strict mypy, explicit-path spec coverage,
+E2E-018/020/021, unchanged adversarial and strict-row scanners. Run the full
+Python suite once and retain broader failures separately. The conductor owns
+ops/status/changelog/traceability reconciliation and archival activation.
 
 ### REQ-REPORT-9082-V775-EXECUTION: Authenticate the complete administrative contract
 
