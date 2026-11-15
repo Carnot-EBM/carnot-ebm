@@ -9,10 +9,28 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_9054_v773_branch_contract.json
+## experiment_9068_v774_dispatch_contract.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+The artifact’s remainder: JSON cuts off inside "authority_manifest". No headline claim or overall verdict is visible. The visible "arc_frontier.checks" records a diagnostic: "optional_arc_support" failed with "observed": 0.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact assert a comparative result without per-unit metrics?
+
+The omitted remainder was not checked; it could change this assessment.
+
+## experiment_9069_v774_source_custody.json
 
 **CANNOT_DETERMINE**
 
@@ -22,19 +40,19 @@ CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
 
-The visible excerpt records passed acceptance gates and no new ARC outcomes, but the headline verdict is not visible.
+no claim
 
 ## WHAT IS MISSING
 
-The artifact’s ending: it cuts off inside "authority_manifest", before any final verdict or "gate_check_summary" is visible. "arc_frontier.ready": false alone does not establish an unexplained blocker.
+The remainder of the artifact: it cuts off mid-path inside `"b_attempt_inventory.files"`. No verdict or `"gate_check_summary"` is visible. `"a_custody_ready_score": 0` and `"complete_no_attempt_authority": false` alone do not establish that the task was blocked.
 
 ## THE CHECK A READER CANNOT DO
 
-Does the omitted portion report a blocked verdict and record its reason?
+Does the missing remainder report a comparative claim or a blocked verdict with a diagnostic?
 
-Only the supplied excerpt was checked; the missing ending could change the classification.
+Only the supplied excerpt was assessed; omitted content could change the classification.
 
-## experiment_9055_v773_prospective_roster.json
+## experiment_9070_v774_adjudication_methods.json
 
 **CHECKABLE**
 
@@ -42,7 +60,7 @@ Only the supplied excerpt was checked; the missing ending could change the class
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The prospective roster is complete and custody-ready; no comparative performance or detector benefit is claimed.
+Human-target construction is blocked by `"base_question_family_authority"`; `"construction_evidence.missing"` identifies the absent author mapping from source-version/question/template IDs to common base families.
 
 ## WHAT IS MISSING
 nothing
@@ -50,9 +68,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-External files and hashes were not checked; this assessment covers only the supplied excerpt.
+Not checked: external files or reruns; assessment covers only the supplied text.
 
-## experiment_9056_v773_human_release_authority.json
+## experiment_9071_collect_b.json
 
 **CHECKABLE**
 
@@ -60,7 +78,7 @@ External files and hashes were not checked; this assessment covers only the supp
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Annotation authority is blocked because attributable individual judgments and original annotator IDs are missing, as recorded in "missingness" and "original_annotator_ids".
+Collection was blocked because `exp9069-source-custody.b_collection_ready_score` was 0, failing the required equality to 1.
 
 ## WHAT IS MISSING
 nothing
@@ -68,9 +86,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-Source files were not checked; this verdict covers the supplied excerpt.
-
-## experiment_9057_human_probe_methods.json
+## experiment_9073_human_features.json
 
 **CHECKABLE**
 
@@ -78,7 +94,7 @@ Source files were not checked; this verdict covers the supplied excerpt.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because upstream `human_source_ready_score` was 0, while the gate required 1.
+The task was blocked because both upstream readiness gates, "human_source_ready_score" and "human_methods_ready_score", recorded 0 when each required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -86,7 +102,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_9058_v773_fresh_corpus_a.json
+## experiment_9079_v774_hardware_boundary.json
 
 **CHECKABLE**
 
@@ -94,7 +110,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact records first-response custody only; it claims no detector benefit or independent generalization.
+The hardware assessment is blocked: "gate_check_summary" records "current_cost" failing with "observed": "missing_file"; no actual-device speedup is claimed.
 
 ## WHAT IS MISSING
 nothing
@@ -102,7 +118,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_9060_sealed_corpus_admission.json
+Not checked: experiment execution or referenced files; this verdict covers the supplied text only.
+
+## experiment_9080_arc_transfer.json
 
 **CHECKABLE**
 
@@ -110,7 +128,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Admission of the full graph corpus was blocked because upstream artifact `exp9059-fresh-corpus-b` was missing.
+Experiment 9080 was blocked because upstream `arc_new_outcomes_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -118,7 +136,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_9066_arc_transfer_evidence.json
+## experiment_9081_v774_capstone.json
 
 **CHECKABLE**
 
@@ -126,7 +144,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 9066 was blocked because upstream "arc_new_outcomes_ready_score" was 0 and the gate required 1.
+Fourteen administrative outcomes were completed, without claiming measured scientific benefit or authorizing publication.
 
 ## WHAT IS MISSING
 nothing
@@ -134,20 +152,4 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_9067_v773_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone reports fourteen administrative outcomes, with scientific bounds unmeasured and no new scientific or deployment benefit claimed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Referenced files and the truncated remainder were not checked; omitted claims remain unaudited.
+External references were not checked; this assessment covers only the supplied text.

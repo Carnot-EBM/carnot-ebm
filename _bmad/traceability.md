@@ -4956,3 +4956,26 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-VERIFY-V773-HUMAN; SCENARIO-VERIFY-V773-HUMAN | Exp9056, Exp9057, Exp9064 | Independent MDH authority and matched factual-error pilot | Planned |
 | REQ-VERIFY-V773-LEARNING; SCENARIO-VERIFY-V773-LEARNING | Exp9062–Exp9065 | Delayed adaptation, retention and complete service cost | Planned |
 | REQ-KAN-V773-MATCHED; SCENARIO-KAN-V773-MATCHED | Exp9057, Exp9061–Exp9065 | Frozen graph states and separate matched human heads | Planned |
+
+
+## V775 planning traceability — 2026-11-14
+
+Proposed only. No implementation, new test coverage or scientific outcome is claimed.
+See `openspec/change-proposals/research-roadmap-vNEXT.md`; active queue is unchanged.
+
+| Requirement / scenario | Task | Phase | Planned deliverable | Status |
+|---|---|---:|---|---|
+| REQ-REPORT-9082-V775 / SCENARIO-REPORT-9082-V775 | exp9082-contract | 1 | results/experiment_9082_v775_contract.json | Proposed |
+| REQ-REPORT-9083-V775 / SCENARIO-REPORT-9083-V775 | exp9083-prospective-custody | 1 | results/experiment_9083_v775_prospective_custody.json | Proposed |
+| REQ-REPORT-9084-V775 / SCENARIO-REPORT-9084-V775 | exp9084-human-methods | 1 | results/experiment_9084_v775_human_methods.json | Proposed |
+| REQ-REPORT-9085-V775 / SCENARIO-REPORT-9085-V775 | exp9085-collect-a | 2 | results/experiment_9085_v775_collect_a.json | Proposed |
+| REQ-REPORT-9086-V775 / SCENARIO-REPORT-9086-V775 | exp9086-collect-b | 2 | results/experiment_9086_v775_collect_b.json | Proposed |
+| REQ-REPORT-9087-V775 / SCENARIO-REPORT-9087-V775 | exp9087-sealed-admission | 2 | results/experiment_9087_v775_sealed_admission.json | Proposed |
+| REQ-REPORT-9088-V775 / SCENARIO-REPORT-9088-V775 | exp9088-human-embeddings | 2 | results/experiment_9088_v775_human_embeddings.json | Proposed |
+| REQ-REPORT-9089-V775 / SCENARIO-REPORT-9089-V775 | exp9089-static-seal | 3 | results/experiment_9089_v775_static_seal.json | Proposed |
+| REQ-REPORT-9090-V775 / SCENARIO-REPORT-9090-V775 | exp9090-online-seal | 3 | results/experiment_9090_v775_online_seal.json | Proposed |
+| REQ-REPORT-9091-V775 / SCENARIO-REPORT-9091-V775 | exp9091-graph-decision | 3 | results/experiment_9091_v775_graph_decision.json | Proposed |
+| REQ-REPORT-9092-V775 / SCENARIO-REPORT-9092-V775 | exp9092-human-decision | 3 | results/experiment_9092_v775_human_decision.json | Proposed |
+| REQ-REPORT-9093-V775 / SCENARIO-REPORT-9093-V775 | exp9093-service-cost | 4 | results/experiment_9093_v775_service_cost.json | Proposed |
+| REQ-REPORT-9094-V775 / SCENARIO-REPORT-9094-V775 | exp9094-susceptibility | 4 | results/experiment_9094_v775_susceptibility.json | Proposed |
+| REQ-REPORT-9095-V775 / SCENARIO-REPORT-9095-V775 | exp9095-capstone | 4 | results/experiment_9095_v775_capstone.json | Proposed |

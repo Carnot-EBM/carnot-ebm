@@ -113864,3 +113864,123 @@ qualification. Its historical log side effect was preserved and restored.
 No activation, manifest mutation or external publication occurred. Ops and BMAD
 updates remain assigned to the conductor. Status: implemented and qualified
 accounting; externally blocked science.
+
+
+## V775 prospective graph decisions and exposed-human representations (proposed 2026-11-14)
+
+This is a planning contract, not implemented or measured evidence. The complete
+methods, thresholds, gates and task prompts are frozen in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+Historical V774 authority remains in the dated preserved design/queue.
+
+### REQ-REPORT-9082-V775: Freeze fourteen tasks and unchanged scientific thresholds
+
+Status: proposed, not executed. Task `exp9082-contract` SHALL produce
+`results/experiment_9082_v775_contract.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9082-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9083-V775: Qualify enforced custody before freezing a new graph roster
+
+Status: proposed, not executed. Task `exp9083-prospective-custody` SHALL produce
+`results/experiment_9083_v775_prospective_custody.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9083-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9084-V775: Freeze an exposed-human embedding comparison
+
+Status: proposed, not executed. Task `exp9084-human-methods` SHALL produce
+`results/experiment_9084_v775_human_methods.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9084-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9085-V775: Collect first-attempt graph shard A under custody
+
+Status: proposed, not executed. Task `exp9085-collect-a` SHALL produce
+`results/experiment_9085_v775_collect_a.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9085-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9086-V775: Collect first-attempt graph shard B under custody
+
+Status: proposed, not executed. Task `exp9086-collect-b` SHALL produce
+`results/experiment_9086_v775_collect_b.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9086-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9087-V775: Admit disjoint complete shards without exposing targets
+
+Status: proposed, not executed. Task `exp9087-sealed-admission` SHALL produce
+`results/experiment_9087_v775_sealed_admission.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9087-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9088-V775: Extract frozen Qwen representations without generated judgments
+
+Status: proposed, not executed. Task `exp9088-human-embeddings` SHALL produce
+`results/experiment_9088_v775_human_embeddings.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9088-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9089-V775: Seal five frozen graph decision arms
+
+Status: proposed, not executed. Task `exp9089-static-seal` SHALL produce
+`results/experiment_9089_v775_static_seal.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9089-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9090-V775: Train delayed-feedback decisions with exact recovery
+
+Status: proposed, not executed. Task `exp9090-online-seal` SHALL produce
+`results/experiment_9090_v775_online_seal.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9090-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9091-V775: Independently reduce frozen detector and learning bounds
+
+Status: proposed, not executed. Task `exp9091-graph-decision` SHALL produce
+`results/experiment_9091_v775_graph_decision.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9091-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9092-V775: Train and audit exposed-human typed energy decisions
+
+Status: proposed, not executed. Task `exp9092-human-decision` SHALL produce
+`results/experiment_9092_v775_human_decision.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9092-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9093-V775: Account for complete and censored service work
+
+Status: proposed, not executed. Task `exp9093-service-cost` SHALL produce
+`results/experiment_9093_v775_service_cost.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9093-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9094-V775: Test physical learning signals at equal Ising energies
+
+Status: proposed, not executed. Task `exp9094-susceptibility` SHALL produce
+`results/experiment_9094_v775_susceptibility.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9094-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9095-V775: Reconcile fourteen outcomes and close unchanged comparisons
+
+Status: proposed, not executed. Task `exp9095-capstone` SHALL produce
+`results/experiment_9095_v775_capstone.json` under its exact V775 prompt, evidence and acceptance contract.
+SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
+**SCENARIO-REPORT-9095-V775:** Positive private controls qualify actual readiness;
+missing external operands block terminally, tampering fails, and valid nulls retain rows.

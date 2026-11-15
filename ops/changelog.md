@@ -23720,3 +23720,18 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-13: Exp9070: Qualify MDHJudgments and freeze human-target methods (⚠️ Blocked) — honest_verdict=complete_blocked_base_question_family_authority; results/experiment_9070_v774_adjudication_methods.json
 - 2026-11-13: Exp9079: Map current verifier work to supported hardware (⚠️ Blocked) — honest_verdict=complete_blocked_current_cost; results/experiment_9079_v774_hardware_boundary.json
 - 2026-11-13: Exp9081: Reconcile fourteen outcomes and exact continuation limits (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9081_v774_capstone.json
+
+
+## 2026-11-14 — V775 research plan proposed (not activated)
+
+Created matching `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`:14 tasks, Exp9082–Exp9095, four phases. Preserved V774
+design and queue byte-for-byte. Recorded the requested literature scan before
+design; added proposed REQ/SCENARIO pairs and traceability. Scope: prospective
+worker custody and fresh graph collection, frozen static/delayed-learning bounds,
+exposed-LPHB Qwen representation/typed-decision comparison, ungated complete/censored
+cost inventory and CPU susceptibility diagnostic. Both graph seals precede shared
+TEST access. Human exposure, V726 null and V774 blocked sources remain explicit.
+No current scientific result, independent generalization, hardware speedup or ARC
+solve is claimed. Active roadmap and research_conductor.py remain unchanged.
+Planning checks are recorded in the follow-up validation entry.

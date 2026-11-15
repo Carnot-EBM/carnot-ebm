@@ -19297,3 +19297,18 @@ have exact structured gates. Full V772 authority bytes are preserved.
 
 Planning checks are in progress. No activation, experiment, model run, board change,
 external publication or push occurred. Protected runtime files remain unchanged.
+
+
+## 2026-11-14 — V775 research plan proposed (not activated)
+
+Created matching `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`:14 tasks, Exp9082–Exp9095, four phases. Preserved V774
+design and queue byte-for-byte. Recorded the requested literature scan before
+design; added proposed REQ/SCENARIO pairs and traceability. Scope: prospective
+worker custody and fresh graph collection, frozen static/delayed-learning bounds,
+exposed-LPHB Qwen representation/typed-decision comparison, ungated complete/censored
+cost inventory and CPU susceptibility diagnostic. Both graph seals precede shared
+TEST access. Human exposure, V726 null and V774 blocked sources remain explicit.
+No current scientific result, independent generalization, hardware speedup or ARC
+solve is claimed. Active roadmap and research_conductor.py remain unchanged.
+Planning checks are recorded in the follow-up validation entry.

@@ -22043,3 +22043,27 @@ code |
 | 2026-11-14 22:21 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
 | 2026-11-14 22:43 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
 | 2026-11-14 22:59 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 11: OPEN 77 days: SILENT_NON_FIRING on exclu |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 11: OPEN 77 days: SILENT_NON |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_online_training_evidence age-week 10: OPEN  |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_online_arm_metric_items age-week 10: OPEN 70 days: SILEN |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_byte_identical_online_arm_reason age-week 10: OPEN 70 da |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_probe_exercise_evidence age-week 10: OPEN 7 |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_but_unrun_probe_reasons age-week 10: OPEN 70 da |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nondegenerate_lever_evidence age-week 10: OPEN 70 da |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_execution_venue age-week 9: OPEN 63 days: SILENT_NO |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_artifact_run_date age-week 9: OPEN 63 days: SILENT_NON_F |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 9: OPEN 63 days: SILENT_NO |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_strip_verdict_terminal_prefix age-week 8: OPEN 56 days:  |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_declaration_shape age-week 8: OPEN 56 day |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 8: OPEN 56 days: REAL_ |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_value_matches age-week 7: OPEN 49 da |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 7: OPEN 49 days: S |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_invocation_evidence age-week 7: OPEN 49 days: SILE |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 7: OPEN 49 days: REAL_ |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8409_v724_retrospective_label_criterion.json age-week 5: OPEN 35 days |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_uniform_energy_ablation_evidence age-week 4: OPEN 28 |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_lever_exercise_severity age-week 2: OPEN 14 days: REAL_B |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_value_routing_cost_control_overclaim age-week 2: OP |
+| 2026-11-15 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_bool_leaf_values age-week 2: OPEN 14 days: SILENT_NON_FI |
+| 2026-11-15 01:24 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

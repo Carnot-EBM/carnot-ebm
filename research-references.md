@@ -56750,3 +56750,105 @@ supplies five separately retained annotation exports. Their exact response and
 section join does not authenticate cross-template base-question lineage or
 close prior exposure. Targets remain sealed. Semantic Scholar returned429 on
 both attempts. No missing annotations or independent people counts are inferred.
+
+## 2026-11-14 — V775 planning scan: prospective custody and measured learning
+
+Recorded before the V775 experiment design. The scan revisited all eight requested
+arXiv topics and all six secondary channels. External results are method leads,
+not Carnot measurements. The V774 primaries show no new detector or learning result.
+
+### Findings selected for design
+
+- **New physical-learning diagnostic:** Farasat et al.,
+  [Susceptibility Bottlenecks in Equilibrium Propagation Using Oscillator Ising
+  Machines, 2611.14727](https://arxiv.org/abs/2611.14727), November 10, 2026.
+  The paper separates the output nudge from the cross-layer response. Couplings
+  can agree on binary-state energy while transmitting different learning signals.
+  Test this distinction with a small numerical derivative control before mapping
+  an online learner to a device. A CPU calculation cannot establish FPGA or TSU
+  speed, nor does an Ising energy identity certify a spline-update implementation.
+- **Rechecked useful learning criteria:** [Online spline KAN,
+  2602.02056v4](https://arxiv.org/abs/2602.02056), June 19 revision, and
+  [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987), April 27,
+  motivate local coefficient updates and separate calibration/accuracy retention.
+  Preserve the pending frozen graph comparison, causal feedback and complete
+  transaction costs. Neither work grants a theorem for Carnot's delayed learner.
+- **Rechecked human target and usable development data:**
+  [The Labeling Problem, 2610.08026](https://arxiv.org/abs/2610.08026), October 6,
+  distinguishes reference faithfulness from factual correctness. Its author
+  [LPHB release](https://github.com/jova486/LPHB) has explicit `qid`, `item_id`,
+  A1 labels and a partial A2 reliability panel. The current inspected revision is
+  `ee12828049420e478b8c8bac971259991400746b`; the author data README declares
+  CSV SHA256 `a3fcf79004152afe92c552754484a10455d9fd73960e7cfca14013059293a86f`.
+  This is already exposed Carnot development data (Exp8389/8403/8409). A new
+  metadata revision does not create fresh questions. It can support an explicitly
+  exploratory, group-separated head-training study, never an independent headline.
+  Preserve prior authority failures and compare exact retained original bytes;
+  no new judge labels, relabeling or regenerated answers are authorized.
+- **New objective caution, from ARM–EBM citation follow-up:** Blondel et al.,
+  [On the Difficulty of Sequence-Level Supervised Learning, 2611.16736](https://arxiv.org/abs/2611.16736),
+  November 12, studies pathological sequence-level objectives. Use established
+  proper small-head losses; do not infer that an energy interpretation licenses
+  generator training or a new unbounded objective.
+
+### Primary topics and decisions
+
+| Topic | Primary source checked | Design consequence |
+|---|---|---|
+| EBM verification/reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 6 | Exploration-based latent training is a future method lead; it does not reverse Carnot's unchanged generator nulls. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [PAL, 2503.19466](https://arxiv.org/abs/2503.19466) | Feasibility and formal truth remain distinct from natural factual judgments. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170); susceptibility paper above | Separate static energy equivalence, sample quality and learning dynamics. |
+| Hallucination detection/mitigation | Labeling Problem above; [Beyond Majority Vote, 2609.03953](https://arxiv.org/abs/2609.03953) | Keep original criteria, unknown judgments and family authority. MDHJudgments remains blocked. |
+| KAN | Online spline KAN above | Reuse frozen basis and strong linear controls; account for dense guard/anchor work. |
+| Energy-guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484), May revision | Defer steering until useful verification is measured; no new generator branch. |
+| Hardware sampling | [250-MTJ Ising machine, 2506.14590](https://arxiv.org/abs/2506.14590); susceptibility study above | Hardware-specific results do not transfer to the local boards or whole-service latency. |
+| Continual/online constraints | Continual Calibration and online spline KAN above | Predict before feedback, retain immutable comparisons and test recovery. |
+
+### Secondary sources and access limits
+
+- **OpenReview:** direct EBT and ARM–EBM forums returned browser challenges.
+  Search exposed primary [ICLR 2026 EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  text and [NRGPT paper](https://openreview.net/pdf/6feb228b3e35f6b1a41057403fa2aed7deebda65.pdf).
+  No unread review decision is used as evidence.
+- **Semantic Scholar:** Graph API queries for `ARXIV:2507.02092` and
+  `ARXIV:2512.15605` succeeded. The first page returned 20 EBT citations with
+  another page, and 11 ARM–EBM citations with no next page. Coverage is partial,
+  not an exhaustive literature review. Primary follow-up inspected EBR and
+  the November 12 sequence-level objective paper.
+- **Hugging Face Papers:** [HalluGuard](https://huggingface.co/papers/2601.18753)
+  was accessible; the Labeling Problem page failed retrieval. Feed summaries
+  are discovery aids, not annotation authority.
+- **GitHub Trending:** the Python monthly page returned a two-month-old crawl.
+  No current popularity claim is made. The author-linked LPHB README, data
+  dictionary and revision were inspected through the GitHub connector.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Torx/Thermalizers/Z1](https://extropic.ai/writing/from-one-to-one-billion).
+  Vendor stack announcements supply no authenticated local device access or
+  measured Carnot service speedup.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint-evaluation layer. No reproducible new implementation
+  was established from the inspected page.
+- **Release access:** the Dataverse LPHB DOI redirect failed in the browser and
+  its metadata API returned HTTP403. The author repository was accessible.
+  Retained qualified local inputs must remain the preferred development source.
+
+### Local evidence that changes the next plan
+
+Exp9069 found missing source-time access and invocation inventories in Exp9058.
+One cannot reconstruct proof of past nonexposure by adding a field today. Keep
+V773 A and the unattempted-B claim closed unless original evidence changes.
+A new prospective collection needs the recorder qualified before its first request,
+complete first-attempt accounting, and a prediction seal before truth access.
+
+Exp9070 found no author base-question family construction lineage for MDHJudgments
+and unknown exposure closure. No new independent human source was qualified by
+this scan. LPHB, RAGTruth and the inspected Trivia+ panel are already exposed.
+They remain development material. A human-head prototype must say so explicitly;
+it cannot close GAP-ORACLE-DISTINCT by renaming a split. This constraint is a reason
+to measure a bounded exploratory model, not to schedule another impossible
+fresh-label gate or silently lower an old gate.
+
+V775 adversarial planning review also traced LPHB through Exp8429–8435.
+Exp8435 is `complete_null_v726_capacity_benefit_audit`; the proposed embedding
+representation is the changed technique, not a fresh source or a reversal of that
+null. Preserve original question partitions and whole-question donor controls.

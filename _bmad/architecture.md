@@ -1154,3 +1154,15 @@ Continuous learning keeps the admitted five-arm delayed-update protocol. Full co
 includes guards, anchors, durable storage and recovery. No new board operation,
 bitstream, generator training, product default or external publication is proposed.
 ARC remains a structured new-outcome-gated slot; capstone accounting is unconditional.
+
+
+### Proposed V775 boundary — 2026-11-14
+
+The staged fourteen-task design adds a prospective trusted custodian with enforced
+OS worker isolation before new graph collection. Both static and online seals must
+exist before shared TEST truth is readable. A separate exposed-LPHB branch uses
+frozen Qwen GGUF embeddings and small typed-decision heads. Complete/censored cost
+accounting, a CPU susceptibility diagnostic and reconciliation are ungated. These
+are proposed experiments, not shipped components; the exact architecture and
+protocols are in `openspec/change-proposals/research-roadmap-vNEXT.md`. Independent
+human generalization remains open; ARC has no new solve claim in this plan.
