@@ -23810,3 +23810,20 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
   loads. Preserve a concurrent anomaly-log append reported by the test guard.
 - 2026-11-15: Exp9107: Measure fixed Qwen factual-decision probabilities on the same human panel (⚠️ Research Finding) — honest_verdict=complete_disqualified_artifact_checks; results/experiment_9107_v776_qwen_judge.json
 - 2026-11-15: Exp9109: Reconcile fourteen outcomes and decide the human verification continuation (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9109_v776_capstone.json
+
+## 2026-11-15 — Stage V777 forward-feature and human-energy research
+
+- Record the requested primary/secondary research scan before design, including
+  full returned Semantic Scholar citation pages, new hardware/sequence-learning
+  leads and explicit OpenReview/Trending access limits.
+- Preserve V776 design and active queue byte for byte. Stage exactly14 tasks,
+  Exp9110–Exp9123, with matching visible and full-object contracts.
+- Plan a masked native-input repair hypothesis and operation-specific receipt
+  controls, followed by independent frozen-feature and raw-logit human studies.
+  Preserve the original static/online protocols, exposed roles and prior nulls.
+- Include delayed continuous learning, answer-information controls, raw-energy
+  probability/offset controls, complete costs and hardware operation boundaries.
+  All LLM tasks name the mandated cached Qwen and actual forward-only substrate.
+- Add proposed requirements, traceability and architecture notes. No experiment,
+  runtime implementation, activation, conductor edit, external publication or push.
+  Planning validation is recorded separately after checks.

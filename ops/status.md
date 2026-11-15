@@ -19359,6 +19359,25 @@ historical topology authority; no device speedup or independent generalization
 is claimed. No experiments ran during planning. Validation results follow below.
 The active roadmap and conductor remain unchanged; nothing was pushed.
 
+## V777 research milestone staged — 2026-11-15
+
+Proposed milestone2026.11.777 contains exactly14 tasks, Exp9110–Exp9123, across
+four phases. The full design and next-roadmap YAML are generated from identical
+complete task objects. V776 authority bytes are preserved separately.
+
+V776 authenticated the exposed900-answer human panel and qualified delayed update
+mechanics. Its embeddings failed padding parity; logits worked, but the measured
+judge was quarantined. V777 tests explicit masked native inputs, repairs demonstrated
+operation/count evidence semantics, and measures independent embedding and raw-logit
+decision branches. Continuous learning retains all original six bounds. Raw energy
+is tested against probability controls and logit-offset sensitivity. Full service
+and adaptation costs determine hardware relevance. No independent-generalization
+claim, active-roadmap change, model run, board operation or push occurred in planning.
+
+The requested research scan was recorded before design. Proposed requirements,
+traceability and architecture boundaries are aligned. Planning validation follows
+in a separate entry; the completion archive still ends at V775.
+
 ### Exp9107 Qwen judge test repair — 2026-11-15
 
 Zero-load refusals now declare `blocked_no_run` in the artifact and both native

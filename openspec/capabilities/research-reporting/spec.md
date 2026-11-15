@@ -114680,3 +114680,190 @@ Implemented and verified by `tests/python/test_qwen_judge_9107.py`: zero-load
 refusals, attempted-load failures, actual cold CLI replay, rehashed tamper
 rejection and unchanged artifact validators pass. The four owned files cover
 409/409 executable statements with zero exclusions.
+
+
+## V777 proposed forward-feature and human-energy research — 2026-11-15
+
+Status: Proposed; no implementation or scientific result is claimed.
+
+### REQ-REPORT-V777-BOUNDARY
+
+The fourteen-task contract, Exp9110–Exp9123, SHALL match the staged YAML and
+full design exactly. Preserve V776 bytes, original human roles/exposure and
+frozen static/online thresholds. Qualify masked native features and operation
+evidence before dependent work; test a separate whole-answer raw-logit protocol.
+All comparisons retain per-qid rows; readiness and benefit remain separate.
+
+### SCENARIO-REPORT-V777-BOUNDARY
+
+Contract drift, later/absent producer gates, copied outcome scores, unsupported
+loads, label leakage, prediction-after-feedback and rehashed tampering SHALL fail.
+The active queue, conductor, historical primaries and exclusions stay unchanged.
+
+### REQ-REPORT-9110-V777
+
+Proposed: Bind fourteen tasks and retain authenticated human methods. Deliver `results/experiment_9110_v777_contract.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: contract_ready_score, source_ready_score, online_methods_ready_score: separate integer0/1 fields; full_task_objects, canonical_task_hash, authority_snapshots, previous_outcome_rows, source_manifest_reference, evaluator_label_reference, shard_a_roster_reference, shard_b_roster_reference, static_protocol_reference, online_protocol_reference, energy_protocol_reference, closed_scope_rows, archive_lag.
+
+### SCENARIO-REPORT-9110-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9111-V777
+
+Proposed: Qualify forward-only receipts and structural count evidence. Deliver `results/experiment_9111_v777_forward_evidence.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: forward_evidence_ready_score: integer0/1; original_flag_rows, semantic_control_rows, structural_count_derivations, preserved_detection_rows, historical_judge_diagnostic_reference, changed_validator_paths, validator_hashes. This task qualifies evidence semantics, not judge accuracy.
+
+### SCENARIO-REPORT-9111-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9112-V777
+
+Proposed: Test masked ragged Qwen features with unchanged tolerances. Deliver `results/experiment_9112_v777_masked_runtime.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: embeddings_ready_score, logits_ready_score, embedding_shard_feasible_score, logit_capture_feasible_score: integer0/1; fixture_rows, native_batch_references, mask_mapping_rows, hidden_state_references, raw_logit_checks, parity_errors, causal_diagnosis, runtime_reference, offload_evidence, duration_projection, actual_operation_receipts.
+
+### SCENARIO-REPORT-9112-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9113-V777
+
+Proposed: Freeze raw-logit energy and probability controls. Deliver `results/experiment_9113_v777_energy_methods.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: energy_methods_ready_score: integer0/1; energy_protocol_reference, formula_control_rows, offset_control_rows, chunk_control_rows, fixture_fit_rows, feature_definitions, comparator_definitions, raw_energy_gauge_invariant=false, frozen_source_role_reference.
+
+### SCENARIO-REPORT-9113-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9114-V777
+
+Proposed: Extract masked frozen human features in shard A. Deliver `results/experiment_9114_v777_features_a.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: features_a_ready_score: integer0/1; feature_matrix_reference, roster_reference, runtime_reference, input_hash_rows, vector_shape, role_counts, token_counts, current_forward_receipts, request_clock_reference, checkpoint_reference. No labels in the model request.
+
+### SCENARIO-REPORT-9114-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9115-V777
+
+Proposed: Extract masked frozen human features in shard B. Deliver `results/experiment_9115_v777_features_b.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: features_b_ready_score: integer0/1; feature_matrix_reference, roster_reference, runtime_reference, input_hash_rows, vector_shape, role_counts, token_counts, current_forward_receipts, request_clock_reference, checkpoint_reference. No labels in the model request.
+
+### SCENARIO-REPORT-9115-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9116-V777
+
+Proposed: Capture teacher-forced Qwen energy statistics on human answers. Deliver `results/experiment_9116_v777_logit_capture.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: logit_rows_ready_score: integer0/1; token_statistics_reference, full_logit_sample_reference, source_roster_reference, runtime_reference, token_alignment_rows, formula_replay_rows, row_support, request_clock_reference, model_load_receipts, forward_calls, generated_tokens=0.
+
+### SCENARIO-REPORT-9116-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9117-V777
+
+Proposed: Train frozen matched human decision heads. Deliver `results/experiment_9117_v777_static_heads.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: static_predictions_ready_score: integer0/1; prediction_reference, fitted_state_reference, transform_reference, calibration_rows, convergence_rows, donor_map_reference, original_role_counts, training_and_scoring_clock_reference.
+
+### SCENARIO-REPORT-9117-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9118-V777
+
+Proposed: Measure delayed coefficient learning with exact recovery. Deliver `results/experiment_9118_v777_online_streams.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: online_predictions_ready_score: integer0/1; online_prediction_reference, retention_prediction_reference, initialization_reference, stream_roster_reference, donor_map_reference, update_rows, state_hash_rows, feedback_release_rows, guard_rows, hard_exit_receipts, recovery_exact_score, complete_adaptation_clock_reference.
+
+### SCENARIO-REPORT-9118-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9119-V777
+
+Proposed: Audit static decisions and answer-specific signal. Deliver `results/experiment_9119_v777_static_audit.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: static_audit_ready_score, static_signal_score: separate integer0/1; per_qid_results, six_arm_metric_rows, five_contrast_interval_rows, acceptance_bound_rows, annotation_sensitivity_rows, ablation_prediction_reference, ablation_metric_rows, within_qid_support, original_exp8435_null.
+
+### SCENARIO-REPORT-9119-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9120-V777
+
+Proposed: Independently test future benefit and retained calibration. Deliver `results/experiment_9120_v777_learning_audit.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: learning_audit_ready_score, learning_signal_score: separate integer0/1; future_brier_rows, retention_rows, six_bound_rows, donor_exercise_rows, causal_order_rows, recovery_rows, effective_unique_qids, conditional_uncertainty_scope.
+
+### SCENARIO-REPORT-9120-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9121-V777
+
+Proposed: Test raw-energy value beyond normalized probability controls. Deliver `results/experiment_9121_v777_energy_audit.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: energy_audit_ready_score, energy_increment_score: separate integer0/1; token_replay_rows, feature_rows_reference, five_arm_prediction_reference, model_state_reference, fit_and_calibration_rows, contrast_interval_rows, acceptance_bound_rows, gauge_sensitivity_rows, cross_model_scoring=true, exact_span_replication=false, optional_embedding_comparison.
+
+### SCENARIO-REPORT-9121-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9122-V777
+
+Proposed: Measure available complete services and adaptation costs. Deliver `results/experiment_9122_v777_complete_cost.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: cost_inventory_ready_score, embedding_service_ready_score, energy_service_ready_score, online_cost_ready_score: separate integer0/1; per_request_timing_rows, paired_service_cost_rows, complete_adaptation_rows, model_load_rows, failed_censored_work, clock_boundary_map, hardware_operation_rows, amdahl_ceiling_or_null, energy_joules_or_null.
+
+### SCENARIO-REPORT-9122-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.
+
+### REQ-REPORT-9123-V777
+
+Proposed: Reconcile fourteen outcomes and exact continuation gates. Deliver `results/experiment_9123_v777_capstone.json`.
+The full task protocol and acceptance gates in the V777 design are normative.
+Required producer fields: reconciliation_ready_score: integer0/1; full_task_objects, task_outcome_rows, declared_gate_rows, static_bound_rows, online_bound_rows, energy_bound_rows, cost_summary, continuation_decisions, retirement_recommendations, closed_scope_rows, open_gaps, archive_lag, independent_generalization_score=0, external_publication_authorized=false, activation_authorized=false.
+
+### SCENARIO-REPORT-9123-V777
+
+Use the task's positive and rejecting controls, original source roles and
+private CLI/cold replay checks; missing external inputs terminate blocked.
+Preserve all measured rows and validate every aggregate before publication.

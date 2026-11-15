@@ -5029,3 +5029,27 @@ consumer and E2E-018/021 tests pass 73 checks. This repair does not rerun model
 inference or republish the historical primary artifact.
 The full private CLI also passes all frozen commands, artifact checks, atomic
 publication and cold replay with zero model loads and 100% owned coverage.
+
+
+## V777 planning traceability — 2026-11-15
+
+Proposed only. FR-12: Exp9112–9117/9119/9121; FR-11: Exp9118/9120;
+FR-05/08 and NFR-01 measurement boundary: Exp9122. No Rust speedup is claimed.
+REQ-REPORT-V777-BOUNDARY / SCENARIO-REPORT-V777-BOUNDARY cover all fourteen tasks.
+
+| Requirement / scenario | Task | Phase | Planned deliverable | Status |
+|---|---|---:|---|---|
+| REQ-REPORT-9110-V777 / SCENARIO-REPORT-9110-V777 | exp9110-contract | 1 | results/experiment_9110_v777_contract.json | Proposed |
+| REQ-REPORT-9111-V777 / SCENARIO-REPORT-9111-V777 | exp9111-forward-evidence | 1 | results/experiment_9111_v777_forward_evidence.json | Proposed |
+| REQ-REPORT-9112-V777 / SCENARIO-REPORT-9112-V777 | exp9112-masked-runtime | 1 | results/experiment_9112_v777_masked_runtime.json | Proposed |
+| REQ-REPORT-9113-V777 / SCENARIO-REPORT-9113-V777 | exp9113-energy-methods | 1 | results/experiment_9113_v777_energy_methods.json | Proposed |
+| REQ-REPORT-9114-V777 / SCENARIO-REPORT-9114-V777 | exp9114-features-a | 2 | results/experiment_9114_v777_features_a.json | Proposed |
+| REQ-REPORT-9115-V777 / SCENARIO-REPORT-9115-V777 | exp9115-features-b | 2 | results/experiment_9115_v777_features_b.json | Proposed |
+| REQ-REPORT-9116-V777 / SCENARIO-REPORT-9116-V777 | exp9116-logit-capture | 2 | results/experiment_9116_v777_logit_capture.json | Proposed |
+| REQ-REPORT-9117-V777 / SCENARIO-REPORT-9117-V777 | exp9117-static-heads | 3 | results/experiment_9117_v777_static_heads.json | Proposed |
+| REQ-REPORT-9118-V777 / SCENARIO-REPORT-9118-V777 | exp9118-online-streams | 3 | results/experiment_9118_v777_online_streams.json | Proposed |
+| REQ-REPORT-9119-V777 / SCENARIO-REPORT-9119-V777 | exp9119-static-audit | 3 | results/experiment_9119_v777_static_audit.json | Proposed |
+| REQ-REPORT-9120-V777 / SCENARIO-REPORT-9120-V777 | exp9120-learning-audit | 3 | results/experiment_9120_v777_learning_audit.json | Proposed |
+| REQ-REPORT-9121-V777 / SCENARIO-REPORT-9121-V777 | exp9121-energy-audit | 3 | results/experiment_9121_v777_energy_audit.json | Proposed |
+| REQ-REPORT-9122-V777 / SCENARIO-REPORT-9122-V777 | exp9122-complete-cost | 4 | results/experiment_9122_v777_complete_cost.json | Proposed |
+| REQ-REPORT-9123-V777 / SCENARIO-REPORT-9123-V777 | exp9123-capstone | 4 | results/experiment_9123_v777_capstone.json | Proposed |

@@ -56940,3 +56940,90 @@ This is a concrete changed prerequisite for immutable historical authentication,
 not permission to repin the old artifact to current code. Remaining producer and
 raw-data closure must still qualify. LPHB remains exposed development and
 Exp8435's prior capacity-benefit null remains valid.
+
+## 2026-11-15 — V777 planning scan: reliable forward features and falsifiable energy signals
+
+Recorded before writing the V777 task design. Read the complete completion archive
+and indexed all 298 prior roadmap documents; followed the relevant human-feature,
+continuous-learning and spilled-energy lineages to their primary artifacts.
+The archive ends at V775; V776 closure is in the active queue, primary artifacts
+and conductor log. Scheduling completion is not a scientific success.
+
+### Primary research and decisions
+
+| Topic | Primary source checked | Consequence for planning |
+|---|---|---|
+| EBM reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 6, 2026 | Latent-energy refinement is a useful foundation-model direction, but its algorithmic-task results do not establish factual verification. Keep the generator frozen. |
+| Neural constraints | [Only Project Once, 2610.04572](https://arxiv.org/abs/2610.04572), October 3, 2026; [T-SKM-Net](https://ojs.aaai.org/index.php/AAAI/article/view/38459), March 14, 2026 | Projection and exact feasibility need an explicit constraint oracle. They cannot replace human factual labels. Correct PAL identifier for this title is 2610.04572; earlier scan references to 2503.19466 are not authority for this paper. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), June 30, 2026 | Measure sample quality, autocorrelation and full service costs before translating a learning workload to Ising hardware. No new sampler sweep is justified here. |
+| Hallucination detection | [Spilled Energy, 2602.18671v4](https://arxiv.org/html/2602.18671v4), March 3, 2026 revision; [Entropy Distribution, 2605.28264](https://arxiv.org/abs/2605.28264), May 27, 2026 | Test forward-only raw-logit energy against normalized likelihood and entropy controls on the authenticated human panel. Distinguish a whole-answer cross-model adaptation from the papers' original settings. |
+| KAN and hardware learning | [Online spline KAN, 2602.02056v4](https://arxiv.org/abs/2602.02056), June 19, 2026 revision, ICML 2026 | Retain fixed local spline bases and small delayed coefficient updates. Include full guard scans and durable storage in adaptation cost. A paper's FPGA result does not qualify Carnot's boards. |
+| Energy-guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484), May 19, 2026 revision, ICML 2026 | Guidance remains downstream of a useful verifier. Do not add generation or search before measuring predictive signal and complete cost. |
+| FPGA sampling | [Anechoic, 2610.13368v2](https://arxiv.org/abs/2610.13368), November 4, 2026 revision | Onsager correction is a new hardware lead. Dense Max-Cut annealing on Alveo V80 is not equilibrium sampling or a KV260 result. File for a future workload-matched study. |
+| Continual learning | [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987), April 27, 2026 | Preserve distinct future-benefit and calibration-retention gates. Calibration buffers are operational feedback, not independent evaluation; no conformal guarantee is imported. |
+
+Spilled Energy uses selected logits and full-vocabulary partition statistics;
+the repository's `metrics/spilled_energy.py` logprob-only functions are not that
+definition. Reuse the checked adjacent-step statistics in
+`python/carnot/experiment_6980_spilled_energy_requalification.py` where applicable.
+Exp6980's `complete_null_spilled_energy_requalification_retired` remains closed
+for its exact ConstraintIR/span experiment. A human-label, whole-answer,
+cross-model teacher-forcing study has a different target and must name that prior
+null explicitly. No claim of reproducing exact-answer localization is permitted.
+
+Planner inference to test: adding a per-prefix constant to every vocabulary logit
+leaves probabilities unchanged but can change raw marginal/spill scores. Include
+this gauge control and a chunk-boundary indexing control before natural scoring.
+Raw-logit discrimination, if present, is representation-specific evidence rather
+than a proof that a probability distribution violates the chain rule. The entropy
+paper motivates mean/tail controls; simple entropy summaries are not CES and
+inherit none of its stated guarantees.
+
+### Citation discovery and secondary sources
+
+- **Semantic Scholar:** browser requests failed; direct read-only Graph API
+  requests succeeded with `limit=100`. EBT (2507.02092) returned 46 citing records,
+  ARM–EBM (2512.15605) returned 11; neither response had a next page. This is the
+  endpoint's indexed coverage at retrieval, not an exhaustive scholarly census.
+  New leads followed to primary arXiv pages were
+  [Energy-Based Policy Orchestration, 2611.02546](https://arxiv.org/abs/2611.02546),
+  November 2, and [Sequence-Level Supervised Learning, 2611.16736](https://arxiv.org/abs/2611.16736),
+  November 12. The first is robotic policy/goal selection; the second identifies
+  problems with particular sequence-level objectives. Neither licenses generator
+  training here. [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047)
+  further cautions against treating solver hardness as model difficulty.
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM work. The EBT PDF was indexed;
+  Spilled Energy forum/PDF requests hit browser verification. Cross-checked the
+  [official ICLR proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/97dc07f1253ab33ee514f395a82fa7cc-Abstract-Conference.html).
+  Do not infer unseen reviewer comments or new acceptance decisions.
+- **Hugging Face Papers:** inspected the [Spilled Energy page](https://huggingface.co/papers/2602.18671)
+  and followed its author repository. Feed summaries and bot recommendations are
+  discovery aids; primary paper and author code govern the method.
+- **GitHub:** [monthly Python Trending](https://github.com/trending/python?since=monthly)
+  was served from a two-month-old crawl. No current trending rank is established.
+  [OmnAI-Lab/spilled-energy](https://github.com/OmnAI-Lab/spilled-energy) is an
+  implementation lead, not a new dependency selected by popularity.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and the
+  [Torx/Thermalizers/Z1 announcement](https://extropic.ai/writing/from-one-to-one-billion).
+  The index exposed little text; the announcement is vendor evidence, with no
+  new local hardware access, measured energy or Carnot sampling result.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  Its description supports a constraint-evaluation direction but provides no
+  inspected reproducible weights or architecture update to implement here.
+
+### Changed local evidence
+
+Exp9097 authenticated 900 human-labeled answers in 300 original question groups.
+They remain exposed development. Exp9099 qualified delayed update/recovery
+mechanics, not learning benefit. Exp9098 recorded real offload and usable logits,
+but eight of twelve embedding fixtures failed `padding_parity`. Its current
+adapter passes padding tokens to native evaluation and removes them only during
+pooling. Whether that explains all discrepancies requires a controlled test;
+an attention-mask-aware ragged boundary is a concrete repair hypothesis.
+
+Exp9107 measured a judge but is quarantined for count-tautology and contradictory
+forward/generation receipt classifications. Preserve its primary bytes. Qualify
+operation-specific receipt semantics using positive and adversarial controls
+before another expensive forward job. Do not suppress flags or rename measured
+fields to conceal them. The existing zero-load repair alone did not qualify the
+measured artifact. No fresh independent human source was established by this scan.

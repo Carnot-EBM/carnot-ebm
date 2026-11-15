@@ -1186,3 +1186,24 @@ date is unchanged. Full V775 design/queue bytes are preserved separately.
 
 Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Execution proposal: `research-roadmap-next.yaml`; active V775 remains unchanged.
+
+## Proposed V777 forward-evidence boundary — 2026-11-15
+
+V777 proposes fourteen tasks, Exp9110–Exp9123; planning changes no runtime behavior.
+V776 design/queue bytes are preserved. Source labels and delayed update machinery
+qualified; hidden features failed padding parity and the measured judge remains
+quarantined. Two scientific branches share authenticated original human roles:
+mask-aware ragged hidden features and chunked teacher-forced raw-logit statistics.
+Logit readiness is independent of embedding readiness. Neither generates tokens.
+
+Explicit masks govern native token admission; pooling cannot retroactively mask
+tokens already evaluated. Receipt semantics distinguish load, forward and
+generation work. Raw-logit energy receives probability and offset controls rather
+than a claim of physical truth. Static150 and online100 initialization stay
+separate; scheduled feedback, CAL guards and TEST retention keep distinct roles.
+
+Complete cost includes frozen-model work, all guards and durable updates. Current
+Ising hardware does not implement those operations automatically. The design and
+staged queue are normative; no independent generalization, Rust speedup, board
+operation or ARC solve is claimed. The global architecture reconciliation date
+is unchanged because this is a scoped proposal, not a whole-repository audit.
