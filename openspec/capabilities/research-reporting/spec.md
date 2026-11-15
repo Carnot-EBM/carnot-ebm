@@ -114123,3 +114123,50 @@ Evidence: `results/raw/experiment_9082_v775_contract/fix-validation/`.
 The separate global diagnostic fails collection in V733 because its historical
 activation reference still checks the evolving live roadmap. Repository-wide
 coverage and health are not qualified by these scoped results.
+
+### REQ-REPORT-9093-V775-ACCOUNTING: Inventory unavailable service branches honestly
+
+The service-cost producer SHALL freeze source bytes, declared producer hashes,
+exact gate fields and its validation commands before any accounting replay.
+It SHALL inventory V775 qualification, rejected or censored work, validation,
+collection diagnostics and unstarted tasks separately. Missing declared paths
+SHALL remain missing even when a separately named conductor diagnostic exists.
+Accounting has no positive-science or source-readiness gate. A validated inventory
+may have cost_inventory_ready_score=1 with complete_service_cost_ready_score=0.
+A missing scientific operand SHALL remain null and prevent a complete-service
+ratio. Failed owned checks SHALL disqualify and zero both readiness fields.
+
+Primitive operation rows SHALL retain identity, group, seed, status, clocks,
+measurement boundary, device, model and source hash. Parent and child intervals
+SHALL be charged once using interval union; shared loads SHALL not be copied to
+requests. Unmeasured operations and gate-skipped requests SHALL never become
+zero-cost services. Power without an integral SHALL leave joules null. A bounded
+private CPU replay SHALL be labeled fixture and excluded from science costs.
+Graph labels remain executable-oracle evidence and human LPHB remains exposed
+development; independent_generalization_score SHALL remain zero.
+
+#### SCENARIO-REPORT-9093-V775-ACCOUNTING
+
+Requirement-linked tests SHALL first fail without the implementation. They SHALL
+exercise missing file, missing field, observed zero, changed producer hash,
+duplicate and overlapping clocks, censored and unstarted work, matched complete
+units, fixture isolation and failed validation. The actual CLI SHALL run privately
+outside the checkout without PYTHONPATH and reject rehashed headline and raw
+receipt tampering. Frozen scoped checks SHALL require 100 percent new statements
+with zero exclusions, Ruff check/format, strict mypy, explicit-path spec coverage,
+unchanged direct consumers and E2E-018/021. The full Python suite runs once with
+its historical failures recorded separately. Unchanged terminal scanners and
+cold replay SHALL pass before atomic primary publication. The conductor owns
+ops and traceability reconciliation; no roadmap or external publication occurs.
+
+Implementation scope, 2026-11-15: `service_cost_9093.py` owns immutable source
+inventory, original gate retention, interval-union accounting and a three-repeat
+synthetic JSON/fsync fixture. `service_cost_runner_9093.py` owns frozen validation,
+primitive replay and checked primary publication. The direct experiment CLI
+runs from foreign working directories without PYTHONPATH. Requirement-linked
+tests include duplicate custody objects, unpublished work, exact gate zeros,
+source and fixture tampering, validation failure and publication refusal.
+Scientific service operands remain unavailable; task and qualification counts
+are separate from scientific request denominators. Validation receipts in the
+primary qualify readiness; ops/status/traceability reconciliation is delegated
+to the conductor by the task instruction.
