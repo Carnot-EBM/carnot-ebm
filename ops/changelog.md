@@ -23757,3 +23757,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9083: Qualify enforced custody before freezing a new graph roster (⚠️ Blocked) — honest_verdict=complete_blocked_historical_attempt_topology_coverage; results/experiment_9083_v775_prospective_custody.json
 - 2026-11-15: Exp9084: Freeze an exposed-human embedding comparison (⚠️ Blocked) — honest_verdict=complete_blocked_historical_producer_hash; results/experiment_9084_v775_human_methods.json
 - 2026-11-15: Exp9093: Account for complete and censored service work (⚠️ Research Finding) — honest_verdict=complete_null_inventory_unavailable_service; results/experiment_9093_v775_service_cost.json
+- 2026-11-15: Exp9094: Test physical learning signals at equal Ising energies (⚠️ Research Finding) — honest_verdict=complete_circular_positive_susceptibility_mechanism; results/experiment_9094_v775_susceptibility.json
