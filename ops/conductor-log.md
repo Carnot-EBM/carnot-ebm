@@ -22090,3 +22090,4 @@ code |
 | 2026-11-15 13:50 UTC | Exp9097: Authenticate original human producer byte | OK | 105 passed, 1 warning in 29.30s |
 | 2026-11-15 15:14 UTC | Exp9098: Qualify frozen Qwen hidden states and dec | OK | 102 passed, 1 warning in 12.43s |
 | 2026-11-15 16:28 UTC | Exp9099: Freeze causal human coefficient updates a | OK | 95 passed, 2 warnings in 110.68s (0:01:50) |
+| 2026-11-15 16:36 UTC | Exp9100: Extract frozen human representations in s | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9098-embedding-runtime.embeddings_ready_score (actual=0 == expected=1) |
