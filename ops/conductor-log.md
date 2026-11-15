@@ -22097,3 +22097,5 @@ code |
 | 2026-11-15 16:47 UTC | Exp9104: Audit factual-error decisions against eve | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9102-static-heads) |
 | 2026-11-15 16:47 UTC | Exp9105: Audit causal benefit and calibration rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9103-online-streams) |
 | 2026-11-15 16:47 UTC | Exp9106: Separate answer information from question | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9102-static-heads) |
+| 2026-11-15 17:47 UTC | Exp9107: Measure fixed Qwen factual-decision proba | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 108 passed, 1 warning in 13.71s |
+| 2026-11-15 17:49 UTC | Exp9108: Measure complete human decision costs and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9102-static-heads) |
