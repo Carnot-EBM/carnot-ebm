@@ -7742,7 +7742,10 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — no data available this milestone for experiment durations or GPU telemetry, as 0 experiments completed (0 compute-bound) in 0 wall-time minutes with no experiment commits found since activation of 2026.11.774 across both live git-log and disk-mtime reconstruction (reconstructed_from_disk_mtime: false); locked gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU monitor was not available.
 - acceptance: no data available this milestone
 
-
-
+### Milestone 2026.11.775
+- exp_range: exp9082-exp9095 (from the 5 synthesis-only tasks listed in TIMING DATA: Exp9082, Exp9083, Exp9084, Exp9094, Exp9095; no data available this milestone for the experiment ID of the 1 completed compute-bound task)
+- theme: Operational execution analysis of 6 completed experiments (1 compute-bound, 5 synthesis-only) across 28.8 wall-time minutes (29 minutes / 0.5 hours, averaging 5 minutes per experiment).
+- key result: honest operational negative — 6 experiments (1 compute-bound, 5 synthesis-only) completed in 28.8 wall-time minutes (29 minutes / 0.5 hours, averaging 5 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log), led by 5 synthesis-only tasks: Exp9082: Freeze fourteen tasks and unchanged scientific thresholds (19.84 min / 20min), Exp9095: Reconcile fourteen outcomes and close unchanged comparisons (5.18 min / 5min), Exp9083: Qualify enforced custody before freezing a new graph roster (3.69 min / 4min), Exp9094: Test physical learning signals at equal Ising energies (0.07 min / 0min), and Exp9084: Freeze an exposed-human embedding comparison (0.01 min / 0min), while no data is available this milestone for the exact ID, task name, or duration of the 1 completed compute-bound experiment (which finished at or below 0.01 minutes / 0min); locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel).
+- acceptance: no data available this milestone
 
 

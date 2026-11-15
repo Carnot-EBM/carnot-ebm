@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.775",
+  "generated_at": "2026-11-15T09:34:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 28.8,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9082: Freeze fourteen tasks and unchanged scientific thresholds",
+      "duration_minutes": 19.84,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9095: Reconcile fourteen outcomes and close unchanged comparisons",
+      "duration_minutes": 5.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9083: Qualify enforced custody before freezing a new graph roster",
+      "duration_minutes": 3.69,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9094: Test physical learning signals at equal Ising energies",
+      "duration_minutes": 0.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9084: Freeze an exposed-human embedding comparison",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.775 completed 6 experiments (1 compute-bound, 5 synthesis-only) in 28.8 wall-time minutes (29 minutes / 0.5 hours, averaging 5 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 entries in slowest_experiments were synthesis-only (compute_bound: false) — Exp9082: Freeze fourteen tasks and unchanged scientific thresholds (19.84 minutes / 20min), Exp9095: Reconcile fourteen outcomes and close unchanged comparisons (5.18 minutes / 5min), Exp9083: Qualify enforced custody before freezing a new graph roster (3.69 minutes / 4min), Exp9094: Test physical learning signals at equal Ising energies (0.07 minutes / 0min), and Exp9084: Freeze an exposed-human embedding comparison (0.01 minutes / 0min) — while no data is available this milestone for the exact ID, name, or duration of the 1 completed compute-bound experiment (which finished at or below 0.01 minutes / 0min). The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "No data is available this milestone for the exact experiment ID, task name, or duration of the 1 completed compute-bound experiment because all 5 entries in slowest_experiments are synthesis-only (compute_bound: false), meaning the 1 compute-bound task finished at or below the 0.01-minute (0min) fifth-slowest threshold; locked gpu_idle_on_compute_bound_tasks is false.",
+    "Synthesis-only contract freezing, outcome reconciliation, and custody qualification dominated the 28.8-minute (29 minutes / 0.5 hours, 5 minutes average per experiment) milestone wall time: Exp9082: Freeze fourteen tasks and unchanged scientific thresholds took 19.84 minutes (20min), Exp9095: Reconcile fourteen outcomes and close unchanged comparisons took 5.18 minutes (5min), and Exp9083: Qualify enforced custody before freezing a new graph roster took 3.69 minutes (4min), whereas Exp9094: Test physical learning signals at equal Ising energies (0.07 minutes / 0min) and Exp9084: Freeze an exposed-human embedding comparison (0.01 minutes / 0min) were sub-minute.",
+    "The live git-log timing path found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 6 completed experiments.",
+    "The GPU STATE block reported 'GPU monitor not available', providing no telemetry for GPU utilization, memory, or hardware state during the milestone."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse fourteen-task contract definitions, unchanged scientific thresholds, and fourteen-outcome comparison state between Exp9082: Freeze fourteen tasks and unchanged scientific thresholds (19.84 minutes / 20min) and Exp9095: Reconcile fourteen outcomes and close unchanged comparisons (5.18 minutes / 5min) to avoid redundant full-roster verification.",
+    "Pre-validate and cache enforced-custody qualification receipts in Exp9083: Qualify enforced custody before freezing a new graph roster (3.69 minutes / 4min) and parallelize independent validation checks across the 5 synthesis-only tasks to reduce the 5-minute per-experiment average.",
+    "Persist direct per-experiment start and completion timestamps in result receipts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry before compute-bound tasks execute while keeping DualGPURunner scoped strictly to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and share fourteen-task contract, unchanged threshold, and fourteen-outcome reconciliation artifacts across Exp9082 (19.84 minutes / 20min) and Exp9095 (5.18 minutes / 5min).",
+    "Reuse pre-qualified custody receipts in Exp9083 (3.69 minutes / 4min) and parallelize synthesis validation checks across the 5 synthesis-only tasks to cut the 5-minute average duration.",
+    "Persist direct per-experiment execution timestamps to eliminate disk-mtime fallback (0 commits in live git-log) and restore GPU monitor availability for the 1 compute-bound task class."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "Wall time in milestone 2026.11.775 (28.8 minutes / 29 minutes / 0.5 hours across 6 completed experiments, averaging 5 minutes per experiment) was dominated by synthesis-only task freezing, outcome reconciliation, and custody qualification in Exp9082 (19.84 minutes / 20min), Exp9095 (5.18 minutes / 5min), and Exp9083 (3.69 minutes / 4min), while Exp9094 (0.07 minutes / 0min), Exp9084 (0.01 minutes / 0min), and the 1 compute-bound experiment (no data available this milestone for its exact ID or duration) finished in negligible time. Caching shared fourteen-task threshold and outcome-reconciliation artifacts alongside pre-validated custody receipts, persisting direct experiment timestamps so timing does not rely on disk-mtime fallback (0 commits in live git-log), and restoring GPU monitor telemetry are the highest-leverage improvements for the next milestone."
+}
