@@ -114339,6 +114339,38 @@ Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
 
+Historical resolution SHALL recover producer bytes from commit
+`8e8b08277f98f6ef3a3680e5a9d2653d7761c69e` and require SHA256
+`52cc5fe1903f0c991ccb416903d873f14d1d01785329e4d005fe77fb2268d128`.
+All original manifest, author, remaining code/config and V726 role references
+SHALL authenticate before replay. An isolated child SHALL use the historical
+mapper and authenticate the project modules actually imported. Current source
+drift SHALL never replace historical authority. Compare all900 item IDs, qids,
+A1/A2 labels and projected roles against independent author bytes. Require
+300 qids, three siblings each, TRAIN/CAL/TEST450/150/300 rows, A1 support900 and
+actual A2 support300 rows/100 qids; -1 remains missing.
+
+Before measurement, freeze Exp9084.protocol() unchanged and owned/direct-consumer
+validation commands. Seal label-free feature views separately from evaluator
+labels. Lexically sorted original qids1-150 form shard A;151-300 form shard B;
+retain sibling rows and original roles. Changed or rehashed labels, substituted
+producer, dependency loss and split drift SHALL fail. Missing closure yields
+terminal complete_blocked_<check> with explicit missing_file/missing_field/zero
+operands. Owned-check failure disqualifies readiness. Require100 percent owned
+statement coverage with zero exclusions, Ruff check/format, strict mypy, explicit
+spec tracing, actual private success/block/tamper/cold replay without PYTHONPATH,
+E2E-018/021 and unchanged adversarial/strict-row scanners. Record one full Python
+suite run separately. No learning or recovery runs occur here, so E2E-020 is
+reserved for downstream learning. Exposed administrative readiness establishes
+no scientific benefit; independent readiness and generalization remain0.
+
+Verification (20261115):24 owned controls and81 unchanged consumers pass with
+authenticated historical fixtures and restored per-test environments. All312 new
+statements execute with zero exclusions; E2E-018/021, Ruff, strict mypy, explicit
+spec tracing, private actual CLI success/block/tamper/cold replay and unchanged
+scanners pass. The single full-suite run retains V733 authority-pin collection
+errors and the V776 collection drift caused by concurrent test additions.
+
 ### REQ-REPORT-9098-V776: Qualify frozen Qwen hidden states and decision logits on fixed texts
 
 Task `exp9098-embedding-runtime` SHALL produce `results/experiment_9098_v776_embedding_runtime.json` using
