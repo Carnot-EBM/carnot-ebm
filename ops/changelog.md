@@ -23785,3 +23785,19 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9097: Authenticate original human producer bytes and retained question roles (✅ Complete) — honest_verdict=complete_positive_exposed_human_authority; results/experiment_9097_v776_human_authority.json
 - 2026-11-15: Exp9098: Qualify frozen Qwen hidden states and decision logits on fixed texts (⚠️ Research Finding) — honest_verdict=complete_null_runtime_capability_limit; results/experiment_9098_v776_embedding_runtime.json
 - 2026-11-15: Exp9099: Freeze causal human coefficient updates and exact recovery (⚠️ Research Finding) — honest_verdict=complete_null_online_methods_qualified; results/experiment_9099_v776_online_methods.json
+
+### 2026-11-15 — Repair Exp9107 zero-load substrate declarations
+
+- Derive actual artifact and native/fallback receipt classes from attempted
+  model loads; retain the requested judge class separately.
+- Preserve existing tests and add receipt assertions plus unchanged real
+  adversarial/strict-row checks of private blocked evidence and cold replay.
+- Verify 27 focused and 73 direct-consumer/E2E-018/021 tests, 409/409 owned
+  statements with zero exclusions, Ruff, format, strict mypy and scoped spec
+  coverage. Reconcile REQ-REPORT-9107-V776 traceability. No conductor changes,
+  live model run, primary-artifact republication, test skips or reversions.
+- Repository-wide checks still report the existing stale architecture date and
+  1,142 missing test/spec references outside this repair's scope.
+- The full private CLI passes all eight frozen commands, both unchanged artifact
+  checkers, publication and cold replay without `PYTHONPATH`, with zero model
+  loads. Preserve a concurrent anomaly-log append reported by the test guard.

@@ -19354,3 +19354,30 @@ LPHB remains exposed development. Graph collection stays closed on missing
 historical topology authority; no device speedup or independent generalization
 is claimed. No experiments ran during planning. Validation results follow below.
 The active roadmap and conductor remain unchanged; nothing was pushed.
+
+### Exp9107 Qwen judge test repair — 2026-11-15
+
+Zero-load refusals now declare `blocked_no_run` in the artifact and both native
+and fallback current-work receipts. Attempted model loads retain
+`model_load_no_generation`; the artifact records the requested class separately.
+Existing replay assertions remain intact, with new receipt checks and real
+adversarial/strict-row validation of the private blocked artifact.
+
+Verification: 27 focused tests and 73 direct-consumer/E2E-018/021 tests pass.
+All four owned files have 100% statement coverage (409/409, zero exclusions).
+Scoped Ruff, formatting, strict mypy and spec-reference coverage pass. No live
+Qwen run or primary-artifact republication was performed. The full repository
+suite was not run; repository-wide reconciliation findings are recorded below.
+
+Repository-wide checks retain existing failures: `_bmad/architecture.md` has a
+2026-10-11 reconciliation date, and full spec coverage reports 1,142 unrelated
+tests without requirement references. The affected test file passes scoped
+spec coverage; this repair does not change unrelated documentation dates or tests.
+
+The full private script-path CLI also passes its eight frozen validation
+commands, unchanged adversarial/strict-row checks, atomic publication and cold
+replay from `/tmp` without `PYTHONPATH`. It reports a missing-input refusal with
+zero model loads and generated tokens, and 409/409 owned statements covered.
+Private evidence is in `/tmp/carnot-9107-fix-1goq5t_4/`. The test mutation guard
+reported an unattributed concurrent append to `ops/anomaly-escalations.md`
+about the pre-repair repository artifact; that edit and artifact remain untouched.

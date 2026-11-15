@@ -5012,7 +5012,7 @@ and research-roadmap-v775-queue-preserved-20261115.yaml.
 | REQ-REPORT-9104-V776 / SCENARIO-REPORT-9104-V776 | exp9104-static-audit | 3 | results/experiment_9104_v776_static_audit.json | Proposed |
 | REQ-REPORT-9105-V776 / SCENARIO-REPORT-9105-V776 | exp9105-learning-audit | 3 | results/experiment_9105_v776_learning_audit.json | Proposed |
 | REQ-REPORT-9106-V776 / SCENARIO-REPORT-9106-V776 | exp9106-signal-controls | 3 | results/experiment_9106_v776_signal_controls.json | Proposed |
-| REQ-REPORT-9107-V776 / SCENARIO-REPORT-9107-V776 | exp9107-qwen-judge | 3 | results/experiment_9107_v776_qwen_judge.json | Proposed |
+| REQ-REPORT-9107-V776 / SCENARIO-REPORT-9107-V776 | exp9107-qwen-judge | 3 | results/experiment_9107_v776_qwen_judge.json | Implemented; private regression checks pass |
 | REQ-REPORT-9108-V776 / SCENARIO-REPORT-9108-V776 | exp9108-complete-cost | 4 | results/experiment_9108_v776_complete_cost.json | Proposed |
 | REQ-REPORT-9109-V776 / SCENARIO-REPORT-9109-V776 | exp9109-capstone | 4 | results/experiment_9109_v776_capstone.json | Proposed |
 
@@ -5020,3 +5020,12 @@ REQ-REPORT-V776-BOUNDARY / SCENARIO-REPORT-V776-BOUNDARY apply to all fourteen
 planned tasks. FR-12 maps to Exp9097/9098/9100–9102/9104/9106/9107; FR-11 maps
 to Exp9099/9103/9105; complete-cost and hardware feasibility map to Exp9108.
 No Rust performance result, independent human generalization or new ARC solve is claimed.
+
+Exp9107 repair verification (2026-11-15): `tests/python/test_qwen_judge_9107.py`
+passes 27 tests, including zero-load substrate declarations in native/fallback
+receipts and cold CLI replay through the unchanged artifact validators. The
+four owned files have 409/409 covered statements and zero exclusions. Direct
+consumer and E2E-018/021 tests pass 73 checks. This repair does not rerun model
+inference or republish the historical primary artifact.
+The full private CLI also passes all frozen commands, artifact checks, atomic
+publication and cold replay with zero model loads and 100% owned coverage.

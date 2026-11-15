@@ -114609,3 +114609,50 @@ verdict_class, exact gate diagnostics, actual substrate and validation receipts.
 Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
+
+#### REQ-REPORT-9107-V776 execution contract (2026-11-15)
+
+Authenticate Exp9097 source_ready_score=1 and Exp9098 logits_ready_score=1
+separately. Pin both primary files and every consumed sidecar. Embedding
+readiness is not a judge prerequisite. Preserve the original 50 CAL and 100
+TEST question groups, with three archived answers each. Missing files, missing
+fields, observed zero and changed bytes must remain distinct gate outcomes.
+
+Freeze one user message before inference: `Question: <quoted question>\nAnswer:
+<quoted answer>\nDoes the answer contain any factually false specific claim?
+Reply Yes or No.` JSON string quoting defines the data delimiters. Truncate
+embedded-tokenizer text tokens on the right at question256/answer768, then use
+the GGUF embedded chat template with its assistant prefix. Template special
+tokens must be parsed as special tokens. Retain full and templated counts.
+Use frozen cached Qwen Q4_K_M on leased GPU0 only. Sum full vocabulary
+teacher-forced log probabilities for every literal Yes and No continuation
+token from identical fresh prompt states. No generated token is permitted.
+
+Select temperature from [0.5,1,2,4] using CAL logloss, with ascending ties.
+Seal predictions before reading TEST targets. Report retained per-unit and
+per-qid metrics and 10000 paired question bootstrap draws with seed775092.
+Unavailable qualified Exp9102 heads do not block the baseline. Current model
+judgments are predictions about archived answers, never replacement labels or
+a Qwen answer-accuracy, search, independent-generalization or ARC solve claim.
+
+#### SCENARIO-REPORT-9107-V776 controls (2026-11-15)
+
+Controls must reject changed pins, absent raw logits, incomplete continuation
+scores, prohibited input leakage, altered aggregates and rehashed reduction
+tampering. Actual private CLI publication and cold replay run outside the
+checkout without PYTHONPATH. External refusal retains all identifiable slots
+and zero invented probabilities. Owned statement coverage is100 percent with
+zero exclusions. Failed owned checks disqualify readiness; unchanged external
+blocks are terminal. No delayed learning or recovery is performed.
+
+REQ-REPORT-9107-V776 substrate correction: a precondition refusal with zero
+model loads SHALL declare actual class `blocked_no_run`. Retain requested
+class `model_load_no_generation` separately. A measured judge keeps that model
+class. The unchanged adversarial verifier must accept the zero-work refusal.
+The native worker and fallback current-work receipts SHALL use the same actual
+class based on whether a model load was attempted, including failed loads.
+
+Implemented and verified by `tests/python/test_qwen_judge_9107.py`: zero-load
+refusals, attempted-load failures, actual cold CLI replay, rehashed tamper
+rejection and unchanged artifact validators pass. The four owned files cover
+409/409 executable statements with zero exclusions.
