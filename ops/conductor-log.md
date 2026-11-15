@@ -22073,3 +22073,5 @@ code |
 | 2026-11-15 04:53 UTC | Exp9083: Qualify enforced custody before freezing  | OK | 95 passed, 1 warning in 13.31s |
 | 2026-11-15 05:46 UTC | Exp9084: Freeze an exposed-human embedding compari | OK | 102 passed, 1 warning in 18.91s |
 | 2026-11-15 05:56 UTC | Exp9085: Collect first-attempt graph shard A under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9083-prospective-custody.custody_ready_score (actual=0 == expected=1) |
+| 2026-11-15 06:07 UTC | Exp9086: Collect first-attempt graph shard B under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9083-prospective-custody.custody_ready_score (actual=0 == expected=1) |
+| 2026-11-15 06:09 UTC | Exp9087: Admit disjoint complete shards without ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9085-collect-a, exp9086-collect-b) |
