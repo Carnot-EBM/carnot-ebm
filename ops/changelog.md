@@ -23827,3 +23827,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - Add proposed requirements, traceability and architecture notes. No experiment,
   runtime implementation, activation, conductor edit, external publication or push.
   Planning validation is recorded separately after checks.
+- 2026-11-15: Exp9110: Bind fourteen tasks and retain authenticated human methods (⚠️ Research Finding) — honest_verdict=complete_null_v777_contract; results/experiment_9110_v777_contract.json
