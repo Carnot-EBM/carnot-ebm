@@ -113889,6 +113889,44 @@ SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_c
 **SCENARIO-REPORT-9083-V775:** Positive private controls qualify actual readiness;
 missing external operands block terminally, tampering fails, and valid nulls retain rows.
 
+#### REQ-REPORT-9083-V775-ENFORCEMENT
+
+The trusted parent SHALL qualify a real mount/user/PID/network namespace with
+allowlisted runtime mounts, immutable worker bytes, cleared environment and closed
+inherited descriptors. The worker SHALL receive only finite numeric features and
+scheduled feedback. In-process sandbox guards are insufficient; isolation has no
+fallback. Host/operator compromise is outside this mechanism. Completeness applies
+only to supervised invocations, never to all host activity or historical access.
+
+Before a collector runs, an exclusive, fsynced request record SHALL bind the slot,
+graph, shard, role, split, exact prompt/model/seed and monotonic time. Responses and
+terminal errors SHALL be fsynced in an append-only hash chain. Pending starts are
+censored attempts after restart. Duplicate slots, orphan responses, absent starts,
+reordering and rehashing against an independently retained seal SHALL fail replay.
+Rejected attempts SHALL remain in the chain. References SHALL bind bytes and the
+producer rather than a literal authority string.
+
+#### SCENARIO-REPORT-9083-V775-ENFORCEMENT
+
+A private scripted fixture SHALL reach custody_ready_score=1 only after actual
+namespace denial controls for direct paths, symlinks, inherited descriptors,
+alternate entrypoints, network and early labels pass, together with ledger controls.
+The fixture SHALL retain a replayable ledger and claim no model measurement.
+Missing external historical roster/topology exclusion coverage SHALL block freshness
+before proposals, collection or dependent work. Observed absence on V773 B is not
+proof of nonattempt; both V773 shards are excluded in full. A blocked artifact SHALL
+name each missing operand and keep both readiness integers zero. It SHALL retain
+the deterministic future proposal contract (seed775083, bound100000, target1024,
+A/B512, CAL/TEST64 and online384 per shard), without treating an unconstructed
+roster as frozen. Owned checks and cold replay SHALL qualify publication. Ops and
+traceability reconciliation are conductor-owned for this task.
+
+Historical Exp9055's positive prefix-authentication test SHALL run unchanged
+against a private view of its original prefix inputs. Later Exp9045/9046/9058/9059
+collection directories SHALL remain preserved in the live tree and absent from
+that historical fixture. Its live-root failure SHALL remain separate evidence;
+the negative unpublished-collection control SHALL still use its own input tree.
+
 ### REQ-REPORT-9084-V775: Freeze an exposed-human embedding comparison
 
 Status: proposed, not executed. Task `exp9084-human-methods` SHALL produce
