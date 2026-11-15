@@ -22075,3 +22075,8 @@ code |
 | 2026-11-15 05:56 UTC | Exp9085: Collect first-attempt graph shard A under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9083-prospective-custody.custody_ready_score (actual=0 == expected=1) |
 | 2026-11-15 06:07 UTC | Exp9086: Collect first-attempt graph shard B under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9083-prospective-custody.custody_ready_score (actual=0 == expected=1) |
 | 2026-11-15 06:09 UTC | Exp9087: Admit disjoint complete shards without ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9085-collect-a, exp9086-collect-b) |
+| 2026-11-15 06:15 UTC | Exp9088: Extract frozen Qwen representations witho | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9084-human-methods.human_methods_ready_score (actual=0 == expected=1) |
+| 2026-11-15 06:17 UTC | Exp9089: Seal five frozen graph decision arms | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9087-sealed-admission) |
+| 2026-11-15 06:17 UTC | Exp9090: Train delayed-feedback decisions with exa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9087-sealed-admission) |
+| 2026-11-15 06:17 UTC | Exp9091: Independently reduce frozen detector and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9089-static-seal, exp9090-online-seal, exp9087-sealed-admission) |
+| 2026-11-15 06:17 UTC | Exp9092: Train and audit exposed-human typed energ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9088-human-embeddings) |
