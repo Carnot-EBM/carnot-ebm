@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-14 UTC — Operational retrospective for milestone 2026.11.774
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.774`: updated `results/operational_retro_2026_11_774.json` (schema `carnot.operational_retro.v64`). The TIMING DATA block reports that no experiment commits were found since activation of `2026.11.774` across both live git-log and disk-mtime reconstruction (`reconstructed_from_disk_mtime: false`), recording `0` completed experiments (`0` compute-bound) across `0` wall-time minutes (`slowest_experiments: []`).
+- No data is available this milestone for slowest compute-bound experiments (`compute_bound_experiments_count: 0`, `slowest_experiments: []`).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization or hardware state); locked `gpu_idle_on_compute_bound_tasks` is `null` (GPU idle is not flagged as a bottleneck), and `DualGPURunner` did not apply because `0` compute-bound experiments ran.
+- Suggested improvements (`estimated_time_savings_pct: 0`): gate operational retrospective triggers on experiment completion or persist direct milestone activation and per-experiment execution receipts so milestones do not reach retrospective generation with `0` completed experiments in both live git-log and disk-mtime reconstruction, restore GPU monitor telemetry before compute-bound experiments execute, and keep `DualGPURunner` scoped strictly to parallel multi-model compute-bound workloads.
+
 ## 2026-11-12 UTC — Operational retrospective for milestone 2026.11.773
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.773`: updated `results/operational_retro_2026_11_773.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 5 completed experiments (all 5 compute-bound, 0 synthesis-only) across 29.9 wall-time minutes (30 minutes / 0.5 hours, averaging 6 minutes per experiment).

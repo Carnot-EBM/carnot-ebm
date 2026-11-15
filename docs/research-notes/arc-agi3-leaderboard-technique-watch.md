@@ -709,3 +709,21 @@ Newly located details from **Tufa Labs’ final release**:
 
 Measurements were not independently reproduced; complete-submission exploit status remains unaudited.
 
+## 2026-11-14 23:58 UTC -- NEW
+
+New details from **xz’s newly public solution**:
+
+- **(b), general-purpose selective precision.** Compresses older KV entries to four bits while retaining the newest **1,280 tokens**, first **64 prompt tokens**, and **288 frequently attended older tokens** in BF16. A 256-token exact window recovered **61% of the measured quantization loss**; an isolated gameplay gain was not established. **POSSIBLE CARNOT LEVER:** Preserve recent verifier evidence at full precision while compressing older generator history. [Writeup, §2.2](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#22-precision-and-output-quality)
+
+- **(b), general-purpose recurrent-memory repair.** Found that BF16 rounding could suppress small decay updates, leaving long-horizon memory stale. Uses **FP16 state with an FP32 scale per 32 rows**, plus stochastic rounding. Reported state error fell from approximately **15% to at most 2.5%** before the additional rounding improvement; gameplay effects were not isolated. **POSSIBLE CARNOT LEVER:** Check this numerical failure when serving a Gated DeltaNet generator. [Explanation](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#22-precision-and-output-quality), [implementation](https://github.com/xz259/arc-prize-2026-solutions/blob/main/vllm/stage2/s16.py)
+
+- **(b), general-purpose positional-memory management.** After attention-guided eviction, re-rotates the system prompt’s cached keys to keep it near surviving context. Rebuilds conversations from position zero at **250K positions**, retaining at most **60K tokens**, to avoid degradation beyond the model’s trained positional range. [Writeup, §1](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#1-harness)
+
+New details from **Team Turducken’s November 9 writeup**:
+
+- **(b), general-purpose cache correctness.** Collapsing blank lines in saved assistant replies broke prefix matching. Preserving replies verbatim raised previous-answer reuse from **38% to 95–100%** and whole-run throughput **1,674→1,807 tokens/second**. **POSSIBLE CARNOT LEVER:** Measure token-prefix identity across Carnot’s reconstructed assistant history. [Writeup, §2.2](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken)
+
+- **(b), general-purpose scheduler optimization.** Hashing approximately **300 MB of image pixels per request** blocked every inference lane. Moving hashing off the scheduler thread reduced that work **205→8.5 ms/request**; it previously consumed **4.2% of runtime**. [Writeup, §2.3](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken)
+
+These mechanisms require neither game-source access nor per-game rules. Measurements were not independently reproduced; complete submissions remain unaudited for exploitation.
+

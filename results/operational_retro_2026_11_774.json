@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.11.774",
-  "generated_at": "2026-11-14T19:55:16Z",
+  "generated_at": "2026-11-14T23:57:50Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
@@ -10,10 +10,21 @@
   "gpu_idle_on_compute_bound_tasks": null,
   "reconstructed_from_disk_mtime": false,
   "timing_integrity_mismatch": false,
-  "summary": "",
-  "bottlenecks_identified": [],
-  "improvements_suggested": [],
-  "top_3_highest_leverage_actions": [],
+  "summary": "No data available this milestone for experiment durations or GPU telemetry: 0 experiments completed (0 compute-bound) in 0 wall-time minutes, with no experiment commits found since activation of 2026.11.774 across both live git-log and disk-mtime reconstruction. Because 0 compute-bound experiments ran and the GPU monitor was not available, gpu_idle_on_compute_bound_tasks is null and DualGPURunner did not apply.",
+  "bottlenecks_identified": [
+    "no data available this milestone for experiment execution timing: 0 experiments completed (0 compute-bound) across 0 wall-time minutes, as no experiment commits were found since activation of 2026.11.774 in either live git-log or disk-mtime reconstruction (reconstructed_from_disk_mtime: false).",
+    "no data available this milestone for GPU utilization or hardware state because the GPU STATE block reported 'GPU monitor not available' and 0 compute-bound tasks executed (gpu_idle_on_compute_bound_tasks: null; GPU idle is not flagged as a bottleneck)."
+  ],
+  "improvements_suggested": [
+    "Gate operational retrospective triggers on experiment completion or persist direct milestone activation and per-experiment execution receipts so milestones do not reach retrospective generation with 0 completed experiments in both live git-log and disk-mtime reconstruction.",
+    "Restore GPU monitor telemetry collection before compute-bound experiments execute so GPU state is available rather than reporting 'GPU monitor not available'.",
+    "Keep DualGPURunner scoped strictly to multi-model parallel compute-bound workloads rather than single-model or synthesis-only tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Verify milestone experiment execution and commit/artifact persistence after activation of 2026.11.774 so timing capture does not return 0 completed experiments across live git-log and disk-mtime reconstruction.",
+    "Restore GPU monitor availability prior to running compute-bound experiments to eliminate 'GPU monitor not available' blind spots.",
+    "Preserve pre-launch failure_ledger doomed-rerun guards and keep DualGPURunner restricted to parallel multi-model compute-bound workloads."
+  ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": ""
+  "meta_reflection": "No data available this milestone for experiment execution durations or GPU utilization: 0 experiments (0 compute-bound) and 0 wall-time minutes were recorded after checking both live git-log and disk-mtime reconstruction since activation of 2026.11.774, and the GPU monitor was not available. In accordance with the anti-hallucination guard, all metrics remain at 0 with gpu_idle_on_compute_bound_tasks set to null rather than inferring values from prior milestones."
 }

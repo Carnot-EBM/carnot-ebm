@@ -896,3 +896,9 @@ Live Kaggle pages were unreadable; indexed discussions were checked and may omit
 
 Live Kaggle verification remained unavailable; indexed discussions and mirrors may miss recent updates.
 
+## 2026-11-14 23:54 UTC -- NEW
+
+**November 10 — Gemini 4 Carbon:** Official ARC-AGI-3 semi-private scores are **65.1% Standard (Low)** and **99.1% Provider Adapter (Medium)**. The highest-reasoning Standard result was withheld after session expirations limited completion to 30 of 55 games. [Official results](https://arcprize.org/results/google-gemini-4-carbon)
+
+Live Kaggle discussion updates remain unverified.
+
