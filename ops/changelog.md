@@ -23828,3 +23828,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
   runtime implementation, activation, conductor edit, external publication or push.
   Planning validation is recorded separately after checks.
 - 2026-11-15: Exp9110: Bind fourteen tasks and retain authenticated human methods (⚠️ Research Finding) — honest_verdict=complete_null_v777_contract; results/experiment_9110_v777_contract.json
+- 2026-11-15: Exp9111: Qualify forward-only receipts and structural count evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_9111_v777_forward_evidence.json
