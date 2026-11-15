@@ -727,3 +727,17 @@ New details from **Team Turducken’s November 9 writeup**:
 
 These mechanisms require neither game-source access nor per-game rules. Measurements were not independently reproduced; complete submissions remain unaudited for exploitation.
 
+## 2026-11-15 14:32 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose cross-game failure cards.** The released final builds cards from cleared levels, recording mistaken beliefs, corrective discoveries, visual cues and cheap probes. Reviewers retrieve similar games’ cards as hypotheses to test against current observations. **POSSIBLE CARNOT LEVER:** Extend existing failure cautions with explicit cue→probe records, requiring current-game evidence before accepting a transferred rule. [Card-writing specification](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/review_prompts/c2/card.md), [retrieval implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/card_library.py).
+
+- **Yi-Chia Chen — source/hardcoding qualification.** The same submission also bundles **25 prewritten public-game rule cards**, checked against public rulebooks: **(a), stored per-game knowledge**. The loader excludes cards matching the reviewed game’s base ID, and reviewers must treat other-game rules as hypotheses. This establishes mixed knowledge provenance, without establishing runtime game-source reading or answer replay. [Static-card provenance](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/game_cards/README.md), [exclusion logic](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/card_library.py).
+
+- **Yi-Chia Chen — (b), general-purpose executable reviewer evidence.** Beyond the previously reported reviewer’s existence, findings must include runnable checking scripts and their actual output. Reviewers inspect observations before player beliefs, distinguish “untested” from “refuted,” and refresh against live records before delivery to discard stale findings. [Reviewer specification](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/review_prompts/r9/brief.md).
+
+- **xz — (b), general-purpose four-bit cache encoding.** Beyond the previously reported selective precision, its codec combines per-head centering, Hadamard rotation, a **16-level Gaussian Lloyd–Max codebook**, and error-minimizing block scales. At the same **296 bytes/token/KV head**, plain NVFP4 measured **2.1× its excess KL divergence**. **POSSIBLE CARNOT LEVER:** Benchmark this codec when compressing the local generator’s attention cache; isolated gameplay improvement remains unestablished. [Writeup, §2.2](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#22-precision-and-output-quality).
+
+- **Team Turducken — (b), general-purpose negative result on output-vocabulary restriction.** Trimming the generator’s output vocabulary lost on Kaggle **all three attempts**. Approximately **one reply in five** wanted an excluded token, mostly newly invented object names. Separately, relaxed speculative acceptance improved offline evaluation but its Kaggle package fell **41.97→38.45**. These shortcuts require neither game-source access nor per-game rules. [Writeup, §2.4](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken).
+
+Measurements were not independently reproduced; complete submissions remain unaudited for exploitation.
+

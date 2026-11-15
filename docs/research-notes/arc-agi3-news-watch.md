@@ -902,3 +902,15 @@ Live Kaggle verification remained unavailable; indexed discussions and mirrors m
 
 Live Kaggle discussion updates remain unverified.
 
+## 2026-11-15 14:12 UTC -- NEW
+
+- **October 1 — Milestone #2 results:** Daniel Franzen won **$25K (27.9%)**, Lord Han Solo **$7.5K (23.8%)**, and Lohit Siriki **$5K (22.5%)**. All three open-sourced their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734)
+
+- **November 9 — Kaggle public leaderboard:** Tufa Labs published its second-place solution, reporting **70.2%** using Qwen3.8-Flash-Next and its “seal” harness. [Team writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/general-approaches-now-beat-domain-specific-tricks)
+
+- **September 3 — GPT-6 Astra:** Official semi-private results reached **62.7% Standard (Max)** and **99.9% Provider Adapter (High)**. [Official blog](https://arcprize.org/blog/astra)
+
+- **November 9 — Claude Fable 5.2:** Official semi-private results reached **81.2% Standard (XHigh)** and **97.7% Provider Adapter (High)**. The evaluated checkpoint’s medium/xhigh tuning differs from the released model. [Official results](https://arcprize.org/results/anthropic-claude-fable-5-2)
+
+Live Kaggle standings could not be checked; the public placement above comes from the team’s published writeup.
+

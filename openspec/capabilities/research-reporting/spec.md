@@ -114377,11 +114377,59 @@ Task `exp9098-embedding-runtime` SHALL produce `results/experiment_9098_v776_emb
 the frozen design and complete task prompt. It SHALL retain per-unit rows,
 verdict_class, exact gate diagnostics, actual substrate and validation receipts.
 
+Execution contract (20261115): freeze twelve label-free texts, including two empty
+inputs, short and Unicode inputs, repetitions, exact256/768-token inputs and
+257/769-token truncation controls. Use the embedded tokenizer without BOS or a
+chat template. Preserve Exp9084 mean-last-layer-nonpadding pooling and separate
+question/answer L2 normalization. Compare serial, batch, padding and cold-process
+vectors at atol1e-5/rtol1e-4. Classifier scores cannot replace hidden states.
+Qualify raw unmasked logits independently through fresh teacher-forced Yes/No
+continuations, summing all continuation log probabilities before logsumexp.
+
+Only cached Qwen3.8-27B Q4_K_M on leased GPU0 is admitted. Pin model, tokenizer
+and native library bytes. Check actual offload and memory. A failed cache, load,
+offload or native capability is terminal blocked; never repair CUDA, download,
+substitute a model or generate tokens. Preserve twelve censored rows if loading
+fails. Runtime qualification has no human-label or graph-source prerequisite;
+the absent context-only Exp9058 collect_a path does not gate these fixtures.
+Estimate both450-response shards from retained length timings without changing
+caps. Stop measurement at3300 seconds; reserve1200 seconds for validation within
+4800 seconds. A projected overrun is an explicit feasibility limit.
+
 #### SCENARIO-REPORT-9098-V776
 
 Given qualified prerequisites, the real private CLI accepts matching evidence
 and rejects altered inputs or rehashed reductions. Missing external evidence
 blocks once. Scientific and administrative readiness remain distinct.
+
+Controls SHALL cover cancellation, missing cache/offload, wrong hidden width,
+nonfinite output, independent readiness, full continuation scoring and rehashed
+tampering. Freeze exact owned/consumer validation commands before measurement.
+Require100 percent newly owned statements with zero exclusions, Ruff check and
+format, strict mypy, explicit-path spec tracing, private E2E-018/021, foreign CLI
+and cold replay without PYTHONPATH, plus unchanged adversarial and strict-row
+scanners. Run the full Python suite once and retain historical failures apart
+from owned checks. No delayed learning or recovery occurs; E2E-020 is inapplicable.
+Ops and BMAD reconciliation remain conductor-owned for this task.
+
+Reporting clarification (20261115): missing external prerequisites remain
+terminal blocked. A completed model-backed parity failure is a measured null;
+embedding readiness0 still prevents the900-answer feature job. Byte-bound
+current-work ledger references distinguish zero generation from zero model
+loads. A stopped zero-load run reports its actual blocked_no_run substrate.
+
+Verification (20261115): twelve fixtures ran on leased GPU0 with raw hidden
+width5120 and66/66 layers offloaded. Serial/cold fixtures agree, but eight
+nonempty fixtures fail padding parity under the frozen1e-5/1e-4 tolerances.
+Embedding readiness0 and independent logits readiness1 yield a measured runtime
+capability null. Three actual current loads, including the preserved initial
+run, generated zero tokens. The retained cap-length timings project738.57 seconds
+per450-response shard; this does not authorize unqualified embeddings.
+All21 owned controls,72 direct consumers and25 E2E-018/021 cases pass.
+All418 owned statements execute with zero exclusions. Ruff, strict mypy,
+explicit spec tracing, private publication/block/tamper/cold replay and unchanged
+adversarial/strict-row scanners pass. The full Python suite ran once, showed
+failures and reached its600-second deadline; its receipt stays separate.
 
 ### REQ-REPORT-9099-V776: Freeze causal human coefficient updates and exact recovery
 
