@@ -4960,12 +4960,13 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 
 ## V775 planning traceability — 2026-11-14
 
-Proposed only. No implementation, new test coverage or scientific outcome is claimed.
-See `openspec/change-proposals/research-roadmap-vNEXT.md`; active queue is unchanged.
+Exp9082 implementation and repair are verified below; other rows remain proposed.
+No new scientific outcome is claimed. See
+`openspec/change-proposals/research-roadmap-vNEXT.md` for the planning contract.
 
 | Requirement / scenario | Task | Phase | Planned deliverable | Status |
 |---|---|---:|---|---|
-| REQ-REPORT-9082-V775 / SCENARIO-REPORT-9082-V775 | exp9082-contract | 1 | results/experiment_9082_v775_contract.json | Proposed |
+| REQ-REPORT-9082-V775 / SCENARIO-REPORT-9082-V775 | exp9082-contract | 1 | results/experiment_9082_v775_contract.json | Implemented; scoped repair verified |
 | REQ-REPORT-9083-V775 / SCENARIO-REPORT-9083-V775 | exp9083-prospective-custody | 1 | results/experiment_9083_v775_prospective_custody.json | Proposed |
 | REQ-REPORT-9084-V775 / SCENARIO-REPORT-9084-V775 | exp9084-human-methods | 1 | results/experiment_9084_v775_human_methods.json | Proposed |
 | REQ-REPORT-9085-V775 / SCENARIO-REPORT-9085-V775 | exp9085-collect-a | 2 | results/experiment_9085_v775_collect_a.json | Proposed |
@@ -4979,3 +4980,14 @@ See `openspec/change-proposals/research-roadmap-vNEXT.md`; active queue is uncha
 | REQ-REPORT-9093-V775 / SCENARIO-REPORT-9093-V775 | exp9093-service-cost | 4 | results/experiment_9093_v775_service_cost.json | Proposed |
 | REQ-REPORT-9094-V775 / SCENARIO-REPORT-9094-V775 | exp9094-susceptibility | 4 | results/experiment_9094_v775_susceptibility.json | Proposed |
 | REQ-REPORT-9095-V775 / SCENARIO-REPORT-9095-V775 | exp9095-capstone | 4 | results/experiment_9095_v775_capstone.json | Proposed |
+
+REQ-REPORT-9082-V775-EXECUTION and REQ-REPORT-9082-V775-REVALIDATION map to
+`python/carnot/reporting/v775_contract.py`, its direct CLI and
+`tests/python/test_v775_contract_9082.py`. Original assertions remain unchanged;
+added controls cover exact conductor brace encoding, semantic prompt refusal and
+canonical-output versus competing-ID collisions. Verification: 203 tests across
+owned, direct/shared consumers and E2E-018/020/021; 286/286 module/CLI statements,
+zero exclusions; all eleven frozen checks pass. Durable evidence is under
+`results/raw/experiment_9082_v775_contract/fix-validation/`. Separate global
+collection is blocked by V733's historical live-roadmap hash check; these results
+make no repository-wide coverage claim.

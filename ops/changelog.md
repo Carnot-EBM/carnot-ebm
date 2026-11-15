@@ -23735,3 +23735,21 @@ TEST access. Human exposure, V726 null and V774 blocked sources remain explicit.
 No current scientific result, independent generalization, hardware speedup or ARC
 solve is claimed. Active roadmap and research_conductor.py remain unchanged.
 Planning checks are recorded in the follow-up validation entry.
+
+## 2026-11-14 — V775 contract revalidation repair
+
+Fixed Exp9082's 20 failing tests by reusing the existing conductor brace encoder
+for complete task comparison and excluding only its own canonical output from
+experiment-ID collisions. Preserve all other authority, receipt and collision
+checks. Added regression controls without changing any original test function;
+the live roadmap and `scripts/research_conductor.py` remain unchanged.
+
+All eleven frozen checks pass: 36 owned tests, 114 direct consumers, 26 private
+E2E-018/020/021 cases, Ruff check/format, strict mypy, explicit spec tracing and
+286/286 owned statements with zero exclusions. Another 27 shared receipt and
+repair-gate tests pass. Evidence:
+`results/raw/experiment_9082_v775_contract/fix-validation/`. The separate global
+diagnostic fails collection on V733's historical live-roadmap activation hash;
+no repository-wide coverage or health claim is made.
+The repository-wide reconciliation check retains its stale architecture date
+and unrelated missing spec-reference findings; scoped tracing and diff checks pass.

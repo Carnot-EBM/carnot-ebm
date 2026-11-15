@@ -1,0 +1,45 @@
+
+==================================== ERRORS ====================================
+________ ERROR collecting tests/python/test_v733_identity_brier_8528.py ________
+tests/python/test_v733_identity_brier_8528.py:12: in <module>
+    from carnot.verify import v733_identity_brier_fit as e
+python/carnot/verify/v733_identity_brier_fit.py:48: in <module>
+    CONFIG = methods.protocol()["identity_brier"]
+             ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v733_contract_methods.py:95: in protocol
+    raise ValueError("original_authority_hash")
+E   ValueError: original_authority_hash
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+python/carnot/autoresearch/transpile.py:58
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+python/carnot/autoresearch/transpile.py:75
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+tests/python/test_energy_premise_v3_3437.py:26
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.kona
+
+.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/python/test_respawn_queue.py:68
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+tests/python/test_respawn_queue.py:97
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_v733_identity_brier_8528.py - ValueError: original_au...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+5 skipped, 20 warnings, 1 error in 44.23s

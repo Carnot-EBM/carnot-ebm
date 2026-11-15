@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-11-14 UTC — V775 contract repair verified
+
+Exp9082 now accepts the existing conductor's exact literal-brace encoding of
+independently pinned prompts and permits revalidation after its own canonical
+output exists. Semantic prompt changes, competing experiment IDs and failed or
+altered receipts still disqualify readiness. Original test functions, roadmap
+bytes and `scripts/research_conductor.py` are unchanged.
+
+All eleven frozen validation commands pass: 36 owned tests, 114 direct consumers,
+26 E2E-018/020/021 cases, Ruff check/format, strict mypy, explicit spec tracing
+and 286/286 owned module/CLI statements with zero exclusions. Another 27 shared
+receipt and repair-gate tests pass. Evidence is retained under
+`results/raw/experiment_9082_v775_contract/fix-validation/`.
+The separate global diagnostic fails collection in
+`test_v733_identity_brier_8528.py`: its original activation reference checks the
+live V775 roadmap against a historical V733 hash. Global coverage remains
+unqualified; historical primaries and their failures are retained.
+Repository-wide reconciliation also reports the existing stale architecture
+date and missing spec references outside the affected test files. Scoped spec
+tracing and `git diff --check` pass; `reconciliation.log` retains both findings.
+
 ## 2026-11-14 UTC — Milestone 2026.11.774 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_774.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. The authoritative TIMING DATA block reports that no experiment commits were found since activation of `2026.11.774` across both live git-log and disk-mtime reconstruction (`reconstructed_from_disk_mtime: false`), recording `0` completed experiments (`0` compute-bound) across `0` wall-time minutes (`slowest_experiments: []`, `estimated_time_savings_pct: 0`). Locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: gate operational retrospective triggers on experiment completion or persist direct milestone activation and per-experiment execution receipts, restore GPU monitor availability before compute-bound runs, and keep `DualGPURunner` scoped to parallel multi-model compute-bound workloads.

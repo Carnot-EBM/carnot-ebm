@@ -113984,3 +113984,77 @@ Status: proposed, not executed. Task `exp9095-capstone` SHALL produce
 SHALL preserve all prior failures, per-unit rows, verdict_class and exact gate_check_summary.
 **SCENARIO-REPORT-9095-V775:** Positive private controls qualify actual readiness;
 missing external operands block terminally, tampering fails, and valid nulls retain rows.
+
+### REQ-REPORT-9082-V775-EXECUTION: Authenticate the complete administrative contract
+
+The implementation of REQ-REPORT-9082-V775 SHALL compare all fourteen complete
+objects against the independent visible table and embedded JSON. It SHALL use
+staged/staged authority before activation and actual activated bytes afterwards.
+It SHALL preserve unique title-prefix keys, unused experiment IDs, original prior
+failures and exact earlier-producer gate declarations. Novel scope needs no
+invented prior failure. Private unchanged scheduler selection SHALL select B
+when only A is recorded, and preserve the failing historical-key control.
+
+The producer SHALL authenticate original fitted states, producer bytes and both
+V768 protocols before dependent work. Immutable V775 protocol wrappers SHALL
+retain every original method field and change only corpus/access authority.
+Contract and method readiness SHALL remain independent integer gates. Missing
+inputs SHALL yield terminal blocked diagnostics with exact operands. Failed
+owned checks SHALL zero both gates. Rows and hashed receipts SHALL reconstruct
+all administrative headlines. No model load or scientific measurement is allowed.
+
+#### SCENARIO-REPORT-9082-V775-EXECUTION
+
+Private positive, missing-input, changed-authority, gate-key, duplicate-key,
+used-ID and rehashed-tamper controls SHALL run before publication. Real foreign
+CLI and cold replay SHALL work without PYTHONPATH. Newly owned statement
+coverage SHALL be100 percent with zero exclusions. Frozen current consumer,
+Ruff, strict mypy, explicit-path spec, E2E-018/020/021 and unchanged scanner
+commands SHALL qualify publication. Broader historical failures stay separate.
+The result SHALL retain actual archive state alongside the planning observation,
+missing V774 primaries alongside real scheduler artifacts, three open gaps and
+closed scopes. Graph success remains circular; exposed LPHB is development;
+hardware claims require operation evidence; ARC adds no dependency or re-solve.
+
+Implementation added2026-11-15 for REQ-REPORT-9082-V775. The reusable library and
+script freeze full objects, exact producer declarations, source snapshots and
+unchanged V768 method envelopes. Requirement-linked tests cover staged and
+activated authority, real scheduler selection, missing inputs, receipt mutations,
+private CLI publication and replay. Current archive bytes take precedence over
+the planning statement that the archive ends at V773. The primary artifact
+records actual qualification and the separate broader-suite observation.
+Operational and traceability reconciliation remains assigned to the conductor.
+
+### REQ-REPORT-9082-V775-REVALIDATION: Preserve authority across conductor encoding and publication
+
+Full task comparison SHALL accept the existing conductor literal-brace encoder's
+exact transformation of an independently pinned prompt. All other task fields,
+prompt content, substitution fields, ordering and design byte pins SHALL remain
+binding. Original and encoded task bytes SHALL be retained without rewriting the
+live roadmap or historical authority.
+
+The producer's own canonical `results/experiment_9082_v775_contract.json` output
+SHALL NOT count as a competing use of its experiment ID during revalidation.
+Other files claiming that ID, any future task's primary, archived IDs and prior
+completion keys SHALL still block readiness. Each invocation SHALL independently
+qualify current validation and activation receipts; prior publication grants no
+readiness credit.
+
+#### SCENARIO-REPORT-9082-V775-REVALIDATION
+
+Original and conductor-encoded prompts SHALL both pass full-object checks;
+semantic changes in encoded prompts SHALL fail. Revalidation after creating the
+producer's canonical output SHALL pass authority, while another output with the
+same experiment ID or any future task's primary SHALL fail. Original receipt
+refusal and CLI tests SHALL pass unchanged with 100 percent owned statements and
+zero exclusions.
+
+Repair verified 2026-11-14: all 36 V775 tests, 114 direct consumers, 27 shared
+receipt/fix-erasure checks and 26 E2E-018/020/021 cases pass. All eleven frozen
+commands pass, including Ruff check/format, strict mypy, explicit spec tracing
+and 286/286 owned module/CLI statements with zero exclusions. Original test
+functions, live roadmap bytes and `scripts/research_conductor.py` are unchanged.
+Evidence: `results/raw/experiment_9082_v775_contract/fix-validation/`.
+The separate global diagnostic fails collection in V733 because its historical
+activation reference still checks the evolving live roadmap. Repository-wide
+coverage and health are not qualified by these scoped results.

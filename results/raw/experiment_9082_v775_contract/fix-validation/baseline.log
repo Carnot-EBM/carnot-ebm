@@ -1,0 +1,222 @@
+F.......[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=101
+[exp9082] phase=authenticate_and_freeze completed=26 pending=76
+[exp9082] phase=authenticate_and_freeze completed=51 pending=51
+[exp9082] phase=authenticate_and_freeze completed=76 pending=26
+[exp9082] phase=authenticate_and_freeze completed=101 pending=1
+[exp9082] phase=preconditions_after completed=116 pending=2
+FFFFFFFFF[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=58
+[exp9082] phase=authenticate_and_freeze completed=26 pending=33
+[exp9082] phase=authenticate_and_freeze completed=51 pending=8
+[exp9082] phase=preconditions_after completed=67 pending=58
+.[test9082] child_before ('--from-work', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/source.json'), '--output', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 ing=0
+[exp9082] phase=publication_after completed=1 pending=0
+{"primary_path": "/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/experiment_9082_v775_contract.json", "primary_sha256": "sha256:a8664aa8a69c137aa2cae3149ef8d4a6b6fc396e5482a514375f6c6042a14630", "sidecar_path": "/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/raw/experiment_9082_v775_contract/validators/a8664aa8a69c137aa2cae3149ef8d4a6b6fc396e5482a514375f6c6042a14630.json", "honest_verdict": "complete_blocked_full_contract"}
+ 
+[test9082] child_before ('--cold-replay', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9082] child_before ('--cold-replay', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 1 {"passed": false, "replay_passed": false, "reason": "aggregate_drift"}
+ 
+[test9082] child_before ('--root', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/absent'), '--output', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/blocked/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 82] phase=publication_after completed=1 pending=0
+{"primary_path": "/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/blocked/experiment_9082_v775_contract.json", "primary_sha256": "sha256:c54bb50825d8ee0021f2912f77623d35a70db35df6e9469f1c317e8d4ef08860", "sidecar_path": "/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/blocked/raw/experiment_9082_v775_contract/validators/c54bb50825d8ee0021f2912f77623d35a70db35df6e9469f1c317e8d4ef08860.json", "honest_verdict": "complete_blocked_authority"}
+ 
+[test9082] child_before ('--cold-replay', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/blocked/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9082] child_before ('--date', 'bad')
+[test9082] child_after 2  usage: experiment_9082_v775_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9082_v775_contract.py: error: this contract requires --date 20261115
+
+[test9082] child_before ('--from-work', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/source.json'))
+[test9082] child_after 2  usage: experiment_9082_v775_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9082_v775_contract.py: error: private work publication requires output outside the checkout
+
+[test9082] child_before ('--cold-replay', PosixPath('/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/absent'))
+[test9082] child_after 1 {"passed": false, "replay_passed": false, "reason": "[Errno 2] No such file or directory: '/tmp/pytest-of-ianblenke/pytest-3/test_foreign_cli0/absent'"}
+ 
+.F[exp9082] phase=publication_before completed=0 pending=0
+F.[exp9082] phase=preconditions_before completed=0 pending=0
+.[exp9082] phase=publication_before completed=0 pending=0
+[exp9082] phase=publication_after completed=1 pending=0
+{"primary_path": "/tmp/pytest-of-ianblenke/pytest-3/test_main_success_orchestratio0/experiment_9082_v775_contract.json", "primary_sha256": "sha256:981801da038ab5d51d4a703c108898fb8539d53d8cd46b9d3b813ee435653be8", "sidecar_path": "/tmp/pytest-of-ianblenke/pytest-3/test_main_success_orchestratio0/raw/experiment_9082_v775_contract/validators/981801da038ab5d51d4a703c108898fb8539d53d8cd46b9d3b813ee435653be8.json", "honest_verdict": "complete_blocked_full_contract"}
+F[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=59
+[exp9082] phase=authenticate_and_freeze completed=26 pending=34
+[exp9082] phase=authenticate_and_freeze completed=51 pending=9
+[exp9082] phase=preconditions_after completed=74 pending=50
+.FFFFFFF[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=58
+[exp9082] phase=authenticate_and_freeze completed=26 pending=33
+[exp9082] phase=authenticate_and_freeze completed=51 pending=8
+[exp9082] phase=preconditions_after completed=73 pending=50
+.
+=================================== FAILURES ===================================
+_________________________ test_authority_and_scheduler _________________________
+tests/python/test_v775_contract_9082.py:29: in test_authority_and_scheduler
+    assert a["ready"] and a["comparison_mode"] == "activated"
+E   assert (False)
+__________________________ test_independent_readiness __________________________
+tests/python/test_v775_contract_9082.py:108: in test_independent_readiness
+    assert work["reduction"], work["preconditions_checked"]
+E   AssertionError: {'checks': [{'artifact_field': 'sys.prefix', 'check': 'virtualenv', 'expected': '/home/ianblenke/github.com/ianblenke/...e, 'mypy': True, 'pytest': True, 'ruff': True}, 'free_disk_bytes': 67116933120, 'free_memory_bytes': 113121026048, ...}
+E   assert {}
+________________________ test_receipt_refusal[missing] _________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+_________________________ test_receipt_refusal[stale] __________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+_________________________ test_receipt_refusal[failed] _________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+________________________ test_receipt_refusal[timeout] _________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+__________________________ test_receipt_refusal[log] ___________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+________________________ test_receipt_refusal[command] _________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+_______________________ test_receipt_refusal[duplicate] ________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+__________________________ test_receipt_refusal[code] __________________________
+tests/python/test_v775_contract_9082.py:138: in test_receipt_refusal
+    assert value["verdict_class"] == "disqualified"
+E   AssertionError: assert 'blocked' == 'disqualified'
+E     
+E     - disqualified
+E     + blocked
+_____________________________ test_replay_rebuilds _____________________________
+tests/python/test_v775_contract_9082.py:203: in test_replay_rebuilds
+    changed["reduction"]["contract"]["ready"] = False
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'contract'
+________________________ test_validation_orchestration _________________________
+tests/python/test_v775_contract_9082.py:226: in test_validation_orchestration
+    assert c.main(["--output", "/tmp/carnot9082-disqualified-test/" + c.NAME + ".json"]) == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_contract.py:799: in main
+    receipt = publish_primary(
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_contract.py:802: in <lambda>
+    lambda path: terminal(path, raw / "terminal", work["validation_scope_manifest"]),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_contract.py:737: in terminal
+    return validation.terminal(candidate, raw, manifest)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/scoped_provenance_9014.py:618: in terminal
+    return dict(passed=all(r["passed"] and r["normal_exit"] for r in receipts), receipts=receipts)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/scoped_provenance_9014.py:618: in <genexpr>
+    return dict(passed=all(r["passed"] and r["normal_exit"] for r in receipts), receipts=receipts)
+                           ^^^^^^^^^^^
+E   KeyError: 'passed'
+_______________________ test_main_success_orchestration ________________________
+tests/python/test_v775_contract_9082.py:286: in test_main_success_orchestration
+    assert value["contract_ready_score"] == value["frozen_methods_ready_score"] == 1
+E   assert 0 == 1
+_________________ test_activation_receipts_are_bound[missing] __________________
+tests/python/test_v775_contract_9082.py:306: in test_activation_receipts_are_bound
+    w["activation_receipts"].pop()
+E   IndexError: pop from empty list
+_________________ test_activation_receipts_are_bound[command] __________________
+tests/python/test_v775_contract_9082.py:310: in test_activation_receipts_are_bound
+    w["activation_receipts"][0]["command_argv"] = ["unmeasured"]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+___________________ test_activation_receipts_are_bound[log] ____________________
+tests/python/test_v775_contract_9082.py:312: in test_activation_receipts_are_bound
+    w["activation_receipts"][0]["log_sha256"] = "sha256:forged"
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+__________________ test_activation_receipts_are_bound[stale] ___________________
+tests/python/test_v775_contract_9082.py:314: in test_activation_receipts_are_bound
+    w["activation_receipts"][0]["scope_sha256"] = "sha256:stale"
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+_________________ test_activation_receipts_are_bound[timeout] __________________
+tests/python/test_v775_contract_9082.py:316: in test_activation_receipts_are_bound
+    w["activation_receipts"][0]["timed_out"] = True
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+________________ test_activation_receipts_are_bound[malformed] _________________
+tests/python/test_v775_contract_9082.py:308: in test_activation_receipts_are_bound
+    w["activation_receipts"][0] = {}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list assignment index out of range
+_____________________ test_replay_pins_cannot_be_rehashed ______________________
+tests/python/test_v775_contract_9082.py:334: in test_replay_pins_cannot_be_rehashed
+    assert c.replay(output)["reason"] == "pinned_authority_drift"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'reason'
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v775_contract_9082.py::test_authority_and_scheduler
+FAILED tests/python/test_v775_contract_9082.py::test_independent_readiness - ...
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[missing]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[stale]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[failed]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[timeout]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[log] - A...
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[command]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[duplicate]
+FAILED tests/python/test_v775_contract_9082.py::test_receipt_refusal[code] - ...
+FAILED tests/python/test_v775_contract_9082.py::test_replay_rebuilds - KeyErr...
+FAILED tests/python/test_v775_contract_9082.py::test_validation_orchestration
+FAILED tests/python/test_v775_contract_9082.py::test_main_success_orchestration
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[missing]
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[command]
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[log]
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[stale]
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[timeout]
+FAILED tests/python/test_v775_contract_9082.py::test_activation_receipts_are_bound[malformed]
+FAILED tests/python/test_v775_contract_9082.py::test_replay_pins_cannot_be_rehashed
+20 failed, 13 passed, 1 warning in 47.43s

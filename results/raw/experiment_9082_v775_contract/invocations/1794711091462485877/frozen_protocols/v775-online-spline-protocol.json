@@ -1,0 +1,278 @@
+{
+  "access_authority": "exp9083-prospective-custody",
+  "corpus_ids": [
+    "exp9085-collect-a",
+    "exp9086-collect-b"
+  ],
+  "method": {
+    "arm_definitions": [
+      {
+        "allowed": "none",
+        "arm": "frozen_spline",
+        "initial": "Exp8987 spline",
+        "labels": "released labels in order"
+      },
+      {
+        "allowed": "all coefficients",
+        "arm": "adaptive_spline",
+        "initial": "Exp8987 spline",
+        "labels": "released labels in order"
+      },
+      {
+        "allowed": "intercepts only",
+        "arm": "bias_only_spline",
+        "initial": "Exp8987 spline",
+        "labels": "released labels in order"
+      },
+      {
+        "allowed": "all coefficients",
+        "arm": "adaptive_linear",
+        "initial": "Exp8987 converged_linear",
+        "labels": "released labels in order"
+      },
+      {
+        "allowed": "all coefficients",
+        "arm": "permuted_spline",
+        "initial": "Exp8987 spline",
+        "labels": "seed768088 permutation within released block"
+      }
+    ],
+    "claim_scope": "fixed-basis coefficient learning mechanics only; not structural knot adaptation or importance-weighted replay",
+    "collection_admission_required": false,
+    "cost_boundary": "Dense anchoring and guard scan cost work beyond the local spline gradient. No inference-speed or FPGA gain follows from fixtures.",
+    "delay_protocol": {
+      "pending_count": 4,
+      "pending_ordinals": [
+        29,
+        30,
+        31,
+        32
+      ],
+      "permutation_seed": 768088,
+      "prediction_seal": "atomic fsync before feedback reads",
+      "released_count": 28,
+      "releases": [
+        {
+          "after_query": 8,
+          "labels": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "after_query": 12,
+          "labels": [
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        {
+          "after_query": 16,
+          "labels": [
+            9,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "after_query": 20,
+          "labels": [
+            13,
+            14,
+            15,
+            16
+          ]
+        },
+        {
+          "after_query": 24,
+          "labels": [
+            17,
+            18,
+            19,
+            20
+          ]
+        },
+        {
+          "after_query": 28,
+          "labels": [
+            21,
+            22,
+            23,
+            24
+          ]
+        },
+        {
+          "after_query": 32,
+          "labels": [
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ]
+    },
+    "experiment_id": 8988,
+    "fixed": [
+      "encoders",
+      "basis",
+      "scaling",
+      "temperature=1 for methods fixtures; downstream temperature frozen once before online",
+      "generator"
+    ],
+    "historical_inputs": [
+      {
+        "path": "openspec/change-proposals/v768-spline-protocol.json",
+        "sha256": "sha256:dd0eb38a797fd3e1ddbe172b27c4b504ac8229251eed6cce73bd3ce6114f251b"
+      },
+      {
+        "path": "results/experiment_8967_v766_online_benefit_audit.json",
+        "sha256": "sha256:dbb48d10ce064fb08fe6d0efcd6671111863641c7591dcfc4bf6df68c5dc3f21"
+      }
+    ],
+    "required_gates": {
+      "fitted_states_ready_score": 1,
+      "required_checks_passed": true
+    },
+    "run_date": "20261111",
+    "seed": 768088,
+    "state_schema": {
+      "accumulator": "arm -> three nonnegative AdaGrad vectors",
+      "acknowledgments": "consumed ordinals once only",
+      "coefficients": "arm -> three coefficient vectors",
+      "feedback_rows": "consumed labels and pre-read prediction hash",
+      "pending": "predicted unacknowledged ordinals",
+      "prediction_hash": "hash of all sealed rows",
+      "promotion_rows": "candidate and committed hashes plus guard decision",
+      "query": "last committed ordinal",
+      "request_hash": "fixed public inputs and label location",
+      "rows": "all sealed five-arm predictions"
+    },
+    "task_id": "exp8988-online-spline-methods",
+    "ten_bound_contract": {
+      "alpha_per_bound": 0.001,
+      "bounds": [
+        {
+          "against": "frozen_spline",
+          "metric": "brier",
+          "ordinals": [
+            17,
+            32
+          ],
+          "split": "online",
+          "strict": false,
+          "upper": -0.01
+        },
+        {
+          "against": "bias_only_spline",
+          "metric": "brier",
+          "ordinals": [
+            17,
+            32
+          ],
+          "split": "online",
+          "strict": true,
+          "upper": 0
+        },
+        {
+          "against": "adaptive_linear",
+          "metric": "brier",
+          "ordinals": [
+            17,
+            32
+          ],
+          "split": "online",
+          "strict": true,
+          "upper": 0
+        },
+        {
+          "against": "permuted_spline",
+          "metric": "brier",
+          "ordinals": [
+            17,
+            32
+          ],
+          "split": "online",
+          "strict": true,
+          "upper": 0
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 0,
+          "metric": "brier",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 0,
+          "metric": "error",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 16,
+          "metric": "brier",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 16,
+          "metric": "error",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 32,
+          "metric": "brier",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        },
+        {
+          "against": "frozen_spline",
+          "checkpoint": 32,
+          "metric": "error",
+          "split": "retention",
+          "strict": false,
+          "upper": 0.01
+        }
+      ],
+      "draws": 10000,
+      "evaluation_status": "frozen_unmeasured; later real streams required",
+      "family_alpha": 0.01,
+      "method": "one-sided percentile upper, linear quantile, Bonferroni ten bounds",
+      "retention_resampling": "same graph-ID draw across streams and checkpoints; independent of stream draw",
+      "shared_retention_count": 128,
+      "unit": "whole paired stream"
+    },
+    "time_budget": {
+      "hard_cap_seconds": 4800,
+      "measurement_seconds": 3600,
+      "reserve_checks_seconds": 900
+    },
+    "update_equations": [
+      "p=mean_s sigmoid(phi_s @ theta_s), s=71,72,73; one ensemble sample per query",
+      "L=-y*log(p)-(1-y)*log(1-p)+0.005*sum_s sum_j>0 (theta_sj-theta_initial_sj)^2",
+      "g=gradient(L) on allowed coefficients; g/=max(1,norm(g)) over the whole three-state vector",
+      "A+=g*g; theta-=0.05*g/sqrt(A+1e-8); A_initial=0; one update per released label",
+      "after four labels: promote iff original64 guard Brier increase<=0.005 and error increase<=0 relative to arm initial; otherwise restore theta and A; always acknowledge labels"
+    ]
+  },
+  "original_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9082_v775_contract/invocations/1794711091462485877/authority/openspec/change-proposals/v768-online-spline-protocol.json",
+    "sha256": "sha256:b5808137993fc5d1e6d1e7aed19652bfe8813fefd07146818d20cedbd68734e8"
+  }
+}

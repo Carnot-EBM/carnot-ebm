@@ -1,0 +1,96 @@
+........[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=102
+[exp9082] phase=authenticate_and_freeze completed=26 pending=77
+[exp9082] phase=authenticate_and_freeze completed=51 pending=52
+[exp9082] phase=authenticate_and_freeze completed=76 pending=27
+[exp9082] phase=authenticate_and_freeze completed=101 pending=2
+[exp9082] phase=preconditions_after completed=117 pending=0
+[exp9014] phase=before_activation_0 completed=0 pending=1
+[exp8205] phase=before_subprocess_activation_0 completed=0 pending=1
+[exp8205] phase=waiting_activation_0 completed=0 pending=1
+[exp8205] phase=after_subprocess_activation_0 completed=1 pending=0
+[exp9014] phase=after_activation_0 completed=1 pending=0
+[exp9014] phase=before_activation_1 completed=0 pending=1
+[exp8205] phase=before_subprocess_activation_1 completed=0 pending=1
+[exp8205] phase=after_subprocess_activation_1 completed=1 pending=0
+[exp9014] phase=after_activation_1 completed=1 pending=0
+[exp9014] phase=before_activation_2 completed=0 pending=1
+[exp8205] phase=before_subprocess_activation_2 completed=0 pending=1
+[exp8205] phase=after_subprocess_activation_2 completed=1 pending=0
+[exp9014] phase=after_activation_2 completed=1 pending=0
+[exp9014] phase=before_activation_3 completed=0 pending=1
+[exp8205] phase=before_subprocess_activation_3 completed=0 pending=1
+[exp8205] phase=after_subprocess_activation_3 completed=1 pending=0
+[exp9014] phase=after_activation_3 completed=1 pending=0
+[exp9082] phase=reduction_before completed=0 pending=0
+[exp9082] phase=reduction_after completed=14 pending=0
+.........[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=59
+[exp9082] phase=authenticate_and_freeze completed=26 pending=34
+[exp9082] phase=authenticate_and_freeze completed=51 pending=9
+[exp9082] phase=preconditions_after completed=68 pending=59
+.[test9082] child_before ('--from-work', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/source.json'), '--output', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 _after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/experiment_9082_v775_contract.json", "primary_sha256": "sha256:0eec8f5ab0907596d3172194cbef8337c8b88639d0c54f1121798541f43faa8e", "sidecar_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/raw/experiment_9082_v775_contract/validators/0eec8f5ab0907596d3172194cbef8337c8b88639d0c54f1121798541f43faa8e.json", "honest_verdict": "complete_disqualified_v775_contract"}
+ 
+[test9082] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 {"passed": true, "replay_passed": true}
+ 2026-11-14 22:21:51,830 [conductor] All 2 research tasks completed or exhausted. Nothing to do.
+
+[test9082] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/experiment_9082_v775_contract.json'))
+[test9082] child_after 1 {"passed": false, "replay_passed": false, "reason": "aggregate_drift"}
+ 2026-11-14 22:21:59,118 [conductor] All 2 research tasks completed or exhausted. Nothing to do.
+
+[test9082] child_before ('--root', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/absent'), '--output', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/blocked/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/blocked/experiment_9082_v775_contract.json", "primary_sha256": "sha256:3650050b56deb5adf8fe14377c0e3a270b114d5f0dab51e3a0d18766fcc2e512", "sidecar_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/blocked/raw/experiment_9082_v775_contract/validators/3650050b56deb5adf8fe14377c0e3a270b114d5f0dab51e3a0d18766fcc2e512.json", "honest_verdict": "complete_blocked_authority"}
+ 
+[test9082] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/blocked/experiment_9082_v775_contract.json'))
+[test9082] child_after 0 {"passed": true, "replay_passed": true}
+ 
+[test9082] child_before ('--date', 'bad')
+[test9082] child_after 2  usage: experiment_9082_v775_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9082_v775_contract.py: error: this contract requires --date 20261115
+
+[test9082] child_before ('--from-work', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/source.json'))
+[test9082] child_after 2  usage: experiment_9082_v775_contract.py [-h] [--date DATE] [--root ROOT]
+                                        [--output OUTPUT]
+                                        [--cold-replay COLD_REPLAY]
+                                        [--from-work FROM_WORK]
+experiment_9082_v775_contract.py: error: private work publication requires output outside the checkout
+
+[test9082] child_before ('--cold-replay', PosixPath('/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/absent'))
+[test9082] child_after 1 {"passed": false, "replay_passed": false, "reason": "[Errno 2] No such file or directory: '/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_foreign_cli0/absent'"}
+ 
+..[exp9082] phase=validation_before completed=0 pending=0
+[exp9082] phase=validation_after completed=0 pending=0
+[exp9082] phase=publication_disqualified completed=0 pending=1
+..[exp9082] phase=preconditions_before completed=0 pending=0
+.[exp9082] phase=validation_before completed=0 pending=0
+[exp9082] phase=validation_after completed=0 pending=0
+[exp9082] phase=global_suite_before completed=0 pending=0
+[exp9082] phase=global_suite_after completed=1 pending=0
+[exp9082] phase=publication_before completed=0 pending=0
+[exp9082] phase=publication_after completed=1 pending=0
+{"primary_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_main_success_orchestratio0/experiment_9082_v775_contract.json", "primary_sha256": "sha256:cc9225f9f273dc964f29cbd9e8ae8dc4e776fa526ea24066b4aef94f4b4886ff", "sidecar_path": "/var/tmp/carnot9082-repair-7vkn1may/owned_tests/test_main_success_orchestratio0/raw/experiment_9082_v775_contract/validators/cc9225f9f273dc964f29cbd9e8ae8dc4e776fa526ea24066b4aef94f4b4886ff.json", "honest_verdict": "complete_null_v775_contract"}
+.[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=60
+[exp9082] phase=authenticate_and_freeze completed=26 pending=35
+[exp9082] phase=authenticate_and_freeze completed=51 pending=10
+[exp9082] phase=preconditions_after completed=75 pending=49
+........[exp9082] phase=preconditions_before completed=0 pending=0
+[exp9082] phase=authenticate_and_freeze completed=1 pending=59
+[exp9082] phase=authenticate_and_freeze completed=26 pending=34
+[exp9082] phase=authenticate_and_freeze completed=51 pending=9
+[exp9082] phase=preconditions_after completed=74 pending=50
+....
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+36 passed, 1 warning in 147.65s (0:02:27)
