@@ -1166,3 +1166,23 @@ accounting, a CPU susceptibility diagnostic and reconciliation are ungated. Thes
 are proposed experiments, not shipped components; the exact architecture and
 protocols are in `openspec/change-proposals/research-roadmap-vNEXT.md`. Independent
 human generalization remains open; ARC has no new solve claim in this plan.
+
+## Proposed V776 human decision boundary — 2026-11-15
+
+The next plan contains fourteen tasks, Exp9096–Exp9109. It authenticates original
+LPHB producer bytes from Git and retains all historical pins and exposed status.
+Frozen Qwen representations feed the existing fixed-basis energy and linear heads.
+A separate causal learner reserves future TRAIN groups before its initial fit;
+operational CAL guards and evaluator-only TEST retention remain distinct.
+
+The source, embedding and logit gates are independent. Static nulls can reach
+complete-cost measurement. Qwen weights remain frozen; teacher-forced Yes/No
+scores are predictions, never labels. Full costs include representation, guards,
+durable writes and recovery. Existing sampler hardware gains no new operation
+claim. Graph recollection remains closed on missing historical topology authority;
+ARC stays opportunistic with no new task or solve claim. This is planned work,
+not implementation or independent generalization. The old general reconciliation
+date is unchanged. Full V775 design/queue bytes are preserved separately.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V775 remains unchanged.

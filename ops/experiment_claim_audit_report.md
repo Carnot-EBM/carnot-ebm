@@ -11,9 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 8 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 7 |
 
-## experiment_9068_v774_dispatch_contract.json
+## experiment_9083_v775_prospective_custody.json
 
 **NO_CLAIM**
 
@@ -24,25 +25,29 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific claim. An authority mismatch, duplicate dispatch key, or failure to select B in the new replay would contradict administrative readiness.
+There is no comparative effectiveness claim to falsify. The limited custody qualification would be contradicted by a successful worker bypass; the reported collection block would be contradicted by proposals or collection proceeding despite unmet prerequisites.
 
 ## WAS THAT CHECKED
-Yes, for the visible administrative checks: task objects match, the shown dispatch key occurs once, and the new fixture selects B while the old fixture does not. These checks support a receipt, not scientific benefit.
+Yes, within the displayed fixture: bypass controls report passing, enforcement records denied access, and proposals and collection attempts remain zero. The artifact reports blocked readiness, with fixture qualification recorded separately.
+
+The oracle supplies no claimed added value, and no model or generalization success is asserted. A rival baseline is therefore unnecessary. The false acceptance gates are reflected in blocked readiness; the displayed rows establish no validity-filter or wrong-key contradiction.
+
+Review was limited to supplied text; elided rows and referenced receipts remain uninspected.
 
 ## EVIDENCE
-- `claim_scope`: `Administrative dispatch custody and historical fitted-method qualification only; no new scientific benefit.`
-- `honest_verdict`: `complete_null_v774_dispatch_contract`
-- `metric`: `ordered_full_object_match`; `matched`: `true`
-- `queue_occurrences`: `1`
-- `fixture_only`: `true`; `selected_id`: `exp9071-collect-b`
-- `independent_generalization_score`: `0`
+
+- `honest_verdict`: `complete_blocked_historical_attempt_topology_coverage`
+- `claim_scope`: `Finite supervised custody qualification only. Exact graph truth is an oracle; any graph success would be circular_positive.`
+- `custody_ready_score`: `0`; `fixture_custody_ready_score`: `1`
+- `paths_denied`: `true`; `symlink_denied`: `true`; `fd_denied`: `true`
+- `proposal_count`: `0`; `construction_started`: `false`
+- `model_invoked`: `false`; `independent_generalization_score`: `0`
+- `exposure_scope`: `Private scripted fixture and historical metadata only. Human LPHB remains exposed development; no independent/generalized claim.`
 
 ## RECOMMENDATION
 KEEP
 
-Elided rows and referenced files were not checked; fixture replay alone does not establish production behavior.
-
-## experiment_9069_v774_source_custody.json
+## experiment_9084_v775_human_methods.json
 
 **NO_CLAIM**
 
@@ -53,24 +58,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. The stated custody policy would be contradicted by granting readiness while complete access or invocation authority remained unproven.
+No comparative claim is asserted. If benefit were claimed, valid results showing the method tying or losing to text-length logistic or regularized linear controls would refute added value.
 
 ## WAS THAT CHECKED
-Yes, for custody readiness: the inventories record incomplete authority, readiness scores are zero, and the verdict is blocked. Oracle use supports no asserted verifier-benefit claim. Elided entries were not inspected; custody readiness remains unproven.
+No comparison was performed. The artifact explicitly reports a blocked, protocol-only result, with extraction and training unperformed. It does not present inventory completion as detector performance or generalization.
 
 ## EVIDENCE
-- `claim_scope`: `Transport and source custody only; graph truth is an executable oracle. No detector, human correctness or generalization result.`
-- `honest_verdict`: `complete_blocked_a_access_coverage`
-- `complete_access_authority`: `false`
-- `complete_no_attempt_authority`: `false`
-- `a_custody_ready_score`: `0`
-- `b_collection_ready_score`: `0`
-- `exclusion_reason`: `a_access_coverage_unproven`
+- `claim_scope`: `Original exposed LPHB inventory and frozen embedding comparison protocol only; no detector benefit, independent source qualification or MDHJudgments repair.`
+- `honest_verdict`: `complete_blocked_historical_producer_hash`
+- `head_comparison_status`: `protocol_only_not_measured`
+- `extraction_performed`: `false`
+- `head_training_performed`: `false`
+- `per_arm_metrics`: `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9070_v774_adjudication_methods.json
+No rerun or external inspection; this assessment is limited to the supplied artifact.
+
+## experiment_9085_collect_a.json
 
 **NO_CLAIM**
 
@@ -81,23 +87,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative result is asserted. Under the frozen protocol, a future benefit claim would fail if any improvement lower bound against prevalence, projected linear, or full linear were zero or negative.
+No experimental success or comparative value claim is asserted. This artifact records a blocked prerequisite check.
 
 ## WAS THAT CHECKED
-No comparative measurement occurred. The authority audit blocked execution; all 4,377 intended targets were excluded, with zero completed units. The comparator arms and benefit criterion describe planned methods.
+Yes—the blocking condition was checked in both `gates_evaluated` entries: each required 1, observed 0, and failed. Experimental performance was not assessed; this receipt supports only the gate-block report.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_base_question_family_authority`
-- `verdict_class`: `blocked`
-- `completed_count`: `0`
-- `intended_count`: `4377`; `excluded_count`: `4377`
-- `targets_opened`: `false`
-- `claim_scope`: `Pinned MDHJudgments authority audit and frozen human-target methods; no fitted head, medical correctness or general verifier moat.`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `custody_ready_score` and `roster_ready_score`; both entries have `expected`: `1`, `actual`: `0`, and `passed`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9071_collect_b.json
+## experiment_9086_collect_b.json
 
 **NO_CLAIM**
 
@@ -108,18 +109,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is made. This artifact records a blocked collection attempt, so there is no experimental success claim to falsify.
+Not applicable: this artifact records blocked prerequisites without claiming successful collection or comparative value.
 
 ## WAS THAT CHECKED
-The prerequisite was checked and failed: collection readiness was 0 against a required 1. The artifact reports blocking before execution; no comparative experiment was tested.
+Yes, the blocking condition was checked in `gates_evaluated`: both prerequisites required 1, observed 0, and failed. No experimental outcome was tested.
 
 ## EVIDENCE
-`blocked_gate_check_v1`, `blocked`, `blocked_gate_check_failed`, `b_collection_ready_score`, `actual=0 == expected=1`, `conductor_pre_gate`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- Both `custody_ready_score` and `roster_ready_score`: `expected`: `1`, `actual`: `0`, `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9073_human_features.json
+## experiment_9088_human_embeddings.json
 
 **NO_CLAIM**
 
@@ -130,18 +135,27 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked prerequisite-check receipt, with no claim of successful feature capture or comparative value.
+No experimental claim is asserted. This artifact records a prerequisite failure, not successful extraction or comparative value.
 
 ## WAS THAT CHECKED
-No experimental claim was tested. Both prerequisite gates were checked and failed: each required 1 and observed 0.
+No experimental claim was tested. The prerequisite gate was checked in `gates_evaluated` and failed: observed readiness was 0 against required readiness of 1.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`. Both `gates_evaluated` entries report `expected`: `1`, `actual`: `0`, `passed`: `false`. `blocked_at_layer`: `conductor_pre_gate`.
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `human_methods_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9079_v774_hardware_boundary.json
+Upstream evidence was not inspected; this receipt establishes no experimental outcome.
+
+## experiment_9093_v775_service_cost.json
 
 **NO_CLAIM**
 
@@ -152,48 +166,56 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Qualified, correctness-matched current-device whole-service timings in its own rows would contradict the recorded evidence-blocked status. There is no comparative performance or verifier-value claim to falsify.
+Not applicable: this is an accounting inventory, with no comparative claim about service cost, verifier value, speedup, or generalization.
 
 ## WAS THAT CHECKED
-No empirical performance comparison is reported. The displayed rows contain unmeasured, null timings; the artifact records zero completed and 35 censored observations. This supports treating it as an evidence-inventory receipt. Elided rows and upstream contents were not inspected.
+No comparative hypothesis was tested. The scientific-service completeness gate fails, costs per request remain unavailable, and service ratios are withheld. The oracle and exposure disclosures therefore do not undermine an asserted benefit.
 
 ## EVIDENCE
 
-- `claim_scope`: `Workload feasibility only. Graph truth is executable; graph wins are circular_positive. No verifier benefit, purchase, 100x or actual-device speedup claim.`
-- `honest_verdict`: `complete_blocked_current_cost`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `completed_count`: `0`
-- `censored_count`: `35`
-- `current_device_implementation_measured`: `false`
-- `value`: `null`
-- `physical_acceleration_demonstrated`: `false`
+- `claim_scope`: `Authenticated accounting inventory only; no scientific service ratio or hardware speedup.`
+- `honest_verdict`: `complete_null_inventory_unavailable_service`
+- `complete_service_ratios`: `[]`
+- `scientific_service_complete`: `passed`: `false`
+- `Neither complete scientific costs nor request denominators are authenticated.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9080_arc_transfer.json
+Not checked: elided rows or external receipts. This inventory supports no scientific performance inference.
 
-**NO_CLAIM**
+## experiment_9094_v775_susceptibility.json
+
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The CPU equation diagnostic reproduces suppression of hidden-layer susceptibility at the cancellation setting despite equal binary energies.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt, with no claim about transfer performance.
+A stable equilibrium at alpha 0.5 showing nonzero first-order hidden response to output forcing, or independently computed derivatives and forced-equilibrium displacements disagreeing with the analytic susceptibility prediction.
 
 ## WAS THAT CHECKED
-The readiness gate was checked and failed: observed 0 versus required 1. Transfer performance was not evaluated, so the artifact supports no conclusion about transfer.
+Yes, within the numerical diagnostic’s scope. Paired rows show zero midpoint response and nonzero endpoint responses. Derivative rows compare analytic derivatives with finite differences; finite-perturbation rows compare solved equilibria with predicted linear displacement as forcing shrinks. Those numerical comparisons could fail, even though binary-energy equality alone cannot establish the mechanism.
+
+The oracle flag concerns exact graph BFS; the headline claims no verifier advantage. No model generalization or computational advantage is claimed, so a competitive baseline is unnecessary. The displayed flags do not invalidate these numerical rows, and their cited metric fields exist.
+
+No experiment was rerun. Elided rows limit direct inspection, particularly of midpoint finite-perturbation results.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `arc_new_outcomes_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
+
+- `claim_scope`: `CPU numerical equation diagnostic only; no generator, inference-speed, joule or hardware benefit.`
+- `arm`: `alpha_0_0.5_1`; `hidden_response_norms`: `0.24959953591282544`, `0.0`, `0.24959953591282544`.
+- `mixed_curvature_error`: `7.331371304486467e-08`; `derivative_atol`: `1e-06`.
+- `error_per_beta`: `6.474635825458494e-10`, `6.474635018019086e-08`, `6.474809844277076e-06`.
+- `floating_point_floor`: `false`; `independent_generalization_score`: `0`; `model_invoked`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_9081_v774_capstone.json
+## experiment_9095_v775_capstone.json
 
 **NO_CLAIM**
 
@@ -204,20 +226,19 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit is asserted. A tie or loss against projected or full linear would defeat a benefit claim, but this artifact reports administrative completion and blocked scientific evaluation.
+Not applicable: this artifact aggregates administrative outcomes without asserting verifier benefit or independent generalization. Oracle-defined wins would not establish added value, but this artifact explicitly labels them circular.
 
 ## WAS THAT CHECKED
-No. The human comparator bounds are unmeasured, and no new ARC gameplay occurred. These limitations are preserved as blocked outcomes rather than converted into a positive verdict.
+Yes, for the administrative boundary: the displayed custody gate observes zero against a required one and fails; the overall verdict remains blocked. Exposed human data is explicitly identified as development data. No comparative scientific success is asserted.
 
 ## EVIDENCE
-- `claim_scope`: `Fourteen administrative outcomes. No measured graph, selected human-panel, broad no-cheap-oracle or complete-cost benefit. Graph wins remain circular_positive; human agreement is neither medical correctness nor general verifier benefit.`
 - `honest_verdict`: `complete_blocked_declared_gate`
-- `status`: `unmeasured`
-- `new_gameplay_executed`: `false`
-- `publication_scope`: `historical_FoVer`
+- `claim_scope`: `Fourteen administrative outcomes; graph labels are an executable oracle and graph wins are circular_positive. No new detector, online or general verifier benefit.`
+- `exposure_scope`: `LPHB is exposed development; no independent human evaluation or generalization. Historical graph access and source authority remain blocked.`
+- `artifact_field`: `custody_ready_score`; `expected`: `1`; `observed`: `0`; `passed`: `false`
 - `current_science_paper_ready`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-Upstream experiments were not checked; this receipt establishes no comparative scientific benefit.
+Not checked: upstream artifacts or elided rows. This assessment covers the supplied text only.

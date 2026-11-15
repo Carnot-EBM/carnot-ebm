@@ -23766,3 +23766,18 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9093: Account for complete and censored service work (⚠️ Research Finding) — honest_verdict=complete_null_inventory_unavailable_service; results/experiment_9093_v775_service_cost.json
 - 2026-11-15: Exp9094: Test physical learning signals at equal Ising energies (⚠️ Research Finding) — honest_verdict=complete_circular_positive_susceptibility_mechanism; results/experiment_9094_v775_susceptibility.json
 - 2026-11-15: Exp9095: Reconcile fourteen outcomes and close unchanged comparisons (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9095_v775_capstone.json
+
+## 2026-11-15 — Stage V776 human decision research
+
+- Record the requested arXiv and secondary-source scan before experiment design.
+  Add frozen decision probabilities, representation-shortcut controls and causal
+  calibration follow-ups, with explicit source and hardware limits.
+- Preserve V775 design and active queue byte for byte. Propose exactly14 tasks,
+  Exp9096–Exp9109, in four phases, with a matching visible/full-object contract.
+- Ground the human-source retry in a located original Git blob. Keep historical
+  pins, exposed question roles, earlier nulls and unchanged graph blocks intact.
+- Plan frozen Qwen features, calibrated small heads, delayed coefficient learning,
+  independent reduction, signal controls, a judge baseline and complete costs.
+  All LLM tasks declare actual no-generation work and the mandated cached model.
+- Add proposed requirements, traceability and architecture boundaries. No runtime
+  implementation, activation, new scientific result, conductor change or push.

@@ -56852,3 +56852,91 @@ V775 adversarial planning review also traced LPHB through Exp8429–8435.
 Exp8435 is `complete_null_v726_capacity_benefit_audit`; the proposed embedding
 representation is the changed technique, not a fresh source or a reversal of that
 null. Preserve original question partitions and whole-question donor controls.
+
+## 2026-11-15 — V776 planning scan: useful human decisions before more collection
+
+Recorded before the V776 experiment design. Primary papers are method leads,
+not Carnot results. The eight requested topics and six secondary channels were
+checked. No fresh independent human evaluation source was qualified.
+
+### Findings selected for the next design
+
+- [Distributional Energy-Based Models, 2605.18871](https://arxiv.org/abs/2605.18871),
+  May 15, 2026, combines learned scores with explicit constraints and reports a
+  generator-identity shortcut on code. Test whether a frozen representation adds
+  answer-specific information beyond question-only, answer-only and text-length
+  controls. Keep generator metadata out of learned inputs and retain per-generator
+  slices. This is a diagnostic inspired by the paper, not its reproduction.
+- [P(Yes), 2610.25474](https://arxiv.org/abs/2610.25474), October 18, uses frozen
+  decision probabilities, including Qwen3.8-27B, for search. Before adding search,
+  compare a single fixed factual-correctness judgment with the small energy heads
+  on the same archived human-labeled answers. Judge probabilities are predictions,
+  never replacement truth. The paper's logic-puzzle gains do not imply factual
+  verification gains. Bound the judgment token budget and measure complete cost.
+- [Online spline KAN, 2602.02056](https://arxiv.org/abs/2602.02056), February 2,
+  and [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987), April 27,
+  motivate an exploratory delayed-feedback comparison on human development data.
+  Freeze representations and update only small coefficients. Measure future
+  Brier loss, decision coverage, retained accuracy and durable update cost.
+  Sparse basis support does not remove dense guards or storage work. No conformal
+  guarantee or local FPGA training capability follows from these papers.
+- [The Labeling Problem, 2610.08026](https://arxiv.org/abs/2610.08026), October 6,
+  remains the target-definition authority: factual correctness differs from
+  agreement with a short reference. Preserve original LPHB A1 labels, missing A2
+  labels, original question groups and exposed-development status.
+- [Agreement Is Not Assurance, 2611.15363](https://arxiv.org/abs/2611.15363),
+  November 11, studies shared-evidence failures in a power-grid verifier. The
+  transferable lesson is to test evidence dependence; its numerical outcomes do
+  not transfer to text. Use prohibited-input mutation controls and distinguish
+  source custody from scientific independence.
+
+### Requested topic coverage
+
+| Topic | Primary source inspected | Decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [EBR, 2611.08977](https://arxiv.org/abs/2611.08977), November 6 | Keep the generator frozen; algorithmic reasoning results do not reopen Carnot's unchanged generator nulls. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [PAL, 2503.19466](https://arxiv.org/abs/2503.19466) | Formal feasibility remains distinct from human factual judgments. No extra solver branch. |
+| Ising applications in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), June 30 | Keep sample quality, training support and complete-service cost separate. |
+| Hallucination detection | Labeling Problem above; [Spilled Energy, 2602.18671v4](https://arxiv.org/abs/2602.18671) | A logit-energy comparator remains a future lead; first execute the already frozen embedding comparison. |
+| KAN | Online spline KAN above | Reuse fixed cubic bases, converged linear controls and causal updates. |
+| Energy-guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484), May 19 revision, ICML 2026 | Defer steering until a useful, calibrated verifier exists. |
+| Hardware sampling | [250-MTJ machine, 2506.14590](https://arxiv.org/abs/2506.14590); [Susceptibility Bottlenecks, 2611.14727](https://arxiv.org/abs/2611.14727) | Preserve Exp9094's CPU mechanism result. No repeated analytic cancellation study or inferred board speedup. |
+| Continual constraint learning | Continual Calibration and online spline KAN above | Separate delayed feedback, operational guards and untouched retention. |
+
+### Secondary channels and limits
+
+- **OpenReview:** inspected the official [ICLR 2026 EBT paper](https://openreview.net/pdf?id=ZBj3Qp1bYg),
+  [Spilled Energy paper](https://openreview.net/pdf?id=EXFKk4Y3yc), and indexed
+  NRGPT proceedings. Search also checked 2026 NeurIPS/ICML/ICLR EBM work. No
+  uninspected review or acceptance decision is asserted.
+- **Semantic Scholar:** browser Graph API requests failed. Direct HTTPS requests
+  succeeded: the first page returned 25 EBT citing papers with a next page, and
+  11 ARM-EBM citing papers without a next page. This is partial coverage. Followed
+  EBR, P(Yes) and Distributional EBMs to their primary arXiv pages. Rechecked the
+  [ARM-EBM bijection](https://arxiv.org/abs/2512.15605), May 25 revision; a function-space
+  equivalence does not grant a practical verifier or an independent correctness label.
+- **Hugging Face Papers:** [HalluGuard](https://huggingface.co/papers/2601.18753)
+  was accessible. Feed descriptions are discovery aids, not label authority.
+- **GitHub Trending:** [Python monthly](https://github.com/trending/python?since=monthly)
+  returned a two-month-old crawl. No current popularity or new repository ranking
+  was established. No dependency is selected from that page.
+- **Extropic:** [Writing](https://extropic.ai/writing) and the
+  [Torx/Thermalizers/Z1 announcement](https://extropic.ai/writing/from-one-to-one-billion)
+  remain vendor evidence. They establish no local TSU access or measured Carnot cost.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  remains a vendor description of constraint evaluation. No reproducible new
+  implementation or weights were established.
+
+### Changed local prerequisites
+
+Exp9083 qualified its enforced fixture but stopped on missing historical attempt
+topology authority. Graph recollection stays closed. Exp9084 inventoried all
+900 LPHB responses in 300 groups, with TRAIN/CAL/TEST counts 450/150/300, but
+stopped on a historical producer hash mismatch. A read-only Git search found
+the required `human_label_custody_8389.py` bytes at commit
+`8e8b08277f98f6ef3a3680e5a9d2653d7761c69e`; their SHA256 is
+`52cc5fe1903f0c991ccb416903d873f14d1d01785329e4d005fe77fb2268d128`.
+This is a concrete changed prerequisite for immutable historical authentication,
+not permission to repin the old artifact to current code. Remaining producer and
+raw-data closure must still qualify. LPHB remains exposed development and
+Exp8435's prior capacity-benefit null remains valid.

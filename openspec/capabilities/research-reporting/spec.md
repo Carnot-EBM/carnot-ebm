@@ -114260,3 +114260,195 @@ exact numerical diagnostic SHALL keep `verifier_is_oracle=true` and use
 `verdict_class=circular_positive`. It does not qualify an independent verifier
 or physical learning benefit. The unchanged adversarial scanner enforces this
 classification before the primary becomes visible.
+
+
+## V776 proposed human decision research — 2026-11-15
+
+Status: planned only. No implementation or new scientific result is established.
+The exact fourteen-task contract is research-roadmap-vNEXT.md and research-roadmap-next.yaml.
+All old requirements, artifacts, source pins and failed outcomes remain intact.
+
+### REQ-REPORT-V776-BOUNDARY: Preserve evidence and claim scopes
+
+The proposed work SHALL authenticate original LPHB producer bytes and author inputs,
+retain exposed-development status and original outer qid roles, freeze Qwen weights,
+separate current inference from archived generation, and keep independent_generalization_score=0.
+Static fitting SHALL preserve Exp9084 methods. Online fitting SHALL exclude future
+TRAIN groups, seal sibling predictions before feedback, protect retention, and test
+exact recovery. Complete costs SHALL include representation and durable update work.
+Historical graph bounds, exclusions and scientific nulls SHALL remain unchanged.
+
+#### SCENARIO-REPORT-V776-BOUNDARY
+
+Given authenticated inputs and a registered null, the task retains complete rows
+and readiness without claiming benefit. Missing external inputs produce terminal
+blocked with the exact gate_check_summary; invalid current checks disqualify.
+A current-code hash cannot replace a historical producer hash.
+
+### REQ-REPORT-9096-V776: Bind fourteen human-decision tasks and preserve V775 outcomes
+
+Task `exp9096-contract` SHALL produce `results/experiment_9096_v776_contract.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9096-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9097-V776: Authenticate original human producer bytes and retained question roles
+
+Task `exp9097-human-authority` SHALL produce `results/experiment_9097_v776_human_authority.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9097-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9098-V776: Qualify frozen Qwen hidden states and decision logits on fixed texts
+
+Task `exp9098-embedding-runtime` SHALL produce `results/experiment_9098_v776_embedding_runtime.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9098-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9099-V776: Freeze causal human coefficient updates and exact recovery
+
+Task `exp9099-online-methods` SHALL produce `results/experiment_9099_v776_online_methods.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9099-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9100-V776: Extract frozen human representations in shard A
+
+Task `exp9100-embeddings-a` SHALL produce `results/experiment_9100_v776_embeddings_a.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9100-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9101-V776: Extract frozen human representations in shard B
+
+Task `exp9101-embeddings-b` SHALL produce `results/experiment_9101_v776_embeddings_b.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9101-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9102-V776: Train the frozen six-arm human decision comparison
+
+Task `exp9102-static-heads` SHALL produce `results/experiment_9102_v776_static_heads.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9102-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9103-V776: Measure delayed human learning with sealed predictions and recovery
+
+Task `exp9103-online-streams` SHALL produce `results/experiment_9103_v776_online_streams.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9103-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9104-V776: Audit factual-error decisions against every frozen comparator
+
+Task `exp9104-static-audit` SHALL produce `results/experiment_9104_v776_static_audit.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9104-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9105-V776: Audit causal benefit and calibration retention without sample inflation
+
+Task `exp9105-learning-audit` SHALL produce `results/experiment_9105_v776_learning_audit.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9105-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9106-V776: Separate answer information from question and generator shortcuts
+
+Task `exp9106-signal-controls` SHALL produce `results/experiment_9106_v776_signal_controls.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9106-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9107-V776: Measure fixed Qwen factual-decision probabilities on the same human panel
+
+Task `exp9107-qwen-judge` SHALL produce `results/experiment_9107_v776_qwen_judge.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9107-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9108-V776: Measure complete human decision costs and justified hardware limits
+
+Task `exp9108-complete-cost` SHALL produce `results/experiment_9108_v776_complete_cost.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9108-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.
+
+### REQ-REPORT-9109-V776: Reconcile fourteen outcomes and decide the human verification continuation
+
+Task `exp9109-capstone` SHALL produce `results/experiment_9109_v776_capstone.json` using
+the frozen design and complete task prompt. It SHALL retain per-unit rows,
+verdict_class, exact gate diagnostics, actual substrate and validation receipts.
+
+#### SCENARIO-REPORT-9109-V776
+
+Given qualified prerequisites, the real private CLI accepts matching evidence
+and rejects altered inputs or rehashed reductions. Missing external evidence
+blocks once. Scientific and administrative readiness remain distinct.

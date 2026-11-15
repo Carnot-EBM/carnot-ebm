@@ -19337,3 +19337,20 @@ TEST access. Human exposure, V726 null and V774 blocked sources remain explicit.
 No current scientific result, independent generalization, hardware speedup or ARC
 solve is claimed. Active roadmap and research_conductor.py remain unchanged.
 Planning checks are recorded in the follow-up validation entry.
+
+## V776 human decision research staged — 2026-11-15
+
+Proposed milestone2026.11.776 contains14 tasks, Exp9096–Exp9109, across four
+phases. Both requested files are written from the same complete task objects:
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V775 design/queue bytes are preserved separately.
+
+Planning found Exp8389's required historical producer hash in Git. The proposed
+source reader will authenticate those original bytes and replay author labels;
+it will not repin an old artifact to mutable current code. The milestone tests
+frozen Qwen human representations, matched calibrated heads, delayed self-learning,
+answer-information controls, a fixed judge comparator and complete service costs.
+LPHB remains exposed development. Graph collection stays closed on missing
+historical topology authority; no device speedup or independent generalization
+is claimed. No experiments ran during planning. Validation results follow below.
+The active roadmap and conductor remain unchanged; nothing was pushed.

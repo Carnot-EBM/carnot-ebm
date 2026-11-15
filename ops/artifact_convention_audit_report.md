@@ -9,10 +9,28 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_9068_v774_dispatch_contract.json
+## experiment_9083_v775_prospective_custody.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Supervised fixture custody qualifies, but proposals and collection are blocked by missing historical attempt topology coverage.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+External references were not checked. The supplied `"gate_check_summary"` explicitly records `"historical_attempt_topology_coverage"` failing with `"observed": "missing_field"` and `"expected": true.
+
+## experiment_9084_v775_human_methods.json
 
 **CANNOT_DETERMINE**
 
@@ -20,136 +38,112 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim
+The visible “claim_scope” covers the exposed LPHB inventory and frozen comparison protocol, with no detector-benefit claim.
 
 ## WHAT IS MISSING
-The artifact’s remainder: JSON cuts off inside "authority_manifest". No headline claim or overall verdict is visible. The visible "arc_frontier.checks" records a diagnostic: "optional_arc_support" failed with "observed": 0.
+The artifact’s remainder: it ends mid-key inside “exposure_ledger.” “blocker”: “historical_producer_hash” and populated “gate_check_summary” entries provide diagnostics; those are not missing.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact assert a comparative result without per-unit metrics?
+Does any headline comparison have supporting per-unit metric rows?
 
-The omitted remainder was not checked; it could change this assessment.
+The truncated remainder was not checked; its claims and evidence remain unknown.
 
-## experiment_9069_v774_source_custody.json
+## experiment_9085_collect_a.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Collection was blocked because `custody_ready_score` and `roster_ready_score` were both 0, while each gate required 1.
+
+## WHAT IS MISSING
+nothing — `gates_evaluated` records each failed check, operator, expected value, observed value, and reason.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_9086_collect_b.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Collection was blocked because “custody_ready_score” and “roster_ready_score” each equaled 0 while both gates required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_9088_human_embeddings.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 9088 was blocked because upstream `human_methods_ready_score` was 0, failing the requirement that it equal 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_9093_v775_service_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The "scientific_service_complete" gate failed, with its "reason" identifying unavailable scientific request clocks, model/device attribution, and denominators; no comparative performance claim is recorded.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_9094_v775_susceptibility.json
 
 **CANNOT_DETERMINE**
 
 ## VERDICT
-
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-
-no claim
+The visible "acceptance_gates" mark equal binary energies and several other checks as passing.
 
 ## WHAT IS MISSING
-
-The remainder of the artifact: it cuts off mid-path inside `"b_attempt_inventory.files"`. No verdict or `"gate_check_summary"` is visible. `"a_custody_ready_score": 0` and `"complete_no_attempt_authority": false` alone do not establish that the task was blocked.
+The artifact is truncated inside "binary_energy_rows"; the headline verdict and remaining evidence are unavailable. Visible rows contain per-unit "energies", "alphas", "seed", and "condition", so they are not aggregate-only.
 
 ## THE CHECK A READER CANNOT DO
+Do all registered conditions support the reported gate outcomes?
 
-Does the missing remainder report a comparative claim or a blocked verdict with a diagnostic?
+The omitted remainder cannot be checked; overall checkability remains unknown.
 
-Only the supplied excerpt was assessed; omitted content could change the classification.
+## experiment_9095_v775_capstone.json
 
-## experiment_9070_v774_adjudication_methods.json
-
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-Human-target construction is blocked by `"base_question_family_authority"`; `"construction_evidence.missing"` identifies the absent author mapping from source-version/question/template IDs to common base families.
+The visible “claim_scope” reports fourteen administrative outcomes and no new detector, online, or general verifier benefit.
 
 ## WHAT IS MISSING
-nothing
+The artifact ends mid-field at “cost_summary” → “bottleneck_opera”. Any subsequent verdict, diagnostic fields, or actual per-unit measurements are unavailable; “task.per_unit_rows”: true records a requirement, not measurements.
 
 ## THE CHECK A READER CANNOT DO
-none
+Does the retained susceptibility result have seed-paired measurements supporting its “complete_circular_positive_susceptibility_mechanism” verdict?
 
-Not checked: external files or reruns; assessment covers only the supplied text.
-
-## experiment_9071_collect_b.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Collection was blocked because `exp9069-source-custody.b_collection_ready_score` was 0, failing the required equality to 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_9073_human_features.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because both upstream readiness gates, "human_source_ready_score" and "human_methods_ready_score", recorded 0 when each required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_9079_v774_hardware_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The hardware assessment is blocked: "gate_check_summary" records "current_cost" failing with "observed": "missing_file"; no actual-device speedup is claimed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Not checked: experiment execution or referenced files; this verdict covers the supplied text only.
-
-## experiment_9080_arc_transfer.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Experiment 9080 was blocked because upstream `arc_new_outcomes_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_9081_v774_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Fourteen administrative outcomes were completed, without claiming measured scientific benefit or authorizing publication.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-External references were not checked; this assessment covers only the supplied text.
+No reruns or referenced files checked; truncation prevents a conclusive classification.

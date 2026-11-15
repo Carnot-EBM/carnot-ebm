@@ -4991,3 +4991,32 @@ zero exclusions; all eleven frozen checks pass. Durable evidence is under
 `results/raw/experiment_9082_v775_contract/fix-validation/`. Separate global
 collection is blocked by V733's historical live-roadmap hash check; these results
 make no repository-wide coverage claim.
+
+
+## V776 planning traceability — 2026-11-15
+
+All rows are proposed, not implemented or measured. The prior V775 design and
+queue are preserved in openspec/change-proposals/research-roadmap-v775-preserved-20261115.md
+and research-roadmap-v775-queue-preserved-20261115.yaml.
+
+| Requirement / scenario | Task | Phase | Planned deliverable | Status |
+|---|---|---:|---|---|
+| REQ-REPORT-9096-V776 / SCENARIO-REPORT-9096-V776 | exp9096-contract | 1 | results/experiment_9096_v776_contract.json | Proposed |
+| REQ-REPORT-9097-V776 / SCENARIO-REPORT-9097-V776 | exp9097-human-authority | 1 | results/experiment_9097_v776_human_authority.json | Proposed |
+| REQ-REPORT-9098-V776 / SCENARIO-REPORT-9098-V776 | exp9098-embedding-runtime | 1 | results/experiment_9098_v776_embedding_runtime.json | Proposed |
+| REQ-REPORT-9099-V776 / SCENARIO-REPORT-9099-V776 | exp9099-online-methods | 1 | results/experiment_9099_v776_online_methods.json | Proposed |
+| REQ-REPORT-9100-V776 / SCENARIO-REPORT-9100-V776 | exp9100-embeddings-a | 2 | results/experiment_9100_v776_embeddings_a.json | Proposed |
+| REQ-REPORT-9101-V776 / SCENARIO-REPORT-9101-V776 | exp9101-embeddings-b | 2 | results/experiment_9101_v776_embeddings_b.json | Proposed |
+| REQ-REPORT-9102-V776 / SCENARIO-REPORT-9102-V776 | exp9102-static-heads | 2 | results/experiment_9102_v776_static_heads.json | Proposed |
+| REQ-REPORT-9103-V776 / SCENARIO-REPORT-9103-V776 | exp9103-online-streams | 2 | results/experiment_9103_v776_online_streams.json | Proposed |
+| REQ-REPORT-9104-V776 / SCENARIO-REPORT-9104-V776 | exp9104-static-audit | 3 | results/experiment_9104_v776_static_audit.json | Proposed |
+| REQ-REPORT-9105-V776 / SCENARIO-REPORT-9105-V776 | exp9105-learning-audit | 3 | results/experiment_9105_v776_learning_audit.json | Proposed |
+| REQ-REPORT-9106-V776 / SCENARIO-REPORT-9106-V776 | exp9106-signal-controls | 3 | results/experiment_9106_v776_signal_controls.json | Proposed |
+| REQ-REPORT-9107-V776 / SCENARIO-REPORT-9107-V776 | exp9107-qwen-judge | 3 | results/experiment_9107_v776_qwen_judge.json | Proposed |
+| REQ-REPORT-9108-V776 / SCENARIO-REPORT-9108-V776 | exp9108-complete-cost | 4 | results/experiment_9108_v776_complete_cost.json | Proposed |
+| REQ-REPORT-9109-V776 / SCENARIO-REPORT-9109-V776 | exp9109-capstone | 4 | results/experiment_9109_v776_capstone.json | Proposed |
+
+REQ-REPORT-V776-BOUNDARY / SCENARIO-REPORT-V776-BOUNDARY apply to all fourteen
+planned tasks. FR-12 maps to Exp9097/9098/9100–9102/9104/9106/9107; FR-11 maps
+to Exp9099/9103/9105; complete-cost and hardware feasibility map to Exp9108.
+No Rust performance result, independent human generalization or new ARC solve is claimed.
