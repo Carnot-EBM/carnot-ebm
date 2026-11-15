@@ -23782,3 +23782,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - Add proposed requirements, traceability and architecture boundaries. No runtime
   implementation, activation, new scientific result, conductor change or push.
 - 2026-11-15: Exp9096: Bind fourteen human-decision tasks and preserve V775 outcomes (⚠️ Research Finding) — honest_verdict=complete_null_v776_contract; results/experiment_9096_v776_contract.json
+- 2026-11-15: Exp9097: Authenticate original human producer bytes and retained question roles (✅ Complete) — honest_verdict=complete_positive_exposed_human_authority; results/experiment_9097_v776_human_authority.json
