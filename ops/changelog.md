@@ -23758,3 +23758,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9084: Freeze an exposed-human embedding comparison (⚠️ Blocked) — honest_verdict=complete_blocked_historical_producer_hash; results/experiment_9084_v775_human_methods.json
 - 2026-11-15: Exp9093: Account for complete and censored service work (⚠️ Research Finding) — honest_verdict=complete_null_inventory_unavailable_service; results/experiment_9093_v775_service_cost.json
 - 2026-11-15: Exp9094: Test physical learning signals at equal Ising energies (⚠️ Research Finding) — honest_verdict=complete_circular_positive_susceptibility_mechanism; results/experiment_9094_v775_susceptibility.json
+- 2026-11-15: Exp9095: Reconcile fourteen outcomes and close unchanged comparisons (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9095_v775_capstone.json
