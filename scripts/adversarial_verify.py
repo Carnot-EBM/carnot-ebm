@@ -112,6 +112,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from carnot.reporting.discrete_count_proof import proven_counts
+from carnot.reporting.forward_evidence_9111 import conflicting_absences, panel_count_derivations
 from carnot.terminal_artifacts import (
     TerminalClassification,
     classify_artifact_path,
@@ -1842,6 +1843,11 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     coincide.
     """
     proved_counts = proven_counts(d)
+    try:
+        panel_counts = panel_count_derivations(d)
+    except ValueError as error:
+        panel_counts = {}
+        flags.append(Flag("STRUCTURAL_COUNT_EVIDENCE", "critical", str(error)))
     for k1, k2, v1, v2 in _numeric_pairs(d):
         if _legitimate_pair(k1, k2):
             continue
@@ -1852,6 +1858,8 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
         # is structural, not a coincidence between two distinct measurements.
         if _is_identifier_field(k1) or _is_identifier_field(k2):
+            continue
+        if k1 in panel_counts and k2 in panel_counts:
             continue
         if k1 in proved_counts and proved_counts.get(k2) == proved_counts[k1] and d[k1] == d[k2]:
             flags.append(
@@ -2579,6 +2587,10 @@ _INVOCATION_COUNT_FIELDS = frozenset(
         "generation_calls_attempted",
         "generation_calls_completed",
         "generation_call_count",
+        "current_llm_invocations",
+        "forward_calls",
+        "forward_calls_attempted",
+        "forward_calls_completed",
         "inference_call_count",
         "invocation_count",
         "live_inference_call_count",
@@ -2675,6 +2687,8 @@ def _claim_evidence_scope(path: tuple[str, ...], container: dict[str, Any]) -> s
     if tokens & _EXTERNAL_PROVENANCE_TOKENS:
         return "external"
     if scope in {"current", "current_run", "current_task", "self", "this_task"}:
+        return "current_task"
+    if len(path) == 2 and path[0] == "model_invocation_counts":
         return "current_task"
     if len(path) == 1 or tokens & _CURRENT_TASK_CONTAINER_TOKENS:
         return "current_task"
@@ -2815,7 +2829,16 @@ def _typed_invocation_evidence(d: dict[str, Any]) -> tuple[list[dict[str, Any]],
                 "value": value,
             }
         )
-    return live, negative, external
+    return (
+        live,
+        conflicting_absences(
+            live,
+            negative,
+            requires_generation=d.get(SUBSTRATE_CLASS_FIELD)
+            in (SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION, SUBSTRATE_CLASS_MODEL_FULL_GENERATION),
+        ),
+        external,
+    )
 
 
 def _substrate_declares_deterministic_non_live(raw: str) -> bool:

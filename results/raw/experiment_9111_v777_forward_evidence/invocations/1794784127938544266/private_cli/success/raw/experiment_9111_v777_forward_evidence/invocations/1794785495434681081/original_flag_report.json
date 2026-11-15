@@ -1,0 +1,26 @@
+{
+  "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9111_v777_forward_evidence/invocations/1794784127938544266/private_cli/success/raw/experiment_9111_v777_forward_evidence/invocations/1794785495434681081/inputs/1a8053cdf2fb2a5f111e97bfe888cdf4200d638131903d97e210dbdf993ac617/experiment_9107_v776_qwen_judge.json",
+  "exp_id": 9107,
+  "flag_count": 3,
+  "flags": [
+    {
+      "detail": "effective_independent_groups=150.0 and half_denominator=150.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    },
+    {
+      "detail": "Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='frozen_gguf_forward_scoring', live_evidence_count=3, negative_evidence_count=2. The duration check fails closed until the invocation scope agrees.",
+      "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+      "severity": "critical"
+    },
+    {
+      "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed']). Contradictory.",
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_artifact_checks",
+  "loaded": true,
+  "max_severity": 2,
+  "title": ""
+}

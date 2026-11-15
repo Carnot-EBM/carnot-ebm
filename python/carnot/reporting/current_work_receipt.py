@@ -32,7 +32,11 @@ ZERO_INVOCATION_COUNTS = {
     "generation_calls_cancelled": 0,
     "generation_calls_in_flight": 0,
 }
-OPERATIONS = {"model_load": "model_loads", "generation": "generation_calls"}
+OPERATIONS = {
+    "model_load": "model_loads",
+    "generation": "generation_calls",
+    "forward": "forward_calls",
+}
 STATES = {"attempted", "completed", "failed", "cancelled"}
 TERMINAL_STATES = {"completed", "failed", "cancelled"}
 SIDECAR_SCOPES = {"historical_model_receipts", "simulated_transport_events"}
@@ -128,6 +132,13 @@ def _reduce_events(
     """Reduce one owned ledger and name each malformed or unfinished call."""
 
     counts = deepcopy(ZERO_INVOCATION_COUNTS)
+    if any(event.get("operation") == "forward" for event in events):
+        counts.update(
+            {
+                f"forward_calls_{state}": 0
+                for state in ["attempted", "completed", "failed", "cancelled", "in_flight"]
+            }
+        )
     errors: list[str] = []
     by_call: dict[str, list[tuple[str, str, int]]] = defaultdict(list)
     for index, event in enumerate(events):
@@ -206,7 +217,7 @@ def build_current_work_receipt(
     counts, errors = _reduce_events(events, run_id=run_id, owner_pid=owner_pid)
     if errors:
         raise ValueError("invalid_current_event_ledger:" + ",".join(errors))
-    attempted = counts["model_loads_attempted"] + counts["generation_calls_attempted"]
+    attempted = sum(counts.get(f"{prefix}_attempted", 0) for prefix in OPERATIONS.values())
     return {
         "MODEL_SPECS": [],
         "model_invoked": attempted > 0,
@@ -260,9 +271,21 @@ def validate_current_work_receipt(
         errors.append("event_count_mismatch")
     if value.get("event_sha256") != canonical_hash(event_rows):
         errors.append("event_hash_mismatch")
-    if value.get("invocation_counts") != counts:
+    declared_counts = value.get("invocation_counts")
+    # Old ledgers predate forward events; accept only their unchanged zero-forward shape.
+    if (
+        isinstance(declared_counts, Mapping)
+        and not any(key.startswith("forward_calls_") for key in declared_counts)
+        and not any(event.get("operation") == "forward" for event in event_rows)
+    ):
+        counts = {
+            key: count for key, count in counts.items() if not key.startswith("forward_calls_")
+        }
+    if declared_counts != counts:
         errors.append("invocation_counts_mismatch")
-    expected_invoked = counts["model_loads_attempted"] + counts["generation_calls_attempted"] > 0
+    expected_invoked = (
+        sum(counts.get(f"{prefix}_attempted", 0) for prefix in OPERATIONS.values()) > 0
+    )
     if value.get("model_invoked") is not expected_invoked:
         errors.append("model_invoked_mismatch")
 

@@ -114726,6 +114726,19 @@ retain eight padding failures, logits readiness and the quarantined judge.
 
 Proposed: Qualify forward-only receipts and structural count evidence. Deliver `results/experiment_9111_v777_forward_evidence.json`.
 The full task protocol and acceptance gates in the V777 design are normative.
+Distinguish owned load attempts, completed loads, forwards and token sampling.
+A zero generation counter cannot contradict a recorded load or forward, while
+conflicting counters for the same operation remain critical. A requested model
+alone proves no execution. Historical receipts cannot become current activity.
+Add forward events to the owned receipt ledger without invalidating unchanged
+legacy receipts which contain no forward events.
+Equal question-group counts and half-coverage denominators require bounded,
+unique original roster rows, matching TEST predictions and per-qid denominators.
+Only those independently reduced integer fields receive structural treatment;
+copied outcome metrics and unsupported or contradictory counts stay critical.
+Authenticate Exp9110's contract gate and all consumed snapshots before work.
+Preserve Exp9107 bytes, quarantine, original flag report and source pins; audit
+the repaired reader separately without granting historical judge readiness.
 Required producer fields: forward_evidence_ready_score: integer0/1; original_flag_rows, semantic_control_rows, structural_count_derivations, preserved_detection_rows, historical_judge_diagnostic_reference, changed_validator_paths, validator_hashes. This task qualifies evidence semantics, not judge accuracy.
 
 ### SCENARIO-REPORT-9111-V777
@@ -114733,6 +114746,12 @@ Required producer fields: forward_evidence_ready_score: integer0/1; original_fla
 Use the task's positive and rejecting controls, original source roles and
 private CLI/cold replay checks; missing external inputs terminate blocked.
 Preserve all measured rows and validate every aggregate before publication.
+Controls cover no-load refusal, failed attempted load, successful zero-sampling
+forward, bounded/full generation, conflicting positive counters and receipt
+scope. Reject noninteger sample counts, unsupported cardinalities, copied
+accuracy/AUROC and contradictory per-qid denominators. Exercise actual private
+CLI success, missing/zero gates, tamper rejection and cold replay outside the
+checkout without PYTHONPATH. Measure all new statements without exclusions.
 
 ### REQ-REPORT-9112-V777
 

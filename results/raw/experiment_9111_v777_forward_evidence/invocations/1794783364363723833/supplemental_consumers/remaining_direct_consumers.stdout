@@ -1,0 +1,74 @@
+........................................................................ [ 12%]
+.........................F.............................................. [ 25%]
+........................................................................ [ 38%]
+........................................................................ [ 51%]
+........................................................................ [ 64%]
+........................................................................ [ 77%]
+........................................................................ [ 90%]
+.............F.........................................                  [100%]
+=================================== FAILURES ===================================
+____ test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor _____
+
+    def test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor() -> None:
+        """REQ-VERIFY-7158 classifies deterministic construction as tiny CPU work."""
+    
+        artifact = {
+            "inference_substrate": "exact_source_fixture_construction",
+            "inference_substrate_class": "cpu_exact_solver_or_simulator",
+            "execution_venue": "host",
+            "duration_s": 0.1,
+            "verifier_is_oracle": False,
+            "verdict_class": "positive",
+            "honest_verdict": "complete_positive_counterfactual_fixture_ready_no_verifier_value_claim",
+            "random_seed": 7_158_202_609_09,
+            "reproducibility_checksum": "sha256:fixture",
+            "rows": [{"fixture_id": "eef-example", "condition": "supported"}],
+        }
+        floor = av.duration_floor_for_artifact(artifact)
+>       assert floor == {
+            "substrate": "exact_source_fixture_construction",
+            "min_duration_s": av.DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+            "reason": "deterministic_verifier",
+        }
+E       AssertionError: assert {'min_duratio...or_simulator'} == {'min_duratio...construction'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'reason': 'substrate_class'} != {'reason': 'deterministic_verifier'}
+E         {'substrate': 'cpu_exact_solver_or_simulator'} != {'substrate': 'exact_source_fixture_construction'}
+E         Use -v to get more diff
+
+tests/python/test_adversarial_verify_exact_source_fixture_7158.py:27: AssertionError
+_______________ test_original_authentication_and_missing_inputs ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261115T225945-685686-63b9e3ea/test_original_authentication_a0')
+
+    def test_original_authentication_and_missing_inputs(tmp_path):
+        """REQ-VERIFY-9000: immutable primaries and actual raw ledger remain historical."""
+        evidence = d.authenticate(d.ROOT, tmp_path / "auth")
+>       assert not evidence["failures"]
+E       AssertionError: assert not [{'artifact_field': 'model_invocation_counts', 'check': 'historical_counts', 'expected': {'forward_calls_attempted': 0...ed': 512, 'generation_calls_cancelled': 0, 'generation_calls_completed': 512, 'generation_calls_failed': 0, ...}, ...}]
+
+tests/python/test_invocation_provenance_9000.py:46: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9000] phase=authenticate_retained completed=1 pending=2688
+[exp9000] phase=authenticate_retained completed=251 pending=2438
+[exp9000] phase=authenticate_retained completed=501 pending=2188
+[exp9000] phase=authenticate_retained completed=751 pending=1938
+[exp9000] phase=authenticate_retained completed=1001 pending=1688
+[exp9000] phase=authenticate_retained completed=1251 pending=1438
+[exp9000] phase=authenticate_retained completed=1501 pending=1188
+[exp9000] phase=authenticate_retained completed=1751 pending=938
+[exp9000] phase=authenticate_retained completed=2001 pending=688
+[exp9000] phase=authenticate_retained completed=2251 pending=438
+[exp9000] phase=authenticate_retained completed=2501 pending=188
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_adversarial_verify_exact_source_fixture_7158.py::test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor
+FAILED tests/python/test_invocation_provenance_9000.py::test_original_authentication_and_missing_inputs
+2 failed, 557 passed, 1 warning in 121.84s (0:02:01)
