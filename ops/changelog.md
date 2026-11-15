@@ -23756,3 +23756,4 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9082: Freeze fourteen tasks and unchanged scientific thresholds (⚠️ Research Finding) — honest_verdict=complete_null_v775_contract; results/experiment_9082_v775_contract.json
 - 2026-11-15: Exp9083: Qualify enforced custody before freezing a new graph roster (⚠️ Blocked) — honest_verdict=complete_blocked_historical_attempt_topology_coverage; results/experiment_9083_v775_prospective_custody.json
 - 2026-11-15: Exp9084: Freeze an exposed-human embedding comparison (⚠️ Blocked) — honest_verdict=complete_blocked_historical_producer_hash; results/experiment_9084_v775_human_methods.json
+- 2026-11-15: Exp9093: Account for complete and censored service work (⚠️ Research Finding) — honest_verdict=complete_null_inventory_unavailable_service; results/experiment_9093_v775_service_cost.json
