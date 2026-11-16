@@ -115258,6 +115258,18 @@ Deliver `results/experiment_9138_v779_contract.json`.
 Follow the task's exact readiness fields, methods and acceptance contract.
 Keep source authority, per-unit evidence, actual compute classes and field principles.
 
+Implementation contract: hash all fourteen ordered full objects, including prompts,
+gates and model metadata. Authenticate the preserved V778 design and queue.
+Replay original Exp9126/9132 validation receipts without fitting or developing
+methods. Keep source, five-arm static and six-arm online readiness separate from
+contract readiness. Preserve TRAIN150/CAL50/TEST100, both lexical shards, original
+evaluator labels and the separate label-blind text view. Keep Exp9125 retired,
+its receipt score zero and its quarantine bytes unchanged: 621 intended nodes,
+48 completed and 573 censored. Register scheduling repair as a new revision.
+Freeze inputs, exclusions, seed and owned validation before reading outcomes.
+Require 100 percent owned statement coverage with real CLI children and zero
+exclusions. No model load, generation, scientific benefit or roadmap activation.
+
 ### SCENARIO-REPORT-9138-V779
 
 Test positive and rejecting controls before measurement. Distinguish missing

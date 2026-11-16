@@ -914,3 +914,11 @@ Live Kaggle discussion updates remain unverified.
 
 Live Kaggle standings could not be checked; the public placement above comes from the team’s published writeup.
 
+## 2026-11-16 14:08 UTC -- NEW
+
+- **November 10 — Gemini 4 Carbon:** Official ARC-AGI-3 semi-private scores reached **65.1% Standard (Low)** and **99.1% Provider Adapter (Medium)**. The Standard High evaluation was omitted after session expirations limited completion to 30 of 55 games. [Official results](https://arcprize.org/results/google-gemini-4-carbon)
+
+- **November 9 — Team Turducken:** Published its solution writeup, reporting **fifth place on the public leaderboard with 56.02**. [Team writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken)
+
+Live Kaggle standings and the complete discussion feed could not be verified; Turducken’s placement is team-reported.
+

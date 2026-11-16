@@ -1,0 +1,146 @@
+{
+  "code_test_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v779_contract_evidence.py",
+      "sha256": "sha256:0e086731d28653e6a8a8d5e761241c3fa6f9e4318659ecc00041190b9b00ab58"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v779_contract.py",
+      "sha256": "sha256:7b5d23e2767a486f3999a75dbee36c62ce218a35ec7b158adf72d4c7821d815a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9138_v779_contract.py",
+      "sha256": "sha256:85f5ae7972eec70ebcc9739d19f4d14fcf152e01e0d0ccc6337238a82f91f57b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v779_contract_9138.py",
+      "sha256": "sha256:8a17e91053b7e4a499d71352b0f27a2b05ba6106a4e7d2640d0a206039d78e12"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v779-contract-inputs.json",
+      "sha256": "sha256:8d4bb42a27dcfdf908eaf4c15a93f844b37dbc1a03c06579326dee1bf6093722"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9138_v779_contract/invocations/1794838199865838049/.coverage",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9138_v779_contract/invocations/1794838199865838049/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9138_v779_contract/invocations/1794838199865838049/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v779_contract_9138.py"
+      ],
+      "name": "owned_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "name": "direct_consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/reporting/v779_contract_evidence.py",
+        "python/carnot/reporting/v779_contract.py",
+        "scripts/experiments/experiment_9138_v779_contract.py",
+        "tests/python/test_v779_contract_9138.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v779_contract_evidence.py",
+        "python/carnot/reporting/v779_contract.py",
+        "scripts/experiments/experiment_9138_v779_contract.py",
+        "tests/python/test_v779_contract_9138.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v779_contract_evidence.py",
+        "python/carnot/reporting/v779_contract.py",
+        "scripts/experiments/experiment_9138_v779_contract.py"
+      ],
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v779_contract_9138.py"
+      ],
+      "name": "spec_coverage"
+    }
+  ],
+  "coverage_config_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9138_v779_contract/invocations/1794838199865838049/coverage.ini",
+    "sha256": "sha256:d442a92b55a318a15c418eee48114ebb53f105e01c054e8b503074e2236099cc"
+  },
+  "e2e_scope": "E2E-018/021 private actual CLI success/refusal/tamper/cold replay in owned tests; E2E-020 not applicable: no learning or recovery changes",
+  "excluded_statements": 0,
+  "exclusions": [],
+  "frozen_ns": 138109631707221,
+  "hard_cap_s": 4800,
+  "measurement_cap_s": 3300,
+  "owned_paths": [
+    "python/carnot/reporting/v779_contract_evidence.py",
+    "python/carnot/reporting/v779_contract.py",
+    "scripts/experiments/experiment_9138_v779_contract.py"
+  ],
+  "random_seed": 779138,
+  "required_check_names": [
+    "owned_tests",
+    "direct_consumers",
+    "ruff_check",
+    "ruff_format",
+    "strict_mypy",
+    "spec_coverage"
+  ],
+  "statement_percent": 100,
+  "validation_reserve_s": 1200
+}
