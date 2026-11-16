@@ -115593,3 +115593,42 @@ pinned in retained evidence. Requirement-linked controls live in
 `tests/python/test_validation_schedule_9139.py`. The primary artifact records
 executed checks, exact scope, conservative feasibility and terminal readiness.
 Full621-node qualification remains a separate Exp9140 obligation.
+
+### REQ-REPORT-9151-V779 — frozen reconciliation scope (2026-11-16)
+
+The capstone authenticates the complete ordered fourteen task objects against
+both active YAML and the visible and embedded design. Freeze source byte pins,
+seed 779151, zero exclusions and the original two static and seven online bounds
+before reducing outcomes. Canonical scientific primaries, scheduler alternatives,
+quarantines, missing files, missing fields and observed integer zero remain distinct.
+All unavailable external science is terminal blocked; affected validation failures
+disqualify administrative readiness. No inference or model load is authorized.
+
+Recompute human question groups and observed annotation disagreements from original
+labels, and retain every scientific cost row and its censor reason. Siblings and
+repeated retention do not increase independent support. Preserve prior outcomes,
+gauge limits, hardware limits and both independent verifier gaps. Historical FoVer
+G1–G4 do not certify current science. Current science readiness is false and the
+independent generalization score is zero. A second failed validation schedule retires
+that exact scope; a qualified but infeasible collector needs smaller execution units
+with unchanged total population. Human confirmation requires a controlled development
+signal and a genuinely independent panel. No ARC solve or hardware benefit follows.
+
+Validation owns only the new capstone modules and CLI: all statements, zero excluded
+statements, real subprocess coverage, strict mypy, Ruff, explicit spec paths,
+E2E-018/021 and private foreign-directory success/refusal/tamper/cold replay without
+PYTHONPATH. Learning and recovery implementations are unchanged. Record one broad
+Python-suite run separately. Publish only through primary_publication after unchanged
+adversarial, strict row and cold replay checkers accept the exact candidate bytes.
+Ops and traceability reconciliation belongs to the conductor for this task.
+
+### SCENARIO-REPORT-9151-V779 — controls before implementation
+
+Accept exact fourteen-slot accounting while scientific primaries remain absent.
+Reject bool readiness, changed full task objects, input byte drift, altered human
+counts, and freshly rehashed invented bounds or current model counters. A missing
+input root yields terminal blocked evidence with exact failed operands. Failing
+owned checks cannot yield reconciliation readiness. The private real CLI accepts
+retained work, refuses checkout publication from private work, rejects invalid dates,
+replays valid evidence and rejects tampering. Report all original unfinished nodes
+and cost units without calling their missing measurements null results.
