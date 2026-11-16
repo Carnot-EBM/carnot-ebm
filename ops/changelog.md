@@ -23908,3 +23908,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9150: Measure complete forward and durable adaptation costs (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_readiness; results/experiment_9150_v779_complete_cost.json
 - 2026-11-16: Exp9151: Reconcile fourteen outcomes and exact continuation limits (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9151_v779_capstone.json
 - 2026-11-16: Exp9152: Bind fourteen tasks and preserve qualified human methods (⚠️ Research Finding) — honest_verdict=complete_null_v780_contract; results/experiment_9152_v780_contract.json
+- 2026-11-16: Exp9153: Separate measured validation costs from watchdog ceilings (⚠️ Blocked) — honest_verdict=complete_blocked_validation_prerequisite; results/experiment_9153_v780_validation_schedule.json
