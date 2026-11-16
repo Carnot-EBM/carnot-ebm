@@ -115308,6 +115308,25 @@ Require real private CLI success/refusal/tamper/cold replay and owned checks.
 External incompleteness is blocked, not retryable partial. No fixture establishes
 scientific benefit or independent human generalization.
 
+Exp9140 frozen qualification contract (2026-11-16): authenticate the exact
+Exp9139 primary and replay its original authority before dependent execution.
+Retain all621 original nodes, assertion/source hashes, command obligations and
+previously missing statements. Enumerate Exp9139 and Exp9140 additions separately.
+Freeze seed7799140, wall-second units, zero exclusions and zero model operations.
+The authenticated schedule projects27880.142389201996 seconds, exceeding3300.
+This projection failure is terminal blocked; do not launch a shortened original
+union, reinterpret conservative bounds as timings, or authorize model work.
+Every original node and normal success/refusal/tamper/replay obligation remains
+owed. Preserve Exp9107/9111/9125 bytes and their quarantines. New rejection-code
+coverage cannot discharge original statement obligations. Reserve verification
+once for1200 seconds within the4800-second hard cap. Run owned tests, actual
+private CLI refusal/replay/tamper children, zero-exclusion coverage, Ruff, strict
+types, explicit-path spec tracing and unchanged terminal scanners. Record one
+bounded global pytest run separately. Recompute all headlines from rows and
+reject rehashed gate, plan and readiness tampering. A future feasible schedule
+requires a separately authenticated revision and complete actual execution.
+Ops and traceability reconciliation are conductor-owned for this invocation.
+
 ### REQ-REPORT-9141-V779
 
 Proposed: Measure human disagreement and freeze calibration slices.
