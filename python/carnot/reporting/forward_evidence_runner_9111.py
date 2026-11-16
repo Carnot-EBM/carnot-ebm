@@ -733,8 +733,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=ROOT / "results" / (NAME + ".json"))
     parser.add_argument("--replay", type=Path)
     parser.add_argument("--diagnostic-only", action="store_true")
+    parser.add_argument("--schedule-v779", type=Path)
+    parser.add_argument("--schedule-invocation")
     args = parser.parse_args(argv)
     try:
+        if args.schedule_v779:
+            from carnot.reporting.validation_schedule_9139 import orchestration
+
+            print(
+                json.dumps(orchestration(args.schedule_v779, args.schedule_invocation)), flush=True
+            )
+            return 0
         if args.replay:
             print(json.dumps(replay(args.replay)), flush=True)
             return 0

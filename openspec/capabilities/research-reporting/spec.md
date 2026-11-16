@@ -115473,3 +115473,43 @@ Require real private CLI success/refusal/tamper/cold replay and owned checks.
 External incompleteness is blocked, not retryable partial. No fixture establishes
 scientific benefit or independent human generalization.
 
+
+### REQ-REPORT-9139-V779 — frozen schedule revision 2
+
+The new schedule retains the original 621 node IDs, test file byte hashes,
+command roles, historical source pins and setup/call/teardown events. Historical
+readers and their command contracts remain version 1. Version 2 consumes only
+same-invocation, hash-bound partition receipts and never issues the old whole
+pytest commands again. Reject stale, foreign, duplicated, incomplete, failed or
+modified evidence. Keep each module in one process to retain fixture lifetimes.
+Unknown node costs receive individual bounded probes within that module process.
+Use observed phase seconds for measured costs. Unknown costs are bounds, never
+measurements. Reserve verification once: measurement <=3300 seconds, verification
+1200 seconds, publication margin300 seconds, hard limit4800 seconds. If the
+complete graph exceeds3300 seconds, report infeasibility before dependent science.
+Schedule readiness qualifies these guards and a small real orchestration child;
+it never qualifies all621 nodes or authorizes model work. Exp9140 owns that run.
+Freeze seed7799139, empty model list, zero model calls, no exclusions and no new
+human observations. Keep all failed and censored obligations visible.
+
+### SCENARIO-REPORT-9139-V779 — schedule custody and execution controls
+
+Before implementation, test budget arithmetic2100-1800=300, full union equality,
+module fixture lifetime, bounded unknown costs, and same-invocation consumption.
+Mutate invocation, command, node, assertion hash, code/config hash, phase outcome,
+exit log and receipt bytes. Each mutation must refuse reuse. Missing files,
+missing fields, booleans and observed zero remain separate gate operands.
+Run actual private CLI success, missing-input refusal, tamper refusal and cold
+replay without PYTHONPATH. Combine child coverage after exit only. Require all
+owned statements and zero exclusions, Ruff, strict mypy, explicit spec coverage,
+private E2E-018/021 and unchanged terminal artifact scanners. Full repository
+health is recorded once separately. No learning/recovery change makes E2E-020
+applicable. Ops and traceability reconciliation are conductor-owned.
+
+Implementation: `validation_schedule_9139.py`, `validation_schedule_runner_9139.py`
+and the direct experiment CLI provide version2. The existing forward runner has
+an explicit version2 consumption option. Its historical version1 reader remains
+pinned in retained evidence. Requirement-linked controls live in
+`tests/python/test_validation_schedule_9139.py`. The primary artifact records
+executed checks, exact scope, conservative feasibility and terminal readiness.
+Full621-node qualification remains a separate Exp9140 obligation.
