@@ -114933,3 +114933,192 @@ permitted. Rehashed aggregate tampering SHALL fail private cold replay.
 Owned statement coverage SHALL be 100 percent with zero exclusions; failed
 affected validation SHALL set reconciliation readiness to zero. Complete
 accounting may be ready while external science remains terminal blocked.
+
+## V778 staged research contract — 2026-11-16
+
+Proposed only. Exactly14 tasks, Exp9124–Exp9137. The full protocols in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and the matching
+`research-roadmap-next.yaml` govern these requirements. No implementation
+or scientific result is claimed by this planning update.
+
+### REQ-REPORT-9124-V778
+
+Proposed: Bind fourteen tasks and preserve V777 failures.
+Deliver `results/experiment_9124_v778_contract.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9124-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9125-V778
+
+Proposed: Qualify forward receipts with complete bounded checks.
+Deliver `results/experiment_9125_v778_receipt_qualification.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9125-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9126-V778
+
+Proposed: Freeze whole-answer energy and probability controls.
+Deliver `results/experiment_9126_v778_logit_methods.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9126-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9127-V778
+
+Proposed: Qualify serial Qwen logit capture and shard budgets.
+Deliver `results/experiment_9127_v778_logit_runtime.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9127-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9128-V778
+
+Proposed: Collect frozen Qwen logit statistics in shard A.
+Deliver `results/experiment_9128_v778_logits_a.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9128-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9129-V778
+
+Proposed: Collect frozen Qwen logit statistics in shard B.
+Deliver `results/experiment_9129_v778_logits_b.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9129-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9130-V778
+
+Proposed: Authenticate complete statistics and role separation.
+Deliver `results/experiment_9130_v778_logit_admission.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9130-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9131-V778
+
+Proposed: Train the frozen five-arm human energy comparison.
+Deliver `results/experiment_9131_v778_static_energy.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9131-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9132-V778
+
+Proposed: Freeze delayed logit learning and recalibration controls.
+Deliver `results/experiment_9132_v778_online_methods.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9132-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9133-V778
+
+Proposed: Measure continuous logit learning on future groups.
+Deliver `results/experiment_9133_v778_delayed_streams.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9133-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9134-V778
+
+Proposed: Audit raw-energy value and gauge susceptibility.
+Deliver `results/experiment_9134_v778_energy_audit.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9134-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9135-V778
+
+Proposed: Test future benefit beyond temperature recalibration.
+Deliver `results/experiment_9135_v778_learning_audit.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9135-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9136-V778
+
+Proposed: Measure complete forward and durable learning costs.
+Deliver `results/experiment_9136_v778_complete_cost.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9136-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+### REQ-REPORT-9137-V778
+
+Proposed: Reconcile fourteen outcomes and continuation decisions.
+Deliver `results/experiment_9137_v778_capstone.json`.
+Keep original authority, complete per-unit rows and explicit verdict classes.
+The task-specific methods, readiness fields and acceptance bounds are normative.
+
+### SCENARIO-REPORT-9137-V778
+
+Exercise positive and rejecting controls before measurement. Missing external
+inputs are terminal blocked with exact gate operands. Preserve failed evidence.
+Require real CLI refusal/tamper/cold replay and owned checks before readiness.

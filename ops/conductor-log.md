@@ -22153,3 +22153,4 @@ code |
 | 2026-11-16 00:09 UTC | Exp9121: Test raw-energy value beyond normalized p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9116-logit-capture, exp9113-energy-methods) |
 | 2026-11-16 00:51 UTC | Exp9122: Measure available complete services and a | OK | 98 passed, 1 warning in 19.06s |
 | 2026-11-16 01:38 UTC | Exp9123: Reconcile fourteen outcomes and exact con | OK | 88 passed, 1 warning in 113.98s (0:01:53) |
+| 2026-11-16 03:27 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

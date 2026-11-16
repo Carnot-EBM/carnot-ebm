@@ -57027,3 +57027,74 @@ operation-specific receipt semantics using positive and adversarial controls
 before another expensive forward job. Do not suppress flags or rename measured
 fields to conceal them. The existing zero-load repair alone did not qualify the
 measured artifact. No fresh independent human source was established by this scan.
+
+## 2026-11-16 — V778 planning scan: forward energy and delayed calibration
+
+Recorded before drafting V778. Parsed the completion archive and scanned all
+317 roadmap-named files in `openspec/change-proposals/`. The archive currently
+ends at V776. The active V777 queue, primary artifacts and conductor log establish
+scheduling closure. They do not establish a successful scientific comparison.
+
+### Primary sources checked
+
+| Topic | Source and date | Planning consequence |
+|---|---|---|
+| EBM reasoning | [Energy-Based Reasoners](https://arxiv.org/abs/2611.08977), November 6, 2026 | Latent energy descent is a foundation-model lead. Its algorithmic reasoning results do not establish factual verification. Keep Qwen frozen. |
+| Neural constraints | [A Probabilistic Neuro-symbolic Layer](https://arxiv.org/abs/2503.19466), March 25, 2025; [Only Project Once](https://arxiv.org/abs/2610.04572), October 3, 2026 | These are different papers. Exact algebraic feasibility needs specified constraints; neither supplies independent factual truth. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 30, 2026 | Keep distributional sampling quality separate from optimization success. No new sampler sweep is justified by the current logit workload. |
+| Hallucination detection | [Spilled Energy](https://arxiv.org/abs/2602.18671), February 21, 2026; [Entropy Distribution](https://arxiv.org/abs/2605.28264), May 27, 2026 | Carry forward the unexecuted whole-answer logit study with normalized-probability controls and explicit gauge sensitivity. Simple entropy summaries are not CES. |
+| KAN online learning | [Ultrafast On-Chip Online Learning](https://arxiv.org/abs/2602.02056), June 19, 2026 revision, ICML 2026 | Local spline coefficients support a small delayed learner. Include complete guard scans and durable state costs; paper FPGA timings are not local measurements. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484), May 19, 2026 revision, ICML 2026 | Defer guided generation until a qualified scoring signal exists. Forward-only scoring does not reproduce ETS. |
+| Hardware sampling | [Anechoic](https://arxiv.org/abs/2610.13368), November 4, 2026 revision | Dense Max-Cut results on Alveo V80 do not imply equilibrium sampling or a KV260 speedup. Retain as a future workload-matched lead. |
+| Continual calibration | [Continual Calibration](https://arxiv.org/abs/2604.23987), April 27, 2026 | Measure retained probability quality separately from accuracy. Keep research retention labels outside operational adaptation. |
+| New calibration lead | [MT-CC](https://arxiv.org/abs/2610.25689), October 19, 2026 | The paper separates calibration changes from capability changes in class-incremental learning. Add a temperature-only adaptive control to the proposed logit learner. This is an inspired control, not a reproduction of its learned grouping network. |
+
+The new hypothesis is limited: local nonlinear energy updates may improve future
+human-label predictions beyond ordinary recalibration. Compare them against a
+temperature-only learner, bias-only updates, adaptive linear energy, frozen energy
+and donor feedback. Keep the label budget and prediction-before-feedback order
+equal. Do not import conformal guarantees from a different data regime.
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The Spilled Energy
+  [forum](https://openreview.net/forum?id=EXFKk4Y3yc) returned browser verification.
+  Its [official ICLR proceedings page](https://proceedings.iclr.cc/paper_files/paper/2026/hash/97dc07f1253ab33ee514f395a82fa7cc-Abstract-Conference.html)
+  was indexed. No inaccessible review content is claimed.
+- **Semantic Scholar:** browser Graph API access failed. Direct HTTPS requests
+  succeeded for both requested citation endpoints with limit100: EBT2507.02092
+  returned46 records; ARM-EBM2512.15605 returned11. Neither had a next page.
+  These counts describe indexed coverage, not an exhaustive literature census.
+  Additional image, motion and fluid-model citation leads do not change this
+  text-verification milestone. The ARM-EBM equivalence remains a theoretical
+  connection, not a demonstrated oracle-distinct verifier.
+- **Hugging Face Papers:** inspected [Spilled Energy](https://huggingface.co/papers/2602.18671).
+  The EBR feed page was unavailable. Feed summaries do not establish label authority.
+- **GitHub Trending:** checked [monthly Python](https://github.com/trending/python?since=monthly).
+  The tool returned a two-month-old crawl. No current trending rank or new
+  dependency is established. The feed links [author code](https://github.com/OmnAI-Lab/spilled-energy)
+  as a method reference, not an automatic dependency choice.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and the
+  [Torx, Thermalizers and Z1 announcement](https://extropic.ai/writing/from-one-to-one-billion).
+  The announcement distinguishes software and simulator access from chip plans.
+  Vendor claims do not establish local TSU availability or complete-service cost.
+- **Logical Intelligence:** checked the [home page](https://logicalintelligence.com/)
+  and [Kona1.0](https://logicalintelligence.com/kona). The constraint-evaluation
+  description supplies no inspected reproducible weights or new implementation.
+
+### Changed local prerequisite and limits
+
+Exp9111's immutable-input and semantic-control gates passed. Its owned tests and
+direct-consumer tests each hit a600-second child deadline. Owned coverage was
+97.24770642201835 percent, with twelve missing runner statements at714–725.
+Its artifact is `complete_disqualified_owned_checks`; keep its quarantine.
+The last test dots do not identify a hung test or prove a performance root cause.
+A follow-up must collect node timings, preserve the complete original test set,
+and exercise the real successful validation path before qualifying any receipt.
+
+Exp9112 never ran. The masked embedding repair remains untested, not disproved.
+Exp9098's logit interface had qualified independently of its failed embedding
+padding checks. A dedicated serial forward-statistics study can avoid that
+unnecessary embedding dependency. Split the900-answer workload into two bounded
+shards and measure feasibility before collection. The900 LPHB answers remain
+exposed development; no result on them closes independent generalization.

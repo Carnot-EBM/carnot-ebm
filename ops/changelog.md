@@ -23838,3 +23838,18 @@ and unrelated missing spec-reference findings; scoped tracing and diff checks pa
 - 2026-11-15: Exp9111: Qualify forward-only receipts and structural count evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_9111_v777_forward_evidence.json
 - 2026-11-16: Exp9122: Measure available complete services and adaptation costs (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_readiness; results/experiment_9122_v777_complete_cost.json
 - 2026-11-16: Exp9123: Reconcile fourteen outcomes and exact continuation gates (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9123_v777_capstone.json
+
+## 2026-11-16 UTC — Plan milestone2026.11.778
+
+User request: plan the next research milestone after2026.11.777 completes.
+Created the matching V778 design and staged execution YAML with14 tasks,
+Exp9124–Exp9137, in four phases. Preserved the V777 design/queue and protected
+`research-roadmap.yaml` and `scripts/research_conductor.py`.
+
+Updated research references before experiment design. The plan tests complete
+forward-receipt validation, dedicated logit capture, energy decisions beyond
+probability controls, and delayed spline learning beyond temperature recalibration.
+It retains original statistical thresholds, adds the sixth online comparator with
+seven-bound multiplicity correction, and reports complete service/durability costs.
+Added proposed requirements/scenarios and PRD traceability. No science was run,
+no milestone was activated and no historical failure or quarantine was cleared.

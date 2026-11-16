@@ -5053,3 +5053,20 @@ REQ-REPORT-V777-BOUNDARY / SCENARIO-REPORT-V777-BOUNDARY cover all fourteen task
 | REQ-REPORT-9121-V777 / SCENARIO-REPORT-9121-V777 | exp9121-energy-audit | 3 | results/experiment_9121_v777_energy_audit.json | Proposed |
 | REQ-REPORT-9122-V777 / SCENARIO-REPORT-9122-V777 | exp9122-complete-cost | 4 | results/experiment_9122_v777_complete_cost.json | Proposed |
 | REQ-REPORT-9123-V777 / SCENARIO-REPORT-9123-V777 | exp9123-capstone | 4 | results/experiment_9123_v777_capstone.json | Proposed |
+
+## V778 staged research traceability — 2026-11-16
+
+Proposed only: exactly14 tasks, Exp9124–Exp9137, across four phases.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`. Active V777 remains unchanged.
+
+| PRD requirement | Planned experiments | Specification and evidence obligation |
+|---|---|---|
+| FR-12, reliable factual verification | Exp9124–9131/9134 | REQ-REPORT-9124-V778 through REQ-REPORT-9131-V778, REQ-REPORT-9134-V778; authentic exposed human labels, full-vocabulary statistics, matched probability/donor controls and gauge susceptibility |
+| FR-06/FR-11, continuous self-learning | Exp9132/9133/9135 | REQ-REPORT-9132-V778, REQ-REPORT-9133-V778, REQ-REPORT-9135-V778; delayed coefficient updates, temperature-only comparator, exact recovery and seven simultaneous benefit/retention bounds |
+| FR-05/FR-08/NFR-01, complete service cost | Exp9136 | REQ-REPORT-9136-V778; uncached raw-text service, complete durable adaptation, measured hardware fractions; no Rust or board speedup claim |
+| Scientific accounting | Exp9137 | REQ-REPORT-9137-V778; all14 outcomes, exact gate operands, exposure limits and stable historical G1–G4 scope |
+
+Each requirement has a matching SCENARIO-REPORT-<id>-V778. Planning does not
+implement these experiments or close independent-generalization gaps. Preserve
+V777 source, receipt failure, masked-runtime nonexecution and blocked costs.

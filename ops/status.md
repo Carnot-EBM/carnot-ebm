@@ -19408,3 +19408,23 @@ zero model loads and generated tokens, and 409/409 owned statements covered.
 Private evidence is in `/tmp/carnot-9107-fix-1goq5t_4/`. The test mutation guard
 reported an unattributed concurrent append to `ops/anomaly-escalations.md`
 about the pre-repair repository artifact; that edit and artifact remain untouched.
+
+## 2026-11-16 UTC — V778 proposed after V777 scheduling closure
+
+Prepared `research-roadmap-next.yaml` and the matching
+`openspec/change-proposals/research-roadmap-vNEXT.md` for2026.11.778:
+14 tasks, Exp9124–Exp9137, across four phases. Not activated or executed.
+The V777 design and queue are preserved byte for byte in change-proposals.
+The active roadmap and conductor are unchanged.
+
+V777 authenticated source authority but disqualified forward receipts after
+600s owned/direct-consumer test timeouts and twelve uncovered runner statements.
+Its scientific branches did not run. V778 first qualifies complete bounded
+validation, then uses serial logits independently of the unqualified embeddings.
+Two450-answer shards feed a frozen five-arm energy comparison. A separate
+six-arm delayed learner includes a temperature-only control. Complete costs
+and unconditional reconciliation finish the plan.
+
+LPHB remains exposed development. Neither independent-verifier gap closes here.
+No Qwen training, new ARC solve, board operation or external publication is planned.
+The V778 research scan records fresh source checks and secondary-channel limits.
