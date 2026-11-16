@@ -1,0 +1,68 @@
+{
+  "adaptation": [
+    "proposal",
+    "full_CAL_guard",
+    "rollback",
+    "final_feedback_drain",
+    "fsync",
+    "recovery"
+  ],
+  "answers": 60,
+  "arm_order_seed": 776108,
+  "cache_conditions": [
+    "cold_load",
+    "warm_uncached",
+    "cached_head_only"
+  ],
+  "embedding": "raw text/tokenize/masked features/transforms/projected-linear/spline/full-linear/serialize",
+  "energy": "raw text/tokenize/all teacher-forced statistics/frozen probability and energy heads/serialize",
+  "exclusions": [],
+  "formulas": "Exp9126 immutable full-vocabulary formulas; no gate or denominator changes",
+  "generated_tokens": 0,
+  "measurement_deadline_s": 3300,
+  "minimum_actual_substrate_s": 2,
+  "model_admission": [
+    "cached_sota_pair(gpu_indices=(0,0))",
+    "GPU0 lease",
+    "CUDA loader",
+    "real offload",
+    "GGUF embedded tokenizer",
+    "model/build SHA256"
+  ],
+  "online_arms": [
+    "frozen",
+    "bias",
+    "linear",
+    "spline",
+    "donor",
+    "temperature"
+  ],
+  "parity_atol": 1e-05,
+  "parity_rtol": 0.0001,
+  "process_arm_order": [
+    [
+      "static",
+      "online"
+    ],
+    [
+      "static",
+      "online"
+    ],
+    [
+      "static",
+      "online"
+    ]
+  ],
+  "process_repetitions": 3,
+  "qids": 20,
+  "static_arms": [
+    "prevalence",
+    "probability_length",
+    "raw_energy",
+    "combined",
+    "combined_donor"
+  ],
+  "total_cap_s": 4800,
+  "typed_decisions": "exact",
+  "validation_reserve_s": 1200
+}

@@ -115189,7 +115189,22 @@ Require real CLI refusal/tamper/cold replay and owned checks before readiness.
 
 ### REQ-REPORT-9136-V778
 
-Proposed: Measure complete forward and durable learning costs.
+Measure complete forward and durable learning costs when the declared scientific
+inputs qualify. Authenticate the current contract, receipt qualification, runtime
+and feasibility, admitted features and fitted static/online heads independently.
+Retain immutable producer pins; absence, a missing field and an observed zero
+are distinct operands. An empty availability inventory is terminal blocked before
+any model load, with requested model_load_no_generation and actual blocked_no_run.
+Resolve only the mandated cached Qwen GGUF through cached_sota_pair on GPU0;
+cache inspection is not a load. No generated tokens, padding, downloads or GPU1.
+Freeze first20 original TEST groups/all60 siblings, three fresh processes,
+seed776108, probability parity atol1e-5/rtol1e-4 and identical typed decisions.
+Static service eligibility is independent of online trajectory availability.
+Cold load, complete warm uncached service and cached-statistic head work have
+separate clocks. Empty clocks cannot support an Amdahl ceiling or energy claim.
+When external inputs are blocked, retain unstarted rows for every scheduled unit
+and report all service/adaptation readiness as0. An eligible branch requires real
+measurement; the blocked inventory must refuse to manufacture its timings.
 Deliver `results/experiment_9136_v778_complete_cost.json`.
 Keep original authority, complete per-unit rows and explicit verdict classes.
 The task-specific methods, readiness fields and acceptance bounds are normative.
@@ -115199,6 +115214,13 @@ The task-specific methods, readiness fields and acceptance bounds are normative.
 Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+Controls SHALL distinguish missing files/fields/zero and reject bool readiness,
+wrong identity, altered producer bytes, invalid JSON, invented timings and
+rehashed aggregate tampering. Retained bytes survive mutable checkout changes.
+Require100 percent owned statement coverage with no exclusions, including actual
+private subprocesses outside the checkout without PYTHONPATH. Keep unrelated
+full-suite health separate from affected checks. Ops/BMAD reconciliation is
+conductor-owned for this invocation.
 
 ### REQ-REPORT-9137-V778
 
