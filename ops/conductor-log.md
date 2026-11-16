@@ -22192,3 +22192,14 @@ code |
 | 2026-11-16 21:05 UTC | Milestone 2026.11.780 activated | OK | 14 tasks queued |
 | 2026-11-16 21:50 UTC | Exp9152: Bind fourteen tasks and preserve qualifie | OK | 89 passed, 1 warning in 60.53s (0:01:00) |
 | 2026-11-16 23:14 UTC | Exp9153: Separate measured validation costs from w | OK | 107 passed, 1 warning in 104.26s (0:01:44) |
+| 2026-11-16 23:23 UTC | Exp9154: Execute the complete forward validation r | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9153-measured-validation.schedule_ready_score (actual=0 == expected=1) |
+| 2026-11-16 23:25 UTC | Exp9155: Qualify frozen Qwen forwards and complete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9154-forward-qualification) |
+| 2026-11-16 23:25 UTC | Exp9156: Collect fixed human Qwen logit shard A | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9155-logit-runtime, exp9155-logit-runtime) |
+| 2026-11-16 23:25 UTC | Exp9157: Collect fixed human Qwen logit shard B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9155-logit-runtime, exp9155-logit-runtime) |
+| 2026-11-16 23:25 UTC | Exp9158: Collect fixed human Qwen logit shard C | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9155-logit-runtime, exp9155-logit-runtime) |
+| 2026-11-16 23:25 UTC | Exp9159: Admit all human features under the origin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9156-logits-a, exp9157-logits-b, exp9158-logits-c) |
+| 2026-11-16 23:25 UTC | Exp9160: Train the five frozen human energy decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9159-logit-admission) |
+| 2026-11-16 23:25 UTC | Exp9161: Measure continuous human learning with ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9159-logit-admission) |
+| 2026-11-16 23:25 UTC | Exp9162: Audit energy increments and human contras | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9160-static-energy) |
+| 2026-11-16 23:25 UTC | Exp9163: Audit future benefit and calibration wher | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9161-delayed-learning) |
+| 2026-11-16 23:25 UTC | Exp9164: Measure complete forward and durable adap | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9155-logit-runtime) |
