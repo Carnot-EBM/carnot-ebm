@@ -23857,3 +23857,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9125: Qualify forward receipts with complete bounded checks (⚠️ Research Finding) — honest_verdict=complete_disqualified_bounded_receipt_qualification; results/experiment_9125_v778_receipt_qualification.json
 - 2026-11-16: Exp9126: Freeze whole-answer energy and probability controls (⚠️ Research Finding) — honest_verdict=complete_null_whole_answer_methods; results/experiment_9126_v778_logit_methods.json
 - 2026-11-16: Exp9132: Freeze delayed logit learning and recalibration controls (⚠️ Research Finding) — honest_verdict=complete_null_online_logit_methods; results/experiment_9132_v778_online_methods.json
+- 2026-11-16: Exp9136: Measure complete forward and durable learning costs (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_readiness; results/experiment_9136_v778_complete_cost.json
