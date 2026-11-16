@@ -115764,3 +115764,45 @@ Honor declared prerequisites: No launch gate. Preserve all original scientific u
 ### SCENARIO-REPORT-9165-V780 — evidence and refusal controls
 Require the specified complete evidence. Reject altered source authority, missing
 gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9153-V780 — frozen measured-cost mechanism (2026-11-16)
+
+Freeze seed7809153, wall seconds, no exclusions and an empty model list. Retain
+all621 original nodes,53 V779 additions, original assertion hashes, command roles
+and the pinned historical reader. Reconstruct27880.142389201996 from retained
+node bounds,90-second startup ceilings and4800 seconds of command ceilings;
+these are watchdogs, never measured serial runtime. Record measured_elapsed_s,
+estimated_remaining_s, unknown_cost and kill_timeout_s separately. Only complete
+module/process lifetimes predict another process lifetime; incomplete node phases
+cannot price fixture setup or interpreter startup. Unknown projections are null,
+not infeasible. Original kill ceilings and scientific gates stay unchanged.
+
+Use one monotonic deadline per invocation, check remaining time before each
+child, retain unfinished nodes, and consume authenticated same-invocation phase
+logs through the existing normal-runner seam without rerunning suites. Keep
+3300 seconds measurement,1200 verification,300 publication and4800 hard cap.
+Exp9154 owns all674 nodes plus new obligations. Exp9153 qualifies small complete
+module children and rejection controls only, never model readiness. A bounded
+slow-child probe records descendant commands and wait evidence; absent causal
+proof keeps computational_root_cause unknown and names the blocked prerequisite.
+Actual affected checks and post-exit100% new-statement coverage with zero
+exclusions precede readiness. Record broad repository health once separately.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+### SCENARIO-REPORT-9153-V780 — measured cost and custody controls
+
+Before implementation, fail controls for fast measured nodes versus4800 seconds
+of command kill ceilings, unknown costs, measured timeout and exhausted budgets.
+Exercise actual module children and the normal orchestration CLI outside checkout
+without PYTHONPATH. Preserve original rejection controls for duplicate, missing,
+foreign or changed nodes, code/config/assertion drift and changed phase evidence.
+Private CLI refusal, cold replay and rehashed tamper refusal must run. Execute
+Ruff check/format, strict mypy, explicit-path spec coverage and E2E-018/021 once;
+E2E-020 is inapplicable because learning/recovery code does not change. Publish
+only checked primary bytes; never repin historical inputs to mutable code.
+
+The V780 producer uses the unique parent invocation identifier, never the shared
+`measurement` directory label. Cross-run IDs must differ before any reuse. An
+explicit hash-bound prior receipt may supply unrelated repository health after
+a development correction; it is labeled retained evidence and cannot satisfy
+an affected check. This keeps the broad suite at one invocation for this task.
