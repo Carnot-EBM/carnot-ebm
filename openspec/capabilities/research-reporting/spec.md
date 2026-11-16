@@ -115329,7 +115329,42 @@ Ops and traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-9141-V779
 
-Proposed: Measure human disagreement and freeze calibration slices.
+Frozen implementation contract (2026-11-16, before measurement): Measure human
+disagreement using byte-authenticated Exp9138 source_ready_score=1 and original
+evaluator-only A1/A2 labels. Preserve TRAIN150/CAL50/TEST100, all three siblings,
+and A2=-1/null missingness. Emit one qid/role row with sibling identities, A1
+error support, observed paired disagreement support, and mixed/all-correct/
+all-wrong membership. No sibling or resample is a new independent question.
+
+Freeze seed779141 and10000 paired whole-qid percentile bootstrap draws at
+[0.025,0.975]. Agreement is the mean of within-qid observed agreement fractions;
+also retain pooled counts, observed qid support, undefined draws and width.
+Never impute A2 or describe agreement as a truth ceiling. Evaluate ALL, original
+roles, and the original future40 roster (positions2..5 of each of ten streams).
+Report panel rate grid1/n, sibling grid1/(3n) explicitly non-independent, maximum
+Bernoulli normal95 width1.96/sqrt(n), and the exact two-sided sign-test best-case
+resolution6/n (six concordant nonzero paired qid changes, p=0.03125); these are
+resolution descriptions, not guaranteed power or model-benefit estimates.
+
+Static masks are mixed A1 siblings versus homogeneous, evaluator-private after
+prediction seals. Online membership is abs(p_adaptive-p_initial)>=0.05 versus
+below0.05, with fixed0.5 threshold flips separately. Every arm uses the same
+sealed reference-adaptive row membership. Brier=mean((p-y)^2), signed calibration
+residual=mean(p-y). Static intervals resample paired qids; online future and
+retention intervals resample paired whole streams preserving order, siblings,
+and membership, conditional on the fixed fit/guard/retention panel. Empty slices
+are unavailable, never wins. No outcome is required to freeze this protocol.
+No model outcomes, fitting, promotion, sample-size changes, feature-path labels,
+or replacement of the original two static/seven online bounds are authorized.
+Hash private masks separately from the label-free diagnostic protocol.
+
+Validate100 percent owned statements with zero exclusions, actual private child
+CLI success/refusal/tamper/cold replay without PYTHONPATH, E2E-018/021, scoped
+Ruff/format/strict mypy and explicit-path spec tracing. Record the full Python
+suite once separately; affected failure disqualifies readiness. No learning or
+recovery implementation changes make E2E-020 applicable. Original authority,
+quarantines and exclusions remain intact. Publish through primary_publication
+only after unchanged adversarial/strict-row checkers and cold replay pass.
 Deliver `results/experiment_9141_v779_human_contrast_audit.json`.
 Follow the task's exact readiness fields, methods and acceptance contract.
 Keep source authority, per-unit evidence, actual compute classes and field principles.
