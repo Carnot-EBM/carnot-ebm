@@ -115642,6 +115642,20 @@ substrate declarations and unchanged static/learning acceptance thresholds.
 ### REQ-REPORT-9152-V780 — Bind fourteen tasks and preserve qualified human methods
 Produce `results/experiment_9152_v780_contract.json` under the complete V780 task contract.
 Honor declared prerequisites: No launch gate. Preserve all original scientific units.
+Bind fourteen complete ordered objects, including prompt, gate, deliverable and
+model hashes, to authenticated design/YAML bytes without queue activation. Reuse
+original Exp9126/9132 receipts and Exp9141 masks without refitting or reanalysis.
+Freeze lexical qid partitions [0:100], [100:200], [200:300], all three siblings,
+and prove their disjoint union equals the original two 150-qid shards. Preserve
+TRAIN150/CAL50/TEST100, evaluator-only labels, five/six arms and two/seven bounds.
+Freeze RMS-logit, tie-aware AUROC and Brier diagnostics on fixed TEST100 before
+outcomes; one-class AUROC is unavailable and rejected updates remain unchanged.
+Retire only the exact 27880.142389-second ceiling-sum forecast: retain 621 original
+nodes and 53 additions, 23 newly owned completions and 651 censored obligations.
+Unknown slow-child duration remains unknown. Current model counters are zero.
+Readiness requires real unit/foreign-CLI coverage of all owned statements with
+zero exclusions, affected lint/type/spec checks and unchanged publication scanners.
+Broad repository health is recorded separately and never replaces affected checks.
 
 ### SCENARIO-REPORT-9152-V780 — evidence and refusal controls
 Require the specified complete evidence. Reject altered source authority, missing
