@@ -19432,3 +19432,22 @@ and unconditional reconciliation finish the plan.
 LPHB remains exposed development. Neither independent-verifier gap closes here.
 No Qwen training, new ARC solve, board operation or external publication is planned.
 The V778 research scan records fresh source checks and secondary-channel limits.
+
+## V779 proposed research milestone — 2026-11-16
+
+Staged exactly 14 tasks, Exp9138–Exp9151, across four phases in the matching
+V779 design and next-roadmap YAML. Preserved V778 design and active queue bytes.
+The active roadmap and research conductor remain unchanged.
+
+V778 qualified static and online methods but not forward evidence. Planning
+identified the concrete 2100-minus-1800 validation-budget defect and repeated
+whole-suite execution. V779 proposes a complete authenticated execution schedule
+and separate full qualification. It reuses qualified methods for frozen Qwen
+forwards, five static energy arms and six delayed-learning arms.
+
+An independent human-label audit and new changed-decision calibration diagnostics
+come from the recorded literature scan. Original scientific bounds remain fixed.
+Complete service costs and unconditional reconciliation retain absent evidence.
+The exposed panel cannot close independent-verifier gaps. No experiments ran,
+no hardware was contacted, and no activation or external publication occurred.
+Planning validation follows in a separate entry.

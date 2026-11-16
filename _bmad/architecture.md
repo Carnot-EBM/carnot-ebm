@@ -1,5 +1,27 @@
 # Carnot — Architecture
 
+## V779 planned evidence and learning boundary — 2026-11-16
+
+V779 proposes fourteen tasks, Exp9138–Exp9151. Planning changes no runtime code.
+The new forward-validation schedule retains every original assertion and node.
+It replaces the measured 2100-minus-1800 budget defect and repeated whole-suite
+execution with authenticated obligations executed once per qualification.
+A separate complete qualification gates model work. Historical readers and
+quarantines keep their original authority.
+
+Qualified Exp9126 and Exp9132 methods feed frozen Qwen logit extraction, five
+static energy arms and six causal learning arms. Qwen weights stay fixed.
+Original TRAIN/CAL/TEST roles remain separate. Delayed learning seals predictions
+before feedback and persists state with acknowledgments. Research retention
+never selects an update. Descriptive calibration slices cannot change promotion.
+
+Complete raw-text service and durable adaptation costs remain separate from
+head-only timing. Hardware mappings require actual supported operations.
+The exposed human panel cannot establish independent generalization. ARC remains
+opportunistic. The V778 design and queue are preserved in change-proposals.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V778 is unchanged.
+
 ## V764 planned evidence boundary — 2026-11-08
 
 V764 stages fourteen tasks, Exp8930–Exp8943. It implements no runtime change

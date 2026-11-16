@@ -115244,3 +115244,220 @@ Exposed development keeps both verifier gaps open and current science readiness
 false. Require100 percent owned statement coverage, with no exclusions and real
 foreign-directory CLI execution without PYTHONPATH. Preserve historical G1-G4
 scope. Ops/status/BMAD reconciliation is conductor-owned for this invocation.
+
+## V779 proposed research obligations — 2026-11-16
+
+Proposed only. The full task contract and frozen methods live in
+`openspec/change-proposals/research-roadmap-vNEXT.md`. No runtime behavior
+changes during planning. Preserve historical requirements and evidence.
+
+### REQ-REPORT-9138-V779
+
+Proposed: Bind fourteen tasks and reuse qualified human methods.
+Deliver `results/experiment_9138_v779_contract.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9138-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9139-V779
+
+Proposed: Replace duplicated validation with a complete execution schedule.
+Deliver `results/experiment_9139_v779_validation_schedule.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9139-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9140-V779
+
+Proposed: Qualify the complete forward validation revision.
+Deliver `results/experiment_9140_v779_forward_qualification.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9140-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9141-V779
+
+Proposed: Measure human disagreement and freeze calibration slices.
+Deliver `results/experiment_9141_v779_human_contrast_audit.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9141-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9142-V779
+
+Proposed: Qualify frozen Qwen forwards and complete shard budgets.
+Deliver `results/experiment_9142_v779_logit_runtime.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9142-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9143-V779
+
+Proposed: Collect fixed human Qwen logit shard A.
+Deliver `results/experiment_9143_v779_logits_a.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9143-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9144-V779
+
+Proposed: Collect fixed human Qwen logit shard B.
+Deliver `results/experiment_9144_v779_logits_b.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9144-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9145-V779
+
+Proposed: Admit all human features under the original roles.
+Deliver `results/experiment_9145_v779_logit_admission.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9145-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9146-V779
+
+Proposed: Train the five frozen human energy decision arms.
+Deliver `results/experiment_9146_v779_static_energy.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9146-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9147-V779
+
+Proposed: Measure continuous human learning with exact recovery.
+Deliver `results/experiment_9147_v779_delayed_learning.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9147-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9148-V779
+
+Proposed: Audit energy increments and human contrast sensitivity.
+Deliver `results/experiment_9148_v779_energy_audit.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9148-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9149-V779
+
+Proposed: Audit future benefit and calibration where decisions change.
+Deliver `results/experiment_9149_v779_learning_audit.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9149-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9150-V779
+
+Proposed: Measure complete forward and durable adaptation costs.
+Deliver `results/experiment_9150_v779_complete_cost.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9150-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+
+### REQ-REPORT-9151-V779
+
+Proposed: Reconcile fourteen outcomes and exact continuation limits.
+Deliver `results/experiment_9151_v779_capstone.json`.
+Follow the task's exact readiness fields, methods and acceptance contract.
+Keep source authority, per-unit evidence, actual compute classes and field principles.
+
+### SCENARIO-REPORT-9151-V779
+
+Test positive and rejecting controls before measurement. Distinguish missing
+files, missing fields and observed zero. Original assertions remain intact.
+Require real private CLI success/refusal/tamper/cold replay and owned checks.
+External incompleteness is blocked, not retryable partial. No fixture establishes
+scientific benefit or independent human generalization.
+

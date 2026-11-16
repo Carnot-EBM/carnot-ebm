@@ -5070,3 +5070,32 @@ Execution proposal: `research-roadmap-next.yaml`. Active V777 remains unchanged.
 Each requirement has a matching SCENARIO-REPORT-<id>-V778. Planning does not
 implement these experiments or close independent-generalization gaps. Preserve
 V777 source, receipt failure, masked-runtime nonexecution and blocked costs.
+
+## V779 proposed research traceability — 2026-11-16
+
+Proposed only: exactly 14 tasks, Exp9138–Exp9151, across four phases.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution: `research-roadmap-next.yaml`. Active V778 is unchanged.
+
+| Task | PRD link | Requirement/scenario | Deliverable | Status |
+|---|---|---|---|---|
+| exp9138-contract | FR-10/FR-12 | REQ-REPORT-9138-V779 / SCENARIO-REPORT-9138-V779 | results/experiment_9138_v779_contract.json | Proposed |
+| exp9139-validation-schedule | FR-10/FR-12 | REQ-REPORT-9139-V779 / SCENARIO-REPORT-9139-V779 | results/experiment_9139_v779_validation_schedule.json | Proposed |
+| exp9140-forward-qualification | FR-10/FR-12 | REQ-REPORT-9140-V779 / SCENARIO-REPORT-9140-V779 | results/experiment_9140_v779_forward_qualification.json | Proposed |
+| exp9141-human-contrast-audit | FR-10/FR-12 | REQ-REPORT-9141-V779 / SCENARIO-REPORT-9141-V779 | results/experiment_9141_v779_human_contrast_audit.json | Proposed |
+| exp9142-logit-runtime | FR-10/FR-12 | REQ-REPORT-9142-V779 / SCENARIO-REPORT-9142-V779 | results/experiment_9142_v779_logit_runtime.json | Proposed |
+| exp9143-logits-a | FR-10/FR-12 | REQ-REPORT-9143-V779 / SCENARIO-REPORT-9143-V779 | results/experiment_9143_v779_logits_a.json | Proposed |
+| exp9144-logits-b | FR-10/FR-12 | REQ-REPORT-9144-V779 / SCENARIO-REPORT-9144-V779 | results/experiment_9144_v779_logits_b.json | Proposed |
+| exp9145-logit-admission | FR-10/FR-12 | REQ-REPORT-9145-V779 / SCENARIO-REPORT-9145-V779 | results/experiment_9145_v779_logit_admission.json | Proposed |
+| exp9146-static-energy | FR-10/FR-12 | REQ-REPORT-9146-V779 / SCENARIO-REPORT-9146-V779 | results/experiment_9146_v779_static_energy.json | Proposed |
+| exp9147-delayed-learning | FR-06/FR-11 | REQ-REPORT-9147-V779 / SCENARIO-REPORT-9147-V779 | results/experiment_9147_v779_delayed_learning.json | Proposed |
+| exp9148-energy-audit | FR-10/FR-12 | REQ-REPORT-9148-V779 / SCENARIO-REPORT-9148-V779 | results/experiment_9148_v779_energy_audit.json | Proposed |
+| exp9149-learning-audit | FR-06/FR-11 | REQ-REPORT-9149-V779 / SCENARIO-REPORT-9149-V779 | results/experiment_9149_v779_learning_audit.json | Proposed |
+| exp9150-complete-cost | FR-05/FR-08/NFR-01 | REQ-REPORT-9150-V779 / SCENARIO-REPORT-9150-V779 | results/experiment_9150_v779_complete_cost.json | Proposed |
+| exp9151-capstone | FR-10/FR-12 | REQ-REPORT-9151-V779 / SCENARIO-REPORT-9151-V779 | results/experiment_9151_v779_capstone.json | Proposed |
+
+Reuse qualified Exp9126/9132 methods and original human authority. Preserve
+all original assertions in the scheduling revision. Keep two static and seven
+online bounds unchanged. New contrast diagnostics are descriptive only.
+No science execution, independent-generalization closure or hardware speedup
+is claimed during planning. Validation evidence is recorded in ops notes.

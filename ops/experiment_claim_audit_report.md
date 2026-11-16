@@ -11,158 +11,7 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 6 |
-| SKIPPED_ALREADY_FLAGGED | 2 |
-
-## experiment_9107_v776_qwen_judge.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_9109_v776_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative scientific claim is advanced. Counting a failed prerequisite as established scientific readiness would contradict the receipt’s stated scope.
-
-## WAS THAT CHECKED
-Yes, for the displayed prerequisite: the embeddings capability gate expected 1, observed 0, and failed. Scientific readiness remains zero, and the downstream feature branch remains unmeasured. This demonstrates an acknowledged blocker, without asserting scientific benefit.
-
-## EVIDENCE
-
-- `claim_scope`: `Fourteen administrative outcomes and retained descriptive evidence only; no independent factuality, learned-head or causal benefit claim.`
-- `check`: `embeddings_capability`; `expected`: `1`; `observed`: `0`; `passed`: `false`.
-- `acceptance_gates`: `scientific_readiness`: `0`; `independent_generalization_score`: `0`.
-- `branch`: `feature_shard_a`; `status`: `unmeasured`; `metric`: `null`.
-
-## RECOMMENDATION
-KEEP
-
-Upstream artifacts and elided rows were not checked; this receipt establishes no scientific benefit.
-
-## experiment_9110_v777_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative scientific claim is asserted. Administrative readiness would be contradicted by an authentication failure, task-authority mismatch, or failed required check nevertheless counted as ready.
-
-## WAS THAT CHECKED
-Yes, administrative checks are reported in acceptance_gates and the visible gate_check_summary rows. Scientific comparisons remain unmeasured or disqualified, rather than being counted as successful.
-
-## EVIDENCE
-
-- `claim_scope`: `Administrative human-decision contract only; historical exact-oracle success remains circular_positive. CPU fixtures establish no scientific benefit; no current ARC solve is claimed.`
-- `honest_verdict`: `complete_null_v777_contract`
-- `effective_independent_groups`: `0`
-- `graph_study_status`: `deferred_unchanged_seven_and_ten_bounds`
-- `claim_scope`: `Disqualified exposed-development diagnostic; no accepted judge comparison.`
-
-## RECOMMENDATION
-KEEP
-
-Not checked: elided entries or referenced files. Administrative readiness establishes no scientific benefit.
-
-## experiment_9111_v777_forward_evidence.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_9112_masked_runtime.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked execution receipt, with no claim about feature accuracy, tolerances, or comparative value.
-
-## WAS THAT CHECKED
-No experimental hypothesis was tested. The prerequisite check in `gates_evaluated` failed: readiness was 0 against required 1, blocking execution before the experiment.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `forward_evidence_ready_score`
-- `expected`: `1`; `actual`: `0`; `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9113_energy_methods.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this artifact records a failed prerequisite gate and makes no comparative claim about energy methods.
-
-## WAS THAT CHECKED
-Yes—the prerequisite was checked in gates_evaluated: forward_evidence_ready_score was 0, while 1 was required. No method-performance experiment is reported.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `forward_evidence_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9122_v777_complete_cost.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative claim is asserted. Qualified service measurements would contradict the reported unmeasured status; no method benefit is claimed.
-
-## WAS THAT CHECKED
-No service-performance test ran. Upstream readiness checks failed, scientific requests remained unstarted, and service acceptance stayed false. The artifact reports that blockage without promoting administrative completion into scientific success.
-
-## EVIDENCE
-- `claim_scope`: `Administrative cost inventory only; complete services and adaptation unmeasured. No human benefit or ARC solve.`
-- `honest_verdict`: `complete_blocked_upstream_readiness`
-- `inference_substrate_class`: `blocked_no_run`
-- `model_invoked`: `false`
-- `scientific_request_counts`: `attempted` = `0`; `unstarted` = `360`
-- `acceptance_gates`: `complete_service` = `false`
-- `gate_check_summary`: `observed` = `missing_file`; `passed` = `false`
-
-## RECOMMENDATION
-KEEP
-
-Review limited to the supplied artifact; service performance remains untested.
+| NO_CLAIM | 8 |
 
 ## experiment_9123_v777_capstone.json
 
@@ -175,19 +24,222 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific claim to falsify. Counting missing, failed or disqualified evidence as scientific success would contradict the artifact’s stated administrative scope.
+No comparative scientific claim is asserted. This is an administrative reconciliation receipt; unavailable scientific outcomes cannot establish either benefit or its absence.
 
 ## WAS THAT CHECKED
-Yes, in the visible accounting: missing prerequisites fail their gates, energy bounds remain censored, and scientific readiness is zero. Administrative completion is not presented as scientific success.
+No scientific benefit test was completed in the shown rows: energy comparisons are censored for missing predictions, and scientific service requests are unstarted. The artifact preserves those blocks and explicitly disclaims independent benefit and generalization.
 
 ## EVIDENCE
 - `claim_scope`: `Fourteen administrative outcomes and conditional exposed-development evidence only; no independent human benefit or generalization.`
-- `Administrative completion makes no claim of useful human verification.`
-- `acceptance_gates`: `reconciliation_ready_score`: `1`; `scientific_readiness`: `0`
-- `observed`: `missing_file`; `passed`: `false`
+- `current_science_paper_ready`: `false`
+- `scientific_readiness`: `0`
 - `censor_reason`: `missing_qualified_scientific_predictions`
+- `status`: `censored`
+- `scope`: `Current unavailable scientific services; historical administrative clocks stay separate.`
 
 ## RECOMMENDATION
 KEEP
 
-Not checked: elided rows or upstream artifacts. This receipt cannot establish comparative scientific value.
+Unchecked: elided upstream results; this verdict covers only the supplied receipt.
+
+## experiment_9124_v778_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative scientific claim to falsify. Administrative readiness would fail if required current checks failed, source bytes mismatched, or inherited disqualified results were counted as qualified.
+
+## WAS THAT CHECKED
+Administrative authentication and owned-check gates report success. Historical receipt failures remain disqualified, and deferred graph bounds remain unmeasured. These are administrative checks, not evidence of scientific benefit.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_v778_contract`
+- `claim_scope`: `Administrative human-decision contract only; historical exact-oracle success remains circular_positive. CPU fixtures establish no scientific benefit; no current ARC solve is claimed.`
+- `exposure_scope`: `LPHB exposed development; no independent generalization; no new scientific measurements.`
+- `inherited_receipt_failure` contains `honest_verdict`: `complete_disqualified_owned_checks`
+- `graph_study_status`: `deferred_unchanged_seven_and_ten_bounds`
+
+## RECOMMENDATION
+KEEP
+
+Unchecked: elided rows and referenced files; complete administrative coverage cannot be independently assessed from this excerpt.
+
+## experiment_9125_v778_receipt_qualification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Successful receipt qualification would be refuted by required validation timing out or readiness remaining false. Both occur here, and the artifact reports disqualification rather than success.
+
+## WAS THAT CHECKED
+Yes. The owned-tests and direct-consumer validation receipts record timeouts; overall validation and readiness remain false. Censored work remains counted. Oracle-defined fixture passes are presented as administrative evidence, with no comparative verifier-value or generalization claim.
+
+Review is limited to the supplied, partly elided artifact; no experiment was rerun.
+
+## EVIDENCE
+- `claim_scope`: `Administrative receipt qualification only; no human benefit or ARC level solve.`
+- `honest_verdict`: `complete_disqualified_bounded_receipt_qualification`
+- `complete_bounded_validation`: `false`
+- `receipt_ready_score`: `0`
+- `readiness_verified`: `false`
+- `owned_tests`, `direct_consumers`: `normal_exit` = `false`, `timed_out` = `true`
+- `censored_count`: `573`
+- `verdict_class`: `Exact administrative controls confer circular validation, not an empirical benefit.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9126_v778_logit_methods.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative claim is made. The narrower methods-readiness assertion would fail if reference formulas disagreed, gauge errors exceeded tolerance, malformed inputs were accepted, or chunk-boundary indexing produced the wrong result.
+
+## WAS THAT CHECKED
+Yes, for methods readiness: three formula checks, two gauge checks, three invalid-input rejection checks, and one chunk-boundary check report passing expected-versus-observed results.
+
+The artifact defines comparison arms and acceptance gates but reports no comparative performance results. These controls establish neither added predictive value nor independent generalization; neither is claimed.
+
+## EVIDENCE
+- `claim_scope`: `Methods and synthetic controls only; no human advantage, ARC level solve, paper localization or independent confirmation.`
+- `honest_verdict`: `complete_null_whole_answer_methods`
+- `verdict_class`: `null`
+- `methods_ready_score`: `1`
+- `formula_reference_rows`, `gauge_control_rows`, `indexing_control_rows`, `passed`: `true`
+- `effective_independent_groups`: `0`
+- `independent_generalization_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9127_logit_runtime.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative or runtime-success claim to refute. The blocked-gate report would be contradicted if all required gates passed.
+
+## WAS THAT CHECKED
+Yes. The receipt-readiness gate failed: observed 0 versus required 1. The methods-readiness gate passed. Runtime qualification was not performed, so runtime conclusions remain unsupported.
+
+## EVIDENCE
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_field": "receipt_ready_score"`, `"failed_expected": 1`, `"failed_observed": 0`, `"blocked_at_layer": "conductor_pre_gate"`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9132_v778_online_methods.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative efficacy claim to refute. The limited recovery assertion would fail if an interrupted execution resumed with predictions or state different from uninterrupted execution. Methods readiness would fail if an owned causal or validation check failed.
+
+## WAS THAT CHECKED
+Yes, for the limited mechanics assertion: three recorded process exits were followed by recovery checks comparing predictions, temperature and state hashes.
+
+The fixture comparisons permit unfavorable outcomes: adaptive spline loses to frozen spline on the no-signal fixture, and all arms tie on constant features. Those outcomes are compatible with the administrative readiness score.
+
+Human efficacy bounds remain explicitly unmeasured; the artifact does not report an observed human efficacy null or positive result.
+
+## EVIDENCE
+
+- `claim_scope`: `Frozen delayed logit methods and exact CPU-fixture recovery only; human benefit unmeasured; no ARC level solve.`
+- `honest_verdict`: `complete_null_online_logit_methods`
+- `scientific_bounds_status`: `frozen_unmeasured`
+- `Integer1 requires authentic inputs, causal controls, exact recovery and every owned check, not a favorable scientific result.`
+- `exact_recovery_rows`: `prediction_equal`, `temperature_equal`, `passed`: `true`
+- `no_signal`: `adaptive_spline`: `0.31077163391866264`; `frozen_spline`: `0.27159699285306094`
+
+## RECOMMENDATION
+KEEP
+
+Review limited to the supplied text; no rerun or external inspection. Human benefit and independent generalization remain unmeasured.
+
+## experiment_9136_v778_complete_cost.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative scientific claim is asserted. Completed current model invocations or qualified service/adaptation measurements would contradict the administrative account that scientific work remained unstarted.
+
+## WAS THAT CHECKED
+Yes, at the accounting level: invocation counts report zero work, all 720 scientific requests are unstarted, and measurement arrays are empty. Scientific superiority, verifier benefit and generalization were not tested or claimed.
+
+Review was limited to the supplied excerpt; elided material was not checked. The inventory supports no performance conclusion.
+
+## EVIDENCE
+- `claim_scope`: `Administrative availability inventory only; no measured service or adaptation cost, independent verifier benefit or ARC level solve. Does not close GAP-ORACLE-DISTINCT or GAP-DETECTOR-AUROC-4208.`
+- `honest_verdict`: `complete_blocked_upstream_readiness`
+- `inference_substrate_class`: `blocked_no_run`
+- `model_invoked`: `false`
+- `scientific_request_counts`: `attempted`: `0`, `completed`: `0`, `unstarted`: `720`
+- `paired_service_cost_rows`: `[]`
+- `complete_adaptation_rows`: `[]`
+- `scientific_parity_rows`: `[]`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9137_v778_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative scientific claim to falsify. Crediting failed gates or unstarted scientific requests as demonstrated benefit would contradict the stated administrative scope.
+
+## WAS THAT CHECKED
+Yes, in the visible accounting: failed gates remain failures, and scientific requests remain unstarted. Administrative completion is not promoted into scientific readiness or generalization. No efficacy test occurred; elided rows prevent a complete accounting audit.
+
+## EVIDENCE
+
+- `claim_scope`: `Fourteen administrative outcomes; two static and seven online bounds remain unmeasured. No independent verifier benefit or ARC solve is claimed.`
+- `acceptance_gates`: `reconciliation_ready_score` is `1`; `independent_generalization_score` and `scientific_readiness` are `0`.
+- `scientific_request_counts`: `attempted` and `completed` are `0`; `intended` and `unstarted` are `720`.
+- `declared_gate_rows`: `receipt_ready_score` has `observed` value `0` and `passed` value `false`.
+
+## RECOMMENDATION
+KEEP

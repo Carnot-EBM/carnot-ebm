@@ -57098,3 +57098,91 @@ padding checks. A dedicated serial forward-statistics study can avoid that
 unnecessary embedding dependency. Split the900-answer workload into two bounded
 shards and measure feasibility before collection. The900 LPHB answers remain
 exposed development; no result on them closes independent generalization.
+## 2026-11-16 — V779 planning scan: executable evidence and persistent calibration
+
+Recorded before the V779 experiment design. The completion archive ends at
+V777. V778 closure comes from its active queue, six canonical primaries and
+conductor records. Scheduling closure does not mean scientific success.
+The scan read the archive and indexed 319 roadmap-named proposal files.
+
+### Findings to carry into the next experiments
+
+- **New to this reference file:** [Evaluating Persistent Calibration under
+  Evolving Model Knowledge](https://arxiv.org/abs/2609.38797), September 30,
+  2026. The [full text](https://arxiv.org/html/2609.38797v1) tests confidence
+  on questions whose correctness changes across model checkpoints. Aggregate
+  calibration can hide failures on these subsets. Carnot inference: register
+  descriptive calibration slices where a small verifier's decisions change
+  after feedback. Keep unchanged decisions visible. This is an adaptation of
+  the evaluation idea, not a replication: Qwen remains frozen, and only the
+  verifier changes. Never select the favorable slice or replace the existing
+  simultaneous benefit and retention gates.
+- **Rechecked:** [Spilled Energy](https://arxiv.org/abs/2602.18671), February
+  21, revised March 3, 2026. Its [method](https://arxiv.org/html/2602.18671v4)
+  localizes answer tokens. Carnot's unexecuted whole-answer study is different.
+  Retain normalized-probability controls and constant/alternating logit offsets.
+  Raw-logit sensitivity cannot establish factual truth or a broken probability
+  chain rule. Preserve the original exact-span negative result.
+- **Rechecked:** [Online spline KAN](https://arxiv.org/abs/2602.02056), February
+  2, revised June 19, 2026; ICML 2026. Its
+  [implementation](https://arxiv.org/html/2602.02056v4) uses sparse local spline
+  updates. Continue the qualified small-head learner with delayed feedback,
+  temperature-only control and complete durable costs. Paper FPGA timings do
+  not establish local hardware acceleration.
+- **Rechecked:** [Continual Calibration](https://arxiv.org/abs/2604.23987),
+  April 27, 2026. Preserve calibration retention separately from classification
+  accuracy. Its exchangeability assumptions do not transfer to these adaptive
+  streams. The temperature comparator remains a baseline, not a new guarantee.
+
+### Requested primary-topic coverage
+
+| Topic | Primary source | Decision |
+|---|---|---|
+| EBM reasoning | [Energy-Based Reasoners](https://arxiv.org/abs/2611.08977), November 6, 2026; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 17, 2025, revised May 25, 2026 | Recurrent reasoning and probabilistic equivalence do not settle natural factual verification. Defer generator training. |
+| Neural constraints | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 11, 2025; [probabilistic algebraic layer](https://proceedings.mlr.press/v286/kurscheidt25a.html), UAI 2025 | Explicit feasibility differs from extracting correct constraints from language. No new solver branch. |
+| Ising applications | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 23, 2026 | Parameter learning and faithful sampling are distinct. Do not infer sampler quality from energy minima. |
+| Hallucination detection | Spilled Energy above | Complete the registered human-label comparison before adding another detector. |
+| KAN | Online spline KAN above | Measure actual coefficient work and complete service overhead. |
+| Guided generation | [ETS](https://arxiv.org/abs/2601.21484), January 29, revised May 19, 2026; [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 27, 2026 | Both depend on a useful energy/reward signal. No decoding study before a useful local verifier. |
+| Accelerated sampling | [Million-p-bit computer](https://arxiv.org/abs/2606.25313), June 24, 2026; [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 17, 2026 | Communication and host preprocessing belong in complete cost. These devices do not execute the current full-vocabulary Qwen workload. |
+| Continual learning | Persistent Calibration and Continual Calibration above | Add fixed changed-decision diagnostics without changing promotion bounds. |
+
+### Secondary sources checked and access limits
+
+- **Semantic Scholar:** Direct HTTPS citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=1000)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=1000)
+  returned 46 and 11 records, respectively. Neither response had a next page.
+  EBT contained 43 records dated 2025–2026. These are all returned records,
+  not a claim of exhaustive citation coverage. Leads include Energy-Based
+  Reasoners and Distributional EBMs, already logged here. No changed local
+  prerequisite follows from another citation.
+- **OpenReview:** Searched 2026 EBM submissions. Indexed ICLR 2026 manuscripts
+  include EBT. Its [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and
+  [PDF endpoint](https://openreview.net/pdf?id=ZBj3Qp1bYg) returned browser
+  verification. Current reviews and acceptance metadata were not verified.
+- **Hugging Face:** Checked the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671).
+  Followed the author/arXiv links. Its generated summary is not evidence.
+- **GitHub Trending:** Checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Browser snapshots
+  were two months old and did not expose useful repository listings. No new
+  repository or current rank is inferred from them.
+- **Extropic:** [Writing](https://extropic.ai/writing) returned a sparse index.
+  [Z1T](https://extropic.ai/writing/z1t/), September 4, 2026, describes sparse
+  hardware/model co-design. Vendor projections exclude costs such as final
+  dense logits and transfers. Record those boundaries; no local TSU run exists.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint-enforcement layer beneath AI applications. The page
+  supplies no reproducible new architecture or quantitative evidence for Carnot.
+
+### Local evidence that changes the plan
+
+Exp9125 retained 621 validation nodes but completed only 48. Its measurement
+budget is 2100 seconds. Its loop stops when 1800 seconds remain, leaving at most
+300 seconds for collection, controls and partition execution. The first batch
+then hit its 240-second cap. The normal CLI repeated both original unpartitioned
+test commands; each timed out at 600 seconds. These facts identify a scheduling
+defect. They do not identify every expensive node's computational cause.
+The next scope must replace repeated validation with a complete, authenticated
+execution schedule. Increasing deadlines or accepting incomplete partitions is
+not a repair. Preserve the retired bounded-qualification scope and all quarantines.
