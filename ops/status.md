@@ -1,5 +1,29 @@
 # Carnot — Operational Status
 
+## 2026-11-16 UTC — V780 research plan staged
+
+The next proposal is `2026.11.780`: fourteen tasks, Exp9152–Exp9165, across four
+phases. The design and complete task objects match `research-roadmap-next.yaml`.
+V779's design and queue are preserved in change-proposals. The active roadmap
+and conductor remain unchanged. No experiment or scientific claim was executed
+by this planning change.
+
+The plan replaces the diagnosed sum-of-watchdog-ceilings forecast with measured
+execution accounting. Every original validation obligation remains required.
+Three smaller source shards preserve all 900 answers and original question roles.
+Static energy decisions and delayed self-learning retain their original bounds.
+A new descriptive diagnostic separates logit-scale drift from lost ranking.
+The exposed human panel cannot establish independent generalization.
+
+Planning validation passed: full design/YAML equality, 14 ordered IDs, 23 exact
+backward gates, prompt rendering, progress/chunking requirements, model classes,
+all prior-failure fields, exclusion and harness-fit lint, overdue-priority checks,
+scoped Ruff and spec tracing. All 109 selected tests passed, including private
+E2E-018/021 CLI cases. The test mutation warning named only the architecture
+section authored during this planning session; no test wrote that file.
+Repository-wide reconciliation retains pre-existing freshness and spec-tracing
+issues. No full repository suite, model run or hardware benchmark is claimed.
+
 ## 2026-11-16 UTC — Milestone 2026.11.779 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_779.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 6 completed experiments (1 compute-bound, 5 synthesis-only) across 20.0 wall-time minutes (20 minutes / 0.3 hours, averaging 3 minutes per experiment): synthesis-only `Exp9139: Replace duplicated validation with a complete execution schedule` (10.07 min / 10min), synthesis-only `Exp9151: Reconcile fourteen outcomes and exact continuation limits` (5.21 min / 5min), synthesis-only `Exp9140: Qualify the complete forward validation revision` (4.65 min / 5min), synthesis-only `Exp9138: Bind fourteen tasks and reuse qualified human methods` (0.09 min / 0min), and synthesis-only `Exp9141: Measure human disagreement and freeze calibration slices` (0.0 min / 0min), while no data is available this milestone for the exact ID, task name, or duration of the 1 completed compute-bound experiment (which finished at or below 0.0 minutes / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: share pre-computed execution-schedule and forward-validation revision artifacts across `Exp9139` (10.07 min / 10min) and `Exp9140` (4.65 min / 5min), reuse cached fourteen-task bindings from `Exp9138` (0.09 min / 0min) and calibration slices from `Exp9141` (0.0 min / 0min) in `Exp9151` (5.21 min / 5min), persist direct per-experiment execution timestamps, and restore GPU monitor availability.

@@ -57186,3 +57186,94 @@ defect. They do not identify every expensive node's computational cause.
 The next scope must replace repeated validation with a complete, authenticated
 execution schedule. Increasing deadlines or accepting incomplete partitions is
 not a repair. Preserve the retired bounded-qualification scope and all quarantines.
+
+## 2026-11-16 — V780 planning scan: measured execution costs and calibration drift
+
+Recorded before designing V780. Read the completion archive and indexed all
+321 roadmap-named proposal files. The archive ends at V778. V779 results come
+from its active queue, primary artifacts and conductor log. Completion means
+scheduling closure; it does not imply a scientific win.
+
+### Findings and experimental implications
+
+- **New reference:** [TOOD: Task-Aware Out-of-Distribution Score Calibration
+  for Continual Learners](https://arxiv.org/abs/2607.29592), July 31, 2026.
+  The authors distinguish loss of discrimination from changes in logit scale.
+  They evaluate task-aware energy recalibration on image-classification streams.
+  Carnot inference: audit ranking, Brier score and logit scale together after
+  delayed verifier updates. This is a descriptive diagnostic, not a replication
+  of TOOD or evidence that factual-error detection is an OOD task. Keep the
+  registered temperature control and all original acceptance bounds.
+- **Rechecked:** [MT-CC](https://arxiv.org/abs/2610.25689), October 19, 2026;
+  [full method](https://arxiv.org/html/2610.25689v1). The authors learn group
+  temperatures for class-incremental calibration. Carnot has already registered
+  a scalar temperature-only control. Complete that comparison before adding a
+  grouping network. Do not transfer class-incremental guarantees to human facts.
+- **Rechecked:** [Persistent Calibration](https://arxiv.org/abs/2609.38797),
+  September 30, 2026, and [Continual Calibration](https://arxiv.org/abs/2604.23987),
+  April 27, 2026. Preserve changed-decision diagnostics and untouched retention.
+  Aggregate accuracy alone cannot certify calibration. The Qwen generator stays
+  frozen; only small verifier coefficients change.
+- **Rechecked:** [Spilled Energy](https://arxiv.org/abs/2602.18671), February
+  21, 2026, and [ARM–EBM equivalence](https://arxiv.org/abs/2512.15605), December
+  17, 2025, revised May 25, 2026. Finish the frozen whole-answer logit comparison
+  with normalized controls and gauge tests. Neither paper licenses a claim
+  that low unnormalized energy proves factual truth.
+
+### Requested primary-topic scan
+
+| Topic | Verified primary source | Decision |
+|---|---|---|
+| EBM verification and reasoning | [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 15, 2026; [Energy-Based Reasoners](https://arxiv.org/abs/2611.08977), November 6, 2026 | Frozen-encoder verification is relevant. Algorithmic reasoning results do not establish natural factual verification. No generator-training branch. |
+| Neural constraints | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 11, 2025; [probabilistic algebraic layer](https://arxiv.org/abs/2503.19466), March 25, 2025 | Feasibility under encoded constraints differs from correct extraction. Preserve that boundary. |
+| Ising in ML | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 23, 2026 | Learning parameters and faithful sampling are different tasks. No sampler claim from head fitting. |
+| Hallucination mitigation | Spilled Energy above; [TRIVIA+ evaluation study](https://arxiv.org/abs/2605.11330), May 11, 2026 | Preserve original human-label provenance, question groups and exposed-development scope. |
+| KAN | [Online learning through spline locality](https://arxiv.org/abs/2602.02056), February 2, revised June 19, 2026 | Reuse local coefficient updates. Measure complete service costs before proposing a hardware port. |
+| Energy-guided generation | [ETS](https://arxiv.org/abs/2601.21484), January 29, revised May 19, 2026; [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 27, 2026 | Defer decoding changes until the local verifier has useful measured signal. |
+| Accelerated sampling | [Million-p-bit FPGA computer](https://arxiv.org/abs/2606.25313), June 24, 2026; [250-MTJ Ising machine](https://arxiv.org/abs/2506.14590), June 2025 | Include communication and host work. These systems do not establish a local dense-Qwen acceleration path. |
+| Continual learning | TOOD, MT-CC and calibration papers above | Separate ranking changes, scale changes and retained decision quality. No new acceptance threshold. |
+
+### Secondary channels checked
+
+- **Semantic Scholar:** Direct citation API requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=1000)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=1000)
+  returned 46 and 11 records. Neither response supplied a next page. These are
+  returned records, not exhaustive citation counts. Energy-Based Reasoners and
+  Distributional EBMs were relevant leads; both already have entries here.
+- **OpenReview:** Searched ICLR/ICML/NeurIPS EBM work. The indexed ICLR material
+  included EBT. Its [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) required
+  browser verification. Current reviews were not accessible. MT-CC's arXiv
+  page states NeurIPS 2026 Spotlight; this was not independently checked there.
+- **Hugging Face papers:** Checked verification/hallucination listings and
+  the [TRIVIA+ paper page](https://huggingface.co/papers/2605.11330).
+  Treat generated summaries as discovery aids. Method claims use author papers.
+- **GitHub Trending:** Checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned browser
+  snapshots were two months old. No current ranking or new repository is inferred.
+- **Extropic:** Checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/), September 4, 2026. Sparse probabilistic
+  co-design is promising. Vendor efficiency figures do not measure Carnot's
+  dense forwards, host transfers, full-vocabulary reduction or durable updates.
+- **Logical Intelligence:** Checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes constraint enforcement beneath application models. The page
+  supplies no reproducible architecture change or local benchmark evidence.
+
+### Local evidence that changes continuation
+
+Exp9139's schedule projects 27,880.142389 seconds. Its node/startup component
+is 23,080.142389 seconds. Other command deadlines contribute 4,800 seconds.
+The latter alone exceeds the 3,300-second execution allowance. The scheduler
+uses `max(30, 2 * measured_seconds)` for measured nodes, 30 seconds for unknown
+nodes, and 90 seconds per process startup. These are safety ceilings, not a
+measurement of the complete workload. Exp9140 rejects that projection before
+launching original obligations. Its 23 completed nodes are newly owned checks;
+651 obligations remain censored. No complete original runtime was measured.
+
+A changed continuation must separate elapsed measurements, estimates, unknown
+costs and kill limits. It must preserve every original assertion and execute
+all required obligations before readiness. Do not lower safety limits to make
+a forecast pass. The retained subprocess wait still has an unknown underlying
+cause; targeted diagnostics must resolve it if reproduced. Retire the old
+sum-of-ceilings schedule. Smaller collection units may preserve all 900 answers
+and their original roles; no shorter answer cap or favorable subset is allowed.

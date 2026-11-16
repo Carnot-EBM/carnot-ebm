@@ -5099,3 +5099,21 @@ all original assertions in the scheduling revision. Keep two static and seven
 online bounds unchanged. New contrast diagnostics are descriptive only.
 No science execution, independent-generalization closure or hardware speedup
 is claimed during planning. Validation evidence is recorded in ops notes.
+
+## V780 proposed milestone — 2026-11-16
+| Task | PRD | Requirement / scenario | Deliverable | Status |
+|---|---|---|---|---|
+| exp9152-contract | FR-10/FR-12 | REQ-REPORT-9152-V780 / SCENARIO-REPORT-9152-V780 | results/experiment_9152_v780_contract.json | Proposed |
+| exp9153-measured-validation | FR-10/FR-12 | REQ-REPORT-9153-V780 / SCENARIO-REPORT-9153-V780 | results/experiment_9153_v780_validation_schedule.json | Proposed |
+| exp9154-forward-qualification | FR-10/FR-12 | REQ-REPORT-9154-V780 / SCENARIO-REPORT-9154-V780 | results/experiment_9154_v780_forward_qualification.json | Proposed |
+| exp9155-logit-runtime | FR-10/FR-12 | REQ-REPORT-9155-V780 / SCENARIO-REPORT-9155-V780 | results/experiment_9155_v780_logit_runtime.json | Proposed |
+| exp9156-logits-a | FR-10/FR-12 | REQ-REPORT-9156-V780 / SCENARIO-REPORT-9156-V780 | results/experiment_9156_v780_logits_a.json | Proposed |
+| exp9157-logits-b | FR-10/FR-12 | REQ-REPORT-9157-V780 / SCENARIO-REPORT-9157-V780 | results/experiment_9157_v780_logits_b.json | Proposed |
+| exp9158-logits-c | FR-10/FR-12 | REQ-REPORT-9158-V780 / SCENARIO-REPORT-9158-V780 | results/experiment_9158_v780_logits_c.json | Proposed |
+| exp9159-logit-admission | FR-10/FR-12 | REQ-REPORT-9159-V780 / SCENARIO-REPORT-9159-V780 | results/experiment_9159_v780_logit_admission.json | Proposed |
+| exp9160-static-energy | FR-10/FR-12 | REQ-REPORT-9160-V780 / SCENARIO-REPORT-9160-V780 | results/experiment_9160_v780_static_energy.json | Proposed |
+| exp9161-delayed-learning | FR-06/FR-11 | REQ-REPORT-9161-V780 / SCENARIO-REPORT-9161-V780 | results/experiment_9161_v780_delayed_learning.json | Proposed |
+| exp9162-energy-audit | FR-10/FR-12 | REQ-REPORT-9162-V780 / SCENARIO-REPORT-9162-V780 | results/experiment_9162_v780_energy_audit.json | Proposed |
+| exp9163-learning-audit | FR-06/FR-11 | REQ-REPORT-9163-V780 / SCENARIO-REPORT-9163-V780 | results/experiment_9163_v780_learning_audit.json | Proposed |
+| exp9164-complete-cost | FR-05/FR-08/NFR-01 | REQ-REPORT-9164-V780 / SCENARIO-REPORT-9164-V780 | results/experiment_9164_v780_complete_cost.json | Proposed |
+| exp9165-capstone | FR-10/FR-12 | REQ-REPORT-9165-V780 / SCENARIO-REPORT-9165-V780 | results/experiment_9165_v780_capstone.json | Proposed |

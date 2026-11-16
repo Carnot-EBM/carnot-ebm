@@ -1,5 +1,24 @@
 # Carnot — Architecture
 
+## V780 planned execution and calibration boundary — 2026-11-16
+
+V780 proposes fourteen tasks, Exp9152–Exp9165. Planning changes no runtime code.
+Measured validation costs stay separate from watchdog ceilings. Complete original
+and added obligations must pass before frozen Qwen forward work can begin.
+Three 100-question execution shards preserve the original 900-answer population,
+TRAIN/CAL/TEST roles, token caps and independent question counts.
+
+The five static energy arms and six delayed-learning arms remain unchanged.
+Only the small verifier learns. Predictions precede feedback; research retention
+cannot select an update. Descriptive scale, ranking and calibration diagnostics
+do not replace the original two static or seven learning acceptance bounds.
+Complete raw-text and durable-update costs retain their actual hardware boundary.
+The human panel remains exposed development; independent verification stays open.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed queue: `research-roadmap-next.yaml`. Preserved V779 authority remains in
+change-proposals. The active queue and conductor are unchanged.
+
 ## V779 planned evidence and learning boundary — 2026-11-16
 
 V779 proposes fourteen tasks, Exp9138–Exp9151. Planning changes no runtime code.

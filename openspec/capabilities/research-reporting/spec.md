@@ -115632,3 +115632,121 @@ owned checks cannot yield reconciliation readiness. The private real CLI accepts
 retained work, refuses checkout publication from private work, rejects invalid dates,
 replays valid evidence and rejects tampering. Report all original unfinished nodes
 and cost units without calling their missing measurements null results.
+
+## V780 planned research contract — 2026-11-16
+Status: Proposed. No runtime implementation or scientific execution is claimed.
+The design and queue bind exactly fourteen tasks, Exp9152 through Exp9165.
+All tasks preserve historical authority, exact gates, per-unit evidence, honest
+substrate declarations and unchanged static/learning acceptance thresholds.
+
+### REQ-REPORT-9152-V780 — Bind fourteen tasks and preserve qualified human methods
+Produce `results/experiment_9152_v780_contract.json` under the complete V780 task contract.
+Honor declared prerequisites: No launch gate. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9152-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9153-V780 — Separate measured validation costs from watchdog ceilings
+Produce `results/experiment_9153_v780_validation_schedule.json` under the complete V780 task contract.
+Honor declared prerequisites: contract_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9153-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9154-V780 — Execute the complete forward validation revision
+Produce `results/experiment_9154_v780_forward_qualification.json` under the complete V780 task contract.
+Honor declared prerequisites: schedule_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9154-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9155-V780 — Qualify frozen Qwen forwards and complete shard budgets
+Produce `results/experiment_9155_v780_logit_runtime.json` under the complete V780 task contract.
+Honor declared prerequisites: forward_validation_ready_score, static_methods_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9155-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9156-V780 — Collect fixed human Qwen logit shard A
+Produce `results/experiment_9156_v780_logits_a.json` under the complete V780 task contract.
+Honor declared prerequisites: source_ready_score, logit_runtime_ready_score, shard_feasible_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9156-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9157-V780 — Collect fixed human Qwen logit shard B
+Produce `results/experiment_9157_v780_logits_b.json` under the complete V780 task contract.
+Honor declared prerequisites: source_ready_score, logit_runtime_ready_score, shard_feasible_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9157-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9158-V780 — Collect fixed human Qwen logit shard C
+Produce `results/experiment_9158_v780_logits_c.json` under the complete V780 task contract.
+Honor declared prerequisites: source_ready_score, logit_runtime_ready_score, shard_feasible_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9158-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9159-V780 — Admit all human features under the original roles
+Produce `results/experiment_9159_v780_logit_admission.json` under the complete V780 task contract.
+Honor declared prerequisites: logits_a_ready_score, logits_b_ready_score, logits_c_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9159-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9160-V780 — Train the five frozen human energy decision arms
+Produce `results/experiment_9160_v780_static_energy.json` under the complete V780 task contract.
+Honor declared prerequisites: admission_ready_score, static_methods_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9160-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9161-V780 — Measure continuous human learning with exact recovery
+Produce `results/experiment_9161_v780_delayed_learning.json` under the complete V780 task contract.
+Honor declared prerequisites: admission_ready_score, online_methods_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9161-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9162-V780 — Audit energy increments and human contrast sensitivity
+Produce `results/experiment_9162_v780_energy_audit.json` under the complete V780 task contract.
+Honor declared prerequisites: static_predictions_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9162-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9163-V780 — Audit future benefit and calibration where decisions change
+Produce `results/experiment_9163_v780_learning_audit.json` under the complete V780 task contract.
+Honor declared prerequisites: online_predictions_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9163-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9164-V780 — Measure complete forward and durable adaptation costs
+Produce `results/experiment_9164_v780_complete_cost.json` under the complete V780 task contract.
+Honor declared prerequisites: logit_runtime_ready_score. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9164-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.
+
+### REQ-REPORT-9165-V780 — Reconcile fourteen outcomes and exact continuation limits
+Produce `results/experiment_9165_v780_capstone.json` under the complete V780 task contract.
+Honor declared prerequisites: No launch gate. Preserve all original scientific units.
+
+### SCENARIO-REPORT-9165-V780 — evidence and refusal controls
+Require the specified complete evidence. Reject altered source authority, missing
+gate fields and incomplete affected validation. Keep blocked external work terminal.

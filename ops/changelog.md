@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-11-16 UTC — Stage V780 research plan
+
+- Record the requested arXiv and secondary-channel scan before designing tasks.
+  Add TOOD as a calibration diagnostic lead with its domain limits.
+- Preserve V779 design/queue bytes. Stage fourteen matching tasks, Exp9152–Exp9165,
+  with exact gates, four-field prior failures and current Qwen model declarations.
+- Separate measured validation costs from watchdog ceilings. Require full checks.
+  Divide collection into three execution shards without changing the 900 answers.
+- Preserve static and continuous-learning acceptance rules. Add descriptive
+  scale/ranking analysis and gate cost work before an unproductive inventory call.
+- Reconcile planned OpenSpec, architecture and traceability. Planning checks and
+  109 selected unit/private CLI tests pass. Global freshness/spec gaps remain.
+  The active roadmap and conductor are unchanged. No push or execution occurred.
+
 ## 2026-11-16 UTC — Operational retrospective for milestone 2026.11.779
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.779`: updated `results/operational_retro_2026_11_779.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 6 completed experiments (1 compute-bound, 5 synthesis-only) across 20.0 wall-time minutes (20 minutes / 0.3 hours, averaging 3 minutes per experiment).
