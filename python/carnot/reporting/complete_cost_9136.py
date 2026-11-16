@@ -12,6 +12,8 @@ import os
 from pathlib import Path
 import resource
 import shutil
+import sys
+from types import ModuleType
 import time
 from typing import Any
 
@@ -88,16 +90,17 @@ def eligibility(available: dict[int, bool]) -> dict[str, bool]:
     )
 
 
-def collect(root: Path, raw: Path) -> Json:
+def collect(root: Path, raw: Path, *, producer: ModuleType | None = None) -> Json:
     """Retain each observed operand once before deciding whether any load is eligible."""
-    progress("before_preconditions")
+    config = producer or sys.modules[__name__]
+    config.progress("before_preconditions")
     start = time.monotonic_ns()
     raw.mkdir(parents=True, exist_ok=True, mode=0o700)
-    atomic_json(raw / "protocol.json", PROTOCOL)
+    atomic_json(raw / "protocol.json", config.PROTOCOL)
     checks: list[Json] = []
     references: list[Json] = []
     available = {}
-    for identity, (label, fields) in INPUTS.items():
+    for identity, (label, fields) in config.INPUTS.items():
         path = root / label
         digest = ref(path)["sha256"]
         before = len(checks)
@@ -123,12 +126,12 @@ def collect(root: Path, raw: Path) -> Json:
                         digest,
                     )
                 )
-            if identity in PINS:
+            if identity in config.PINS:
                 checks.append(
                     gate(
                         str(path),
                         "sha256",
-                        PINS[identity],
+                        config.PINS[identity],
                         digest,
                         "immutable_primary",
                         identity,
@@ -163,9 +166,9 @@ def collect(root: Path, raw: Path) -> Json:
                 )
             )
         available[identity] = all(c["passed"] for c in checks[before:])
-        progress(f"after_source_{identity}")
+        config.progress(f"after_source_{identity}")
     cohort: dict[str, Json] = {}
-    for kind, (label, expected) in COHORT_INPUTS.items():
+    for kind, (label, expected) in config.COHORT_INPUTS.items():
         path = root / label
         observed = ref(path)["sha256"]
         check = gate(
@@ -200,7 +203,7 @@ def collect(root: Path, raw: Path) -> Json:
                 [20, 60, 60],
                 [len({r["qid"] for r in units}), len(units), len({r["unit_id"] for r in units})],
                 "cohort",
-                TASK,
+                config.TASK,
             )
         )
     disk = shutil.disk_usage(raw).free
@@ -214,11 +217,13 @@ def collect(root: Path, raw: Path) -> Json:
         ),
         ("llama_cpp_import_available", True, importlib.util.find_spec("llama_cpp") is not None),
     ]:
-        checks.append(gate(str(raw), field, expected, observed, "resource_precondition", TASK))
-    progress("before_cached_model_resolution_no_load")
-    pair = cached_sota_pair(gpu_indices=(0, 0)) or []
-    model = next((s for s in pair if s["hf_id"] == MODEL_SPECS[0]["hf_id"]), None)
-    progress("after_cached_model_resolution_no_load")
+        checks.append(
+            gate(str(raw), field, expected, observed, "resource_precondition", config.TASK)
+        )
+    config.progress("before_cached_model_resolution_no_load")
+    pair = config.cached_sota_pair(gpu_indices=(0, 0)) or []
+    model = next((s for s in pair if s["hf_id"] == config.MODEL_SPECS[0]["hf_id"]), None)
+    config.progress("after_cached_model_resolution_no_load")
     end = time.monotonic_ns()
     receipt = build_current_work_receipt(
         run_id=raw.name,
@@ -235,8 +240,8 @@ def collect(root: Path, raw: Path) -> Json:
         checks=checks,
         references=references,
         units=units,
-        eligibility=eligibility(available),
-        protocol=PROTOCOL,
+        eligibility=config.eligibility(available),
+        protocol=config.PROTOCOL,
         cached_model=model,
         current_work_receipt=receipt,
         duration_s=(end - start) / 1e9,
@@ -244,7 +249,7 @@ def collect(root: Path, raw: Path) -> Json:
         resources=dict(free_disk_bytes=disk, address_space_limit=limit),
     )
     atomic_json(raw / "work.json", work)
-    progress("after_preconditions")
+    config.progress("after_preconditions")
     return dict(work, work_reference=ref(raw / "work.json"))
 
 
@@ -459,9 +464,10 @@ def build(work: Json, validation: Json, date: str) -> Json:
     return value
 
 
-def replay(path: Path) -> Json:
+def replay(path: Path, *, producer: ModuleType | None = None) -> Json:
     """Rebuild the terminal artifact from retained work so rehashed invention fails."""
-    progress("before_cold_replay")
+    config = producer or sys.modules[__name__]
+    config.progress("before_cold_replay")
     try:
         value = json.loads(path.read_bytes())
         if checksum(value) != value["reproducibility_checksum"]:
@@ -472,7 +478,7 @@ def replay(path: Path) -> Json:
             if ref(Path(reference["path"]))["sha256"] != reference["sha256"]:
                 raise ValueError("code_hash_drift")
         for receipt in value["validation_receipts"]:
-            if ref(ROOT / receipt["log_path"])["sha256"] != receipt["log_sha256"]:
+            if ref(config.ROOT / receipt["log_path"])["sha256"] != receipt["log_sha256"]:
                 raise ValueError("validation_log_drift")
         validation = dict(
             passed=value["required_checks_passed"],
@@ -480,9 +486,9 @@ def replay(path: Path) -> Json:
             coverage=value["owned_statement_coverage"],
             repository_health=value["repository_health"],
         )
-        expected = build(work, validation, value["run_date"])
-        progress("after_cold_replay")
+        expected = config.build(work, validation, value["run_date"])
+        config.progress("after_cold_replay")
         return dict(passed=expected == value)
     except (OSError, ValueError, KeyError, TypeError) as error:
-        progress("cold_replay_refused")
+        config.progress("cold_replay_refused")
         return dict(passed=False, reason=str(error))

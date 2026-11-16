@@ -1,0 +1,119 @@
+{
+  "adaptation": [
+    "proposal",
+    "full_CAL_guard",
+    "rollback",
+    "final_feedback_drain",
+    "fsync",
+    "recovery"
+  ],
+  "answers": 60,
+  "arm_order_seed": 776108,
+  "cache_conditions": [
+    "cold_load",
+    "warm_uncached",
+    "cached_head_only"
+  ],
+  "embedding": "raw text/tokenize/masked features/transforms/projected-linear/spline/full-linear/serialize",
+  "energy": "raw text/tokenize/all teacher-forced statistics/frozen probability and energy heads/serialize",
+  "exclusions": [],
+  "formulas": "Exp9126 immutable full-vocabulary formulas; no gate or denominator changes",
+  "generated_tokens": 0,
+  "hard_cap_s": 4800,
+  "measurement_budget_s": 3300,
+  "measurement_deadline_s": 3300,
+  "minimum_actual_substrate_s": 2,
+  "model_admission": [
+    "cached_sota_pair(gpu_indices=(0,0))",
+    "GPU0 lease",
+    "CUDA loader",
+    "real offload",
+    "GGUF embedded tokenizer",
+    "model/build SHA256"
+  ],
+  "online_arms": [
+    "frozen",
+    "bias",
+    "linear",
+    "spline",
+    "donor",
+    "temperature"
+  ],
+  "parity_atol": 1e-05,
+  "parity_rtol": 0.0001,
+  "process_arm_order": [
+    [
+      "static",
+      "online"
+    ],
+    [
+      "static",
+      "online"
+    ],
+    [
+      "static",
+      "online"
+    ]
+  ],
+  "process_repetitions": 3,
+  "qids": 20,
+  "source_inputs": {
+    "9138": [
+      "results/experiment_9138_v779_contract.json",
+      [
+        "contract_ready_score",
+        "source_ready_score",
+        "static_methods_ready_score",
+        "online_methods_ready_score"
+      ]
+    ],
+    "9140": [
+      "results/experiment_9140_v779_forward_qualification.json",
+      [
+        "forward_validation_ready_score",
+        "full_621_node_qualification_score"
+      ]
+    ],
+    "9142": [
+      "results/experiment_9142_v779_logit_runtime.json",
+      [
+        "logit_runtime_ready_score",
+        "shard_feasible_score",
+        "cost_feasible_score"
+      ]
+    ],
+    "9145": [
+      "results/experiment_9145_v779_logit_admission.json",
+      [
+        "admission_ready_score"
+      ]
+    ],
+    "9146": [
+      "results/experiment_9146_v779_static_energy.json",
+      [
+        "static_predictions_ready_score"
+      ]
+    ],
+    "9147": [
+      "results/experiment_9147_v779_delayed_learning.json",
+      [
+        "online_predictions_ready_score"
+      ]
+    ]
+  },
+  "source_pins": {
+    "9138": "sha256:65528ba505f6ab790c80ef7bba257c1bbe30e2a63502cad0be0d247f88125169",
+    "9140": "sha256:761aea6f77740bed81737d663ed3667d7b3af8ab54aa9b91b3ec84e05a3b8093"
+  },
+  "static_arms": [
+    "prevalence",
+    "probability_length",
+    "raw_energy",
+    "combined",
+    "combined_donor"
+  ],
+  "total_cap_s": 4800,
+  "typed_decisions": "exact",
+  "validation_reserve_s": 1200,
+  "verification_reserve_s": 1200
+}

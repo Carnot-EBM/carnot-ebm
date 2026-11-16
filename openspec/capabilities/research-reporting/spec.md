@@ -115512,6 +115512,32 @@ Require real private CLI success/refusal/tamper/cold replay and owned checks.
 External incompleteness is blocked, not retryable partial. No fixture establishes
 scientific benefit or independent human generalization.
 
+Implementation contract frozen 2026-11-16 before outcomes: authenticate exact
+canonical contract9138, qualification9140, runtime9142, admission9145,
+static9146 and online9147 fields. Preserve original producer hashes; do not
+replace them with current checkout hashes. Static and online availability are
+independent after common readiness. Missing canonical files remain missing even
+when a similarly named artifact exists. Eligible services require actual clocks;
+an availability inventory cannot claim their cost.
+
+Use original first20 TEST qids/all60 siblings, three process slots, seed776108,
+all five static and six online arms, cold load/warm uncached/cached head boundaries.
+Probability parity is atol1e-5/rtol1e-4; typed decisions match exactly. Unstarted
+units retain null seconds, components and parity. Adaptation includes initialization,
+proposals, rejected updates, every guard, fsync, acknowledgment, drain and recovery.
+There are no exclusions. Fractions require measured nonoverlapping service clocks.
+The theoretical infinitely fast fraction must be at least0.99 for100x and0.9
+for10x; neither number is a measured fraction. Energy requires measured integrals.
+
+Validation freezes owned unit/real-child statement coverage with zero exclusions,
+Ruff check/format, strict mypy, explicit test-path spec coverage, original direct
+consumer assertions, E2E-018/021 and private foreign-directory success/refusal/
+tamper/cold replay without PYTHONPATH. Run the full Python suite once as separate
+repository health. This change adds no learner or recovery implementation, so
+E2E-020 does not apply.
+Publish through primary_publication only after real terminal checker receipts.
+Keep the3300s measurement limit,1200s verification reserve and4800s hard cap.
+
 ### REQ-REPORT-9151-V779
 
 Proposed: Reconcile fourteen outcomes and exact continuation limits.

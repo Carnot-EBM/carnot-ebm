@@ -1,0 +1,45 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9150_v779_complete_cost.json",
+  "primary_sha256": "sha256:8a191a2c70310b7b02bb38e15b586ce20130f5c0eb3285193dddf0d1fac19a9c",
+  "report": {
+    "passed": true,
+    "validation_receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/candidate.json",
+          "--json"
+        ],
+        "duration_s": 11.148103774990886,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/terminal/00_adversarial.log",
+        "log_sha256": "sha256:1ac06006207cc289fc16ed304d67beecb8f850f7617485a914ef905413c86da3",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 9150,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_upstream_readiness\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"453c71cea2837f8cdb59b9bca9eccbbdcdc64a2750c253935ae6c9df17804e9d\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/candidate.json"
+        ],
+        "duration_s": 0.24972054798854515,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_9150_v779_complete_cost/invocations/1794849925224518387/terminal/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}
