@@ -22185,3 +22185,4 @@ code |
 | 2026-11-16 17:16 UTC | Exp9147: Measure continuous human learning with ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9145-logit-admission) |
 | 2026-11-16 17:16 UTC | Exp9148: Audit energy increments and human contras | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9146-static-energy) |
 | 2026-11-16 17:16 UTC | Exp9149: Audit future benefit and calibration wher | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9147-delayed-learning) |
+| 2026-11-16 17:53 UTC | Exp9150: Measure complete forward and durable adap | OK | 84 passed, 1 warning in 19.93s |
