@@ -22191,3 +22191,4 @@ code |
 | 2026-11-16 20:51 UTC | Plan milestone 2026.11.780 | OK | 14 tasks proposed |
 | 2026-11-16 21:05 UTC | Milestone 2026.11.780 activated | OK | 14 tasks queued |
 | 2026-11-16 21:50 UTC | Exp9152: Bind fourteen tasks and preserve qualifie | OK | 89 passed, 1 warning in 60.53s (0:01:00) |
+| 2026-11-16 23:14 UTC | Exp9153: Separate measured validation costs from w | OK | 107 passed, 1 warning in 104.26s (0:01:44) |
