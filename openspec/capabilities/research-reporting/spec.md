@@ -115806,3 +115806,29 @@ The V780 producer uses the unique parent invocation identifier, never the shared
 explicit hash-bound prior receipt may supply unrelated repository health after
 a development correction; it is labeled retained evidence and cannot satisfy
 an affected check. This keeps the broad suite at one invocation for this task.
+
+### REQ-REPORT-9165-V780 — frozen reconciliation scope (2026-11-16)
+
+Freeze seed780165, no model requests, zero exclusions and the full fourteen
+ordered task objects before outcomes. Authenticate original primary bytes and
+exact declared gate operands; scheduler refusals cannot replace missing science.
+Absent files, absent fields and measured zero remain distinct. Preserve two
+static and seven online conjuncts, human question units, contrast diagnostics,
+complete cost censoring, original quarantines and historical hardware scope.
+Retire only the old sum-of-ceilings forecast. The measured attempt retains all674
+obligations and requires a demonstrated new cause before continuation. Three
+disjoint100-qid rosters must retain all900 answers and original roles.
+Administrative readiness is separate from blocked science and historical FoVer
+G1-G4. Independent generalization remains zero; publication stays operator-only.
+
+### SCENARIO-REPORT-9165-V780 — immutable accounting and real CLI controls
+
+Before implementation, fail controls for fourteen slots, scheduler alternatives,
+missing operands, bool-versus-int gates, observed zero, source/task drift and
+rehashed inventions. Recompute aggregates from retained rows. Execute owned
+unit and foreign CLI success/refusal/tamper/cold replay under actual child
+coverage, with100 percent new statements and zero exclusions. Run affected
+consumers, E2E-018/021, Ruff, strict mypy, explicit spec tracing and unchanged
+adversarial/strict-row scanners. E2E-020 is inapplicable to this reporting-only
+change. Broad repository health runs once, separately; affected failures
+disqualify readiness. Status, changelog and traceability are conductor-owned.
