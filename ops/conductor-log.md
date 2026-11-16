@@ -22142,3 +22142,12 @@ code |
 | 2026-11-16 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_archive_zero_reasons age-week 4: OPEN 28 days: SILENT_NO |
 | 2026-11-16 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_shape_dims age-week 4: OPEN 28 days: REAL_BUG on adversa |
 | 2026-11-16 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8715_v747_verifier_completeness.json age-week 2: OPEN 14 days: CLAIM_ |
+| 2026-11-16 00:07 UTC | Exp9113: Freeze raw-logit energy and probability c | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9111-forward-evidence.forward_evidence_ready_score (actual=0 == expected=1) |
+| 2026-11-16 00:09 UTC | Exp9114: Extract masked frozen human features in s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9112-masked-runtime, exp9112-masked-runtime) |
+| 2026-11-16 00:09 UTC | Exp9115: Extract masked frozen human features in s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9112-masked-runtime, exp9112-masked-runtime) |
+| 2026-11-16 00:09 UTC | Exp9116: Capture teacher-forced Qwen energy statis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9112-masked-runtime, exp9113-energy-methods, exp9112-masked-runtime) |
+| 2026-11-16 00:09 UTC | Exp9117: Train frozen matched human decision heads | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9114-features-a, exp9115-features-b) |
+| 2026-11-16 00:09 UTC | Exp9118: Measure delayed coefficient learning with | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9114-features-a, exp9115-features-b) |
+| 2026-11-16 00:09 UTC | Exp9119: Audit static decisions and answer-specifi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9117-static-heads) |
+| 2026-11-16 00:09 UTC | Exp9120: Independently test future benefit and ret | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9118-online-streams) |
+| 2026-11-16 00:09 UTC | Exp9121: Test raw-energy value beyond normalized p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9116-logit-capture, exp9113-energy-methods) |
