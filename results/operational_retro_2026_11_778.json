@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.778",
+  "generated_at": "2026-11-16T11:07:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 60.4,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9125: Qualify forward receipts with complete bounded checks",
+      "duration_minutes": 34.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9124: Bind fourteen tasks and preserve V777 failures",
+      "duration_minutes": 18.59,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9137: Reconcile fourteen outcomes and continuation decisions",
+      "duration_minutes": 6.86,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9132: Freeze delayed logit learning and recalibration controls",
+      "duration_minutes": 0.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9136: Measure complete forward and durable learning costs",
+      "duration_minutes": 0.03,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.778 completed 6 experiments (1 compute-bound, 5 synthesis-only) in 60.4 wall-time minutes (60 minutes / 1.0 hours, averaging 10 minutes per experiment) via disk-mtime fallback reconstruction (0 commits in live git-log). The only compute-bound experiment was Exp9136: Measure complete forward and durable learning costs at 0.03 minutes (0min), while synthesis-only tasks accounted for the longest durations: Exp9125 (34.6 minutes / 35min), Exp9124 (18.59 minutes / 19min), Exp9137 (6.86 minutes / 7min), and Exp9132 (0.3 minutes / 0min), with no data available this milestone for the fifth synthesis-only task. No data is available this milestone for GPU utilization because the GPU monitor was not available, locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply as no data shows 2+ models loaded in parallel.",
+  "bottlenecks_identified": [
+    "Single compute-bound task duration: Exp9136: Measure complete forward and durable learning costs was the only compute-bound experiment (compute_bound_experiments_count: 1) and completed in 0.03 minutes (0min), so compute-bound execution was not a wall-time bottleneck; no data is available this milestone for internal sub-step timing beyond its task title.",
+    "Sequential synthesis-only verification and contract overhead (not a GPU bottleneck, as 0% GPU on synthesis-only tasks is expected behavior): Exp9125: Qualify forward receipts with complete bounded checks took 34.6 minutes (35min), Exp9124: Bind fourteen tasks and preserve V777 failures took 18.59 minutes (19min), Exp9137: Reconcile fourteen outcomes and continuation decisions took 6.86 minutes (7min), and Exp9132: Freeze delayed logit learning and recalibration controls took 0.3 minutes (0min), while no data is available this milestone for the identity or duration of the fifth synthesis-only experiment.",
+    "Timing reconstruction fallback: Live git-log found 0 commits, requiring retro_timing_fallback disk-mtime reconstruction (reconstructed_from_disk_mtime: true) across the 60.4 wall-time minutes (60 minutes / 1.0 hours).",
+    "GPU telemetry unavailability: The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry); locked gpu_idle_on_compute_bound_tasks is false, and no data is available this milestone indicating any compute-bound task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache forward-receipt and bounded-check verification inputs so synthesis-only Exp9125 (34.6 minutes / 35min) validates incrementally rather than re-running full bounded checks from scratch.",
+    "Share a cached fourteen-task manifest and preserved V777 failure state between synthesis-only Exp9124 (18.59 minutes / 19min) and Exp9137 (6.86 minutes / 7min) to eliminate duplicate contract binding and outcome reconciliation passes.",
+    "Write direct per-experiment start and end timestamps from the conductor to a milestone timing ledger so retrospectives do not depend on retro_timing_fallback disk-mtime reconstruction when live git-log finds 0 commits.",
+    "Restore GPU monitor health checks before compute-bound tasks such as Exp9136 (0.03 minutes / 0min) run, while keeping DualGPURunner restricted strictly to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache forward-receipt qualification and complete bounded-check artifacts used in synthesis-only Exp9125 (34.6 minutes / 35min).",
+    "Unify fourteen-task binding, preserved V777 failure records, and fourteen-outcome continuation reconciliation across synthesis-only Exp9124 (18.59 minutes / 19min) and Exp9137 (6.86 minutes / 7min).",
+    "Persist direct per-experiment execution timestamps and restore GPU monitor telemetry before compute-bound tasks (Exp9136, 0.03 minutes / 0min) execute to remove retro_timing_fallback (0 git-log commits) and telemetry blind spots."
+  ],
+  "estimated_time_savings_pct": 45,
+  "meta_reflection": "Across the 60.4 wall-time minutes (60 minutes / 1.0 hours, averaging 10 minutes across 6 experiments), the single compute-bound task Exp9136 completed in 0.03 minutes (0min), whereas synthesis-only tasks Exp9125 (34.6 minutes / 35min), Exp9124 (18.59 minutes / 19min), and Exp9137 (6.86 minutes / 7min) dominated milestone execution time. Because 0% GPU usage on synthesis-only tasks is expected behavior and locked gpu_idle_on_compute_bound_tasks is false with no GPU monitor data available this milestone, the highest-leverage speedup for the next milestone is caching bounded-check receipts and shared fourteen-task state on the CPU synthesis path."
+}
