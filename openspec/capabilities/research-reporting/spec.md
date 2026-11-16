@@ -114954,6 +114954,20 @@ Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
 
+Implementation scope frozen 2026-11-16: compare all fourteen complete objects
+against the visible table and JSON, selecting staged V778 until activation.
+Authenticate original Exp9110/Exp9097 snapshots without changing producer pins.
+Retain all fourteen V777 outcomes, actual A2 labels, TRAIN150/CAL50/TEST100 and
+three siblings; freeze label-free inference views separately from evaluator data.
+Preserve inherited raw-logit formulas and online rosters/donors. Freeze the new
+seven-feature/six-arm temperature study separately; retain embedding and graph
+bounds, receipt quarantine, source exposure and hardware limitations unchanged.
+Contract and source readiness require real normal-exit owned validation, 100%
+owned statement coverage including subprocess execution, and zero exclusions.
+Tests exercise missing/zero/changed operands, staged/active authority, immutable
+protocol drift, stale/failed receipts, private CLI success/refusal and cold replay.
+This administrative aggregation loads no model and creates no scientific units.
+
 ### REQ-REPORT-9125-V778
 
 Proposed: Qualify forward receipts with complete bounded checks.
