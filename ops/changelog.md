@@ -23858,3 +23858,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9126: Freeze whole-answer energy and probability controls (⚠️ Research Finding) — honest_verdict=complete_null_whole_answer_methods; results/experiment_9126_v778_logit_methods.json
 - 2026-11-16: Exp9132: Freeze delayed logit learning and recalibration controls (⚠️ Research Finding) — honest_verdict=complete_null_online_logit_methods; results/experiment_9132_v778_online_methods.json
 - 2026-11-16: Exp9136: Measure complete forward and durable learning costs (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_readiness; results/experiment_9136_v778_complete_cost.json
+- 2026-11-16: Exp9137: Reconcile fourteen outcomes and continuation decisions (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9137_v778_capstone.json
