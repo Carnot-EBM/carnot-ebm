@@ -23853,3 +23853,4 @@ It retains original statistical thresholds, adds the sixth online comparator wit
 seven-bound multiplicity correction, and reports complete service/durability costs.
 Added proposed requirements/scenarios and PRD traceability. No science was run,
 no milestone was activated and no historical failure or quarantine was cleared.
+- 2026-11-16: Exp9124: Bind fourteen tasks and preserve V777 failures (⚠️ Research Finding) — honest_verdict=complete_null_v778_contract; results/experiment_9124_v778_contract.json
