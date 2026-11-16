@@ -22159,3 +22159,8 @@ code |
 | 2026-11-16 05:35 UTC | Exp9124: Bind fourteen tasks and preserve V777 fai | OK | 122 passed, 1 warning in 84.94s (0:01:24) |
 | 2026-11-16 07:09 UTC | Exp9125: Qualify forward receipts with complete bo | OK | 99 passed, 1 warning in 17.64s |
 | 2026-11-16 07:56 UTC | Exp9126: Freeze whole-answer energy and probabilit | OK | 105 passed, 1 warning in 22.93s |
+| 2026-11-16 08:07 UTC | Exp9127: Qualify serial Qwen logit capture and sha | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9125-receipt-qualification.receipt_ready_score (actual=0 == expected=1) |
+| 2026-11-16 08:09 UTC | Exp9128: Collect frozen Qwen logit statistics in s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9127-logit-runtime, exp9127-logit-runtime) |
+| 2026-11-16 08:09 UTC | Exp9129: Collect frozen Qwen logit statistics in s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9127-logit-runtime, exp9127-logit-runtime) |
+| 2026-11-16 08:09 UTC | Exp9130: Authenticate complete statistics and role | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9128-logits-a, exp9129-logits-b) |
+| 2026-11-16 08:09 UTC | Exp9131: Train the frozen five-arm human energy co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9130-logit-admission) |
