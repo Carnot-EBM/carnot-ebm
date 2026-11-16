@@ -23855,3 +23855,4 @@ Added proposed requirements/scenarios and PRD traceability. No science was run,
 no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9124: Bind fourteen tasks and preserve V777 failures (⚠️ Research Finding) — honest_verdict=complete_null_v778_contract; results/experiment_9124_v778_contract.json
 - 2026-11-16: Exp9125: Qualify forward receipts with complete bounded checks (⚠️ Research Finding) — honest_verdict=complete_disqualified_bounded_receipt_qualification; results/experiment_9125_v778_receipt_qualification.json
+- 2026-11-16: Exp9126: Freeze whole-answer energy and probability controls (⚠️ Research Finding) — honest_verdict=complete_null_whole_answer_methods; results/experiment_9126_v778_logit_methods.json
