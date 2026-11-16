@@ -115009,6 +115009,24 @@ Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
 
+Implementation contract frozen 2026-11-16 for REQ-REPORT-9126-V778:
+authenticate Exp9124 contract/source readiness and its immutable inherited energy,
+static and label-free inference references before reduction. Receipt qualification
+and model access are not dependencies. Freeze literal UTF-8 prefix bytes, zero-based
+answer position i scored at prefix_length+i-1, reset per answer, chunk128 and the
+inherited seven features/five arms, A1 target, ridge/CAL/bootstrap/two-bound rules.
+Retain first8 positions of first20 lexical qids/all siblings before labels.
+Float64 full-vocabulary reduction must reject nonfinite, incomplete vocabulary,
+shifted indices and cross-answer state. Zero-token answers escalate; one-token
+spill is missing. Constant3 and alternating3*(-1)^i gauges preserve probabilities,
+NLL and entropy, shift M by -c_i and spill by c_(i+1)-c_i. Gauge sensitivity is
+not a probability-chain violation. Tiny independent references, chunk-edge and
+state-reset controls, actual private CLI refusal/tamper/cold replay, 100% owned
+statements with zero exclusions and real checker receipts qualify methods only.
+No model loads, generated tokens, human benefit or independent generalization.
+Preserve Exp6980's retired exact-oracle null; this is whole-answer cross-model
+adaptation, not paper localization. The conductor reconciles ops and traceability.
+
 ### REQ-REPORT-9127-V778
 
 Proposed: Qualify serial Qwen logit capture and shard budgets.
