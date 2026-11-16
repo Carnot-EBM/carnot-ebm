@@ -23885,3 +23885,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9140: Qualify the complete forward validation revision (⚠️ Blocked) — honest_verdict=complete_blocked_infeasible_forward_schedule; results/experiment_9140_v779_forward_qualification.json
 - 2026-11-16: Exp9141: Measure human disagreement and freeze calibration slices (⚠️ Research Finding) — honest_verdict=complete_null_v779_human_contrast_audit; results/experiment_9141_v779_human_contrast_audit.json
 - 2026-11-16: Exp9150: Measure complete forward and durable adaptation costs (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_readiness; results/experiment_9150_v779_complete_cost.json
+- 2026-11-16: Exp9151: Reconcile fourteen outcomes and exact continuation limits (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9151_v779_capstone.json
