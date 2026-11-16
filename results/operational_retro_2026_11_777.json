@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.777",
+  "generated_at": "2026-11-16T01:51:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 46.9,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9111: Qualify forward-only receipts and structural count evidence",
+      "duration_minutes": 23.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9110: Bind fourteen tasks and retain authenticated human methods",
+      "duration_minutes": 18.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9123: Reconcile fourteen outcomes and exact continuation gates",
+      "duration_minutes": 4.94,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9122: Measure available complete services and adaptation costs",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.777 completed 4 experiments (1 compute-bound, 3 synthesis-only) in 46.9 wall-time minutes (47 minutes / 0.8 hours, averaging 12 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). The sole compute-bound experiment was Exp9122: Measure available complete services and adaptation costs at 0.0 minutes (0min, compute_bound: true), while the 3 synthesis-only tasks accounted for the recorded wall time: Exp9111: Qualify forward-only receipts and structural count evidence (23.7 minutes / 24min), Exp9110: Bind fourteen tasks and retain authenticated human methods (18.24 minutes / 18min), and Exp9123: Reconcile fourteen outcomes and exact continuation gates (4.94 minutes / 5min). The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry), locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "The sole compute-bound experiment, Exp9122: Measure available complete services and adaptation costs (compute_bound: true), completed in 0.0 minutes (0min), whereas the 3 synthesis-only tasks (compute_bound: false) accounted for the entire 46.9-minute (47 minutes / 0.8 hours, 12 minutes average per experiment) wall time: Exp9111: Qualify forward-only receipts and structural count evidence (23.7 minutes / 24min), Exp9110: Bind fourteen tasks and retain authenticated human methods (18.24 minutes / 18min), and Exp9123: Reconcile fourteen outcomes and exact continuation gates (4.94 minutes / 5min).",
+    "The live git-log timing path found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across all 4 completed experiments.",
+    "The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state during compute-bound Exp9122); locked gpu_idle_on_compute_bound_tasks is false."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache forward-only receipt qualification and structural count evidence inputs in synthesis-only Exp9111: Qualify forward-only receipts and structural count evidence (23.7 minutes / 24min).",
+    "Cache and reuse fourteen-task bindings, retained authenticated human methods, and fourteen-outcome continuation-gate state between synthesis-only Exp9110: Bind fourteen tasks and retain authenticated human methods (18.24 minutes / 18min) and Exp9123: Reconcile fourteen outcomes and exact continuation gates (4.94 minutes / 5min).",
+    "Record direct per-experiment start and completion timestamps in result artifacts so milestone timing does not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry before compute-bound tasks such as Exp9122: Measure available complete services and adaptation costs (0.0 minutes / 0min) execute, while keeping DualGPURunner scoped strictly to compute-bound tasks loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache forward-only receipt and structural count evidence verification inputs for synthesis-only Exp9111 (23.7 minutes / 24min).",
+    "Share fourteen-task binding, retained authenticated human method, and fourteen-outcome continuation-gate artifacts across synthesis-only Exp9110 (18.24 minutes / 18min) and Exp9123 (4.94 minutes / 5min).",
+    "Persist direct per-experiment execution timestamps to avoid disk-mtime fallback (0 commits in live git-log) and restore GPU monitor availability for compute-bound tasks."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "Execution across milestone 2026.11.777 (46.9 minutes / 47 minutes / 0.8 hours over 4 completed experiments, averaging 12 minutes per experiment) was concentrated in the 3 synthesis-only tasks — Exp9111 (23.7 minutes / 24min), Exp9110 (18.24 minutes / 18min), and Exp9123 (4.94 minutes / 5min) — while the single compute-bound task Exp9122 completed in 0.0 minutes (0min) with locked gpu_idle_on_compute_bound_tasks set to false. Caching forward-only receipt and structural count verification state, sharing fourteen-task binding and fourteen-outcome reconciliation artifacts, recording direct experiment timestamps to eliminate retro_timing_fallback on 0 git-log commits, and restoring GPU monitor telemetry are the primary operational priorities for the next milestone."
+}
