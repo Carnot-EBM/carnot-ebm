@@ -22174,3 +22174,4 @@ code |
 | 2026-11-16 13:28 UTC | Plan milestone 2026.11.779 | OK | 14 tasks proposed |
 | 2026-11-16 13:48 UTC | Milestone 2026.11.779 activated | OK | 14 tasks queued |
 | 2026-11-16 14:42 UTC | Exp9138: Bind fourteen tasks and reuse qualified h | OK | 89 passed, 1 warning in 88.83s (0:01:28) |
+| 2026-11-16 15:34 UTC | Exp9139: Replace duplicated validation with a comp | OK | 111 passed, 1 warning in 97.63s (0:01:37) |
