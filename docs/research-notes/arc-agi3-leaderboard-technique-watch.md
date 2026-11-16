@@ -741,3 +741,15 @@ These mechanisms require neither game-source access nor per-game rules. Measurem
 
 Measurements were not independently reproduced; complete submissions remain unaudited for exploitation.
 
+## 2026-11-16 14:32 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose camera tracking and action protection.** Tracks scrolling through animation frames using color-plane FFT correlation, stitches observations into fixed world coordinates, learns stationary HUD strips, and marks potentially stale off-screen cells. Pending clicks are cancelled after a camera shift. **POSSIBLE CARNOT LEVER:** Extend existing camera cautions into automatic coordinate tracking and click-batch interruption. [Tracker implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/viewtrack.py), [action guard](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/act_client.py).
+
+- **Yi-Chia Chen — (b), general-purpose compression repair.** Newly located training details show distillation on the **compressed student’s own trajectories**, using reverse KL against teacher top-32 probabilities **plus remaining probability mass**. The 1,000-step run updates INT3 group scales, routers, dense and shared weights over a mixed ARC-AGI-2/3 corpus. **POSSIBLE CARNOT LEVER:** Repair generator compression on its actual tool-use distribution without RL. [Training recipe, B2–B5](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/training/README.md).
+
+- **xz — (b), general-purpose structured cache eviction.** Beyond previously reported precision and positional management, eviction protects the newest **16K tokens** and latest observation, removes images whole, and removes an assistant turn together with its tool output once three-quarters of its content has gone. Formatting tokens are never independently discarded. [Harness details, §1](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#1-harness).
+
+- **xz — (b), general-purpose speculative-sampling correctness.** Fixed two defects in its vLLM version: rejection corrections reused the random noise that selected the rejected draft, and resumed requests could verify tokens never proposed for them. The implementation separates correction randomness and marks absent drafts with a sentinel. [Implementation and upstream-fix reference](https://github.com/xz259/arc-prize-2026-solutions/blob/main/vllm/stage2/vsampler.py).
+
+These mechanisms require neither game-source access nor fixed per-game rules. Not independently reproduced; complete submissions were not audited for exploitation.
+
