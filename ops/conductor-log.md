@@ -22164,3 +22164,7 @@ code |
 | 2026-11-16 08:09 UTC | Exp9129: Collect frozen Qwen logit statistics in s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9127-logit-runtime, exp9127-logit-runtime) |
 | 2026-11-16 08:09 UTC | Exp9130: Authenticate complete statistics and role | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9128-logits-a, exp9129-logits-b) |
 | 2026-11-16 08:09 UTC | Exp9131: Train the frozen five-arm human energy co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9130-logit-admission) |
+| 2026-11-16 09:36 UTC | Exp9132: Freeze delayed logit learning and recalib | OK | 97 passed, 2 warnings in 117.25s (0:01:57) |
+| 2026-11-16 09:38 UTC | Exp9133: Measure continuous logit learning on futu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9130-logit-admission) |
+| 2026-11-16 09:38 UTC | Exp9134: Audit raw-energy value and gauge suscepti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9131-static-energy) |
+| 2026-11-16 09:38 UTC | Exp9135: Test future benefit beyond temperature re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9133-delayed-streams) |
