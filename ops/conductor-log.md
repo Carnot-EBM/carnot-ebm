@@ -22177,3 +22177,11 @@ code |
 | 2026-11-16 15:34 UTC | Exp9139: Replace duplicated validation with a comp | OK | 111 passed, 1 warning in 97.63s (0:01:37) |
 | 2026-11-16 16:23 UTC | Exp9140: Qualify the complete forward validation r | OK | 104 passed, 1 warning in 34.11s |
 | 2026-11-16 17:06 UTC | Exp9141: Measure human disagreement and freeze cal | OK | 88 passed, 1 warning in 24.69s |
+| 2026-11-16 17:14 UTC | Exp9142: Qualify frozen Qwen forwards and complete | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9140-forward-qualification.forward_validation_ready_score (actual=0 == expected=1) |
+| 2026-11-16 17:16 UTC | Exp9143: Collect fixed human Qwen logit shard A | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9142-logit-runtime, exp9142-logit-runtime) |
+| 2026-11-16 17:16 UTC | Exp9144: Collect fixed human Qwen logit shard B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9142-logit-runtime, exp9142-logit-runtime) |
+| 2026-11-16 17:16 UTC | Exp9145: Admit all human features under the origin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9143-logits-a, exp9144-logits-b) |
+| 2026-11-16 17:16 UTC | Exp9146: Train the five frozen human energy decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9145-logit-admission) |
+| 2026-11-16 17:16 UTC | Exp9147: Measure continuous human learning with ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9145-logit-admission) |
+| 2026-11-16 17:16 UTC | Exp9148: Audit energy increments and human contras | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9146-static-energy) |
+| 2026-11-16 17:16 UTC | Exp9149: Audit future benefit and calibration wher | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9147-delayed-learning) |
