@@ -115224,7 +115224,7 @@ conductor-owned for this invocation.
 
 ### REQ-REPORT-9137-V778
 
-Proposed: Reconcile fourteen outcomes and continuation decisions.
+Implemented contract: Reconcile fourteen outcomes and continuation decisions.
 Deliver `results/experiment_9137_v778_capstone.json`.
 Keep original authority, complete per-unit rows and explicit verdict classes.
 The task-specific methods, readiness fields and acceptance bounds are normative.
@@ -115234,3 +115234,13 @@ The task-specific methods, readiness fields and acceptance bounds are normative.
 Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+Freeze all fourteen full task objects, original producer byte pins, two static
+energy bounds and seven separately qualified online bounds before reduction.
+Account for canonical absence and scheduler alternatives without substitution.
+Reject rehashed invented aggregates, altered retained bytes and boolean readiness.
+Missing files, missing fields and observed zero SHALL remain distinct operands.
+Gauge fixtures, donor-label changes and recovery controls grant no science credit.
+Exposed development keeps both verifier gaps open and current science readiness
+false. Require100 percent owned statement coverage, with no exclusions and real
+foreign-directory CLI execution without PYTHONPATH. Preserve historical G1-G4
+scope. Ops/status/BMAD reconciliation is conductor-owned for this invocation.
