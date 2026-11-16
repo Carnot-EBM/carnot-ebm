@@ -22176,3 +22176,4 @@ code |
 | 2026-11-16 14:42 UTC | Exp9138: Bind fourteen tasks and reuse qualified h | OK | 89 passed, 1 warning in 88.83s (0:01:28) |
 | 2026-11-16 15:34 UTC | Exp9139: Replace duplicated validation with a comp | OK | 111 passed, 1 warning in 97.63s (0:01:37) |
 | 2026-11-16 16:23 UTC | Exp9140: Qualify the complete forward validation r | OK | 104 passed, 1 warning in 34.11s |
+| 2026-11-16 17:06 UTC | Exp9141: Measure human disagreement and freeze cal | OK | 88 passed, 1 warning in 24.69s |
