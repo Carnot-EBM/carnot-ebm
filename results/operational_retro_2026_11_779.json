@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.779",
+  "generated_at": "2026-11-16T18:43:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 20.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9139: Replace duplicated validation with a complete execution schedule",
+      "duration_minutes": 10.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9151: Reconcile fourteen outcomes and exact continuation limits",
+      "duration_minutes": 5.21,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9140: Qualify the complete forward validation revision",
+      "duration_minutes": 4.65,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9138: Bind fourteen tasks and reuse qualified human methods",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9141: Measure human disagreement and freeze calibration slices",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.779 completed 6 experiments (1 compute-bound, 5 synthesis-only) across 20.0 wall-time minutes (20 minutes / 0.3 hours, averaging 3 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 entries in slowest_experiments were synthesis-only (compute_bound: false): Exp9139: Replace duplicated validation with a complete execution schedule (10.07 minutes / 10min), Exp9151: Reconcile fourteen outcomes and exact continuation limits (5.21 minutes / 5min), Exp9140: Qualify the complete forward validation revision (4.65 minutes / 5min), Exp9138: Bind fourteen tasks and reuse qualified human methods (0.09 minutes / 0min), and Exp9141: Measure human disagreement and freeze calibration slices (0.0 minutes / 0min), leaving no data available this milestone for the specific experiment ID, title, or duration of the 1 completed compute-bound task (which finished at or below 0.0 minutes / 0min). The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "Compute-bound task duration: no data is available this milestone for the specific experiment ID, task name, or duration of the 1 completed compute-bound experiment (compute_bound_experiments_count: 1) because all 5 slowest_experiments entries are synthesis-only (compute_bound: false) down to Exp9141 at 0.0 minutes (0min); locked gpu_idle_on_compute_bound_tasks is false, so GPU idle is not flagged as a bottleneck.",
+    "Synthesis-only validation scheduling and reconciliation overhead (CPU-path execution only, as 0% GPU on synthesis-only tasks is expected behavior): Exp9139: Replace duplicated validation with a complete execution schedule required 10.07 minutes (10min), Exp9151: Reconcile fourteen outcomes and exact continuation limits required 5.21 minutes (5min), and Exp9140: Qualify the complete forward validation revision required 4.65 minutes (5min), whereas Exp9138: Bind fourteen tasks and reuse qualified human methods (0.09 minutes / 0min) and Exp9141: Measure human disagreement and freeze calibration slices (0.0 minutes / 0min) finished in under a minute.",
+    "Timing fallback reconstruction: the live git-log path found 0 commits, forcing disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 20.0 wall-time minutes (20 minutes / 0.3 hours).",
+    "Missing GPU monitor telemetry: the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization, memory, or hardware telemetry), and no data is available this milestone indicating any compute-bound task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Pre-compute and share execution-schedule and forward-validation revision receipts between synthesis-only Exp9139: Replace duplicated validation with a complete execution schedule (10.07 minutes / 10min) and Exp9140: Qualify the complete forward validation revision (4.65 minutes / 5min) so forward validation qualification reuses the compiled schedule rather than re-running checks.",
+    "Cache the fourteen-task bindings and qualified human methods produced in synthesis-only Exp9138: Bind fourteen tasks and reuse qualified human methods (0.09 minutes / 0min) alongside calibration slice outputs from Exp9141 (0.0 minutes / 0min) for direct consumption by Exp9151: Reconcile fourteen outcomes and exact continuation limits (5.21 minutes / 5min).",
+    "Record direct per-experiment start and end timestamps in conductor execution artifacts so milestone timing does not rely on retro_timing_fallback disk-mtime reconstruction when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry before the 1 compute-bound experiment class executes, while keeping DualGPURunner restricted strictly to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share pre-computed execution-schedule and forward-validation revision artifacts across synthesis-only Exp9139 (10.07 minutes / 10min) and Exp9140 (4.65 minutes / 5min).",
+    "Pass cached fourteen-task bindings from Exp9138 (0.09 minutes / 0min) directly into fourteen-outcome continuation-limit reconciliation in Exp9151 (5.21 minutes / 5min).",
+    "Persist direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor availability for compute-bound runs."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "Milestone 2026.11.779 executed 6 experiments (1 compute-bound, 5 synthesis-only) in 20.0 wall-time minutes (20 minutes / 0.3 hours, averaging 3 minutes per experiment), with nearly all wall time concentrated in three synthesis-only tasks — Exp9139 (10.07 minutes / 10min), Exp9151 (5.21 minutes / 5min), and Exp9140 (4.65 minutes / 5min) — while Exp9138 (0.09 minutes / 0min), Exp9141 (0.0 minutes / 0min), and the 1 compute-bound task (no data available this milestone for its exact ID or duration beyond finishing at or below 0.0 minutes / 0min) completed almost instantaneously. Because 0% GPU on synthesis-only tasks is expected behavior, locked gpu_idle_on_compute_bound_tasks is false, and no GPU monitor data is available this milestone, the primary operational leverage for the next milestone is reusing validation-schedule and fourteen-task reconciliation state on the synthesis path while restoring direct timestamp logging and GPU telemetry."
+}
