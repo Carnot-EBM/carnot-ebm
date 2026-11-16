@@ -30,6 +30,29 @@ ARMS = (
 )
 
 
+def arms(request: Json) -> tuple[str, ...]:
+    """The logit protocol adds a control without changing the embedding study."""
+    return ARMS + ("temperature_only_spline",) if request.get("feature_count") == 7 else ARMS
+
+
+def temperature_step(u: float, accumulator: float, score: float, label: int) -> tuple[float, float]:
+    """Learn log temperature while keeping all initial spline coefficients fixed."""
+    if (
+        not np.isfinite([u, accumulator, score]).all()
+        or accumulator < 0
+        or not np.log(0.5) <= u <= np.log(4)
+        or type(label) is not int
+        or label not in (0, 1)
+    ):
+        raise ValueError("temperature_operands")
+    scaled = float(np.exp(-u) * score)
+    gradient = float(np.clip((label - expit(scaled)) * scaled + 0.01 * u, -1, 1))
+    total = accumulator + gradient**2
+    return float(
+        np.clip(u - 0.05 * gradient / np.sqrt(total + 1e-8), np.log(0.5), np.log(4))
+    ), total
+
+
 def transform(x: Any, fitted: Json) -> Any:
     """Apply only initialization statistics so future observations cannot move the basis."""
     a = np.asarray(x, dtype=float)
@@ -136,12 +159,12 @@ def guard(candidate: Any, initial: Any, design: Any, labels: Any) -> Json:
 
 def initial(request: Json) -> Json:
     """A new stream receives identical coefficients and fresh zero accumulators."""
-    return dict(
+    state = dict(
         request_hash=canonical_hash(request),
         query=0,
         phase="predict",
         coefficients=deepcopy(request["initial"]),
-        accumulators={a: np.zeros_like(request["initial"][a]).tolist() for a in ARMS},
+        accumulators={a: np.zeros_like(request["initial"][a]).tolist() for a in arms(request)},
         rows=[],
         retention_rows=[],
         pending=[],
@@ -149,15 +172,19 @@ def initial(request: Json) -> Json:
         feedback_rows=[],
         rollback_checks=[],
     )
+    if request.get("feature_count") == 7:
+        state["temperature"] = dict(u=0.0, accumulator=0.0)
+    return state
 
 
 def predictions(state: Json, request: Json, role: str, group: int) -> list[Json]:
     """Predict all siblings and all arms from one state before the evaluator sees a label."""
     rows = []
-    for arm in ARMS:
+    for arm in arms(request):
         kind = "linear" if arm == "adaptive_linear" else "spline"
         phi = np.asarray(request[role + "_design"][kind])[group]
-        for sibling, p in enumerate(expit(phi @ state["coefficients"][arm])):
+        q = np.exp(-state["temperature"]["u"]) if arm == "temperature_only_spline" else 1
+        for sibling, p in enumerate(expit(q * (phi @ state["coefficients"][arm]))):
             rows.append(
                 dict(
                     unit_id=f"{request[role + '_qids'][group]}:{sibling}:{arm}",
@@ -167,7 +194,7 @@ def predictions(state: Json, request: Json, role: str, group: int) -> list[Json]
                     group=group,
                     arm=arm,
                     condition=request["condition"],
-                    seed=776099,
+                    seed=request.get("random_seed", 776099),
                     metric="p_error",
                     absolute_metric=float(p),
                     value=float(p),
@@ -191,7 +218,7 @@ def release(
     if (
         group not in state["pending"]
         or group != min(state["pending"])
-        or len(state["rows"]) != state["query"] * 15
+        or len(state["rows"]) != state["query"] * 3 * len(arms(request))
         or not (
             group == state["query"] - 2
             or group == 4
@@ -246,6 +273,29 @@ def feedback(state: Json, request: Json, group: int, labels: list[int]) -> bool:
                 **checked,
             )
         )
+    if request.get("feature_count") == 7:
+        arm = "temperature_only_spline"
+        before_temperature = deepcopy(state["temperature"])
+        u, total = before_temperature["u"], before_temperature["accumulator"]
+        theta = np.asarray(request["initial"][arm])
+        for phi, y in zip(request["online_design"]["spline"][group], labels, strict=True):
+            u, total = temperature_step(u, total, float(theta @ phi), y)
+        candidate = dict(u=u, accumulator=total)
+        checked = guard(
+            np.exp(-u) * theta, theta, request["guard_design"]["spline"], request["guard_labels"]
+        )
+        if checked["passed"]:
+            state["temperature"] = candidate
+        state["rollback_checks"].append(
+            dict(
+                arm=arm,
+                group=group,
+                before_hash=canonical_hash(before_temperature),
+                candidate_hash=canonical_hash(candidate),
+                after_hash=canonical_hash(state["temperature"]),
+                **checked,
+            )
+        )
     state["pending"].remove(group)
     state["acknowledgments"].append(group)
     state["feedback_rows"].append(
@@ -266,13 +316,15 @@ def checked_request(request: Json) -> None:
     ):
         raise ValueError("donor_causality")
     if (
-        set(request["initial"]) != set(ARMS)
+        request.get("feature_count", 27) not in (7, 27)
+        or set(request["initial"]) != set(arms(request))
         or len(set(request["online_qids"])) != 5
         or len(set(request["retention_qids"])) != 100
         or set(request["online_qids"]) & set(request["retention_qids"])
     ):
         raise ValueError("human_stream_roster")
-    for kind, width in [("spline", 217), ("linear", 28)]:
+    count = request.get("feature_count", 27)
+    for kind, width in [("spline", 1 + count * 8), ("linear", 1 + count)]:
         for role, shape in [
             ("online", (5, 3, width)),
             ("retention", (100, 3, width)),
@@ -281,13 +333,19 @@ def checked_request(request: Json) -> None:
             phi = np.asarray(request[role + "_design"][kind], dtype=float)
             if phi.shape != shape or not np.isfinite(phi).all() or not np.all(phi[..., 0] == 1):
                 raise ValueError("human_design")
-    for arm in ARMS:
+    for arm in arms(request):
         theta = np.asarray(request["initial"][arm])
         if (
-            theta.shape != (28 if arm == "adaptive_linear" else 217,)
+            theta.shape != (1 + count if arm == "adaptive_linear" else 1 + count * 8,)
             or not np.isfinite(theta).all()
         ):
             raise ValueError("human_head")
+    if count == 7 and any(
+        request["initial"][a] != request["initial"]["frozen_spline"]
+        for a in arms(request)
+        if a != "adaptive_linear"
+    ):
+        raise ValueError("initial_spline_parity")
     donor = np.asarray(request["donor_labels"])
     if donor.shape != (5, 3) or not np.isin(donor, [0, 1]).all():
         raise ValueError("donor_labels")
@@ -331,7 +389,7 @@ def drive(request: Json, directory: Path, labels: Path, *, crash: str = "") -> J
 
     def hook(phase: str) -> None:
         """A real child exits at a frozen transaction boundary without Python cleanup."""
-        if crash == phase and state["query"] == 2:
+        if crash == phase and state["query"] == (3 if request.get("feature_count") == 7 else 2):
             print(f"[exp9099-child] hard_exit={phase}", flush=True)
             os._exit(73)
 

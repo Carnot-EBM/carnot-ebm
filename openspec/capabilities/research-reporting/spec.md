@@ -89414,6 +89414,14 @@ sidecars and both existing reader selections to its final hash. Preserve the
 September 28 oracle correction, exposed-development limits and prior verdicts.
 The conductor owns ops/status/changelog/traceability reconciliation for this task.
 
+Implementation added 2026-11-16: `online_methods_9132.py` and its runner reuse
+the causal worker with a separate seven-coordinate basis and temperature state.
+`test_online_methods_9132.py` covers this requirement and scenario. The frozen
+V778 protocol interrupts after committed nonzero temperature feedback. It binds
+the historical worker to retained producer bytes, separately from current code.
+The primary artifact records actual validation, recovery and readiness receipts.
+Its methods verdict does not establish any of the seven human benefit bounds.
+
 Implementation: arc_supervisor_v691_delta configures the existing V690 runner.
 The Exp7975 CLI reuses its private reducer and replay routes. Focused unit and
 actual CLI checks measured 100 percent statements across the four affected files.
@@ -115099,11 +115107,46 @@ Deliver `results/experiment_9132_v778_online_methods.json`.
 Keep original authority, complete per-unit rows and explicit verdict classes.
 The task-specific methods, readiness fields and acceptance bounds are normative.
 
+The separate `v778-online-logit-protocol.json` SHALL preserve Exp9099's original
+initialization100, stream50, CAL50, retention100 qids, sibling order and donor map.
+Authenticate Exp9099 and Exp9126 producer pins, readiness fields and their frozen
+operands before controls. Missing files, missing fields and observed zero SHALL
+remain distinct gate operands. No embedding runtime or LLM load is permitted.
+
+Fit medians, population scaling, clipped initialization ranges and fixed cubic
+features on the 300 initialization siblings only. Use the seven Exp9126 logit
+statistics directly, with no random projection or static150 initialization.
+Reuse the original proper-loss gradients, delay, guard, rollback and acknowledgment.
+Add temperature-only spline with frozen initial coefficients and scalar u=0,
+q=exp(-u), p=sigmoid(q*s). Its gradient is (y-p)*q*s+0.01*u, clipped to[-1,1].
+Accumulate its square, apply AdaGrad0.05/sqrt(accumulator+1e-8), then clip u to
+[log0.5,log4]. Guard the complete three-sibling proposal against initial CAL
+Brier increase<=0.005 and classification-error increase<=0. Atomic snapshots
+SHALL include u and its accumulator; rejection restores both but consumes feedback.
+
+Freeze five future Brier improvement bounds against frozen, bias-only, linear,
+donor and temperature arms, plus the original two retention bounds. Use10000
+paired stream draws, seed778135 and tail0.05/7. Human benefit remains unmeasured
+in this methods task. Constructed fixtures contribute zero independent questions.
+The new seven-bound protocol SHALL NOT replace the old six-bound embedding study.
+
 ### SCENARIO-REPORT-9132-V778
 
 Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
+
+Constructed positive, no-signal, donor-mismatch and constant-feature controls
+SHALL precede any human measurement. Verify the temperature gradient independently.
+Mutating future or current sibling truth cannot change already sealed predictions.
+Reject invalid initialization, transforms and requests. Demonstrate real exit73
+at prediction fsync, feedback receipt and state replacement, then exact complete
+state and prediction equality with uninterrupted execution, including temperature.
+Require100 percent owned statement coverage with actual subprocess shards and
+zero exclusions, Ruff check/format, strict mypy, explicit-path spec coverage,
+private E2E-018/020/021 and real terminal scanners before primary_publication.
+Affected failures disqualify readiness; unrelated global health is recorded apart.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
 
 ### REQ-REPORT-9133-V778
 
