@@ -1,0 +1,47 @@
+[exp9123] phase=preconditions_before completed=0 pending=0
+[exp9123] phase=authenticated_bindings completed=0 pending=1312
+[exp9123] phase=authenticated_bindings completed=100 pending=1212
+[exp9123] phase=authenticated_bindings completed=200 pending=1112
+[exp9123] phase=authenticated_bindings completed=300 pending=1012
+[exp9123] phase=authenticated_bindings completed=400 pending=912
+[exp9123] phase=authenticated_bindings completed=500 pending=812
+[exp9123] phase=authenticated_bindings completed=600 pending=712
+[exp9123] phase=authenticated_bindings completed=1300 pending=12
+[exp9123] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9123] phase=after_publication_gate completed=1 pending=0
+[exp9123] phase=preconditions_after completed=736 pending=0
+[exp9123] phase=primitive_reduction_before completed=0 pending=0
+[exp9123] phase=primitive_reduction_after completed=13 pending=1
+.[exp9123] phase=preconditions_before completed=0 pending=0
+[exp9123] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9123] phase=after_publication_gate completed=1 pending=0
+[exp9123] phase=preconditions_after completed=21 pending=18
+...[test9123] child_before ('--from-work', '/var/tmp/carnot9123-en2k8xbx/owned_tests/test_private_cli_success_refus0/work.json', '--output', '/var/tmp/carnot9123-en2k8xbx/owned_tests/test_private_cli_success_refus0/valid/experiment_9123_v777_capstone.json')
+[test9123] child_after 0
+[test9123] child_before ('--cold-replay', '/var/tmp/carnot9123-en2k8xbx/owned_tests/test_private_cli_success_refus0/valid/experiment_9123_v777_capstone.json')
+[test9123] child_after 0
+[test9123] child_before ('--date', '20261115')
+[test9123] child_after 2
+[test9123] child_before ('--from-work', '/var/tmp/carnot9123-en2k8xbx/owned_tests/test_private_cli_success_refus0/work.json')
+[test9123] child_after 2
+[test9123] child_before ('--cold-replay', '/var/tmp/carnot9123-en2k8xbx/owned_tests/test_private_cli_success_refus0/valid/experiment_9123_v777_capstone.json')
+[test9123] child_after 1
+.[exp9123] phase=owned_validation_before completed=0 pending=0
+[exp9123] phase=owned_validation_after completed=0 pending=0
+{"passed": false, "reason": "owned_validation"}
+[exp9123] phase=owned_validation_before completed=0 pending=0
+[exp9123] phase=owned_validation_after completed=0 pending=0
+[exp9123] phase=complete completed=14 pending=0
+{"primary_path": "/var/tmp/carnot9123-en2k8xbx/owned_tests/test_owned_main_success_and_re0/experiment_9123_v777_capstone.json", "primary_sha256": "sha256:f6084456655e3768cb5359cf1e07deac2995457abbead0f3452e9f5c617c10db", "sidecar_path": "/var/tmp/carnot9123-en2k8xbx/owned_tests/test_owned_main_success_and_re0/raw/experiment_9123_v777_capstone/validators/f6084456655e3768cb5359cf1e07deac2995457abbead0f3452e9f5c617c10db.json"}
+..
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+7 passed, 1 warning in 202.19s (0:03:22)

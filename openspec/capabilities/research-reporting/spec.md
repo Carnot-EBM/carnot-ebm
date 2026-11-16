@@ -114921,3 +114921,15 @@ Required producer fields: reconciliation_ready_score: integer0/1; full_task_obje
 Use the task's positive and rejecting controls, original source roles and
 private CLI/cold replay checks; missing external inputs terminate blocked.
 Preserve all measured rows and validate every aggregate before publication.
+
+The capstone SHALL compare all fourteen full objects with the byte-pinned active
+queue and visible V777 design. Scheduler alternatives SHALL retain their exact
+names and SHALL NOT replace missing scientific primaries. Missing files, missing
+fields and observed zero SHALL remain distinct gate operands. Historical code
+SHALL resolve to authenticated retained snapshots when checkout bytes differ.
+Five static contrasts, six online bounds and two energy contrasts SHALL retain
+undefined values when prerequisites fail. No model load or token generation is
+permitted. Rehashed aggregate tampering SHALL fail private cold replay.
+Owned statement coverage SHALL be 100 percent with zero exclusions; failed
+affected validation SHALL set reconciliation readiness to zero. Complete
+accounting may be ready while external science remains terminal blocked.
