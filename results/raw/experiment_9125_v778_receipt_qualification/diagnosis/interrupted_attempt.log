@@ -1,0 +1,39 @@
+[exp9125] phase=authentication_before
+[exp9111] phase=authentication_before
+[exp9111] phase=authentication_after
+[exp9125] phase=authentication_after
+[exp8738] phase=8764_before_collect_original
+[exp8738] phase=8764_parent_heartbeat_collect_original
+[exp8738] phase=8764_parent_heartbeat_collect_original
+[exp8738] phase=8764_parent_heartbeat_collect_original
+[exp8738] phase=8764_parent_heartbeat_collect_original
+[exp8738] phase=8764_after_collect_original
+[exp9111] phase=historical_reproduction_before
+[exp9111] phase=historical_reproduction_after
+[exp9111] phase=semantic_measurement_after
+[exp8738] phase=8764_before_original_nondiagnostic_cli
+[exp8738] phase=8764_parent_heartbeat_original_nondiagnostic_cli
+[exp8738] phase=8764_parent_heartbeat_original_nondiagnostic_cli
+[exp8738] phase=8764_parent_heartbeat_original_nondiagnostic_cli
+[exp8738] phase=8764_parent_heartbeat_original_nondiagnostic_cli
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9125_v778_receipt_qualification.py", line 10, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/receipt_qualification_9125.py", line 732, in main
+    work = measure(work, private, start / 1e9 + MEASUREMENT_BUDGET_S)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/receipt_qualification_9125.py", line 330, in measure
+    receipt = run_check("original_nondiagnostic_cli", argv, raw, remaining)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/receipt_qualification_9125.py", line 220, in run_check
+    return supervise(name, argv, raw / name, deadline, expected=expected)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/publication_probe_8764.py", line 174, in supervise
+    process.wait(
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 2047, in _wait
+    time.sleep(delay)
+KeyboardInterrupt

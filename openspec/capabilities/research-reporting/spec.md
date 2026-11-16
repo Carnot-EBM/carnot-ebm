@@ -114981,6 +114981,21 @@ Exercise positive and rejecting controls before measurement. Missing external
 inputs are terminal blocked with exact gate operands. Preserve failed evidence.
 Require real CLI refusal/tamper/cold replay and owned checks before readiness.
 
+Qualification protocol frozen 2026-11-16: authenticate Exp9124's exact bytes and
+integer contract_ready_score=1, then Exp9111's original source, assertion and log
+pins. Collect the unchanged owned/direct-consumer node union before execution.
+Run verbose finite file partitions with per-node phase times and retain every
+uncompleted node. No semantic changes follow from a timeout. Shared fixtures stay
+module-scoped with copies before mutation. Preserve Exp9107 quarantine, all 19
+original controls and original checker assertions. Readiness requires the complete
+node union, original required command union, actual non-diagnostic validation
+orchestration, genuine owned 100% statement coverage with zero exclusions, private
+CLI success/refusal/tamper/cold replay and both real publication checkers. Otherwise
+publish a terminal measured disqualification and retire this bounded scope; absent
+external evidence instead yields blocked with exact missing_file/missing_field/zero
+operands. Stop measurement at 3300 seconds, reserving verification within 4800.
+Administrative fixtures confer no scientific positive or independent human units.
+
 ### REQ-REPORT-9126-V778
 
 Proposed: Freeze whole-answer energy and probability controls.
