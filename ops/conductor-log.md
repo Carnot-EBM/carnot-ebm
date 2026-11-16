@@ -22168,3 +22168,4 @@ code |
 | 2026-11-16 09:38 UTC | Exp9133: Measure continuous logit learning on futu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9130-logit-admission) |
 | 2026-11-16 09:38 UTC | Exp9134: Audit raw-energy value and gauge suscepti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9131-static-energy) |
 | 2026-11-16 09:38 UTC | Exp9135: Test future benefit beyond temperature re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9133-delayed-streams) |
+| 2026-11-16 10:16 UTC | Exp9136: Measure complete forward and durable lear | OK | 90 passed, 1 warning in 19.37s |
