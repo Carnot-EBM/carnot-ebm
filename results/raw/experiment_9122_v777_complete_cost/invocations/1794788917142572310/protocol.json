@@ -1,0 +1,51 @@
+{
+  "adaptation": [
+    "proposal",
+    "full_CAL_guard",
+    "rollback",
+    "final_feedback_drain",
+    "fsync",
+    "recovery"
+  ],
+  "answers": 60,
+  "arm_order_seed": 776108,
+  "cache_conditions": [
+    "cold_load",
+    "warm_uncached",
+    "question_cache_hit",
+    "cached_head_only"
+  ],
+  "embedding": "raw text/tokenize/masked features/transforms/projected-linear/spline/full-linear/serialize",
+  "energy": "raw text/tokenize/all teacher-forced statistics/frozen probability and energy heads/serialize",
+  "generated_tokens": 0,
+  "measurement_deadline_s": 3300,
+  "minimum_actual_substrate_s": 2,
+  "model_admission": [
+    "cached_current_model(gpu_index=0)",
+    "GPU0 lease",
+    "free VRAM",
+    "original GGUF/tokenizer/build hashes",
+    "actual CUDA offload"
+  ],
+  "parity_atol": 1e-05,
+  "parity_rtol": 0.0001,
+  "process_arm_order": [
+    [
+      "embedding",
+      "energy"
+    ],
+    [
+      "embedding",
+      "energy"
+    ],
+    [
+      "embedding",
+      "energy"
+    ]
+  ],
+  "process_repetitions": 3,
+  "qids": 20,
+  "total_cap_s": 4800,
+  "typed_decisions": "exact",
+  "validation_reserve_s": 1200
+}

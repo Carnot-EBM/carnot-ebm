@@ -114879,11 +114879,36 @@ Proposed: Measure available complete services and adaptation costs. Deliver `res
 The full task protocol and acceptance gates in the V777 design are normative.
 Required producer fields: cost_inventory_ready_score, embedding_service_ready_score, energy_service_ready_score, online_cost_ready_score: separate integer0/1; per_request_timing_rows, paired_service_cost_rows, complete_adaptation_rows, model_load_rows, failed_censored_work, clock_boundary_map, hardware_operation_rows, amdahl_ceiling_or_null, energy_joules_or_null.
 
+Exp9122 authenticates each declared current primary independently. An embedding
+block cannot gate the energy branch. Missing files, missing fields, typed zero
+and changed hashes remain distinct operands. When no complete service qualifies,
+publish terminal `complete_blocked_*`, actual `blocked_no_run`, zero new loads
+and null scientific timings. Preserve requested `model_load_no_generation`,
+the two-second floor for actual loads, and the original first20 TEST qids with
+all60 answers; three repetitions never multiply independent support. Never load
+a model to repair missing scientific inputs or price inventory as service work.
+Authenticate historical sources through retained snapshots, never checkout code.
+Refuse inventory-only publication if a scientific branch becomes qualified.
+
 ### SCENARIO-REPORT-9122-V777
 
 Use the task's positive and rejecting controls, original source roles and
 private CLI/cold replay checks; missing external inputs terminate blocked.
 Preserve all measured rows and validate every aggregate before publication.
+
+Controls distinguish absent, untyped and zero gates; retain an independently
+eligible energy branch despite unavailable embeddings; reject changed retained
+bytes and rehashed aggregate tampering. Actual private CLI publication, date
+refusal and cold replay run outside the checkout without PYTHONPATH. All owned
+statements, including CLI children, require coverage with zero exclusions.
+
+Implementation: `carnot.reporting.complete_cost_9122` and its runner retain the
+pre-load inventory and original cohort; the experiment CLI publishes through
+`primary_publication`. `tests/python/test_complete_cost_9122.py` covers missing,
+malformed, zero and changed operands, independent energy eligibility, exact
+cohort accounting, real SQLite coverage, owned-check refusal and private replay.
+This implementation publishes no service timings when scientific inputs are
+unavailable; newly qualified science requires measurement before publication.
 
 ### REQ-REPORT-9123-V777
 
