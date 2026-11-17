@@ -23975,3 +23975,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - Align proposed requirements, traceability and architecture. Active queue and
   conductor remain unchanged; no implementation, experiment, activation or push.
 - 2026-11-17: Exp9180: Bind fourteen tasks and freeze diagnostic supports (⚠️ Research Finding) — honest_verdict=complete_null_v782_contract; results/experiment_9180_v782_contract.json
+- 2026-11-17: Exp9181: Remove repeated structural scans and qualify immutable diagnostic evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_causal_validation; results/experiment_9181_v782_causal_validation.json
