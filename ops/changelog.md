@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-17 UTC — Operational retrospective for milestone 2026.11.781
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.781`: updated `results/operational_retro_2026_11_781.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 4 completed experiments (0 compute-bound, 4 synthesis-only) across 20.9 wall-time minutes (21 minutes / 0.3 hours, averaging 5 minutes per experiment).
+- All 4 completed experiments in `slowest_experiments` were synthesis-only (`compute_bound: false`): `Exp9167: Trace the actual validation work and qualify a causal correction` (13.72 minutes / 14min), `Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths` (7.12 minutes / 7min), `Exp9166: Bind fourteen tasks and freeze diagnostic supports` (0.1 minutes / 0min), and `Exp9178: Test game-name invariance of explicit ARC mechanic routing` (0.0 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or hardware telemetry); because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null` (GPU idle is not flagged as a bottleneck), and `DualGPURunner` did not apply.
+- Suggested improvements (`estimated_time_savings_pct: 35`): pre-index and cache validation-work traces and causal-correction qualification inputs in synthesis-only `Exp9167` (13.72 minutes / 14min), pass cached fourteen-task bindings and frozen diagnostic supports from synthesis-only `Exp9166` (0.1 minutes / 0min) and explicit ARC mechanic routing invariance outputs from `Exp9178` (0.0 minutes / 0min) into synthesis-only `Exp9179` (7.12 minutes / 7min), persist direct per-experiment start and end timestamps to eliminate `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability before future compute-bound runs.
+
 ## 2026-11-17 UTC — Repair V781 activated queue binding
 
 - Bind `v781-contract-inputs.json` to the activated queue after the conductor's

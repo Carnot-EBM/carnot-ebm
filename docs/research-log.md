@@ -7778,6 +7778,10 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — all 3 completed experiments were compute-bound (0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log): Exp9153: Separate measured validation costs from watchdog ceilings (24.54 min / 25min), Exp9165: Reconcile fourteen outcomes and exact continuation limits (3.13 min / 3min), and Exp9152: Bind fourteen tasks and preserve qualified human methods (0.1 min / 0min); locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel).
 - acceptance: no data available this milestone
 
-
+### Milestone 2026.11.781
+- exp_range: exp9166-exp9179 (from the 4 completed synthesis-only tasks listed in TIMING DATA: Exp9166, Exp9167, Exp9178, Exp9179)
+- theme: Operational execution analysis of 4 completed synthesis-only experiments (0 compute-bound) across 20.9 wall-time minutes (21 minutes / 0.3 hours, averaging 5 minutes per experiment).
+- key result: honest operational negative — all 4 completed experiments were synthesis-only (0 compute-bound) across 20.9 wall-time minutes (21 minutes / 0.3 hours, averaging 5 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log): Exp9167: Trace the actual validation work and qualify a causal correction (13.72 min / 14min), Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths (7.12 min / 7min), Exp9166: Bind fourteen tasks and freeze diagnostic supports (0.1 min / 0min), and Exp9178: Test game-name invariance of explicit ARC mechanic routing (0.0 min / 0min); because 0 compute-bound tasks ran, locked gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU monitor was not available (no data available this milestone for GPU state telemetry).
+- acceptance: no data available this milestone
 
 

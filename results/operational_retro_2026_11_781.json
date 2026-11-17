@@ -1,0 +1,54 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.781",
+  "generated_at": "2026-11-17T06:56:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 20.9,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9167: Trace the actual validation work and qualify a causal correction",
+      "duration_minutes": 13.72,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths",
+      "duration_minutes": 7.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9166: Bind fourteen tasks and freeze diagnostic supports",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9178: Test game-name invariance of explicit ARC mechanic routing",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.781 completed 4 synthesis-only experiments (0 compute-bound) in 20.9 wall-time minutes (21 minutes / 0.3 hours, averaging 5 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 4 completed synthesis-only experiments were Exp9167: Trace the actual validation work and qualify a causal correction (13.72 minutes / 14min), Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths (7.12 minutes / 7min), Exp9166: Bind fourteen tasks and freeze diagnostic supports (0.1 minutes / 0min), and Exp9178: Test game-name invariance of explicit ARC mechanic routing (0.0 minutes / 0min). Because 0 compute-bound experiments ran and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is null and DualGPURunner did not apply.",
+  "bottlenecks_identified": [
+    "Validation-trace and causal-correction qualification latency in Exp9167: synthesis-only Exp9167: Trace the actual validation work and qualify a causal correction required 13.72 minutes (14min) of the 20.9-minute (21min / 0.3 hours) total wall time; because 0 compute-bound tasks ran and locked gpu_idle_on_compute_bound_tasks is null, 0% GPU on synthesis-only tasks is expected behavior and not a GPU bottleneck.",
+    "Fourteen-outcome reconciliation latency in Exp9179: synthesis-only Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths required 7.12 minutes (7min) after synthesis-only Exp9166: Bind fourteen tasks and freeze diagnostic supports completed in 0.1 minutes (0min) and synthesis-only Exp9178: Test game-name invariance of explicit ARC mechanic routing completed in 0.0 minutes (0min).",
+    "Timing fallback reconstruction: the live git-log path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 20.9 wall-time minutes (21 minutes / 0.3 hours).",
+    "Unavailable GPU monitor telemetry: the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU state), though 0 compute-bound experiments executed and no task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache validation-work traces and causal-correction qualification artifacts in synthesis-only Exp9167: Trace the actual validation work and qualify a causal correction (13.72 minutes / 14min) so validation tracing does not re-scan full inputs sequentially.",
+    "Pass the cached fourteen-task bindings and frozen diagnostic supports from synthesis-only Exp9166: Bind fourteen tasks and freeze diagnostic supports (0.1 minutes / 0min) and explicit ARC mechanic routing invariance outputs from synthesis-only Exp9178: Test game-name invariance of explicit ARC mechanic routing (0.0 minutes / 0min) directly into synthesis-only Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths (7.12 minutes / 7min).",
+    "Persist direct per-experiment start and completion timestamps in conductor artifacts to avoid retro_timing_fallback disk-mtime reconstruction when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability before future compute-bound experiments run while keeping DualGPURunner restricted strictly to compute-bound tasks loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache validation-work traces and causal-correction qualification inputs in synthesis-only Exp9167 (13.72 minutes / 14min).",
+    "Share cached fourteen-task bindings and frozen diagnostic supports from synthesis-only Exp9166 (0.1 minutes / 0min) directly with fourteen-outcome reconciliation in synthesis-only Exp9179 (7.12 minutes / 7min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor availability before future compute-bound runs."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "Milestone 2026.11.781 completed 4 synthesis-only experiments (0 compute-bound) in 20.9 wall-time minutes (21 minutes / 0.3 hours, averaging 5 minutes per experiment), with wall time concentrated in Exp9167: Trace the actual validation work and qualify a causal correction at 13.72 minutes (14min) and Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths at 7.12 minutes (7min), while Exp9166: Bind fourteen tasks and freeze diagnostic supports took 0.1 minutes (0min) and Exp9178: Test game-name invariance of explicit ARC mechanic routing took 0.0 minutes (0min). Because 0 compute-bound tasks ran, locked gpu_idle_on_compute_bound_tasks is null, GPU monitor telemetry was not available (no data available this milestone), and DualGPURunner did not apply, the highest-leverage improvements for the next milestone are caching validation-work traces in Exp9167, sharing fourteen-task bindings between Exp9166 and Exp9179, and restoring direct timestamp logging."
+}
