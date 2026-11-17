@@ -22236,3 +22236,13 @@ code |
 | 2026-11-17 02:45 UTC | Milestone 2026.11.781 activated | OK | 14 tasks queued |
 | 2026-11-17 03:44 UTC | Exp9166: Bind fourteen tasks and freeze diagnostic | OK | 93 passed, 1 warning in 55.74s |
 | 2026-11-17 04:56 UTC | Exp9167: Trace the actual validation work and qual | OK | 97 passed, 1 warning in 66.38s (0:01:06) |
+| 2026-11-17 05:05 UTC | Exp9168: Execute the complete causally corrected v | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9167-causal-validation.causal_fix_ready_score (actual=0 == expected=1) |
+| 2026-11-17 05:07 UTC | Exp9169: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9168-forward-qualification) |
+| 2026-11-17 05:07 UTC | Exp9170: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9169-logit-runtime, exp9169-logit-runtime) |
+| 2026-11-17 05:07 UTC | Exp9171: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9169-logit-runtime, exp9169-logit-runtime) |
+| 2026-11-17 05:07 UTC | Exp9172: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9169-logit-runtime, exp9169-logit-runtime) |
+| 2026-11-17 05:07 UTC | Exp9173: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9170-logits-a, exp9171-logits-b, exp9172-logits-c) |
+| 2026-11-17 05:07 UTC | Exp9174: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9173-logit-admission) |
+| 2026-11-17 05:07 UTC | Exp9175: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9173-logit-admission) |
+| 2026-11-17 05:07 UTC | Exp9176: Audit static and future benefit with exac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9173-logit-admission) |
+| 2026-11-17 05:07 UTC | Exp9177: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9169-logit-runtime) |
