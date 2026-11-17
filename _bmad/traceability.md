@@ -5117,3 +5117,23 @@ is claimed during planning. Validation evidence is recorded in ops notes.
 | exp9163-learning-audit | FR-06/FR-11 | REQ-REPORT-9163-V780 / SCENARIO-REPORT-9163-V780 | results/experiment_9163_v780_learning_audit.json | Proposed |
 | exp9164-complete-cost | FR-05/FR-08/NFR-01 | REQ-REPORT-9164-V780 / SCENARIO-REPORT-9164-V780 | results/experiment_9164_v780_complete_cost.json | Proposed |
 | exp9165-capstone | FR-10/FR-12 | REQ-REPORT-9165-V780 / SCENARIO-REPORT-9165-V780 | results/experiment_9165_v780_capstone.json | Proposed |
+
+
+## V781 planned research tasks — 2026-11-16
+
+| Requirement | Scenario | Proposed deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-9166-V781 | SCENARIO-REPORT-9166-V781 | `results/experiment_9166_v781_contract.json` | Planned; not executed |
+| REQ-REPORT-9167-V781 | SCENARIO-REPORT-9167-V781 | `results/experiment_9167_v781_causal_validation.json` | Planned; not executed |
+| REQ-REPORT-9168-V781 | SCENARIO-REPORT-9168-V781 | `results/experiment_9168_v781_forward_qualification.json` | Planned; not executed |
+| REQ-REPORT-9169-V781 | SCENARIO-REPORT-9169-V781 | `results/experiment_9169_v781_logit_runtime.json` | Planned; not executed |
+| REQ-REPORT-9170-V781 | SCENARIO-REPORT-9170-V781 | `results/experiment_9170_v781_logits_a.json` | Planned; not executed |
+| REQ-REPORT-9171-V781 | SCENARIO-REPORT-9171-V781 | `results/experiment_9171_v781_logits_b.json` | Planned; not executed |
+| REQ-REPORT-9172-V781 | SCENARIO-REPORT-9172-V781 | `results/experiment_9172_v781_logits_c.json` | Planned; not executed |
+| REQ-REPORT-9173-V781 | SCENARIO-REPORT-9173-V781 | `results/experiment_9173_v781_logit_admission.json` | Planned; not executed |
+| REQ-REPORT-9174-V781 | SCENARIO-REPORT-9174-V781 | `results/experiment_9174_v781_static_energy.json` | Planned; not executed |
+| REQ-REPORT-9175-V781 | SCENARIO-REPORT-9175-V781 | `results/experiment_9175_v781_delayed_learning.json` | Planned; not executed |
+| REQ-REPORT-9176-V781 | SCENARIO-REPORT-9176-V781 | `results/experiment_9176_v781_decision_audit.json` | Planned; not executed |
+| REQ-REPORT-9177-V781 | SCENARIO-REPORT-9177-V781 | `results/experiment_9177_v781_complete_cost.json` | Planned; not executed |
+| REQ-REPORT-9178-V781 | SCENARIO-REPORT-9178-V781 | `results/experiment_9178_v781_arc_mechanic_routing.json` | Planned; not executed |
+| REQ-REPORT-9179-V781 | SCENARIO-REPORT-9179-V781 | `results/experiment_9179_v781_capstone.json` | Planned; not executed |

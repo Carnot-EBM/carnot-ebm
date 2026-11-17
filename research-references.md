@@ -57277,3 +57277,85 @@ a forecast pass. The retained subprocess wait still has an unknown underlying
 cause; targeted diagnostics must resolve it if reproduced. Retire the old
 sum-of-ceilings schedule. Smaller collection units may preserve all 900 answers
 and their original roles; no shorter answer cap or favorable subset is allowed.
+## 2026-11-16 — V781 planning scan: causal execution and interpretable calibration changes
+
+Recorded before writing the V781 design and queue. All eight primary topics and
+six secondary channels were checked. V780 is scheduling-complete; its scientific
+branches did not execute. The completion archive still ends at V779. Use the
+V780 primaries and conductor log for its outcomes.
+
+### New findings and experimental implications
+
+- **Newly inspected:** [Yates covariance decomposition of the Brier score,
+  2603.05544](https://arxiv.org/abs/2603.05544), March 4, 2026;
+  [full method](https://arxiv.org/html/2603.05544v1). It separates squared mean
+  bias, variance mismatch and correlation deficit. Carnot can compute this
+  identity directly on sealed predictions, without selecting calibration bins.
+  Use population moments on identical supports. Evaluate the covariance form
+  when a variance is zero. This is a descriptive diagnostic, not an estimator
+  of irreducible factual uncertainty or a replacement acceptance gate.
+- **Newly inspected:** [Discrimination, Calibration, and Ranking,
+  2611.02215](https://arxiv.org/abs/2611.02215), November 1, 2026, and its
+  [author code](https://github.com/rcprati/discrimination-calibration-ranking).
+  The paper distinguishes probability losses from ranking metrics and their
+  aggregation units. Retain qid grouping and report Brier components alongside
+  tie-aware AUROC. Do not infer calibrated confidence from ranking alone.
+- **New citation lead:** [On the Difficulty of Sequence-Level Supervised
+  Learning for Autoregressive Language Models,
+  2611.16736](https://arxiv.org/abs/2611.16736), November 12, 2026. Two studied
+  sequence-level objectives are unbounded below; the authors also analyze a
+  stop-gradient moment-matching direction. This does not reject all sequence
+  objectives. It supports keeping this milestone's Qwen weights frozen and
+  testing the existing small verifier loss before proposing generator training.
+
+### Primary-topic coverage and decisions
+
+| Topic | Inspected primary work | Use or deferral |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [Energy-Based Reasoners](https://arxiv.org/abs/2611.08977), November 6, 2026 | Latent refinement is promising. Algorithmic benchmark success does not certify natural factual claims. Defer generator training. |
+| Neural constraints | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025 | Encoded linear feasibility differs from extracting correct language constraints. No new solver branch. |
+| Ising in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302), January 30, 2026 | Learned local updates address optimization. Do not treat optimization quality as sampling fidelity. |
+| Hallucinations | [Spilled Energy](https://arxiv.org/abs/2602.18671), February 21, 2026; [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 15, 2026 | Complete energy versus normalized-probability controls. Retain generator-identity and gauge limitations. |
+| KAN | [Online spline locality](https://arxiv.org/abs/2602.02056), February 2, revised June 19, 2026 | Reuse the qualified local coefficient learner. Include guard scans and durable writes in its hardware cost boundary. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484), revised May 19, 2026; [DCCD](https://arxiv.org/abs/2603.03305), revised June 27, 2026 | Separate structural validity from semantic correctness. Defer decoding changes until a useful verifier is measured. |
+| Accelerated sampling | [Million-p-bit FPGA computer](https://arxiv.org/abs/2606.25313), June 24, 2026 | Communication affects sample quality. Require operation-matched local evidence before hardware claims. |
+| Continual learning | [Continual Calibration](https://arxiv.org/abs/2604.23987), April 27, 2026; Brier decomposition above | Preserve temperature-only learning, untouched retention and delayed feedback. No exchangeability guarantee is imported. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** Searched NeurIPS/ICML/ICLR EBM material. The indexed
+  [ICLR 2026 EBT paper](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [NRGPT paper](https://openreview.net/pdf/6feb228b3e35f6b1a41057403fa2aed7deebda65.pdf)
+  were accessible as paper text. No review-score or newest-submission claim follows.
+- **Semantic Scholar:** Browser citation requests failed. Direct API retrieval
+  succeeded for [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=100)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=100):
+  46 and 11 returned records, with no next page. These are retrieved counts,
+  not exhaustive citation totals. The November 12 sequence-loss paper was
+  checked on arXiv. [ARM–EBM v4](https://arxiv.org/abs/2512.15605) remains a
+  probabilistic equivalence result, not a truth certificate.
+- **Hugging Face:** Checked the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671).
+  Method claims above use the author paper, not the feed summary.
+- **GitHub Trending:** Checked [all languages](https://github.com/trending?since=weekly)
+  and [Python](https://github.com/trending/python?since=weekly). Browser snapshots
+  were two months old. No current trend ranking follows. Checked
+  [EBT author code](https://github.com/alexiglad/EBT); new code leads came from
+  primary papers rather than a verified current trending list.
+- **Extropic:** Checked [Writing](https://extropic.ai/writing) and the
+  September 4 [Z1T update](https://extropic.ai/writing/z1t/). Sparse probabilistic
+  hardware co-design remains relevant. Vendor figures do not measure Carnot's
+  complete dense-model service or establish local TSU access.
+- **Logical Intelligence:** Checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The inspected product page provides no reproducible new architecture result
+  that removes Carnot's independent-verification gap.
+
+### Local evidence that changes the next attempt
+
+Exp9153 measured 32 of 674 obligations and retained 642 as censored. It separated
+watchdog ceilings from measured runtime. Its remaining probe launched one test
+for at most 20 seconds. The probe did not instrument descendants. Its code then
+unconditionally recorded `slow_child_causal_trace` as failed with cause unknown.
+This is a demonstrated limit of the diagnostic method, not a diagnosis of the
+underlying slow child. A changed attempt must capture the process tree and the
+actual expensive operation, then demonstrate a bounded correction with unchanged
+assertions. A bare wait stack or a larger timeout cannot qualify a rerun.

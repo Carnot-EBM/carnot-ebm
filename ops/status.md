@@ -19483,3 +19483,37 @@ Complete service costs and unconditional reconciliation retain absent evidence.
 The exposed panel cannot close independent-verifier gaps. No experiments ran,
 no hardware was contacted, and no activation or external publication occurred.
 Planning validation follows in a separate entry.
+
+## V781 proposed research milestone — 2026-11-16
+
+Prepared matching design and queue files for `2026.11.781`: exactly fourteen
+tasks, Exp9166–Exp9179, across four phases. V780's original design and active
+queue are preserved byte for byte. The active roadmap, completion archive and
+research conductor retain their pre-planning hashes. No activation or push.
+
+V780 corrected validation-ceiling accounting but did not identify the slow
+operation or qualify complete execution. The next attempt requires descendant
+and operation traces, a demonstrated correction and the full unchanged check
+union before any Qwen work. Three complete shards retain all 900 human answers.
+Five static arms and six causal learning arms preserve their original bounds.
+Independent branch audits add descriptive Brier components; complete costs and
+a bounded ARC mechanic-precedence test precede unconditional reconciliation.
+
+The literature scan covers the requested primary and secondary channels, with
+retrieval limits recorded in `research-references.md`. Planned requirements,
+architecture and traceability agree with the contract. The exposed human panel
+cannot close independent-verification gaps. The ARC task claims no live solve.
+
+Planning validation: schema and complete Markdown/YAML object equality pass for
+all fourteen tasks; all 22 gate fields resolve to declared current producers.
+Exclusion-manifest, gate, harness-fit and overdue-priority lints pass. The ARC
+floor check passes with method-only scope and no public-level solve requirement.
+The adversarial review's prerequisite and raw-logit retention findings are fixed.
+Ninety-five selected tests pass, including private CLI authority/audit checks
+and real hard-exit recovery (E2E-018/020/021). Scoped Ruff check, spec-reference
+coverage and whitespace checks pass. No new experiment or model run occurred.
+
+Repository-wide reconciliation still reports pre-existing document freshness
+and missing test/spec references. Formatting checks also flag the unchanged
+`audit_roadmap_gates.py` and `exclusion_manifest_lint.py` tools. This proposal
+does not claim a whole-repository reconciliation or repair unrelated tooling.

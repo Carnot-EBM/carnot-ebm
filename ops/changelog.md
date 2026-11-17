@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-11-16 — Stage V781 causal qualification and learning plan
+
+- Record the requested literature scan before design, including exact Brier
+  components, ranking/calibration distinctions and citation-following limits.
+- Preserve the V780 design and queue. Write both matching V781 files with
+  fourteen tasks, Exp9166–Exp9179, in four phases; no active-queue change.
+- Require observed validation cause and corrective reproduction before full
+  qualification. Preserve all cohort, method and acceptance obligations.
+- Retain the mandated frozen Qwen GGUF and operation-accurate load-only class.
+  Keep independent static/online audits, six-arm continuous learning and raw
+  pre/post logits; add a bounded shared ARC selector-precedence experiment.
+- Reconcile planned specs, architecture, traceability and status. All fourteen
+  complete task objects and 22 gate bindings agree. Ninety-five selected tests,
+  scoped lint/spec checks and adversarial contract review pass. Existing global
+  freshness/spec gaps and two unchanged-tool formatting issues remain recorded.
+- No research experiments, activation, hardware operation or push performed.
+
 ## 2026-11-17 UTC — Operational retrospective for milestone 2026.11.780
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.780`: updated `results/operational_retro_2026_11_780.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 3 completed experiments (3 compute-bound, 0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment).

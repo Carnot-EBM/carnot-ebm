@@ -115832,3 +115832,178 @@ consumers, E2E-018/021, Ruff, strict mypy, explicit spec tracing and unchanged
 adversarial/strict-row scanners. E2E-020 is inapplicable to this reporting-only
 change. Broad repository health runs once, separately; affected failures
 disqualify readiness. Status, changelog and traceability are conductor-owned.
+
+
+## V781 planned research contract — 2026-11-16
+
+Exactly fourteen tasks, Exp9166 through Exp9179, are proposed across four phases.
+The complete design objects match research-roadmap-next.yaml. No execution is
+claimed. Original authority, thresholds and failure history remain unchanged.
+
+### REQ-REPORT-9166-V781 — Bind fourteen tasks and freeze diagnostic supports
+
+Produce `results/experiment_9166_v781_contract.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9166-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9167-V781 — Trace the actual validation work and qualify a causal correction
+
+Produce `results/experiment_9167_v781_causal_validation.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9167-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9168-V781 — Execute the complete causally corrected validation revision
+
+Produce `results/experiment_9168_v781_forward_qualification.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9168-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9169-V781 — Qualify frozen Qwen forwards and all three shard budgets
+
+Produce `results/experiment_9169_v781_logit_runtime.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9169-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9170-V781 — Collect complete frozen Qwen logit shard A
+
+Produce `results/experiment_9170_v781_logits_a.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9170-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9171-V781 — Collect complete frozen Qwen logit shard B
+
+Produce `results/experiment_9171_v781_logits_b.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9171-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9172-V781 — Collect complete frozen Qwen logit shard C
+
+Produce `results/experiment_9172_v781_logits_c.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9172-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9173-V781 — Admit the exact full cohort and retain separate fit views
+
+Produce `results/experiment_9173_v781_logit_admission.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9173-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9174-V781 — Train the five fixed human energy decision arms
+
+Produce `results/experiment_9174_v781_static_energy.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9174-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9175-V781 — Measure continuous small-energy learning with exact recovery
+
+Produce `results/experiment_9175_v781_delayed_learning.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9175-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9176-V781 — Audit static and future benefit with exact Brier components
+
+Produce `results/experiment_9176_v781_decision_audit.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9176-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9177-V781 — Measure complete service costs and operation-matched hardware limits
+
+Produce `results/experiment_9177_v781_complete_cost.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9177-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9178-V781 — Test game-name invariance of explicit ARC mechanic routing
+
+Produce `results/experiment_9178_v781_arc_mechanic_routing.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9178-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9179-V781 — Reconcile fourteen outcomes and retire unchanged failed paths
+
+Produce `results/experiment_9179_v781_capstone.json` under the full V781 task contract.
+Require actual per-unit evidence, exact gate operands and a valid verdict class.
+Preserve original scientific bounds, source authority and declared compute class.
+
+### SCENARIO-REPORT-9179-V781 — evidence and refusal controls
+
+Complete inputs permit the declared work; absent or failed prerequisites block.
+Tampered evidence and incomplete owned validation cannot establish readiness.
+Status: planned; implementation and experiment validation remain pending.

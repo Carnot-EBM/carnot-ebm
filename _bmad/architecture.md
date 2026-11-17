@@ -1248,3 +1248,27 @@ Ising hardware does not implement those operations automatically. The design and
 staged queue are normative; no independent generalization, Rust speedup, board
 operation or ARC solve is claimed. The global architecture reconciliation date
 is unchanged because this is a scoped proposal, not a whole-repository audit.
+
+## Proposed V781 causal qualification boundary — 2026-11-16
+
+The proposed fourteen-task milestone, Exp9166–Exp9179, first requires an observed
+validation bottleneck and a demonstrated correction. Exp9153 corrected watchdog
+accounting but did not identify the expensive operation. Descendant instrumentation
+and controlled reproduction precede the complete unchanged validation union.
+Targeted diagnostic success alone cannot authorize model work.
+
+Qualified frozen Qwen3.8-27B forwards feed three complete 100-question shards.
+Admission retains all 900 answers and separate static/online initialization views.
+Five static arms and six delayed-learning arms retain their original acceptance
+bounds. The audit evaluates each eligible branch independently and adds only a
+descriptive Brier moment decomposition. Learning retains original pre/post logits,
+durable state and real hard-exit recovery evidence.
+
+Complete service costs retain operation-specific hardware limits. An independent
+CPU ARC task tests explicit mechanic precedence in the shared selector without
+claiming a live solve. Unconditional reconciliation records blocked branches.
+Exposed human development evidence cannot close independent-generalization gaps.
+These are planned components, not implemented results; no queue is activated.
+The V780 design and queue are preserved in change-proposals. See
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml` for the matching V781 contract.
