@@ -116621,3 +116621,41 @@ denominators, not a scientific null or retryable partial. Recommend exact repeat
 scope retirement in evidence without editing the manifest. Keep independent
 generalization open and current_science_paper_ready=false. Applicable private
 E2E-018/021, owned checks and immutable publication receipts qualify readiness.
+
+Exp9207 implementation contract (2026-11-17): freeze the complete V783 queue,
+embedded design, preserved V782 contracts, producer hashes, exclusions and scheduler
+log before reduction. Recompute original human groups, three shard union, costs,
+donor controls and obligation union through the retained V782 work, with its
+original hashes. Original methods and assertions retain their authority.
+The two static, seven learning and three secondary CES bounds use independently
+eligible predictions; absent predictions have null metrics and zero denominators.
+The separate observed-disagreement and missing-A2 sensitivity branches require
+Exp9197 method authority and actual frozen predictions. Neither branch rescues
+primary energy. A scheduler receipt is not a scientific primary.
+
+SCENARIO-REPORT-9207-V783-CONTROLS: all fourteen ordered outcomes survive missing
+inputs and failed scientific gates. Missing file, missing field, observed zero and
+boolean readiness remain distinct. Authenticate scheduler refusal hashes and log
+skips; refuse rehashed invented science, changed producer bytes and task mutation.
+Retirement requires all four prior-failure fields, an authenticated exact repeated
+verdict and the same logical execution role. Changed methods and unconditional
+accounting are not failed scientific reruns. Preserve Exp9181/9182 and V781
+retirement without editing the manifest. Owned statement and actual child CLI
+coverage is100 percent with zero exclusions; private success, refusal, tamper and
+cold replay follow E2E-018/021. Existing recovery controls cover E2E-020; no learner
+or recovery behavior changes. Broad Python health is recorded once, separately
+from affected readiness. No model work, queue activation or external publication.
+
+Exp9207 observed scope (2026-11-17): Exp9194 is disqualified with all four
+readiness scores zero. Exp9195 and Exp9197 have authenticated scheduler refusal
+artifacts. Exp9196 and Exp9198–9206 have authenticated log-only upstream-retired
+skips and absent scientific primaries. With this capstone, V783 has two executed
+administrative tasks and twelve skips. V782 remains four executed and ten skipped.
+No corpus prefilter, complete forward qualification, independent label method,
+primary human comparison, CES comparison or label sensitivity was measured.
+Exact matching downstream execution skips support retirement recommendations;
+Exp9196's changed scheduler verdict does not satisfy exact repeated-verdict
+retirement. Exposed-panel hypotheses stay open. A later untouched human cohort
+is warranted only after a qualified useful development signal with matched controls.
+Architecture scope is the existing CPU reporting lifecycle, source authentication,
+row reduction and checked primary publisher; no learner or runtime changes occur.
