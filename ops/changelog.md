@@ -23951,3 +23951,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-16: Exp9165: Reconcile fourteen outcomes and exact continuation limits (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9165_v780_capstone.json
 - 2026-11-17: Exp9166: Bind fourteen tasks and freeze diagnostic supports (⚠️ Research Finding) — honest_verdict=complete_null_v781_contract; results/experiment_9166_v781_contract.json
 - 2026-11-17: Exp9167: Trace the actual validation work and qualify a causal correction (⚠️ Research Finding) — honest_verdict=complete_disqualified_causal_validation; results/experiment_9167_v781_causal_validation.json
+- 2026-11-17: Exp9178: Test game-name invariance of explicit ARC mechanic routing (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_mechanic_routing; results/experiment_9178_v781_arc_mechanic_routing.json
