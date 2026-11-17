@@ -1,0 +1,47 @@
+...F...                                                                  [100%]
+=================================== FAILURES ===================================
+_______________________________ test_private_cli _______________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T100025-1667979-fdd0d162/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T100025-1667979-fdd0d162/test_private_cli0')
+
+    def test_private_cli(work, tmp_path):
+        """SCENARIO-REPORT-9180-V782: real E2E-018/021 success, refusal and rehashed tamper."""
+        source, output = tmp_path / "work.json", tmp_path / (e.NAME + ".json")
+        c.atomic_json(source, work)
+        result = child(tmp_path, "--from-work", source, "--output", output)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp9180] phase=start_no_model_load
+E         [exp9180] phase=publication_before
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp9180] phase=refused:candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home...05] phase=after_subprocess_strict_rows completed=1 pending=0\n[exp9180] phase=refused:candidate_rejected\n', stderr='').returncode
+
+tests/python/test_v782_contract_9180.py:165: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[test9180] child_before ('--from-work', PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T100025-1667979-fdd0d162/test_private_cli0/work.json'), '--output', PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T100025-1667979-fdd0d162/test_private_cli0/experiment_9180_v782_contract.json'))
+[test9180] child_after 1 mpleted=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp9180] phase=refused:candidate_rejected
+ 
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v782_contract_9180.py::test_private_cli - AssertionE...
+1 failed, 6 passed, 1 warning in 93.97s (0:01:33)

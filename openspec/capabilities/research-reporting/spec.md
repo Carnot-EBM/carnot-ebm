@@ -116154,6 +116154,22 @@ The planned experiment shall implement its exact V782 design/queue task contract
 and publish `results/experiment_9180_v782_contract.json`. It shall preserve original
 scientific roles, thresholds, historical authority and terminal failure evidence.
 
+Freeze fourteen ordered complete objects and rendered prompt equality against the
+independently pinned V782 design/queue. Preserve both V781 authorities verbatim.
+Authenticate Exp9166, its producer work and original Exp9126/9132 snapshots;
+retain TRAIN150/CAL50/TEST100,900 siblings and three lexical100 rosters. Keep
+source/method readiness independent of the failed validation diagnostic. Freeze
+five static/six online arms, two/seven bounds and Brier moment supports. Freeze
+CES from token-weighted A1-correct TRAIN entropies, empirical CDF<=x and
+sqrt(F0(mean(H))*F0(max(H))), three directional AUROC contrasts,10000 paired
+TEST-qid draws seed782190 and tail0.05/3. Invalid draws stay unavailable; TEST
+never tunes the reference. CES cannot rescue primary gates. Bind621+53 and all
+affected V780/V781/V782 assertions once, preserve historical failures and ten
+ARC regressions separately, and grant zero historical qualification credit.
+Require actual owned checks,100 percent owned statements without exclusions,
+private child CLI success/refusal/tamper/replay without PYTHONPATH and checked
+atomic publication. No model work, queue activation or scientific execution.
+
 ### SCENARIO-REPORT-9180-V782 — Evidence and refusal
 
 Verify the task's frozen conditions with per-unit rows, exact gate operands,
