@@ -116070,3 +116070,40 @@ Preserve original scientific bounds, source authority and declared compute class
 Complete inputs permit the declared work; absent or failed prerequisites block.
 Tampered evidence and incomplete owned validation cannot establish readiness.
 Status: planned; implementation and experiment validation remain pending.
+
+### REQ-REPORT-9178-V781 — Frozen routing qualification (2026-11-17)
+
+Explicit recognized mechanic text SHALL select its existing primitive branch
+before game identity fallbacks. Recognition includes all existing aliases in the
+eight mechanic branches, including graph. Absent and unrecognized mechanics
+SHALL retain existing game and action fallback behavior and operator ordering.
+The experiment SHALL freeze seed 7819178, units, source byte hashes and baseline
+rows before correction. The registry defines names and mechanics only; no game
+source, solver, model load, generation or environment episode is permitted.
+
+Each recognized branch SHALL cross empty, matching, all conflicting fallback
+names and an unseen name with a fixed action model. The empty-name selection is
+the reference. Unknown and absent mechanics cross the same names and action
+controls. Both recommend_approach call sites SHALL run under controlled registry
+and survey fixtures. Rows are deterministic development controls, not independent
+games. Readiness requires all matrix and legacy controls plus real owned checks,
+100 percent owned statements without exclusions and private CLI replay. Existing
+unrelated test failures remain separate repository health evidence.
+
+### SCENARIO-REPORT-9178-V781 — Routing and custody controls
+
+Before correction, record every game-name mismatch against the empty-name
+reference. After correction, all recognized permutations match and legacy rows
+remain identical. Private real CLI success, missing-input refusal, cold replay
+and rehashed tamper rejection run outside the checkout without PYTHONPATH.
+Publish only after actual adversarial and strict-row checker receipts pass.
+Use complete_null for deterministic method hardening; no solve, live reachability,
+leaderboard or independent generalization claim follows from these helper tests.
+
+Implementation for the 2026-11-17 routing contract: the existing selector now
+suppresses identity fallbacks for its recognized mechanic substrings. The owned
+experiment module is `carnot.reporting.arc_mechanic_routing_9178`; its standalone
+CLI and `tests/python/test_arc_mechanic_routing_9178.py` retain baseline custody,
+both recommendation call-site controls and private replay checks. Exact executed
+validation and final readiness belong to the experiment artifact and its bound
+checker sidecar. This change grants no live ARC discovery or solve credit.

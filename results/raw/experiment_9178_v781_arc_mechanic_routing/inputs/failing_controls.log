@@ -1,0 +1,603 @@
+F....FFFFFFFFFFFFFFFFFFFFFFF                                             [100%]
+=================================== FAILURES ===================================
+______________________________ test_frozen_matrix ______________________________
+
+    def test_frozen_matrix():
+        """Explicit mechanic routing must survive identity collisions without changing legacy rows."""
+        baseline = json.loads(BASELINE.read_bytes())
+        mismatches = []
+        for row in baseline['rows']:
+            actual = [o.operator for o in kit.select_primitive_operators(
+                mechanic_class=row['mechanic'], action_model=row['action_model'], game=row['game_name'])]
+            reference = [o.operator for o in kit.select_primitive_operators(
+                mechanic_class=row['mechanic'], action_model=row['action_model'], game='')]
+            if row['recognized']:
+                if row['before'] != reference:
+                    mismatches.append(row['unit_id'])
+>               assert actual == reference, row
+E               AssertionError: {'action_model': 'click', 'before': ['approach_dispatcher_operator', 'value_head_bridge_fix_operator', 'cheap_value_ro...hting_operator', 'controllable_novelty_embedding_operator', ...], 'condition': 'conflicting', 'game_name': 'sc25', ...}
+E               assert ['approach_di...perator', ...] == ['approach_di..._action_cost']
+E                 
+E                 At index 1 diff: 'value_head_bridge_fix_operator' != 'color_match_slot_sequence_verifier'
+E                 Left contains 13 more items, first extra item: 'per_level_reinduction_operator'
+E                 Use -v to get more diff
+
+tests/python/test_arc_mechanic_routing_9178.py:30: AssertionError
+____________________ test_all_existing_aliases[color_match] ____________________
+
+mechanic = 'color_match'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='color_match_slot_sequence_verifier', d...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+____________________ test_all_existing_aliases[color match] ____________________
+
+mechanic = 'color match'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='color_match_slot_sequence_verifier', d...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+___________________ test_all_existing_aliases[slot_sequence] ___________________
+
+mechanic = 'slot_sequence'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='color_match_slot_sequence_verifier', d...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+___________________ test_all_existing_aliases[slot sequence] ___________________
+
+mechanic = 'slot sequence'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='color_match_slot_sequence_verifier', d...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+__________________ test_all_existing_aliases[sprite_overlay] ___________________
+
+mechanic = 'sprite_overlay'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='sprite_overlay_resize_verifier', deriv...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+__________________ test_all_existing_aliases[sprite overlay] ___________________
+
+mechanic = 'sprite overlay'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='sprite_overlay_resize_verifier', deriv...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+____________ test_all_existing_aliases[pattern_match_sprite_resize] ____________
+
+mechanic = 'pattern_match_sprite_resize'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='sprite_overlay_resize_verifier', deriv...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+___________________ test_all_existing_aliases[sprite_resize] ___________________
+
+mechanic = 'sprite_resize'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='sprite_overlay_resize_verifier', deriv...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+______________________ test_all_existing_aliases[resize] _______________________
+
+mechanic = 'resize'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...d', 'click')))
+E             
+E             At index 1 diff: PrimitiveOperator(operator='value_head_bridge_fix_operator', derived_from_games=('exp4616_offline_live_bridge_disambiguation', 'exp4652_value_routing_cost_fix_live'), purpose='Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.', selector_tags=('value_head', 'bridge_fix', 'decision_point', 'candidate_ranking', 'graph_explore', 'live_path', 'transfer')) != PrimitiveOperator(operator='sprite_overlay_resize_verifier', deriv...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+________________ test_all_existing_aliases[config_substitution] ________________
+
+mechanic = 'config_substitution'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='glyph_rewrite_rule_verifier', derived_from_games=('bsqsshqpox', 'tr87'), purpose='Induce and execution-ground greedy glyph rewrite win predicates from config-substitution ex...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+_______________________ test_all_existing_aliases[glyph] _______________________
+
+mechanic = 'glyph'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='glyph_rewrite_rule_verifier', derived_from_games=('bsqsshqpox', 'tr87'), purpose='Induce and execution-ground greedy glyph rewrite win predicates from config-substitution ex...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+______________________ test_all_existing_aliases[config] _______________________
+
+mechanic = 'config'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='config_rule_verifier', derived_from_games=('s5i5', 'ft09', 'g50t', 'dc22'), purpose='Propose and execution-ground coverage, local-constraint, or toggle win predicates.', sel...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+______________________ test_all_existing_aliases[toggle] _______________________
+
+mechanic = 'toggle'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='config_rule_verifier', derived_from_games=('s5i5', 'ft09', 'g50t', 'dc22'), purpose='Propose and execution-ground coverage, local-constraint, or toggle win predicates.', sel...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+____________________ test_all_existing_aliases[constraint] _____________________
+
+mechanic = 'constraint'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='config_rule_verifier', derived_from_games=('s5i5', 'ft09', 'g50t', 'dc22'), purpose='Propose and execution-ground coverage, local-constraint, or toggle win predicates.', sel...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+__________________ test_all_existing_aliases[program_editor] ___________________
+
+mechanic = 'program_editor'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 15 diff: PrimitiveOperator(operator='cast_grid_phase_fsm_world_model', derived_from_games=('sc25', 'ar25', 'ka59', 'ft09'), purpose='Two-phase cast/config-grid toggle CSP followed by player navigation to an exit predicate.', selector_tags=('cast_grid', 'phase_fsm', 'config_toggle', 'navigation', 'world_model', 'verifier')) != PrimitiveOperator(operator='object_centric_representation_builder_operator', derived_from_games=('exp4700_object_centric_perception_proposal_live', 'exp4701_amortized_exploration_prior_go_explore_live'), purpose='Build connected-component ...
+E             
+E             ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+___________________ test_all_existing_aliases[object_motion] ___________________
+
+mechanic = 'object_motion'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+___________________ test_all_existing_aliases[object motion] ___________________
+
+mechanic = 'object motion'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+____________________ test_all_existing_aliases[reflection] _____________________
+
+mechanic = 'reflection'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+______________________ test_all_existing_aliases[reflect] ______________________
+
+mechanic = 'reflect'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+_______________________ test_all_existing_aliases[push] ________________________
+
+mechanic = 'push'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+____________________ test_all_existing_aliases[world_model] ____________________
+
+mechanic = 'world_model'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+________________________ test_all_existing_aliases[e3] _________________________
+
+mechanic = 'e3'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 6 diff: PrimitiveOperator(operator='per_level_reinduction_operator', derived_from_games=('lp85', 'm0r0', 'sp80', 'vc33'), purpose='Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.', selector_tags=('reinduction', 'level_up', 'deepening', 'goal_bias', 'transfer')) != PrimitiveOperator(operator='world_model_trust_energy_gate_operator', derived_from_games=('exp4604_world_model_trust_energy',), purpose='Rank executable world-model candidates by change-weighted held-ou...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+_______________________ test_all_existing_aliases[graph] _______________________
+
+mechanic = 'graph'
+
+    @pytest.mark.parametrize('mechanic', [
+        'cast_grid', 'cast grid', 'phase_fsm', 'two_phase_cast_grid',
+        'color_match', 'color match', 'slot_sequence', 'slot sequence',
+        'sprite_overlay', 'sprite overlay', 'pattern_match_sprite_resize', 'sprite_resize',
+        'resize', 'config_substitution', 'glyph', 'config', 'toggle', 'constraint',
+        'program_editor', 'object_motion', 'object motion', 'reflection', 'reflect',
+        'push', 'world_model', 'e3', 'graph',
+    ])
+    def test_all_existing_aliases(mechanic):
+        """Recognition uses existing substring semantics, including casing and overlapping labels."""
+        reference = kit.select_primitive_operators(mechanic_class=mechanic.upper())
+        for game in ['sc25', 'sb26', 're86', 'tr87', 'unseen_9178']:
+>           assert kit.select_primitive_operators(mechanic_class=mechanic.upper(), game=game.upper()) == reference
+E           AssertionError: assert (PrimitiveOpe...nsfer')), ...) == (PrimitiveOpe...nsfer')), ...)
+E             
+E             At index 15 diff: PrimitiveOperator(operator='cast_grid_phase_fsm_world_model', derived_from_games=('sc25', 'ar25', 'ka59', 'ft09'), purpose='Two-phase cast/config-grid toggle CSP followed by player navigation to an exit predicate.', selector_tags=('cast_grid', 'phase_fsm', 'config_toggle', 'navigation', 'world_model', 'verifier')) != PrimitiveOperator(operator='graph_astar_action_cost', derived_from_games=('tu93', 'lp85', 'cd82', 'sp80', 'cn04', 'm0r0', 'sk48', 'su15'), purpose='A* frontier priority: standing path cost plus verifier/action-cost heuristic.', selector_ta...
+E             
+E             ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_mechanic_routing_9178.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_frozen_matrix - A...
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[color_match]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[color match]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[slot_sequence]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[slot sequence]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[sprite_overlay]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[sprite overlay]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[pattern_match_sprite_resize]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[sprite_resize]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[resize]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[config_substitution]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[glyph]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[config]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[toggle]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[constraint]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[program_editor]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[object_motion]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[object motion]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[reflection]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[reflect]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[push]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[world_model]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[e3]
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_all_existing_aliases[graph]
+24 failed, 4 passed in 2.93s

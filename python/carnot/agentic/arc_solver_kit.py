@@ -486,6 +486,40 @@ def select_primitive_operators(
     mechanic = (mechanic_class or "").lower()
     action = (action_model or "").lower()
     gid = (game or "").lower()
+    # Recognized mechanics take priority; unknown text keeps historical game fallbacks.
+    if any(
+        marker in mechanic
+        for marker in (
+            "cast_grid",
+            "cast grid",
+            "phase_fsm",
+            "two_phase_cast_grid",
+            "color_match",
+            "color match",
+            "slot_sequence",
+            "slot sequence",
+            "sprite_overlay",
+            "sprite overlay",
+            "pattern_match_sprite_resize",
+            "sprite_resize",
+            "resize",
+            "config_substitution",
+            "glyph",
+            "config",
+            "toggle",
+            "constraint",
+            "program_editor",
+            "object_motion",
+            "object motion",
+            "reflection",
+            "reflect",
+            "push",
+            "world_model",
+            "e3",
+            "graph",
+        )
+    ):
+        gid = ""
 
     if (
         "cast_grid" in mechanic
