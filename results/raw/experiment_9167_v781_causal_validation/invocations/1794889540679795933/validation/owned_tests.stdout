@@ -1,0 +1,60 @@
+.........F......                                                         [100%]
+=================================== FAILURES ===================================
+___________________ test_real_receipts_coverage_and_refusals ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T042541-1590910-3624c4b1/test_real_receipts_coverage_an0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb4aabe5df0>
+
+    def test_real_receipts_coverage_and_refusals(tmp_path: Path, monkeypatch: Any) -> None:
+        """REQ-REPORT-9167-V781: exact logs, complete statements and commands gate qualification."""
+        from copy import deepcopy
+        import runpy
+        from coverage import Coverage
+        from carnot.reporting import causal_validation_9167 as r
+    
+        source = tmp_path / "tiny.py"
+        source.write_text("executed = 123\n")
+        tracer = Coverage(
+            config_file=False,
+            data_file=str(tmp_path / ".coverage"),
+            include=[str(source)],
+            data_suffix=True,
+        )
+        tracer.start()
+        runpy.run_path(str(source))
+        tracer.stop()
+        tracer.save()
+        (tmp_path / "coverage.ini").write_text(
+            "[run]\nparallel=true\ndata_file="
+            + str(tmp_path / ".coverage")
+            + "\n[report]\nexclude_lines=\n"
+        )
+        monkeypatch.setattr(r, "ROOT", tmp_path)
+        monkeypatch.setattr(r, "OWNED", [])
+        monkeypatch.setattr(r, "SEAM", "tiny.py")
+        monkeypatch.setattr(r, "BASELINE", tmp_path / "before.py")
+        r.BASELINE.write_text("")
+        monkeypatch.setattr(r, "BASELINE_PIN", r.sha256_file(r.BASELINE))
+        argv = [os.sys.executable, "-c", 'print("actual child log")']
+        spec = dict(name="real", argv=argv)
+        monkeypatch.setattr(r, "commands", lambda raw: [spec])
+        work = dict(raw=str(tmp_path), commands=[spec])
+        r.verify(work, r.time.monotonic() + 120)
+>       assert work["coverage"]["statement_percent"] == 100
+E       assert 0.0 == 100
+
+tests/python/test_causal_validation_9167.py:269: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9167] phase=real_before
+[exp8205] phase=before_subprocess_real completed=0 pending=1
+[exp8205] phase=after_subprocess_real completed=1 pending=0
+[exp9167] phase=real_after
+=============================== warnings summary ===============================
+tests/python/test_causal_validation_9167.py::test_private_cli_success_refusal_tamper_cold_replay
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_validation_9167.py::test_real_receipts_coverage_and_refusals
+1 failed, 15 passed, 1 warning in 94.43s (0:01:34)

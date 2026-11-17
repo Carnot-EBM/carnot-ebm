@@ -115892,11 +115892,40 @@ Produce `results/experiment_9167_v781_causal_validation.json` under the full V78
 Require actual per-unit evidence, exact gate operands and a valid verdict class.
 Preserve original scientific bounds, source authority and declared compute class.
 
+V781 causal validation freezes seed 7819167, one retained derivation node with its
+module fixture, and a 900-second diagnostic ceiling inside the unchanged
+3300/1200/300-second budget. Trace Python descendants before imports. Retain
+PID/PPID/argv, setup/call/teardown events, operation counters, elapsed time,
+wait stacks and tracing overhead. Parent waits alone cannot establish a cause.
+Preserve Exp9153 primary/trace and original checker/assertion bytes. Only a
+trace-demonstrated correction may change the existing runner seam. Reuse of
+immutable work must bind bytes, validator and configuration within one invocation;
+current assertions and negative controls still execute. Publish an exact unique
+obligation union for Exp9168 with unknown remaining cost separate from ceilings.
+No model work, whole-suite qualification or independent verifier claim follows.
+
 ### SCENARIO-REPORT-9167-V781 — evidence and refusal controls
 
 Complete inputs permit the declared work; absent or failed prerequisites block.
 Tampered evidence and incomplete owned validation cannot establish readiness.
-Status: planned; implementation and experiment validation remain pending.
+Controls must exercise missing files, absent fields, observed zero, trace child
+startup/exit, original fixture phases, tamper refusal and cold CLI replay outside
+the checkout. Require actual 100 percent newly owned statements, zero exclusions,
+scoped Ruff/type/spec receipts and both terminal scanners. Unresolved diagnosis
+is terminal blocked; failed affected checks disqualify. Documentation reconciliation
+is conductor-owned.
+Implementation: `causal_validation_9167.py`, `validation_trace_9167.py`,
+`validation_reuse_9167.py` and the direct Exp9167 CLI. The existing reader uses
+content/checker/config-bound structural preprocessing within each real checker
+call. Historical checker code and original assertions remain unchanged.
+Measured diagnostic result: repeated structural field traversal was observed.
+The corrected fixture and three initial assertions completed. The full module
+was censored during the real CLI tamper control. Diagnosis consumed925.472 seconds,
+exceeding900. Three intermediate log hashes no longer match their reused paths.
+Five foreign Python launches remove the bootstrap PYTHONPATH and lack operation
+hooks. These are recorded failures, not successful qualification. Readiness stays
+zero. Owned unit/real-child coverage and final checker receipts are retained in
+the Exp9167 primary. Exp9168 must retain the complete obligation union.
 
 ### REQ-REPORT-9168-V781 — Execute the complete causally corrected validation revision
 

@@ -1,0 +1,47 @@
+{
+  "argv": [
+    "env",
+    "CARNOT_9167_TRACE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794887803075372321/corrected",
+    "PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794887803075372321/corrected/bootstrap:/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot",
+    "CARNOT_9125_NODE_LOG=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794887803075372321/corrected/nodes.jsonl",
+    "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794887803075372321/corrected/coverage.ini",
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-m",
+    "coverage",
+    "run",
+    "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794887803075372321/corrected/coverage.ini",
+    "-m",
+    "pytest",
+    "-n0",
+    "-o",
+    "addopts=",
+    "--no-cov",
+    "-p",
+    "carnot.reporting.receipt_qualification_9125",
+    "-q",
+    "-s",
+    "tests/python/test_forward_evidence_runner_9111.py"
+  ],
+  "assertions": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_forward_evidence_runner_9111.py",
+    "sha256": "sha256:7110d0143cadb8f272b54847ea3c4cc6ebf77e29864923db4003120a58baf340"
+  },
+  "corrected_ceiling_s": 400,
+  "diagnostic_budget_s": 900,
+  "files": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_reuse_9167.py",
+      "sha256": "sha256:63c5abb7bbe5a8741dfbc98a503a97a3931c921731985e7c21a2cf495e1bd2c2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_trace_9167.py",
+      "sha256": "sha256:d6106adc4f9c2b7c9f3cff0769e5aaf7549f71b01169b015a365af83f4454793"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/forward_evidence_runner_9111.py",
+      "sha256": "sha256:df83f4fdb5959ca914d34a0dc84466c022b596806fc354514f4780f99973f58b"
+    }
+  ],
+  "frozen_ns": 187967602848628,
+  "previous_probe_elapsed_s": 487
+}
