@@ -116397,3 +116397,38 @@ Verify the task's frozen conditions with per-unit rows, exact gate operands,
 closed verdict class, operation-accurate model receipts and independent replay.
 Missing external inputs block; failed owned checks disqualify. Use the task's
 scoped tests and applicable private E2E checks before readiness. Planned only.
+
+#### Exp9193 frozen implementation scope — 2026-11-17
+
+REQ-REPORT-9193-V782 and SCENARIO-REPORT-9193-V782 SHALL authenticate the
+complete visible/embedded design and active fourteen-task queue before reduction.
+Frozen producer pins and exact original retained implementation bytes SHALL
+preserve V781 retirement, diagnostic and ARC disqualifications. No positive
+upstream gate applies to administrative accounting. All fourteen ordered slots
+include canonical primaries, authenticated scheduler alternatives, or explicit
+terminal absence with failed operands. Missing field/file and observed zero differ.
+
+Original TEST100 qids (siblings retained) define both static bounds; the original
+ten delayed streams and TEST100 retention define seven learning bounds. No new
+predictions exist when those branches are skipped: their metrics remain null,
+with zero measured denominators. CES completeness and three ranking bounds use
+the frozen TRAIN-correct token CDF, TEST-qid bootstrap, 10000 draws and tail0.05/3;
+secondary scores never promote primary energy science. Exposed development has
+independent_generalization_score=0. Untouched confirmation is warranted only
+after useful controlled development evidence qualifies.
+
+Retirement requires all four prior-failure fields and authenticated exact prior
+and current verdicts in matching execution scope. Unmeasured science is not a
+scientific null. Keep V781's four executed/ten skipped administrative outcomes,
+original assertions, source shards, model provenance, historical FoVer G1–G4,
+and hardware exclusions. No queue activation or external publication occurs.
+
+Private CLI success/refusal/tamper/cold replay without PYTHONPATH, E2E-018/021,
+original direct consumers, scoped Ruff/format, strict mypy and explicit-path spec
+tracing SHALL qualify publication. Owned unit plus real-child statements require
+100 percent coverage and zero exclusions. E2E-020 is inapplicable: no learning or
+recovery implementation changes. One bounded full-suite run records repository
+health separately. All subprocesses inherit one monotonic deadline with 3300s
+measurement, 1200s final validation and 300s publication reserves. Status,
+changelog and traceability reconciliation is delegated to the conductor by the
+operator's final instruction.
