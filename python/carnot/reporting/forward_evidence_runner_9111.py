@@ -33,7 +33,6 @@ from carnot.reporting.primary_publication import publish_primary
 from carnot.reporting.spline_basis_methods_8986 import gate
 from carnot.reporting.v709_execution import child, execute
 from scripts import adversarial_verify as av
-from carnot.reporting.validation_reuse_9167 import current_report, preprocessing
 
 Json = dict[str, Any]
 ROOT = Path(__file__).resolve().parents[3]
@@ -199,7 +198,7 @@ def measure(evidence: Json, raw: Path) -> Json:
     candidate = raw / "historical_judge_diagnostic_input.json"
     atomic_json(candidate, diagnostic)
     work["diagnostic_input_reference"] = ref(candidate)
-    after = current_report(candidate)
+    after = dict(av._verify_artifact_impl(candidate))
     work["historical_judge_diagnostic"] = dict(
         original_quarantine_preserved=True,
         judge_ready_score=0,
@@ -275,8 +274,7 @@ def structural_controls(diagnostic: Json) -> list[Json]:
     rows = []
     for name, value in cases:
         flags: list[Any] = []
-        with preprocessing():
-            av.check_tautology(av._flatten_metrics(value), flags)
+        av.check_tautology(av._flatten_metrics(value), flags)
         passed = any(f.severity == "critical" for f in flags)
         rows.append(
             dict(
@@ -645,7 +643,7 @@ def replay(path: Path) -> Json:
             or historical_report(evidence)["flags"] != value["original_flag_rows"]
         ):
             raise ValueError("historical_evidence_drift")
-        actual_diagnostic = current_report(diagnostic_path)
+        actual_diagnostic = dict(av._verify_artifact_impl(diagnostic_path))
         if actual_diagnostic != work["historical_judge_diagnostic"]["repaired_reader_report"]:
             raise ValueError("diagnostic_report_drift")
         derived = structural_derivations(diagnostic_input, evidence)

@@ -116183,12 +116183,44 @@ The planned experiment shall implement its exact V782 design/queue task contract
 and publish `results/experiment_9181_v782_causal_validation.json`. It shall preserve original
 scientific roles, thresholds, historical authority and terminal failure evidence.
 
+The synchronous tautology checker shall lazily evaluate the invariant ARC-null
+descriptor at most once per invocation, preserving pair order and exact flags.
+Direct descriptor calls and mutation/revision/configuration controls remain valid.
+The normal reader shall cease using per-pair whole-artifact hashing. Diagnostic
+attempts use exclusive paths and seal streams only after child exit. Explicit
+entrypoint tracing shall observe PID/PPID/argv and operations without PYTHONPATH.
+Freeze one 900-second diagnostic deadline (300/450/150 original/changed/overhead),
+then complete the unchanged target module and seven tamper cases under the shared
+3300-second measurement deadline. Reserve 1200 seconds for verification and 300
+for publication. Censored observations establish bounds only. Readiness requires
+exact flags, changed operation counts, immutable logs, child observation and all
+affected checks with 100 percent newly owned statements and zero exclusions.
+Publish the deduplicated original/additional obligation union for Exp9182; this
+targeted result grants no model or full-suite authority. Units are checker calls
+and unique test nodes; exclusions are empty, seed is 7829181, and timing is actual
+monotonic elapsed seconds, never the watchdog ceiling.
+
 ### SCENARIO-REPORT-9181-V782 — Evidence and refusal
 
 Verify the task's frozen conditions with per-unit rows, exact gate operands,
 closed verdict class, operation-accurate model receipts and independent replay.
 Missing external inputs block; failed owned checks disqualify. Use the task's
 scoped tests and applicable private E2E checks before readiness. Planned only.
+
+Compare retained original and changed checker flags on identical ordinary, ARC,
+declared-null and excluded pairs. Assert one structural evaluation, zero wrapper
+hashes and mutation detection on the next invocation. Reject reused log paths,
+changed bound evidence, narrowed obligations and invented readiness. Exercise
+real sanitized child startup, CLI success/refusal/tamper/cold replay and child
+coverage. Preserve every original assertion and report unavailable operands as
+missing_file/missing_field separately from observed zero.
+
+Implementation note (2026-11-17): the shared checker owns the lazy invariant;
+`causal_validation_9181.py` and `validation_diagnostics_9181.py` own the producer
+and process evidence. `test_causal_validation_9181.py` supplies the new controls;
+the original forward-reader, V781 cache and private lifecycle assertions remain
+unchanged. The canonical Exp9181 primary records actual qualification, coverage
+and unfinished work. Its targeted score never grants full Exp9182 or model work.
 
 ### REQ-REPORT-9182-V782 — Execute the complete causally corrected validation revision
 
@@ -116345,4 +116377,3 @@ Verify the task's frozen conditions with per-unit rows, exact gate operands,
 closed verdict class, operation-accurate model receipts and independent replay.
 Missing external inputs block; failed owned checks disqualify. Use the task's
 scoped tests and applicable private E2E checks before readiness. Planned only.
-

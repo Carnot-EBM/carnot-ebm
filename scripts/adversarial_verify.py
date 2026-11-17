@@ -1848,6 +1848,8 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     except ValueError as error:
         panel_counts = {}
         flags.append(Flag("STRUCTURAL_COUNT_EVIDENCE", "critical", str(error)))
+    arc_null_checked = False
+    arc_null_descriptor = None
     for k1, k2, v1, v2 in _numeric_pairs(d):
         if _legitimate_pair(k1, k2):
             continue
@@ -1896,7 +1898,14 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             continue
         declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
         if declared_null_delta is None:
-            declared_null_delta = _declared_arc_nondegenerate_firstwin_null_descriptor(d, k1, k2)
+            # Artifact structure is invariant during this synchronous call.
+            if not arc_null_checked:
+                arc_null_descriptor = _declared_arc_nondegenerate_firstwin_null_descriptor(
+                    d, "first_win", "first_win"
+                )
+                arc_null_checked = True
+            if "first_win" in k1.lower() and "first_win" in k2.lower():
+                declared_null_delta = arc_null_descriptor
         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
         # honest_verdict declares a no-value null (verifier_router_no_value_added,
         # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
@@ -8034,5 +8043,8 @@ def main(argv: list[str]) -> int:  # pragma: no cover
     return 1 if flagged else 0
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
+    from carnot.reporting.validation_diagnostics_9181 import startup
+
+    startup()
     sys.exit(main(sys.argv))

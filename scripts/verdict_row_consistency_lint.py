@@ -455,4 +455,7 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
+    from carnot.reporting.validation_diagnostics_9181 import startup
+
+    startup()
     raise SystemExit(main(sys.argv[1:]))
