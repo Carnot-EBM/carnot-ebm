@@ -116365,6 +116365,26 @@ closed verdict class, operation-accurate model receipts and independent replay.
 Missing external inputs block; failed owned checks disqualify. Use the task's
 scoped tests and applicable private E2E checks before readiness. Planned only.
 
+#### Exp9192 frozen compatibility protocol (20261117)
+
+Recognized mechanics shall keep the Exp9178 game-name invariance while placing
+cast-grid, color-slot, sprite, glyph verifier/matcher, config verifier/grounding,
+object-motion or reinduction primitives first, as required by the original ten
+assertions. Unknown and absent mechanics shall retain their exact legacy tuples.
+Orchestration dispatch remains present and executable independently of first slot.
+Freeze all124 original rows, eight mechanic groups, all aliases, ten original
+nodes and direct consumer modules before implementation. No exclusions, seed
+7829192, equality numerator0/1 and denominator1 per row; independent groups0.
+Reproduce original failures on current and authenticated pre9178 source, retaining
+assertion identities. Measure recommendation and a public policy action path on
+label-free scripted frames. A selector never reached by that entry is explicitly
+live_path_observed=false. No game environment, solve, source RE or BFS is allowed.
+Readiness requires complete parity, every affected check and100 percent newly
+owned statements with zero exclusions. Private child CLI success, refusal,
+tamper and cold replay plus E2E-018/021 qualify publication; learning/recovery
+is unchanged so E2E-020 is inapplicable. Historical model provenance remains
+reference-only; MODEL_SPECS=[], all current model and token counters0.
+
 ### REQ-REPORT-9193-V782 — Reconcile fourteen outcomes and retire unchanged failed paths
 
 The planned experiment shall implement its exact V782 design/queue task contract

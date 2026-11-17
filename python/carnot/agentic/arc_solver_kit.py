@@ -486,6 +486,7 @@ def select_primitive_operators(
     mechanic = (mechanic_class or "").lower()
     action = (action_model or "").lower()
     gid = (game or "").lower()
+    recognized_mechanic = False
     # Recognized mechanics take priority; unknown text keeps historical game fallbacks.
     if any(
         marker in mechanic
@@ -519,6 +520,7 @@ def select_primitive_operators(
             "graph",
         )
     ):
+        recognized_mechanic = True
         gid = ""
 
     if (
@@ -709,6 +711,22 @@ def select_primitive_operators(
             if name == "graded_goal_energy_search_heuristic_operator":
                 expanded.append("energy_fitness_qd_generator_operator")
         names = tuple(expanded)
+    if recognized_mechanic:
+        # Direct consumers need specialists first; dispatch remains available by name.
+        specialists = next(
+            group
+            for group in (
+                ("cast_grid_phase_fsm_world_model",),
+                ("color_match_slot_sequence_verifier",),
+                ("sprite_overlay_resize_verifier",),
+                ("glyph_rewrite_rule_verifier", "glyph_rewrite_matcher"),
+                ("config_rule_verifier", "config_rule_grounding"),
+                ("object_motion_world_model",),
+                ("per_level_reinduction_operator",),
+            )
+            if group[0] in names
+        )
+        names = specialists + tuple(name for name in names if name not in specialists)
     return tuple(registry[name] for name in names)
 
 

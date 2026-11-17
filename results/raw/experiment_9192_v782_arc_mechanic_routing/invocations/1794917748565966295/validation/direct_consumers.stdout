@@ -1,0 +1,58 @@
+.............................................F.F........................ [ 28%]
+........................................................................ [ 56%]
+........................................................................ [ 85%]
+......................................                                   [100%]
+=================================== FAILURES ===================================
+____________________________ test_measure_and_build ____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T121757-1704144-a74492cd/test_measure_and_build0')
+
+    def test_measure_and_build(tmp_path):
+        """Current rows and source gates determine readiness without model activity."""
+        from carnot.reporting import arc_mechanic_routing_9178 as m
+    
+        work = m.measure(ROOT, tmp_path / "raw", "20261117")
+        assert all(c["passed"] for c in work["inspection"]["checks"])
+        assert len(work["rows"]) == 124
+>       assert all(r["passed"] for r in work["rows"])
+E       assert False
+E        +  where False = all(<generator object test_measure_and_build.<locals>.<genexpr> at 0x7ff1747f8d40>)
+
+tests/python/test_arc_mechanic_routing_9178.py:124: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9178] phase=preconditions_before
+[exp9178] phase=matrix_before
+[exp9178] phase=matrix_after
+_____________________________ test_replay_refusals _____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T121757-1704144-a74492cd/test_replay_refusals0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1747cfa40>
+
+    def test_replay_refusals(tmp_path, monkeypatch):
+        """Source, primitive and row drift remain refusals even with freshly computed checksums."""
+        from carnot.reporting import arc_mechanic_routing_9178 as m
+    
+        work = m.measure(ROOT, tmp_path / "work", "20261117")
+        monkeypatch.setattr(m, "receipts_pass", lambda *_: True)
+        value = m.build(work, {})
+>       assert value["verdict_class"] == "null" and value["mechanic_routing_ready_score"] == 1
+E       AssertionError: assert ('disqualified' == 'null'
+E         
+E         - null
+E         + disqualified)
+
+tests/python/test_arc_mechanic_routing_9178.py:189: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9178] phase=preconditions_before
+[exp9178] phase=matrix_before
+[exp9178] phase=matrix_after
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_measure_and_build
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_replay_refusals
+2 failed, 252 passed, 1 warning in 91.76s (0:01:31)
