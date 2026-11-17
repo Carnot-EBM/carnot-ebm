@@ -1321,3 +1321,26 @@ queue activation or independent-generalization claim occurs during planning.
 The V782 design/queue are preserved; current contracts are the V783 design and
 `research-roadmap-next.yaml`. This scoped update does not attest whole-repository
 architecture freshness.
+
+## Proposed V784 replay and target boundary — 2026-11-17
+
+V784 proposes fourteen tasks, Exp9208–Exp9221. V783 closed with two executed
+administrative tasks and twelve skips. Full contract equality did not qualify
+cold replay or historical consumers. The new plan binds each inherited protocol
+to its original owner and isolates historical input roots before corpus and
+complete forward validation. Original assertions, pins and failures remain.
+
+The human-method branch authenticates original source custody independently of
+administrative readiness. It measures which targets original annotations identify
+and proves unchanged ambiguity bounds without model work. Cross-model siblings
+cannot identify prompt-recoverable error categories. Missing evidence stays absent.
+
+Frozen Qwen forward features still feed the original five static and six delayed
+learning arms. All 900 answers, original roles, primary bounds, guards and recovery
+remain fixed. Complete service costs precede accelerator claims. No runtime code,
+generator weights, active queue or ARC behavior changes during planning. Exposed
+human development evidence cannot close independent generalization. This is a
+scoped proposal, not a new whole-repository architecture reconciliation.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed execution: `research-roadmap-next.yaml`. V783 design/queue bytes are preserved.

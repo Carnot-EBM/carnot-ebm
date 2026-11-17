@@ -24010,3 +24010,17 @@ no milestone was activated and no historical failure or quarantine was cleared.
   changes, experiment runs, active-queue edits, conductor edits, activation or push.
 - 2026-11-17: Exp9194: Bind fourteen tasks and preserve human methods and V782 failures (⚠️ Research Finding) — honest_verdict=complete_disqualified_v783_contract; results/experiment_9194_v783_contract.json
 - 2026-11-17: Exp9207: Reconcile fourteen outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9207_v783_capstone.json
+
+## 2026-11-17 — Stage V784 research milestone
+
+- Record the requested literature scan before experiment design, including the
+  November taxonomy revision and exact secondary-source retrieval limits.
+- Preserve V783 design/activated queue bytes. Create matching design and proposed
+  YAML with fourteen ordered tasks, Exp9208–Exp9221, in four phases.
+- Address the measured missing-protocol cold replay and mutable historical-input
+  failures before corpus/forward qualification; preserve all original assertions.
+- Independently authenticate the human label-method branch. Add target-evidence
+  availability checks while retaining original ambiguity and scientific bounds.
+- Retain frozen mandated Qwen, operation-accurate substrates, continuous delayed
+  learning, complete costs and hardware limits. Reconcile proposed requirements,
+  architecture, traceability and status. No implementation, activation or push.

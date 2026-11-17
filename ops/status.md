@@ -19584,3 +19584,21 @@ contracts are `openspec/change-proposals/research-roadmap-vNEXT.md` and
 The active roadmap, conductor and exclusion manifest are unchanged. No experiment
 has run for V783 and no exposed-development result can close independent
 generalization. Planning checks are recorded below after completion.
+
+## V784 research plan staged — 2026-11-17
+
+Staged milestone 2026.11.784: exactly fourteen tasks, Exp9208–Exp9221, across
+four phases. V783 design/activated queue bytes are preserved. The current queue,
+conductor, completion archive and exclusions remain unchanged.
+
+V783's contract matched but private replay lacked entropy_reference_protocol;
+historical V782 consumers read newer mutable authority. All four readiness gates
+stayed zero, so twelve tasks skipped. V784 qualifies original protocol ownership
+and isolated historical input roots before the lossless corpus and full-validation
+steps. The independently authenticated human-method branch audits target evidence
+and exact ambiguity bounds even if administrative validation fails.
+
+The original 900-answer Qwen panel, five static arms, six delayed-learning arms,
+all primary bounds and full-cost boundaries remain. The literature scan covers
+all requested channels and records access limits. Planning performs no scientific
+execution, activation, external publication or push. Validation follows separately.

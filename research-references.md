@@ -57570,3 +57570,87 @@ Compute exact endpoint bounds over observed annotator disagreements; separately
 show the wider envelope when second annotations are absent. This planning
 derivation is not a theorem claimed by the cited papers. It does not replace
 the original A1 target, statistical intervals or delayed-learning gates.
+
+## 2026-11-17 — V784 planning scan: replay closure and identifiable human targets
+
+Recorded before V784 experiment design. This scan checked 2025–2026 work in
+all eight requested topics and the six secondary channels. Papers motivate
+experiments; they do not establish Carnot results. Existing references remain.
+
+### Findings selected for the next design
+
+- **Updated taxonomy authority:** Kim et al., [What Hallucinations Have We
+  Measured? Semantic Illusion, Confabulation, and Expressed Uncertainty,
+  2610.38520v2](https://arxiv.org/abs/2610.38520v2), November 11 revision of
+  the October 28 paper. The authors separate expressed uncertainty from errors
+  and use equivalent-prompt re-elicitation to distinguish two error classes.
+  The repository previously inspected v1. Useful next test: determine which
+  targets the existing human annotations actually identify before reporting
+  category-specific detector performance. One archived answer cannot establish
+  whether another prompt would recover knowledge. Missing taxonomy evidence
+  must remain unavailable; no regex or model judge becomes human truth.
+- **Retained annotation sensitivity:** [The Labeling Problem,
+  2610.08026](https://arxiv.org/abs/2610.08026) and [When Ground Truth Is Not
+  Ground Truth, 2611.04697](https://arxiv.org/abs/2611.04697) still motivate
+  exact label-ambiguity bounds. V783 never executed its method. Preserve its
+  observed-disagreement and missing-A2 sets, response-consistent labels and
+  original A1 primary target. Target-identifiability and ambiguity sensitivity
+  answer different questions; neither may select a better-looking result.
+- **Retained continuous-learning comparison:** [Continual Calibration,
+  2604.23987](https://arxiv.org/abs/2604.23987), April 27, studies calibration
+  loss under sequential fine-tuning. Continue the already frozen small-head
+  learner with delayed feedback and a temperature-only comparator. Its
+  exchangeability assumptions do not establish a guarantee for Carnot streams.
+- **Energy interpretation:** [ARM–EBM equivalence,
+  2512.15605v4](https://arxiv.org/abs/2512.15605v4), May 25 revision, connects
+  autoregressive probabilities and energies. Keep additive-logit and matched
+  probability controls. A probability representation is not factual authority.
+
+### Primary topic coverage and decisions
+
+| Topic | Checked primary source | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [Energy-Based Reasoners, November 6, 2026](https://arxiv.org/abs/2611.08977) | Latent energy descent is a generator research lead. First complete the pending human verifier comparison; no generator retraining. |
+| Neural constraint satisfaction | [HardNet++, May 26 revision](https://arxiv.org/abs/2604.19669) | Explicit nonlinear constraints differ from extracting factual truth. The retired local repair stack stays closed. |
+| Ising in ML | [Neural Ising Machines via Unrolling and Zeroth-Order Training, January 30, 2026](https://arxiv.org/abs/2602.00302) | Learned update rules optimize explicit Ising objectives; they do not fix replay or natural-label authority. |
+| Hallucination detection/mitigation | Taxonomy and labeling papers above | Test target identifiability and label sensitivity without inventing annotation categories. |
+| KAN | [Online spline locality, 2026](https://arxiv.org/abs/2602.02056); [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306) | Keep local small-head updates and full retention costs; no unchanged importance-anchor retry. |
+| Energy-guided/constrained generation | [The Missing Piece in Pre-trained Model Evaluation, May 27, 2026](https://arxiv.org/abs/2605.28020) | EBD uses external rewards with frozen base models. Defer steering until a qualified useful verifier exists. |
+| FPGA/thermodynamic sampling | [Programmable Probabilistic Computer with 1,000,000 p-bits, June 24, 2026](https://arxiv.org/abs/2606.25313) | Include communication and host work. Distributed sampling cannot automatically accelerate dense forward logits or durable updates. |
+| Continual/online constraints | Continual Calibration and spline locality above | Preserve causal labels, operational CAL guards, untouched TEST retention and hard-exit recovery. |
+
+### Secondary checks and retrieval limits
+
+- **OpenReview:** searches for NeurIPS/ICML/ICLR EBMs returned the
+  [EBT ICLR 2026 paper](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [Learning Navigable World Models via Latent Energy Shaping](https://openreview.net/pdf?id=fnLHZcXZUW).
+  The EBT forum redirected to browser verification. No new review decision is
+  inferred from inaccessible forum content.
+- **Semantic Scholar:** both requested citation endpoints returned HTTP429:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=1000)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=1000).
+  Browser fallback also failed. No current citation list or count was verified.
+- **Hugging Face papers:** checked [HalluScoring 2026](https://huggingface.co/papers/2609.38355),
+  a lead for unseen-question/model evaluation. Existing source-authority failures
+  are not reopened by a paper-feed entry. Use the original paper for method claims.
+- **GitHub Trending:** [weekly Python](https://github.com/trending/python?since=weekly)
+  returned a two-month-old snapshot. No current trending rank is asserted.
+  The [author EBT repository](https://github.com/alexiglad/EBT) remains accessible.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T, September 4, 2026](https://extropic.ai/writing/z1t/).
+  Sparse probabilistic/digital co-design is a future operation-mapping lead;
+  vendor energy estimates are not local complete-service measurements.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The product description supplies no newly verified reproducible local method.
+
+### Local prerequisite evidence
+
+Exp9194's full-object contract passed, but its private CLI cold replay refused
+with missing `entropy_reference_protocol`. Its direct-consumer checks also used
+V782 pins against the newer mutable design/queue; the V782 reducer then saw
+`exp9194-contract` outside its task list. These are concrete replay and historical
+input-isolation failures. Owned coverage later reached 100 percent, but the
+published required-check gate stayed false. Exp9207 records two executed tasks
+and twelve skips. No lossless corpus prefilter or human-label method ran.
+The next continuation must fix and test these exact failure paths while retaining
+original assertions, pins, receipts and scientific bounds.

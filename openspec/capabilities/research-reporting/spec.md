@@ -116659,3 +116659,93 @@ retirement. Exposed-panel hypotheses stay open. A later untouched human cohort
 is warranted only after a qualified useful development signal with matched controls.
 Architecture scope is the existing CPU reporting lifecycle, source authentication,
 row reduction and checked primary publisher; no learner or runtime changes occur.
+
+## Proposed V784 research milestone — 2026-11-17
+
+Status: planned, not implemented or experimentally qualified. Exact task objects
+are in research-roadmap-next.yaml and the matching vNEXT design. All original
+V783 requirements and observed failures remain authoritative history.
+
+### REQ-REPORT-9208-V784: Protocol-owner replay and historical input isolation
+
+Bind inherited entropy/ambiguity protocols to original owning hashes. Run historical suites against private original inputs, keeping every assertion. Require all original affected checks, real cold replay and full fourteen-task equality before readiness.
+
+SCENARIO-REPORT-9208-V784: Missing/rehashed protocols and successor-queue contamination must fail; old failures and pins remain unchanged.
+
+### REQ-REPORT-9209-V784: Lossless complete corpus traversal
+
+Require qualified replay and contract gates. Stream every original recursive JSON path; potential sentinels and Unicode escapes use the original decoder/classifier. Qualify the full target and all affected checks.
+
+SCENARIO-REPORT-9209-V784: Byte filtering cannot remove paths, assertions or malformed-input behavior. Censored baseline timing cannot establish full-corpus speedup.
+
+### REQ-REPORT-9210-V784: Complete forward qualification
+
+Execute all original 621 plus 53 added nodes and every affected V780–V784 obligation once for the corrected revision. Include replay and historical-input regressions.
+
+SCENARIO-REPORT-9210-V784: Only complete current receipts establish forward_validation_ready_score; subsets and old receipts do not.
+
+### REQ-REPORT-9211-V784: Independent target and ambiguity methods
+
+Authenticate original Exp9097 custody and Exp9126/9132 role authority independently of administrative readiness. Audit factuality, explicit uncertainty and same-generator re-elicitation evidence. Prove original affine ambiguity endpoints.
+
+SCENARIO-REPORT-9211-V784: Absent taxonomy evidence remains unavailable. Cross-generator siblings cannot identify SI/CF. Shared response labels persist across repeated retention. No model or guessed annotation.
+
+### REQ-REPORT-9212-V784: Frozen forward runtime and complete shard budgets
+
+Use mandated Qwen3.8-27B GGUF, actual CUDA and forward-only receipts. Qualify serial/chunk128 parity and all three complete 100-qid shard budgets.
+
+SCENARIO-REPORT-9212-V784: No token generation, replacement model, shorter cap or favorable subset qualifies the runtime.
+
+### REQ-REPORT-9213-V784: Original human shard A
+
+Collect lexical qids 0:100 and all three siblings using the frozen forward protocol and exact model/runtime hashes.
+
+SCENARIO-REPORT-9213-V784: Checkpoint all 300 slots and token evidence; failed or empty rows remain visible.
+
+### REQ-REPORT-9214-V784: Original human shard B
+
+Collect lexical qids 100:200 and all three siblings independently of shard A outcomes.
+
+SCENARIO-REPORT-9214-V784: No alternate response or role may replace an incomplete original slot.
+
+### REQ-REPORT-9215-V784: Original human shard C
+
+Collect lexical qids 200:300 and all three siblings independently of other shard outcomes.
+
+SCENARIO-REPORT-9215-V784: Retain every original role and slot; current scoring is not historical answer generation.
+
+### REQ-REPORT-9216-V784: Exact population admission
+
+Join exactly 900 answers/300 qids with original TRAIN150/CAL50/TEST100 roles and separate online TRAIN100 initialization. Recompute token statistics and reject label leakage.
+
+SCENARIO-REPORT-9216-V784: No favorable intersection; empty-answer escalation and original denominators remain.
+
+### REQ-REPORT-9217-V784: Five fixed calibrated energy decisions
+
+Fit the original prevalence, probability, energy, combined and donor arms. Seal TEST predictions; original calibration and convergence settings remain.
+
+SCENARIO-REPORT-9217-V784: Readiness measures valid complete predictions, not effect. Original two-bound and risk criteria govern benefit.
+
+### REQ-REPORT-9218-V784: Continuous delayed small-head learning
+
+Run six original arms with original AdaGrad, delayed feedback, CAL promotion, TEST retention and real hard exits. Preserve all seven bounds and full durable state.
+
+SCENARIO-REPORT-9218-V784: Predictions precede feedback; TEST never selects updates. Repeated retention is not extra independent data. Require E2E-020 exact recovery.
+
+### REQ-REPORT-9219-V784: Independent primary, target and sensitivity audit
+
+Audit each eligible static/online branch independently, preserving two/seven primary and three CES bounds. Apply separately qualified ambiguity reducer; report identified target scope.
+
+SCENARIO-REPORT-9219-V784: Missing secondary authority blocks only its branch. Unavailable category labels cannot be inferred. No sensitivity, diagnostic or CES result rescues failed primary bounds.
+
+### REQ-REPORT-9220-V784: Complete eligible service costs
+
+Measure original first20 TEST qids/all60 siblings in three fresh processes with cold/warm model work, rejected updates, all guards, fsync and recovery.
+
+SCENARIO-REPORT-9220-V784: Keep nonoverlapping measured fractions and hardware operation limits; no assumed board acceleration or energy figures.
+
+### REQ-REPORT-9221-V784: Unconditional fourteen-outcome reconciliation
+
+Account for all fourteen tasks including independent label methods and scheduler-only skips. Preserve V783 two-executed/twelve-skipped closure and exact source authority.
+
+SCENARIO-REPORT-9221-V784: External blocking is terminal, not partial; retire only authenticated repeated failed scope. Keep historical G1–G4 separate from exposed-development science.

@@ -4,73 +4,74 @@
 # docs_audit_report — 2026-11-17
 
 ## TL;DR (stranger's 30-second take)
-I’d close the tab. The opening explains the product clearly, but contradictory licenses, a 33-card research scrapbook, and benchmark claims without direct evidence links make it hard to trust.
+I’d close the tab after an initially clear opening. Conflicting licenses, unexplained benchmark headlines, and a wall of research activity make the project look harder to trust than to try.
 
 ## TOP 3 PROBLEMS
-1. The license contradicts itself — hero says **MIT-0**, footer says **Apache 2.0**.
-2. Precise numbers arrive without inspectable methodology — **“What we measured.”**
-3. Research operations, hardware, and failure retrospectives overwhelm the user’s reason to try the tool — **Capabilities, Evidence, Writing.**
+1. The page contradicts itself on licensing — **MIT-0 in the hero, Apache 2.0 in the footer**.
+2. Twelve result cards promise evidence but provide no direct artifact links, uncertainty, or usable comparison context — **What we measured**.
+3. The quick start doesn’t deliver its promise: installation is elsewhere, and the Rust example neither verifies an answer nor runs independently — **Install and verify in five lines**.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **Individual word limits** — largest bento body ≈72 words; longest result-card body ≈47; footer paragraph ≈11 — none breaches the specified limits. No section exceeds 20 cards.
-- **Whole page** — 33 cards, plus four headline statistics — consider roughly 10–15 cards total. Individually short cards still create a reading assignment.
-- **What we measured** — 12 result cards spanning verification, training, hardware, decoding, routing, and tool use — cap at three strong, relevant results.
-- **Seven capabilities, one framework** — seven cards, including development operations and integration surfaces — cap at three or four things a user can actually check.
-- **From the blog** — seven previews, approximately 326 words including section copy and headings — cap at two previews and the existing archive link.
-- **Navigation** — 12 links plus two outbound buttons — cap at four or five primary destinations. A stranger should not need to understand the documentation hierarchy before starting.
+- **Threshold check** — No individual card breaches the stated word limits: the longest bento body is approximately 72 words; result cards stay below 60; the footer stays below 100. No section exceeds 20 cards. The problem is cumulative volume.
+- **Entire page** — 33 cards across the hero, problem, explanation, capabilities, results, and writing sections — prioritize the few that help someone understand, trust, and try Carnot.
+- **What we measured** — 12 cards spanning code, safety, hardware, training, extraction, routing, and tool use — cap at 3–4 representative results with inspectable evidence.
+- **From the blog** — 7 cards, several foregrounding cheating, fatal flaws, or retractions — cap at 2–3. This currently reads like a catalog of reasons to distrust the system.
+- **Hero statistics / Recent progress** — Four statistics plus another result card before the explanation gets going — retain one useful outcome. “382 completed milestones” measures internal activity, not usefulness.
+- **Navigation** — 12 navigation links plus two external-service buttons — cap at approximately 4–5 primary destinations. The fixed, unwrapped desktop navigation also appears vulnerable to clipping given its 1,200-pixel container.
 
 ### Internal jargon
-- **Headline statistics / Recent progress** — “AUROC,” “FoVer,” “5-seed dual-condition,” “architecture-only,” “Repinned from v2” — the page never explains what the headline score measures in practical terms.
-- **Evidence** — “CRANE,” “VeriCoT,” “PRM-BiasBench,” “HalluGuard v3,” “CCTU,” “TP rate” — a stranger cannot reliably distinguish benchmarks, algorithms, and Carnot components.
-- **Math reasoning result** — “EstimationVerifier SVAMP AUC” and “FoVer baseline” — several unfamiliar names appear before the reader learns what was compared.
-- **Test-Time Compute & PREM** — the acronyms are expanded, but “PREM variance” and “intrinsic motivation for continuous self-learning” remain unexplained promises. What does enabling this do for the user?
-- **Preprint / Evidence** — “paper-v6,” “publication gate,” “k=5” — draft identifiers, internal acceptance language, and parameter notation belong beside methodology.
-- No raw experiment IDs or `foo=True` flags appear in this version.
+- **Hero / Recent progress** — `AUROC`, `FoVer`, “5-seed dual-condition,” “architecture-only,” “Repinned from v2” — the first performance claim requires knowledge of both evaluation methodology and project history.
+- **What we measured** — `CRANE`, `VeriCoT`, `SVAMP`, `GSM8K`, `PRM-BiasBench`, `HalluGuard v3`, `CCTU` — names substitute for explanations of what was tested and why it matters.
+- **Math extraction / Adversarial audit** — `TP rate`, `k=5` — neither the measured population nor the ensemble parameter is explained.
+- **APIs & portable memory** — `MCP`, `VerdictRecord`, `SessionMemory`, “candidate-level reranking” — implementation vocabulary crowds out the integration outcome.
+- **Test-Time Compute & PREM** — The acronyms are expanded, but “PREM variance” and “intrinsic motivation for continuous self-learning” still explain nothing actionable to a newcomer.
+- **Writing** — `NTK`, “Deep Think rounds,” “self-distillation” — the page assumes readers already understand the research conversation.
 
 ### Per-milestone narrative
-- **Recent progress** — “Repinned from v2 0.9857 after pre-submission adversarial audit” reads like a release-note correction pasted into the hero.
-- **Preprint** — “paper-v6” and “pending operator-initiated upload” report internal workflow status. Neither helps a stranger judge the tool.
-- **Research operations** — the planner, inner agent, adversarial verification pass, and JSON artifact workflow describe how the project operates, not what a visitor can accomplish.
-- No individual numbered milestone retrospectives appear. The **“382 completed milestones”** headline is still an internal productivity counter with no clear user value.
+- **Recent progress** — “Repinned from v2 0.9857 after pre-submission adversarial audit” reads like a release correction pasted into the hero. The correction deserves documentation; the landing page needs the current claim and a clear evidence link.
+- **Preprint** — `paper-v6` and “pending operator-initiated upload” expose document-management workflow. “Unsubmitted draft” would communicate the relevant public status.
+- **Research operations** — Planner proposals, inner agents, adversarial passes, and JSON artifacts describe internal machinery rather than what a visitor can accomplish.
+- **Literal milestone audit** — No raw experiment IDs, numbered milestone retrospectives, or “X/Y criteria met” closeout cards appear in this version. The “382 completed milestones” statistic is still insider bookkeeping.
 
 ### Inconsistencies
-- **“MIT-0 · Open Source”** in the hero vs **“Apache 2.0 License”** in the footer — a direct contradiction about reuse rights.
-- **“Install and verify in five lines”** vs the **Rust** tab — the Rust example demonstrates Ising energy and sampling, supplies no installation instructions, and references undefined `activations`. It does not demonstrate verification.
-- **Result labels vs meter widths** — “+3.0 points” gets 14.6% fill; “+4.9 points” gets 66.7%; “4.4% cost savings” gets 95.6%. No scale explains these mappings. The graphics imply comparisons the text cannot support.
-- **“What you can check” / “Seven capabilities”** vs **Research operations, APIs & portable memory, TTC & PREM** — these are different categories presented as equivalent verification capabilities.
-- **“What we measured”** vs **“0.91 AUROC (publication gate)”** — the wording leaves unclear whether 0.91 is an observed result or an acceptance threshold.
+- **Hero: “MIT-0”** vs **footer: “Apache 2.0 License.”** These are different licenses. A visitor cannot determine the intended terms from this page.
+- **“Install and verify in five lines”** vs **no installation command in the quick-start code block.** The command exists in the hero, but the supposedly self-contained entry point omits it.
+- **Python tab: verify and repair an LLM answer** vs **Rust tab: construct an Ising model and sample it.** These demonstrate different jobs. The Rust example also references undefined `activations` and supplies no dependency setup.
+- **Result labels** vs **meter widths:** “+3.0 points” gets a 14.6% bar; “+4.9 points” gets 66.7%; “4.4% cost savings” gets 95.6%. No scale explains these encodings. The graphics communicate success without a consistent quantitative meaning.
+- **“What you can check”** vs **Research operations, APIs, and TTC/PREM.** Three of the seven cards describe development, integration, or computation rather than categories of output a user can check.
+- **Scope language drifts:** the hero promises internal consistency, while the energy explanation equates low energy with “valid,” and the maths card promises “Every equation.” The page leaves the boundary between consistency checking and correctness unclear.
+- **The two current AUROCs are not a contradiction:** 0.9131 and 0.8947 are explicitly labeled as ensemble and architecture-only measurements.
 
 ### Missing essentials
-- **Trustworthy evidence access:** “Every number” has an artifact, supposedly, but none of the 12 evidence cards links directly to its artifact or methodology. Missing context includes model, sample size, baseline, evaluation split, uncertainty, and reproduction command.
-- **A practical interpretation of the headline:** what does 0.9131 AUROC mean for missed errors and false alarms at the default threshold?
-- **Capability boundaries:** does Carnot check factual truth, internal consistency, or only extracted constraints? “Cited facts” and “every equation” imply broad coverage without explaining what extraction misses or what goes unchecked.
-- **Installation prerequisites:** the pip command is present, but the quick start does not clearly separate local verification requirements from GPU-backed repair requirements.
-- **Maintenance responsibility:** the footer names Ian Blenke as copyright holder. It does not explicitly identify the maintainer or provide a labeled support/contact route.
-- The one-sentence purpose and installation command are present. The license is present twice and disagrees.
+- **What Carnot does is present.** The hero gives a usable sentence: it checks internal consistency and suggests fixes. What remains missing is the supported scope and its limitations.
+- **Credibility anchors are missing where the numbers appear.** None of the 12 evidence cards links directly to its experiment artifact. Most omit model, evaluated sample count, baseline details, uncertainty, and evaluation conditions.
+- **“Independently re-computed” is insufficiently identified.** No reproducer, run report, actual confidence interval, or explanation of whether predictions were regenerated is supplied in that section.
+- **Installation is present, but setup is incomplete.** The page does not clearly separate prerequisites for basic verification from those for local-model repair, including hardware and downloads.
+- **Licensing is contradictory rather than absent.** There is no direct license link to resolve the disagreement.
+- **Maintenance ownership is weakly communicated.** Ian Blenke appears in the copyright line, but the page does not explicitly identify a maintainer or provide a support/contact route.
+- **Practical trade-offs are absent.** “99.3% of wrong code flagged” says nothing about correct code rejected, and the page provides no verification latency or cost context.
 
 ### Fabrication signals
-- **Math extraction:** “GSM8K extraction TP rate: 0.5 → 1.0” — perfect extraction performance without a denominator, split, or direct artifact link. A handful of examples could produce this.
-- **Adversarial audit:** “catches 60/60 attacks” — perfect coverage of a small attack set needs attack-selection details and separation from development examples.
-- **Dogfooding blog preview:** “Zero false positives” — no adjudication method or relevant denominator accompanies the claim. “639 experiments” does not establish how false positives were measured.
-- **Training:** “2.0× speedup, identical losses” — exact linear scaling and identical outcomes need timing scope, numerical tolerance, workload, and hardware details.
-- **Cascade routing:** “0.0pp accuracy delta” — rounded equality can conceal uncertainty or a small regression; no sample size is supplied.
-- **HumanEval-50 decoding:** “85% pass rate” — a single binary evaluation of 50 tasks changes in two-percentage-point increments. Averaging or repeated sampling could explain 85%, but the card does not say so.
-- These are credibility gaps, not proof of fabrication. The disclosed bogus 95-microsecond evaluation is explicitly presented as a caught failure.
+- **Math extraction — “TP rate: 0.5 → 1.0.”** Perfect extraction without a denominator, held-out protocol, or artifact link resembles a tiny demonstration promoted into a benchmark claim.
+- **Adversarial audit — “60/60 attacks.”** A perfect score on 60 attacks needs attack provenance, selection rules, and evidence that the set was held out.
+- **Training — “2.0× speedup, identical losses.”** Exactly ideal scaling and identical outcomes need timing methodology and a definition of “identical.”
+- **Cascade routing — “0.0pp accuracy delta.”** Without sample size and uncertainty, this cannot establish unchanged accuracy.
+- **Carnot Dogfooding by the Numbers — “Zero false positives.”** The teaser gives no audited negative population or review method.
+- **Research operations vs blog teasers** — The capability card promises fabricated artifacts are caught before influencing headlines; nearby posts recount fabricated evaluations, retractions, and disguised implementations. That disclosure is useful, but the page supplies no concise account of which current results survived those failures.
+- These are credibility warning signs, not proof of fabrication.
 
 ## WHAT'S WORKING
-- The hero gives a clear purpose, an installation command, and a concrete arithmetic example.
-- “Extract → Check → Repair” explains the workflow effectively. Publishing corrections and audit failures also provides useful transparency.
+- The hero explains the basic purpose in ordinary language and provides the actual `pip install carnot-ebm` command.
+- “Extract → Check → Repair” and the incorrect-addition example make the core workflow understandable quickly.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Resolve the license contradiction and link the authoritative license.
-2. Replace the 12-result wall with three relevant results, each linking directly to its artifact and a compact methodology summary.
-3. Reduce the landing-page card count; move research operations, hardware detail, and submission status into supporting documentation.
-4. Explain the headline score and verification limits in plain language, including false alarms and missed errors.
-5. Make the quick start copyable, state prerequisites, and give Rust a verification example or a clearly labeled lower-level destination.
-6. Replace unexplained identifiers and remove meters whose scales cannot be explained.
-7. Identify the maintainer and support route; retain two blog previews and the archive link.
+1. Resolve the license disagreement and link the authoritative license.
+2. Reduce the evidence grid to 3–4 defensible results, each with its baseline, evaluated population, uncertainty, model, and direct artifact link.
+3. Replace milestone and experiment counters with one useful outcome; move repinning history and internal research workflow into supporting documentation.
+4. Make the quick start independently usable: include installation and prerequisites, distinguish verification from GPU-backed repair, and provide a complete Rust example for its stated purpose.
+5. State supported checks and failure boundaries; define AUROC once and remove unexplained benchmark shorthand from primary copy.
+6. Simplify navigation and reduce the blog preview to 2–3 entries.
+7. Identify the maintainer and support route, and link the claimed independent reproduction with a precise description of what was reproduced.
 
-Scope: only `docs/index.html` reviewed; linked documents, installation, and benchmark results were not verified.  
-Risk: the page’s credibility signals cannot establish whether the underlying measurements are valid.
+Not checked: rendered layout, linked material, installation, or underlying experiments. Numerical validity remains unverified.

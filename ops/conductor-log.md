@@ -22282,3 +22282,4 @@ code |
 | 2026-11-17 17:35 UTC | Exp9205: Audit primary gains, entropy controls and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9202-logit-admission) |
 | 2026-11-17 17:35 UTC | Exp9206: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9198-logit-runtime) |
 | 2026-11-17 18:22 UTC | Exp9207: Reconcile fourteen outcomes and exact con | OK | 87 passed, 1 warning in 155.53s (0:02:35) |
+| 2026-11-17 20:07 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

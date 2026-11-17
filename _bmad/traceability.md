@@ -5204,3 +5204,24 @@ Contracts: `openspec/change-proposals/research-roadmap-vNEXT.md` and
 `research-roadmap-next.yaml`. All five model tasks use the mandated Qwen model
 with forward-only receipts. New annotation sensitivity does not alter primary
 acceptance. No current model, science, hardware or ARC result is claimed.
+
+## Proposed V784 — replay closure and human energy learning (2026-11-17)
+
+Planning only; no new implementation or scientific result.
+
+| Requirement | PRD | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-9208-V784 / SCENARIO-REPORT-9208-V784 | FR-09, FR-10 | `results/experiment_9208_v784_contract.json` | Proposed |
+| REQ-REPORT-9209-V784 / SCENARIO-REPORT-9209-V784 | FR-09, FR-10 | `results/experiment_9209_v784_corpus_prefilter.json` | Proposed |
+| REQ-REPORT-9210-V784 / SCENARIO-REPORT-9210-V784 | FR-09, FR-10 | `results/experiment_9210_v784_forward_qualification.json` | Proposed |
+| REQ-REPORT-9211-V784 / SCENARIO-REPORT-9211-V784 | FR-12 | `results/experiment_9211_v784_label_ambiguity.json` | Proposed |
+| REQ-REPORT-9212-V784 / SCENARIO-REPORT-9212-V784 | FR-12 | `results/experiment_9212_v784_logit_runtime.json` | Proposed |
+| REQ-REPORT-9213-V784 / SCENARIO-REPORT-9213-V784 | FR-12 | `results/experiment_9213_v784_logits_a.json` | Proposed |
+| REQ-REPORT-9214-V784 / SCENARIO-REPORT-9214-V784 | FR-12 | `results/experiment_9214_v784_logits_b.json` | Proposed |
+| REQ-REPORT-9215-V784 / SCENARIO-REPORT-9215-V784 | FR-12 | `results/experiment_9215_v784_logits_c.json` | Proposed |
+| REQ-REPORT-9216-V784 / SCENARIO-REPORT-9216-V784 | FR-12 | `results/experiment_9216_v784_logit_admission.json` | Proposed |
+| REQ-REPORT-9217-V784 / SCENARIO-REPORT-9217-V784 | FR-12 | `results/experiment_9217_v784_static_energy.json` | Proposed |
+| REQ-REPORT-9218-V784 / SCENARIO-REPORT-9218-V784 | FR-06, FR-11 | `results/experiment_9218_v784_delayed_learning.json` | Proposed |
+| REQ-REPORT-9219-V784 / SCENARIO-REPORT-9219-V784 | FR-12 | `results/experiment_9219_v784_decision_audit.json` | Proposed |
+| REQ-REPORT-9220-V784 / SCENARIO-REPORT-9220-V784 | FR-05, FR-08, NFR-01 | `results/experiment_9220_v784_complete_cost.json` | Proposed |
+| REQ-REPORT-9221-V784 / SCENARIO-REPORT-9221-V784 | FR-12 | `results/experiment_9221_v784_capstone.json` | Proposed |
