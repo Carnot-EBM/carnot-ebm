@@ -24001,3 +24001,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
   boundaries. Defer the failed ARC compatibility route.
 - Align planned requirements, traceability, architecture and status. No runtime
   changes, experiment runs, active-queue edits, conductor edits, activation or push.
+- 2026-11-17: Exp9194: Bind fourteen tasks and preserve human methods and V782 failures (⚠️ Research Finding) — honest_verdict=complete_disqualified_v783_contract; results/experiment_9194_v783_contract.json
