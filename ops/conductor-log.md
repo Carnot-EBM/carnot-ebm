@@ -22264,3 +22264,4 @@ code |
 | 2026-11-17 12:05 UTC | Exp9190: Audit energy and learning gains against a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9187-logit-admission) |
 | 2026-11-17 12:05 UTC | Exp9191: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9183-logit-runtime) |
 | 2026-11-17 12:48 UTC | Exp9192: Reconcile primitive ordering with explici | OK | 108 passed, 1 warning in 29.39s |
+| 2026-11-17 13:36 UTC | Exp9193: Reconcile fourteen outcomes and retire un | OK | 89 passed, 1 warning in 152.63s (0:02:32) |

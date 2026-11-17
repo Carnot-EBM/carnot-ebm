@@ -1,0 +1,54 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.782",
+  "generated_at": "2026-11-17T13:47:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 42.2,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide",
+      "duration_minutes": 31.64,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths",
+      "duration_minutes": 10.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9180: Bind fourteen tasks and freeze diagnostic supports",
+      "duration_minutes": 0.15,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9192: Reconcile primitive ordering with explicit mechanic precedence",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.782 completed 4 synthesis-only experiments (0 compute-bound) in 42.2 wall-time minutes (42 minutes / 0.7 hours, averaging 11 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 4 completed synthesis-only experiments were Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide (31.64 minutes / 32min), Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths (10.36 minutes / 10min), Exp9180: Bind fourteen tasks and freeze diagnostic supports (0.15 minutes / 0min), and Exp9192: Reconcile primitive ordering with explicit mechanic precedence (0.02 minutes / 0min). Because 0 compute-bound experiments ran and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is null and DualGPURunner did not apply.",
+  "bottlenecks_identified": [
+    "Structural-scan removal and immutable diagnostic evidence qualification latency in Exp9181: synthesis-only Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide required 31.64 minutes (32min) of the 42.2-minute (42min / 0.7 hours) total wall time; because 0 compute-bound tasks ran and locked gpu_idle_on_compute_bound_tasks is null, 0% GPU on synthesis-only tasks is expected behavior and not a GPU bottleneck.",
+    "Fourteen-outcome reconciliation latency in Exp9193: synthesis-only Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths required 10.36 minutes (10min) after synthesis-only Exp9180: Bind fourteen tasks and freeze diagnostic supports completed in 0.15 minutes (0min) and synthesis-only Exp9192: Reconcile primitive ordering with explicit mechanic precedence completed in 0.02 minutes (0min).",
+    "Timing fallback reconstruction: the live git-log path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 42.2 wall-time minutes (42 minutes / 0.7 hours).",
+    "Unavailable GPU monitor telemetry: the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU state), though 0 compute-bound experiments executed and no task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache structural scan removal and immutable diagnostic evidence qualification artifacts in synthesis-only Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide (31.64 minutes / 32min) so diagnostic evidence qualification does not re-scan inputs sequentially.",
+    "Pass the cached fourteen-task bindings and frozen diagnostic supports from synthesis-only Exp9180: Bind fourteen tasks and freeze diagnostic supports (0.15 minutes / 0min) and primitive ordering / mechanic precedence outputs from synthesis-only Exp9192: Reconcile primitive ordering with explicit mechanic precedence (0.02 minutes / 0min) directly into synthesis-only Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths (10.36 minutes / 10min).",
+    "Persist direct per-experiment start and completion timestamps in conductor artifacts to avoid retro_timing_fallback disk-mtime reconstruction when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability before future compute-bound experiments run while keeping DualGPURunner restricted strictly to compute-bound tasks loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache structural scan removal and immutable diagnostic evidence qualification inputs in synthesis-only Exp9181 (31.64 minutes / 32min).",
+    "Share cached fourteen-task bindings and frozen diagnostic supports from synthesis-only Exp9180 (0.15 minutes / 0min) and mechanic precedence outputs from Exp9192 (0.02 minutes / 0min) directly with fourteen-outcome reconciliation in synthesis-only Exp9193 (10.36 minutes / 10min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor availability before future compute-bound runs."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "Milestone 2026.11.782 completed 4 synthesis-only experiments (0 compute-bound) in 42.2 wall-time minutes (42 minutes / 0.7 hours, averaging 11 minutes per experiment), with wall time concentrated in Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide at 31.64 minutes (32min) and Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths at 10.36 minutes (10min), while Exp9180: Bind fourteen tasks and freeze diagnostic supports took 0.15 minutes (0min) and Exp9192: Reconcile primitive ordering with explicit mechanic precedence took 0.02 minutes (0min). Because 0 compute-bound tasks ran, locked gpu_idle_on_compute_bound_tasks is null, GPU monitor telemetry was not available (no data available this milestone), and DualGPURunner did not apply, the highest-leverage improvements for the next milestone are caching diagnostic evidence qualification inputs in Exp9181, sharing fourteen-task bindings between Exp9180 and Exp9193, and restoring direct timestamp logging."
+}

@@ -1,5 +1,11 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-17 (Milestone 2026.11.782 operational retrospective)
+
+## 2026-11-17 UTC — Milestone 2026.11.782 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_782.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 4 completed synthesis-only experiments (0 compute-bound) across 42.2 wall-time minutes (42 minutes / 0.7 hours, averaging 11 minutes per experiment): synthesis-only `Exp9181: Remove repeated structural scans and qualify immutable diagnostic evide` (31.64 min / 32min), synthesis-only `Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths` (10.36 min / 10min), synthesis-only `Exp9180: Bind fourteen tasks and freeze diagnostic supports` (0.15 min / 0min), and synthesis-only `Exp9192: Reconcile primitive ordering with explicit mechanic precedence` (0.02 min / 0min). Because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: pre-index and cache structural scan removal and immutable diagnostic evidence qualification inputs in `Exp9181` (31.64 min / 32min), reuse cached fourteen-task bindings and frozen diagnostic supports from `Exp9180` (0.15 min / 0min) and mechanic precedence outputs from `Exp9192` (0.02 min / 0min) in `Exp9193` (10.36 min / 10min), persist direct per-experiment execution timestamps, and restore GPU monitor availability.
+
 **Last Updated:** 2026-11-17 (Exp9166 activated queue binding repair only)
 
 ## 2026-11-17 UTC — Exp9166 activated queue binding repaired
