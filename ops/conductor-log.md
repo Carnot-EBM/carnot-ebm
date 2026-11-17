@@ -22253,3 +22253,13 @@ code |
 | 2026-11-17 09:39 UTC | Milestone 2026.11.782 activated | OK | 14 tasks queued |
 | 2026-11-17 10:27 UTC | Exp9180: Bind fourteen tasks and freeze diagnostic | OK | 92 passed, 1 warning in 67.10s (0:01:07) |
 | 2026-11-17 11:54 UTC | Exp9181: Remove repeated structural scans and qual | OK | 102 passed, 1 warning in 105.87s (0:01:45) |
+| 2026-11-17 12:03 UTC | Exp9182: Execute the complete causally corrected v | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9181-validation-loop-repair.causal_fix_ready_score (actual=0 == expected=1) |
+| 2026-11-17 12:05 UTC | Exp9183: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9182-forward-qualification) |
+| 2026-11-17 12:05 UTC | Exp9184: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9183-logit-runtime, exp9183-logit-runtime) |
+| 2026-11-17 12:05 UTC | Exp9185: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9183-logit-runtime, exp9183-logit-runtime) |
+| 2026-11-17 12:05 UTC | Exp9186: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9183-logit-runtime, exp9183-logit-runtime) |
+| 2026-11-17 12:05 UTC | Exp9187: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9184-logits-a, exp9185-logits-b, exp9186-logits-c) |
+| 2026-11-17 12:05 UTC | Exp9188: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9187-logit-admission) |
+| 2026-11-17 12:05 UTC | Exp9189: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9187-logit-admission) |
+| 2026-11-17 12:05 UTC | Exp9190: Audit energy and learning gains against a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9187-logit-admission) |
+| 2026-11-17 12:05 UTC | Exp9191: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9183-logit-runtime) |
