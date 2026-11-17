@@ -116107,3 +116107,37 @@ CLI and `tests/python/test_arc_mechanic_routing_9178.py` retain baseline custody
 both recommendation call-site controls and private replay checks. Exact executed
 validation and final readiness belong to the experiment artifact and its bound
 checker sidecar. This change grants no live ARC discovery or solve credit.
+
+### REQ-REPORT-9179-V781 — Exact terminal accounting (2026-11-17)
+
+Freeze seed781179, empty MODEL_SPECS, all fourteen full ordered objects,
+original source byte hashes, all primary absences, units, formulas and zero
+exclusions before reduction. Authenticate the active queue against the visible
+and embedded design. Retain scheduler alternatives without granting science.
+Recompute the three shard union, obligation identities, diagnostic observations
+and ARC method-only controls from retained rows. Preserve original assertions,
+quarantines, two static and seven learning bounds. Missing predictions, service
+costs and descriptive Brier/ranking changes remain unmeasured, not a complete
+scientific null. Readiness is administrative only. Record unchanged-scope
+retirement and exact reopening prerequisites through the existing manifest
+workflow; never activate a queue, load an LLM or publish externally.
+
+### SCENARIO-REPORT-9179-V781 — Exact accounting and private CLI controls
+
+Require fourteen ordered outcomes with exact gate operands; distinguish absent
+files, absent fields and observed zero, including strict integer gate types.
+Disqualified diagnostic and ARC primaries retain their terminal classes.
+Missing external inputs produce terminal blocked evidence. Failed owned checks
+disqualify readiness. Private CLI success, refusal, cold replay and rehashed
+aggregate or retained-input tampering run outside the checkout without
+PYTHONPATH. Real unit and child coverage must cover100 percent of new owned
+statements with zero exclusions. Historical FoVer G1–G4 cannot grant current
+paper readiness or close either independent-verifier gap.
+Status: specified before tests and implementation.
+
+Implementation: `v781_capstone.py`, `v781_capstone_evidence.py`,
+`v781_capstone_reduction.py` and the Exp9179 CLI implement this contract.
+`test_v781_capstone_9179.py` owns the accounting, refusal, row-aggregate,
+operation-receipt, manifest-retirement and private child replay controls.
+The primary artifact's hash-bound executed validation receipts determine
+qualification. Repository health and scientific readiness remain separate.
