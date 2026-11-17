@@ -1,175 +1,229 @@
-# Carnot Research Roadmap v782: Single-Pass Validation, Human Energy Decisions, and Continuous Calibration
+# Carnot Research Roadmap v783: Lossless Corpus Validation, Human Energy Decisions, and Label-Robust Learning
 
-**Milestone:** 2026.11.782  
+**Milestone:** 2026.11.783  
 **Created:** 2026-11-17 America/New_York  
-**Status:** Proposed; no experiments executed or queue activated by planning.  
-**Predecessor:** 2026.11.781, scheduling complete.  
-**Execution contract:** Exactly **14 tasks, Exp9180 through Exp9193**, in the
-order in the task table, across **four phases**. The complete task objects below
+**Status:** Proposed; planning executes no experiment and activates no queue.  
+**Predecessor:** 2026.11.782, scheduling complete.  
+**Execution contract:** Exactly **14 tasks, Exp9194 through Exp9207**, in the
+order shown below, across **four phases**. The embedded complete task objects
 must equal `research-roadmap-next.yaml`, including prompts, gates and metadata.
 
-The [V781 design](research-roadmap-v781-preserved-20261117.md) and
-[V781 activated queue](research-roadmap-v781-queue-preserved-20261117.yaml)
-are preserved byte for byte. The active roadmap and conductor remain unchanged.
-`research-complete.yaml` currently ends at V780; V781's primaries and conductor
-log are the current outcome authority. No archival scheduling action is required
-of this planning change.
+The [V782 design](research-roadmap-v782-preserved-20261117.md) and
+[V782 activated queue](research-roadmap-v782-queue-preserved-20261117.yaml)
+are preserved byte for byte. The active roadmap and conductor are unchanged.
+At planning read time the completion archive ends at V781; V782 primaries and
+`ops/conductor-log.md` establish its outcomes. Scheduling completion is not
+scientific success.
 
-## What V781 proved
+## What V782 proved
 
-| Experiment | Evidence | Finding and limit |
+| Experiment | Observed outcome | Limit |
 |---|---|---|
-| Exp9166 | Contract, source, static-method and online-method readiness all1 | Original human roles and methods authenticate. This is administrative readiness. |
-| Exp9167 | `complete_disqualified_causal_validation`; correction readiness0 | Traces localize repeated structural traversal, but immutable-log, child-observation, diagnostic-budget and complete-module checks failed. |
-| Exp9168 | `blocked_gate_check_failed`; exact repeated scope retired | The full qualification never ran. Its retired ID must not be a new dependency. |
-| Exp9169–9177 | Nine cascade skips, no canonical scientific primaries | No new Qwen collection, detector comparison, learning gain or service cost was measured. |
-| Exp9178 | 52 recognized and72 legacy fixture rows;22 to0 recognized mismatches; ten direct-consumer failures | Explicit mechanic precedence helped fixtures, but ordering compatibility remains disqualified. No live-agent solve was observed. |
-| Exp9179 | Reconciliation readiness1; `complete_blocked_declared_gate` | All fourteen outcomes are accounted for; the independent-verifier gaps remain open. |
+| Exp9180 | Contract and original human methods authenticated | Administrative readiness, no new inference |
+| Exp9181 | Controlled case: 91 structural scans became 1, with zero canonical hashes; targeted tests and owned coverage passed | `complete_disqualified_causal_validation`; direct consumers did not finish |
+| Exp9182 | `blocked_gate_check_failed`, observed correction gate 0 | No complete forward qualification; exact repeated execution scope retired |
+| Exp9183–9191 | Nine downstream skips | No Qwen panel, static comparison, learning effect, CES result or service cost |
+| Exp9192 | `complete_disqualified_arc_ordering_compatibility` | Affected compatibility tests failed; no live solve or generalization |
+| Exp9193 | Reconciliation ready; `complete_blocked_declared_gate` | All fourteen outcomes accounted for; independent-verifier gaps remain open |
 
-Four primaries executed; ten tasks were skipped. Primary sources are
-`results/experiment_9166_v781_contract.json`,
-`results/experiment_9167_v781_causal_validation.json`,
-`results/experiment_9168_forward_qualification.json`,
-`results/experiment_9178_v781_arc_mechanic_routing.json`,
-`results/experiment_9179_v781_capstone.json` and `ops/conductor-log.md`.
-The scheduler's Exp9168 file is not the absent intended scientific primary.
+Four tasks executed and ten skipped. Primary authority:
+`results/experiment_9180_v782_contract.json`,
+`results/experiment_9181_v782_causal_validation.json`,
+`results/experiment_9192_v782_arc_mechanic_routing.json` and
+`results/experiment_9193_v782_capstone.json`. The Exp9182 scheduler refusal is
+`results/experiment_9182_forward_qualification.json`, distinct from its absent
+intended scientific primary.
 
-The corrected Exp9167 trace still contains2178 classifier calls and4368 full
-canonical hashes. Its cache rescans complete artifact content per pair.
-Three intermediate receipts name overwritten logs. Private child CLIs remove
-PYTHONPATH, which removes its tracing bootstrap. Diagnosis took925.472 seconds
-against900; the full target module was then killed at130 seconds. These are
-observed defects, not evidence that the scientific methods failed.
+Exp9181's `direct_consumers` receipt ran 1224.316 seconds and exited -15.
+Its stderr records an outer work cutoff, not an assertion failure or a measured
+scientific null. Node events stop inside
+`test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole`. That test
+recursively decodes every JSON beneath `results/`. A read-only planning census
+counted 714,951 paths and 275,757,334,875 bytes. Those counts are mutable snapshots;
+they do not establish decoder throughput or a complete causal profile.
 
-V782 changes the algorithm: compute an invariant structural predicate once,
-lazily within the synchronous checker call. It also separates bounded diagnosis
-from complete target validation and retains unique logs and sanitized-child
-observations. Exact flag parity and original mutation controls are mandatory.
-This is a falsifiable correction hypothesis, not a predeclared speedup.
+V783 tests a different correction: avoid decoding files that cannot contain any
+recognized sentinel. Every file remains in the walk. Potential matches and
+Unicode escapes use the original decoder and classifier. The original assertions
+and all validation obligations remain. No previous disqualification is cleared.
 
-## The three biggest gaps to the PRD
+## Three biggest gaps to the PRD
 
-1. **FR-12: useful independent factual verification.** The exposed human cohort
-   and methods exist, but no admitted Qwen logit comparison exists. Test energy
-   beyond probability, donor-label and entropy-reference controls. Later untouched
-   independent human confirmation is still necessary.
-2. **FR-06/FR-11: beneficial continuous self-learning.** Durable updates exist;
-   future error must decrease beyond five controls without damaging retained
-   quality. Only the small verifier learns; the generator stays frozen.
-3. **FR-05/FR-08/NFR-01: reliable, affordable complete execution.** Finish the
-   qualification path, then measure raw-text and durable-update cost. Head-only
-   timing and a theoretical hardware mapping cannot establish service speedup.
+1. **FR-12: independent factual verification.** Original human labels exist,
+   but the forward-feature comparison remains unmeasured. Energy must beat
+   matched probability and donor controls, and its dependence on label ambiguity
+   must be visible. This exposed panel cannot close independent generalization.
+2. **FR-06/FR-11: useful continuous learning.** Durable machinery is not a
+   future-loss improvement. Preserve causal feedback, a calibration-only control,
+   retained quality and exact recovery. Train only the small verifier.
+3. **FR-05/FR-08/NFR-01: reliable and affordable execution.** A corpus-level
+   validation walk now scans hundreds of GB. Qualify a lossless correction, then
+   measure complete raw-text and durable-update cost before selecting hardware.
 
-The November7 north star is the oracle-distinct verifier. This exposed LPHB panel
-cannot close `GAP-ORACLE-DISTINCT` or `GAP-DETECTOR-AUROC-4208`, even on a positive
-result. ARC is an independent opportunistic compatibility task, not a solve target.
+The November 7 north star is the oracle-distinct verifier. ARC is opportunistic;
+no ARC task is scheduled while its latest compatibility route remains disqualified.
+Historical FoVer publication gates stay separate from this new development study.
 
-## Research incorporated before design
+## Research recorded before design
 
-The [V782 reference scan](../../research-references.md) was recorded first.
-It covers all requested arXiv topics and secondary sources, including access limits.
+The V783 entry in [research-references.md](../../research-references.md) records
+all eight requested primary topics, the six secondary channels and access limits.
 
-| Source | Experiment use | Boundary |
+| Primary source | Experiment use | Boundary |
 |---|---|---|
-| [Entropy Distribution, May2026](https://arxiv.org/abs/2605.28264) | Exp9180 freezes CES; Exp9190 compares a reference-CDF score with mean/max entropy and the probability head | Teacher-forced archived answers differ from self-generated answers; token iid guarantees do not transfer. |
-| [Spilled Energy, February2026](https://arxiv.org/abs/2602.18671) and [ARM–EBM, December2025/revised2026](https://arxiv.org/abs/2512.15605) | Exp9183–9190 preserve energy, normalized probability and logit-gauge controls | Energy can be an empirical feature without being factual truth. |
-| [Continual Calibration, April2026](https://arxiv.org/abs/2604.23987) | Exp9189–9190 preserve future loss, retention and changed-decision evidence | No conformal coverage guarantee or generator learning is claimed. |
-| [Online spline locality, February2026](https://arxiv.org/abs/2602.02056) | Exp9189 updates existing coefficients; Exp9191 measures full adaptation cost | Local arithmetic does not remove dense guard scans or fsync. |
-| [Near-linear Ising sampler, November2026](https://arxiv.org/abs/2611.04786) | Exp9191 records operation mismatch; defer implementation | Zero-field ferromagnets do not cover arbitrary signed learned constraints. |
+| [Labeling Problem, October 2026](https://arxiv.org/abs/2610.08026) and [Automatic Labeling, November 2026](https://arxiv.org/abs/2611.04697) | Exp9197 exact ambiguity masks and endpoint reducer; Exp9205 sensitivity on genuine predictions | Preserve A1 factuality; missing A2 stays missing; no new truth labels |
+| [Spilled Energy, February 2026](https://arxiv.org/abs/2602.18671), [ARM–EBM, December 2025/revised May 2026](https://arxiv.org/abs/2512.15605) | Exp9198–9205 unchanged energy/probability and logit-offset controls | Empirical energy is not factual truth |
+| [Continual Calibration, April 2026](https://arxiv.org/abs/2604.23987) | Exp9204–9205 causal updates, temperature control, future loss and retention | No imported conformal guarantee or generator training |
+| [Online spline locality, February/revised June 2026](https://arxiv.org/abs/2602.02056) | Exp9204 small coefficient updates; Exp9206 full adaptation costs | Sparse arithmetic does not remove full guards and durable storage |
+| [Entropy Distribution, May 2026](https://arxiv.org/abs/2605.28264) | Preserve the registered CES comparison in Exp9205 | Secondary ranking cannot rescue primary failures |
 
-EBT, Distributional EBMs, PAL/HardNet++, EBD and KAN-CL remain scoped leads.
-No retired importance-anchor or projection rerun is proposed. Semantic Scholar
-returned11 ARM–EBM citation records; EBT retrieval was rate-limited. OpenReview
-exposed indexed papers but challenged direct retrieval. GitHub Trending was stale.
-Extropic/Kona pages do not establish local access or a reproducible new benchmark.
+EBT and Energy-Based Reasoners remain generator research leads. HardNet++,
+Neural Ising Machines, EBD and the million-p-bit FPGA work do not remove the
+current input or verification bottleneck. Extropic's Z1T supplies a concrete
+sparse JAX repository, but its estimates are not local Carnot measurements.
+Kona's product pages supply no reproducible new architecture result.
+
+Semantic Scholar returned 46 EBT and 11 ARM–EBM citation records with no next
+page. P(Yes) was checked as a lead. Generated confidence transport was considered
+and rejected after the manifest review: Exp5813 closes that mechanism. No
+finite-ID, grammar, parser-retry or generated-confidence workaround is proposed.
+OpenReview direct retrieval had a browser challenge; Trending was a stale snapshot.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-  C[Original human cohort and frozen methods]
-  R[One structural classification per checker invocation]
-  T[Immutable logs and observed sanitized children]
+  C[Original human custody and frozen methods]
+  P[Lossless byte prefilter: every corpus file]
   V[Complete unchanged validation union]
-  Q[Frozen Qwen3.8 27B forwards]
-  X[Three complete 100-question shards]
+  Q[Frozen Qwen3.8 forward-only qualification]
+  A[Shard A: 100 questions]
+  B[Shard B: 100 questions]
+  D[Shard C: 100 questions]
   J[Exact 900-answer admission]
-  S[Five static binary-energy decision arms]
-  L[Six delayed small-head learning arms]
-  E[TRAIN-only entropy reference]
-  A[Independent primary and secondary audits]
-  K[Complete cost and hardware operation map]
-  P[Independent ARC ordering compatibility]
+  S[Five static energy arms]
+  L[Six delayed learning arms and recovery]
+  U[Independent human ambiguity method]
+  E[Independent primary, CES and label audits]
+  K[Complete raw-text and durable costs]
   Z[Unconditional fourteen-outcome reconciliation]
-  R --> V
-  T --> V
-  V --> Q --> X --> J
-  C --> X
-  J --> S --> A
-  J --> L --> A
-  J --> E --> A
+  C --> P --> V --> Q
+  C --> U
+  Q --> A --> J
+  Q --> B --> J
+  Q --> D --> J
+  J --> S --> E
+  J --> L --> E
+  U -. sensitivity only .-> E
   Q --> K
-  S --> K
-  L --> K
-  A --> Z
+  S -. eligible service .-> K
+  L -. eligible service .-> K
+  E --> Z
   K --> Z
-  P --> Z
+  U --> Z
 ```
 
-Human labels remain outside model inputs. TRAIN labels fit heads or the reference
-CDF. CAL controls temperatures and operational guards. TEST is evaluator-only;
-its repeated retention measurements never select updates. Static150 fitting and
-online100 initialization stay separate. Archived answers are not current Qwen
-outputs. All current LLM work is teacher forcing with zero generated tokens.
+Labels never enter model input. Static fitting uses TRAIN150; online initialization
+uses its original TRAIN100. CAL guards promotion; TEST retention cannot select an
+update. All current LLM work is forward-only with zero generated tokens. The
+model scores archived answers; those answers are not new Qwen generations.
 
-## Phase 1 — Qualify the changed validation algorithm (Exp9180–9183)
+## Phase 1 — Qualify corpus execution and label sensitivity (Exp9194–9197)
 
-Exp9180 binds the full contract and original source/method authority. It freezes
-the CES comparison and preserves historical failures without rerunning methods.
+Exp9194 binds both complete contracts and original source/method authority.
+Exp9195 tests the lossless corpus reader. Exp9196 then executes all 621 original
+nodes, 53 additions and every affected V780–V783 obligation. Exp9197 can run
+independently of those validation results: it builds exact sensitivity masks
+from authenticated human annotations and proves the endpoint reducer on controls.
+It makes no verifier-benefit claim before prediction rows exist.
 
-Exp9181 changes the repeated structural-predicate evaluation in the shared checker.
-All pair ordering, classification, flags and refusal semantics remain identical.
-It uses no global or pass/fail cache. Unique attempt logs cannot overwrite earlier
-receipts. An explicit child startup seam supplies diagnostic observation when
-PYTHONPATH is absent; no shared interpreter installation is allowed.
-Diagnosis uses one900-second budget, including cleanup:300 baseline,450 corrected,
-150 overhead. Remaining execution time serves the complete original target module,
-not another diagnostic attempt. The total execution limit stays3300 seconds.
+## Phase 2 — Collect the unchanged population (Exp9198–9202)
 
-Exp9182 executes all621 original nodes,53 V779 additions and every affected
-V780/V781/V782 obligation with original assertions. Same-invocation receipts
-avoid duplicate final runs; historical passes grant no current execution credit.
-Only complete current validation authorizes Exp9183. The retired Exp9168 ID is
-cited in prior failures, never used as a dependency.
+Exp9198 qualifies serial/chunk128 Qwen forwards and budgets all three complete
+300-answer shards. Exp9199–9201 use one collector and distinct checkpoints;
+they depend on runtime readiness, not on one another. Exp9202 admits the exact
+900-answer union. No changed cap, favorable subset or replacement answer rescues
+an incomplete population. CES uses already-required token entropy statistics.
 
-Exp9183 qualifies the existing six-text serial/chunk128 Qwen pilot, alignment,
-full-vocabulary parity and actual operation receipts. Measured token rates and
-load/storage costs must fit all three complete300-answer shards before collection.
+## Phase 3 — Test energy decisions and continuous learning (Exp9203–9205)
 
-## Phase 2 — Collect the complete fixed population (Exp9184–9187)
+Exp9203 fits the original five static arms. Exp9204 runs six delayed-learning
+arms with actual hard-exit recovery. Exp9205 audits each available branch even
+if the other is unavailable or null. It retains the original two static and
+seven learning bounds and the separate three CES contrasts. New ambiguity
+intervals are descriptive robustness results, not replacement acceptance gates.
 
-Exp9184–9186 use one collector with separate checkpoints and lexical qid ranges
-0:100,100:200,200:300. Each retains all three siblings and original roles.
-They depend on runtime readiness, not on each other. Exp9187 admits only the exact
-900-answer union. No favorable intersection, changed cap or replacement answer
-rescues a failed shard. Already-required token entropies also support CES.
+## Phase 4 — Measure complete cost and reconcile (Exp9206–9207)
 
-## Phase 3 — Measure energy decisions and continuous learning (Exp9188–9190)
+Exp9206 measures each eligible service with cold/warm model work, all guards,
+rejected updates, storage and recovery. Exp9207 always accounts for all fourteen
+outcomes, including scheduler skips and the independent ambiguity method.
+Retirement applies to authenticated repeated execution scope, not to an
+unmeasured scientific hypothesis. No queue activation or external publication.
 
-Exp9188 fits the original five static arms. Exp9189 runs the original six delayed
-arms, predicts before feedback, and proves actual hard-exit recovery. Scientific
-benefit never gates the independent audit. Exp9190 evaluates each available branch
-separately and runs the frozen entropy-reference comparison from admitted features.
-Both original static bounds and all seven learning bounds remain unchanged.
+## Lossless corpus correction and its stop rule
 
-## Phase 4 — Complete cost, compatibility and reconciliation (Exp9191–9193)
+The target classifier recognizes five fixed ASCII substrate strings at the top
+level or in the existing principle wrapper. A JSON string spelling any of those
+values contains either the literal sentinel or a JSON Unicode escape. Therefore,
+absence of every sentinel and of the Unicode escape marker is a necessary
+negative condition. It is not a positive classifier.
 
-Exp9191 times each eligible complete service independently, including rejected
-updates, full guards and durable storage. Hardware fractions require measured
-nonoverlapping clocks. Exp9192 addresses the ten real ARC ordering failures while
-preserving mechanic invariance and measuring actual consumer reachability. It can
-run if the entire model branch blocks. Exp9193 always records all fourteen outcomes,
-with exact failed operands and branch-specific reopening conditions.
+Stream each file in bounded chunks. Retain overlap of at least the longest
+needle minus one byte. A negative decision requires EOF. Any sentinel or Unicode
+escape sends the entire file to the unchanged `read_text`/`json.loads` path and
+classifier. False-positive candidates are harmless extra parsing. Invalid JSON,
+invalid encoding, non-dicts, duplicate keys, wrapped values and annotated suffixes
+retain original behavior. No directory, filename, age or size is excluded.
+Original `checked > 0` and `offenders == []` assertions remain executable.
+
+Freeze the classifier revision and sentinel inventory together. Add controls for
+every sentinel and escape handling; deleting any fallback must fail a control.
+Measure original and candidate decoding on identical predetermined size strata.
+The planning census is not a content seal. Record a complete current path manifest,
+bytes read and changed files. Do not call a concurrently changing corpus complete.
+Do not claim full-corpus speedup from a censored baseline.
+
+The new gate is `corpus_scan_ready_score`. Exp9181's old gate remains zero.
+Readiness requires the full original target module, original V782 mutation and
+structural controls, every affected consumer, immutable receipts and owned coverage.
+Exp9196 still runs the entire validation union with original assertions. No subset,
+old passing receipt or cache of verdicts can stand in for execution. If full
+validation cannot finish, the model branch stays blocked and Exp9197 still runs.
+
+## New label-ambiguity protocol
+
+Use the original 300 question groups and all three answer siblings. A1 remains
+the primary binary factual-error target. Actual A2 annotations are observations;
+`-1` means missing. Do not replace either annotator with model judgments.
+
+Freeze two sets per original response before model work:
+
+- **Observed-disagreement sensitivity:** agreements fix A1; observed A1/A2
+  disagreements permit either binary value; missing A2 fixes A1 but is reported.
+- **Missing-annotation envelope:** agreements fix A1; disagreements and missing
+  A2 permit either binary value. This deliberately broad envelope does not assume
+  that all unobserved annotations would disagree.
+
+For fixed control and treatment error probabilities c and t, the Brier improvement
+is `d(y) = (c-y)^2 - (t-y)^2 = c*c - t*t - 2*y*(c-t)`.
+It is affine in binary y. Evaluate allowed endpoints to obtain exact minimum and
+maximum contrast under each scenario. Use the original equal-qid weights and all
+three siblings. An unchanged label belongs to the response, not to a measurement:
+for repeated retention across streams/updates, first sum that response's weighted
+coefficient, then choose its endpoint. Never assign a different label to the same
+response at each appearance. Pairwise worst cases need not be jointly attainable
+across several contrasts; do not claim a simultaneous worst-case assignment.
+
+Exp9197 tests the reducer using exhaustive small binary panels, duplicated
+retention, permuted order, constant scores, missing annotations and boundary
+probabilities. It publishes masks and code receipts, not natural model effects.
+Exp9205 uses genuine frozen predictions to report both endpoint intervals beside
+the original A1 estimate and sampling interval. Endpoint robustness is conditional
+on the declared ambiguity set and is not a confidence interval or factuality proof.
+No mask, endpoint, A2 label or sensitivity result selects training, temperature,
+learning promotion or primary acceptance. Missing sensitivity authority blocks
+only that secondary branch.
 
 ## Frozen scientific protocols
 
@@ -343,7 +397,7 @@ significance test replaces the original two static and seven learning bounds.
 
 ## Secondary experiment: a frozen entropy reference
 
-Exp9180 fixes this protocol before model work. For all nonempty A1-correct
+Exp9194 fixes this protocol before model work. For all nonempty A1-correct
 TRAIN150 answers, pool token entropies and define F0(x) as the fraction<=x.
 Preserve the paper's token weighting and report tokens and distinct qids.
 A missing correct reference blocks this branch. No CAL or TEST response defines
@@ -365,6 +419,7 @@ ties, mean/max entropy and every score. An empty answer or one-class TEST set
 cannot receive invented AUROC. This is a secondary ranking experiment: no new
 probability threshold, learned feature, online arm or primary bound. Its outcome
 can motivate a later study, not close independent factual verification.
+
 
 ## Complete cost and hardware requirements
 
@@ -394,148 +449,123 @@ needs strictly more coverage. Unknown fractions stay unknown. Sampling hardware
 cannot by itself remove dense forwards or durable storage. No power claim without
 measured energy integrals, and no purchase or board operation is scheduled.
 
+
 ## Execution, routing and stop rules
 
-Every prompt has numbered phase-boundary and before/after-call flushed progress,
-60-second heartbeats inside long loops/calls, gaps below600 seconds, and file
-writes split into calls of at most about200 lines with messages between calls.
-The4800-second cap contains3300 execution,1200 final verification and300 publication.
-All child deadlines include cleanup. Actual elapsed cost stays distinct from
-watchdog ceilings. Each complete validation obligation executes once per current
-qualifying invocation; no passing verdict cache replaces execution.
+Every prompt requires numbered flushed progress at phase boundaries, before and
+after minute-scale calls, and inside long loops. Blocking children get 60-second
+heartbeats; every silence gap stays below 600 seconds. Files over about 200 lines
+are written in bounded tool calls with progress between them. The 4800-second cap
+contains 3300 seconds of work, 1200 of final checks and 300 of publication; child
+cleanup shares the same deadline. Each current validation obligation runs once.
 
-Exp9183–9186 and Exp9191 declare `model_load_no_generation` with the mandated
-MODEL_SPECS and a2-second floor: actual frozen forwards, zero sampled tokens.
-A future handful-token canary requires `model_bounded_generation`/10 seconds;
-a real generative workload requires `model_full_generation`/60 seconds.
-No such generation is authorized here. Use `blocked_no_run` for refusal before
-loading; count failed attempted loads accurately. No duration padding or simulated
-fallback. Legacy small models are CPU smoke controls only, never headline results.
+The five model tasks use `unsloth/Qwen3.8-27B-GGUF` through the current resolver.
+All request `model_load_no_generation` (2-second floor): actual forward work,
+zero generated tokens. A refusal before load records `blocked_no_run`; attempted
+loads remain attempted loads. No artificial padding or CPU simulation can qualify.
+If scope ever includes short generation, it requires bounded-generation receipts
+and the 10-second class; real full generation has a 60-second floor. Neither is
+scheduled here. Historical or cached Qwen provenance is not current model work.
 
-Exp9180–9183 and Exp9191 use Opus/100 turns for infrastructure/runtime work.
-Exp9187 uses Codex/gpt-6.1-sol/30 turns for formulaic admission. Exp9192 uses
-Codex/gpt-6.1-sol/50 turns for the connected compatibility fix. Other science tasks
-use the default synthesis backend/50 turns; Exp9193 uses the default/20 turns.
-No Luna or Gemini task is planned. Current user routing overrides old defaults.
+Exp9195 and Exp9196 route to Claude Opus with 100 turns for the corpus
+preflight correction and complete validation coordination. Formulaic collection, admission and contract tasks use Codex
+`gpt-6.1-sol`. The new label method and judgment-heavy scientific tasks retain
+Sonnet. No Luna or Gemini task is scheduled. Per-task budgets remain in the YAML.
 
-All comparisons require per-unit rows. Every required field carries a principle.
-Every failed gate names its exact upstream field, expected and observed values;
-missing file, missing field and zero are different states. All tasks declare
-`verdict_class: positive | circular_positive | null | blocked | disqualified | partial`.
-External missing/retired/gated inputs are terminal blocked. Only incomplete owned
-work that another attempt can finish is partial. Oracle fixtures require
-circular_positive if called a positive; readiness alone is not scientific benefit.
+Every comparative task emits primitive rows. All artifacts declare the closed
+verdict class next to the terminal honest verdict and principle-annotated fields.
+External absence is blocked; only retryable unfinished owned work is partial.
+Every blocked result gives `gate_check_summary` with its exact failed operand.
+A readiness score measures completeness and checks, never a favorable result.
 
-Spec first, failing controls first, smallest shared implementation, then scoped
-unit/real-child coverage, Ruff, strict types, explicit spec tracing and applicable
-E2E-018/021; learning changes also require E2E-020. Preserve every old assertion.
-Qualification requires100 percent owned statements with zero exclusions.
-Actual adversarial and strict-row checker receipts precede primary publication.
-Do not mutate historical primaries, quarantine determinations or the conductor.
-
-Stop the checker branch if parity, sanitized-child evidence, deadlines or any
-required original obligation fails. Stop collection if a complete shard cannot
-fit; record the deficit without shrinking the population. A complete primary
-scientific null retires the unchanged method; absent predictions leave it untested.
-CES nulls retire the unchanged reference comparison. ARC compatibility failures
-cannot be described as live progress. Capstone execution is unconditional.
+Exp9181/9182 remain retired; neither is a new dependency. Their matching new
+scopes carry complete prior-failure records and the standing May 29 versioned-
+continuation rationale naming the changed corpus algorithm. All prior scientific
+nulls and original two/seven/three bounds remain. No new mechanism reopens the
+retired finite-ID generation, importance-anchor or projection lanes.
 
 ## Dependency graph
 
-```mermaid
-flowchart LR
-  E9180 --> E9181 --> E9182 --> E9183
-  E9180 --> E9183
-  E9180 --> E9184
-  E9180 --> E9185
-  E9180 --> E9186
-  E9183 --> E9184 --> E9187
-  E9183 --> E9185 --> E9187
-  E9183 --> E9186 --> E9187
-  E9180 --> E9188
-  E9180 --> E9189
-  E9187 --> E9188
-  E9187 --> E9189
-  E9187 --> E9190
-  E9188 -. branch eligibility .-> E9190
-  E9189 -. branch eligibility .-> E9190
-  E9183 --> E9191
-  E9188 -. service eligibility .-> E9191
-  E9189 -. service eligibility .-> E9191
-  E9192 -. outcome .-> E9193
-  E9190 -. outcome .-> E9193
-  E9191 -. outcome .-> E9193
-```
+These are the exact structured gates; all listed checks require value 1. Tasks
+are executed in table order. Scientific success never gates an audit. Exp9197
+depends only on human custody and can run after an execution-branch failure.
+Exp9207 has no structured prerequisite. Optional audit/cost inputs remain
+branch-specific checks, not conjunctive gates that discard eligible evidence.
 
-Solid arrows are structured launch gates; dotted arrows are independently checked
-branch evidence. Exp9192 and Exp9193 have no launch gates. The full gate table
-below is authoritative, including the two runtime gates for each collection shard.
+| Task | Required earlier readiness fields |
+|---|---|
+| exp9194-contract | None |
+| exp9195-corpus-prefilter | exp9194-contract.contract_ready_score |
+| exp9196-forward-qualification | exp9195-corpus-prefilter.corpus_scan_ready_score |
+| exp9197-label-ambiguity | exp9194-contract.source_ready_score |
+| exp9198-logit-runtime | exp9196-forward-qualification.forward_validation_ready_score; exp9194-contract.static_methods_ready_score |
+| exp9199-logits-a | exp9194-contract.source_ready_score; exp9198-logit-runtime.logit_runtime_ready_score; exp9198-logit-runtime.shard_feasible_score |
+| exp9200-logits-b | exp9194-contract.source_ready_score; exp9198-logit-runtime.logit_runtime_ready_score; exp9198-logit-runtime.shard_feasible_score |
+| exp9201-logits-c | exp9194-contract.source_ready_score; exp9198-logit-runtime.logit_runtime_ready_score; exp9198-logit-runtime.shard_feasible_score |
+| exp9202-logit-admission | exp9199-logits-a.logits_a_ready_score; exp9200-logits-b.logits_b_ready_score; exp9201-logits-c.logits_c_ready_score |
+| exp9203-static-energy | exp9202-logit-admission.admission_ready_score; exp9194-contract.static_methods_ready_score |
+| exp9204-delayed-learning | exp9202-logit-admission.admission_ready_score; exp9194-contract.online_methods_ready_score |
+| exp9205-decision-audit | exp9202-logit-admission.admission_ready_score |
+| exp9206-complete-cost | exp9198-logit-runtime.logit_runtime_ready_score |
+| exp9207-capstone | None |
 
 ## Task contract
 
-| Order | Task ID | Phase | Deliverable |
-|---|---|---|---|
-| 1 | `exp9180-contract` | 1 | `results/experiment_9180_v782_contract.json` |
-| 2 | `exp9181-validation-loop-repair` | 1 | `results/experiment_9181_v782_causal_validation.json` |
-| 3 | `exp9182-forward-qualification` | 1 | `results/experiment_9182_v782_forward_qualification.json` |
-| 4 | `exp9183-logit-runtime` | 1 | `results/experiment_9183_v782_logit_runtime.json` |
-| 5 | `exp9184-logits-a` | 2 | `results/experiment_9184_v782_logits_a.json` |
-| 6 | `exp9185-logits-b` | 2 | `results/experiment_9185_v782_logits_b.json` |
-| 7 | `exp9186-logits-c` | 2 | `results/experiment_9186_v782_logits_c.json` |
-| 8 | `exp9187-logit-admission` | 2 | `results/experiment_9187_v782_logit_admission.json` |
-| 9 | `exp9188-static-energy` | 3 | `results/experiment_9188_v782_static_energy.json` |
-| 10 | `exp9189-delayed-learning` | 3 | `results/experiment_9189_v782_delayed_learning.json` |
-| 11 | `exp9190-decision-audit` | 3 | `results/experiment_9190_v782_decision_audit.json` |
-| 12 | `exp9191-complete-cost` | 4 | `results/experiment_9191_v782_complete_cost.json` |
-| 13 | `exp9192-arc-ordering-compatibility` | 4 | `results/experiment_9192_v782_arc_mechanic_routing.json` |
-| 14 | `exp9193-capstone` | 4 | `results/experiment_9193_v782_capstone.json` |
+Exactly **14 tasks, Exp9194 through Exp9207**, with these exact IDs and order.
+Every row has a concrete JSON deliverable; implementation scripts are named in
+its prompt. This table and the complete YAML below describe the same work.
 
-| Downstream | Upstream field | Required value |
-|---|---|---|
-| `exp9181-validation-loop-repair` | `exp9180-contract.contract_ready_score` | `== 1` |
-| `exp9182-forward-qualification` | `exp9181-validation-loop-repair.causal_fix_ready_score` | `== 1` |
-| `exp9183-logit-runtime` | `exp9182-forward-qualification.forward_validation_ready_score` | `== 1` |
-| `exp9183-logit-runtime` | `exp9180-contract.static_methods_ready_score` | `== 1` |
-| `exp9184-logits-a` | `exp9180-contract.source_ready_score` | `== 1` |
-| `exp9184-logits-a` | `exp9183-logit-runtime.logit_runtime_ready_score` | `== 1` |
-| `exp9184-logits-a` | `exp9183-logit-runtime.shard_feasible_score` | `== 1` |
-| `exp9185-logits-b` | `exp9180-contract.source_ready_score` | `== 1` |
-| `exp9185-logits-b` | `exp9183-logit-runtime.logit_runtime_ready_score` | `== 1` |
-| `exp9185-logits-b` | `exp9183-logit-runtime.shard_feasible_score` | `== 1` |
-| `exp9186-logits-c` | `exp9180-contract.source_ready_score` | `== 1` |
-| `exp9186-logits-c` | `exp9183-logit-runtime.logit_runtime_ready_score` | `== 1` |
-| `exp9186-logits-c` | `exp9183-logit-runtime.shard_feasible_score` | `== 1` |
-| `exp9187-logit-admission` | `exp9184-logits-a.logits_a_ready_score` | `== 1` |
-| `exp9187-logit-admission` | `exp9185-logits-b.logits_b_ready_score` | `== 1` |
-| `exp9187-logit-admission` | `exp9186-logits-c.logits_c_ready_score` | `== 1` |
-| `exp9188-static-energy` | `exp9187-logit-admission.admission_ready_score` | `== 1` |
-| `exp9188-static-energy` | `exp9180-contract.static_methods_ready_score` | `== 1` |
-| `exp9189-delayed-learning` | `exp9187-logit-admission.admission_ready_score` | `== 1` |
-| `exp9189-delayed-learning` | `exp9180-contract.online_methods_ready_score` | `== 1` |
-| `exp9190-decision-audit` | `exp9187-logit-admission.admission_ready_score` | `== 1` |
-| `exp9191-complete-cost` | `exp9183-logit-runtime.logit_runtime_ready_score` | `== 1` |
+| Order | Phase | Task ID | Deliverable |
+|---|---|---|---|
+| 1 | 1 | exp9194-contract | `results/experiment_9194_v783_contract.json` |
+| 2 | 1 | exp9195-corpus-prefilter | `results/experiment_9195_v783_corpus_prefilter.json` |
+| 3 | 1 | exp9196-forward-qualification | `results/experiment_9196_v783_forward_qualification.json` |
+| 4 | 1 | exp9197-label-ambiguity | `results/experiment_9197_v783_label_ambiguity.json` |
+| 5 | 2 | exp9198-logit-runtime | `results/experiment_9198_v783_logit_runtime.json` |
+| 6 | 2 | exp9199-logits-a | `results/experiment_9199_v783_logits_a.json` |
+| 7 | 2 | exp9200-logits-b | `results/experiment_9200_v783_logits_b.json` |
+| 8 | 2 | exp9201-logits-c | `results/experiment_9201_v783_logits_c.json` |
+| 9 | 2 | exp9202-logit-admission | `results/experiment_9202_v783_logit_admission.json` |
+| 10 | 3 | exp9203-static-energy | `results/experiment_9203_v783_static_energy.json` |
+| 11 | 3 | exp9204-delayed-learning | `results/experiment_9204_v783_delayed_learning.json` |
+| 12 | 3 | exp9205-decision-audit | `results/experiment_9205_v783_decision_audit.json` |
+| 13 | 4 | exp9206-complete-cost | `results/experiment_9206_v783_complete_cost.json` |
+| 14 | 4 | exp9207-capstone | `results/experiment_9207_v783_capstone.json` |
+
+## Deferred work and reopen conditions
+
+- No ARC compatibility rerun, hidden-game solve, registry edit or board probe.
+- No generated-ID/confidence transport workaround for the blocked forward path.
+- No new generator training, raw-energy threshold search or reduced human cohort.
+- No independent-verifier or publication claim from exposed development results.
+- A later untouched human confirmation needs a useful qualified development
+  result and independent label/source custody. A hardware implementation needs
+  a measured bottleneck, matching operations and authenticated device access.
 
 ## Full machine-readable contract
 
+The complete objects below are normative and equal the proposed execution file.
+
 ```yaml
-milestone: 2026.11.782
-milestone_title: Single-Pass Validation, Human Energy Decisions, and Continuous Calibration
+milestone: 2026.11.783
+milestone_title: Lossless Corpus Validation, Human Energy Decisions, and Label-Robust
+  Learning
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-- id: exp9180-contract
-  title: 'Exp9180: Bind fourteen tasks and freeze diagnostic supports'
+- id: exp9194-contract
+  title: 'Exp9194: Bind fourteen tasks and preserve human methods and V782 failures'
   phase: 1
   track: infrastructure
   priority: high
   requires_gpu: false
-  max_turns: 100
+  max_turns: 30
   estimated_wall_time_min: 45
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9180_v782_contract.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9194_v783_contract.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
-  model: opus
+  model: gpt-6.1-sol
   prior_failures:
   - experiment_id: exp7329-contract
     verdict: complete_disqualified_v644_contract_mismatched_or_invalid
@@ -543,26 +573,26 @@ tasks:
     retire_if_same_verdict: true
   - experiment_id: exp7421-contract-ingestion
     verdict: complete_disqualified_stale_markdown_contract_with_method_ingestion
-    addressed_by: Preserve V781 authority and generate both complete V782 contracts from one task list.
+    addressed_by: Preserve V782 authority and generate both complete V783 contracts from one task list, comparing
+      all objects before activation.
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 has four executed primaries and ten skipped tasks. Its archive entry lags. Authenticate primaries and scheduler evidence, preserve the full previous design/queue, and bind the new fourteen-task contract. No activation or science execution belongs in this task.
+    Work in {project_root} on {date}. V782 closed scheduling with four executed tasks and ten skips; its correction and ARC compatibility remain disqualified. Bind this distinct corpus-scan correction and the unchanged human science. No activation or experiment finding is implied.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/v780_contract.py; python/carnot/reporting/v780_capstone.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9152_v780_contract.json; results/experiment_9153_v780_validation_schedule.json; results/experiment_9165_v780_capstone.json; openspec/change-proposals/research-roadmap-v780-preserved-20261116.md; openspec/change-proposals/research-roadmap-v780-queue-preserved-20261116.yaml; python/carnot/reporting/v781_contract.py; python/carnot/reporting/v781_capstone.py; results/experiment_9166_v781_contract.json; results/experiment_9167_v781_causal_validation.json; results/experiment_9179_v781_capstone.json; openspec/change-proposals/research-roadmap-v781-preserved-20261117.md; openspec/change-proposals/research-roadmap-v781-queue-preserved-20261117.yaml
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/v782_contract.py; python/carnot/reporting/v782_capstone.py; python/carnot/reporting/human_authority_9097.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9180_v782_contract.json; results/experiment_9181_v782_causal_validation.json; results/experiment_9193_v782_capstone.json; openspec/change-proposals/research-roadmap-v782-preserved-20261117.md; openspec/change-proposals/research-roadmap-v782-queue-preserved-20261117.yaml; research-roadmap-next.yaml
     TASK:
-    Bind fourteen tasks and freeze diagnostic supports. Deliver results/experiment_9180_v782_contract.json. Implement scripts/experiments/experiment_9180_v782_contract.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
-    Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
+    Exp9194: Bind fourteen tasks and preserve human methods and V782 failures. Deliver results/experiment_9194_v783_contract.json. Implement scripts/experiments/experiment_9194_v783_contract.py using existing seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load. No current LLM load or generation; current_llm_invocations=0, generated_tokens=0.
     CONCRETE STEPS:
-    1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
-    2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9180-V782 and SCENARIO-REPORT-9180-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Compare fourteen ordered complete task objects between V782 design and queue, including prompts, gates, model metadata and deliverables. Preserve the V781 activated queue bytes and separately its design objects; do not rewrite either to hide brace encoding. Follow the qualified V781 binding normalization and test rendering, missing objects and tamper controls. Never activate the next queue.
-    5. Authenticate Exp9166 source and Exp9126/9132 methods through original producer snapshots. Retain 900 answers/300 qids, TRAIN150/CAL50/TEST100, all siblings, independent_generalization_score=0 and three lexical100-qid rosters. Source/method readiness stays independent of the diagnostic failure. Do not rerun completed method studies.
-    6. Freeze the five static arms, six delayed-learning arms, two static bounds, seven learning bounds and existing Brier moment diagnostics. Freeze the new CES reference protocol from the design: TRAIN-correct token empirical CDF, three fixed ranking contrasts, qid resampling and no TEST tuning. Do not add CES to the primary energy or online acceptance conditions.
-    7. Bind all621 original nodes,53 V779 additions and every affected V780/V781/V782 obligation by node identity and assertion hash. Retain original failing/censored checks and ten ARC regressions separately. Prior completions grant no current qualification credit. Record all fourteen V781 outcomes, including absent scientific primaries.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark or subprocess that can take minutes. Print inside long loops and supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines; send a progress message between calls. Never use one huge tool call.
+    2. PRECONDITIONS: authenticate exact inputs, immutable producer hashes and named gate operands. Check CPU, memory, private free disk and required tools. Record missing_file, missing_field and observed zero separately in gate_check_summary. External absence is terminal blocked, never partial. Do not repin historical evidence to mutable checkout bytes.
+    3. Before implementation use rg to inspect every caller. Confirm the REQ-REPORT-9194-V783 / SCENARIO-REPORT-9194-V783 in the research-reporting spec, extend the spec first, then add failing controls before code. Preserve original assertions, artifacts and quarantines. Freeze units, formulas, exclusions and the complete affected validation scope before outcomes.
+    4. Compare all fourteen ordered complete objects in the design and proposed/activated queue, including prompts, IDs, gates and model metadata. Preserve V782 design and queue bytes. Verify new ID availability against the archive, current queue, manifest and canonical artifacts; exclude only this task own canonical output from collision checks. Do not perform activation.
+    5. Authenticate the original Exp9097 human authority and Exp9126/9132 methods through their retained original bytes, not by changing pins. Preserve 300 qids/900 siblings with TRAIN150/CAL50/TEST100 and lexical qid shards 0:100,100:200,200:300. Retain source-ready, static-method and online-method gates independently of contract readiness.
+    6. Freeze the additional label ambiguity protocol in the design: observed A1/A2 disagreement sets and a separate missing-A2 envelope, exact affine Brier contrast endpoints, fixed qid/stream weights and no replacement of the original primary gates. Reuse original Brier-moment and CES protocols without rewriting them.
+    7. Inventory the complete original621 plus53 added validation nodes and all affected V780-V783 obligations, including the stalled full-corpus duration node. No assertion, file category or historical quarantine is removed. Preserve Exp9181/9182 retirement; the new gate is corpus_scan_ready_score, not a rewrite of causal_fix_ready_score.
+    8. Run owned unit tests and actual child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Run private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH under E2E-018/021; learning/recovery changes also require E2E-020. Every affected failure disqualifies readiness; record unrelated repository health separately.
+    9. Stop measurement by 3300 seconds using one monotonic deadline for descendants and cleanup. Reserve 1200 seconds for final verification and 300 for publication within the 4800-second cap. Preserve unfinished units and censor reasons. Recompute every claim from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats; publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a queue, change the exclusion manifest, publish externally or modify historical results.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -585,17 +615,19 @@ tasks:
     - validation_receipts: commands, logs, exit codes and coverage references; principle: Self-reported passing checks do not establish readiness.
     - required_checks_passed: boolean; principle: Readiness requires every affected check.
     - acceptance_gates: fixed conditions, each with a principle annotation; principle: Outcome-dependent thresholds cannot manufacture success.
-    - contract_ready_score: integer 0/1; principle: All fourteen complete objects must agree.
-    - source_ready_score: integer 0/1; principle: Original labels, roles and complete rosters must authenticate.
-    - static_methods_ready_score: integer 0/1; principle: Reuse requires original static method authority.
-    - online_methods_ready_score: integer 0/1; principle: Reuse preserves all causal update and recovery semantics.
     - protocol_references: source, evaluator labels, static, online, diagnostic and three shard rosters; principle: Consumers share immutable inputs with exact names.
-    - full_task_objects: canonical_task_hash and previous_outcome_rows; principle: Scheduling completion is not scientific success.
-    - entropy_reference_protocol: exact CDF construction, score, comparator directions, bootstrap seed and support rules; principle: An auxiliary comparison must be fixed before its TEST results.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9180_v782_contract.py --date {date}
+    - contract_ready_score: integer 0/1; principle: Exact full-object agreement is administrative readiness, independent of scientific effects.
+    - source_ready_score: integer 0/1; principle: Original authenticated roles and labels cannot be replaced with convenient current bytes.
+    - static_methods_ready_score: integer 0/1; principle: Exp9126 five arms and both original bounds remain fixed.
+    - online_methods_ready_score: integer 0/1; principle: Exp9132 six arms, recovery and seven bounds remain fixed.
+    - full_task_objects: fourteen ordered complete objects; principle: A short aspirational task list is not an execution contract.
+    - validation_scope_manifest: original and affected nodes with code/test hashes; principle: Corpus optimization grants no omitted-test credit.
+    - label_ambiguity_protocol_reference: immutable path and SHA256; principle: Label sensitivity is fixed before predictions and never selects an update.
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9194_v783_contract.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9181-validation-loop-repair
-  title: 'Exp9181: Remove repeated structural scans and qualify immutable diagnostic evidence'
+  agent_type: codex
+- id: exp9195-corpus-prefilter
+  title: 'Exp9195: Qualify a lossless byte prefilter for the complete corpus walk'
   phase: 1
   track: infrastructure
   priority: high
@@ -603,72 +635,71 @@ tasks:
   max_turns: 100
   estimated_wall_time_min: 75
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9181_v782_causal_validation.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9195_v783_corpus_prefilter.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   model: opus
   gated_on:
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: contract_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9181-validation-loop-repair
+    verdict: complete_disqualified_causal_validation
+    addressed_by: Exp9181 completed local structural controls but was cut off inside a recursive JSON corpus scan.
+      The new method filters impossible sentinel matches before decoding while visiting every file and preserving
+      every assertion; it does not retry structural caching.
+    retire_if_same_verdict: true
   - experiment_id: exp9167-causal-validation
     verdict: complete_disqualified_causal_validation
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Reproduce the original flags with the changed algorithm;900 seconds for diagnosis
-      plus separate complete-module execution, not a leftover130-second module cap.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9153-measured-validation
     verdict: complete_blocked_validation_prerequisite
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Reproduce the original flags with the changed algorithm;900 seconds for diagnosis
-      plus separate complete-module execution, not a leftover130-second module cap.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9125-receipt-qualification
     verdict: complete_disqualified_bounded_receipt_qualification
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Reproduce the original flags with the changed algorithm;900 seconds for diagnosis
-      plus separate complete-module execution, not a leftover130-second module cap.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9111-forward-evidence
     verdict: complete_disqualified_owned_checks
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Reproduce the original flags with the changed algorithm;900 seconds for diagnosis
-      plus separate complete-module execution, not a leftover130-second module cap.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9140-forward-qualification
     verdict: complete_blocked_infeasible_forward_schedule
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Reproduce the original flags with the changed algorithm;900 seconds for diagnosis
-      plus separate complete-module execution, not a leftover130-second module cap.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 traced repeated structural traversal but its correction failed: complete artifact hashing repeats per numeric pair, probe logs were overwritten, PYTHONPATH removal hid children, and diagnosis exceeded900 seconds. Change the algorithm and evidence lifecycle; do not repeat the unqualified cache or extend deadlines.
+    Work in {project_root} on {date}. Exp9181 completed local structural controls but was cut off inside a recursive JSON corpus scan. The new method filters impossible sentinel matches before decoding while visiting every file and preserving every assertion; it does not retry structural caching.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/validation_schedule_9153.py; python/carnot/reporting/validation_schedule_9139.py; python/carnot/reporting/validation_schedule_runner_9139.py; python/carnot/reporting/forward_evidence_runner_9111.py; tests/python/test_forward_evidence_runner_9111.py; tests/python/test_validation_schedule_9153.py; results/experiment_9153_v780_validation_schedule.json; scripts/adversarial_verify.py; python/carnot/reporting/validation_reuse_9167.py; python/carnot/reporting/validation_trace_9167.py; python/carnot/reporting/causal_validation_9167.py; tests/python/test_causal_validation_9167.py; results/experiment_9167_v781_causal_validation.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; scripts/adversarial_verify.py (_is_arc_live_agent_no_llm, _inference_substrate_text); tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py; python/carnot/reporting/causal_validation_9181.py; python/carnot/reporting/validation_diagnostics_9181.py; results/experiment_9181_v782_causal_validation.json; python/carnot/reporting/receipt_qualification_9125.py
     TASK:
-    Remove repeated structural scans and qualify immutable diagnostic evidence. Deliver results/experiment_9181_v782_causal_validation.json. Implement scripts/experiments/experiment_9181_v782_causal_validation.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
-    Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
+    Exp9195: Qualify a lossless byte prefilter for the complete corpus walk. Deliver results/experiment_9195_v783_corpus_prefilter.json. Implement scripts/experiments/experiment_9195_v783_corpus_prefilter.py using existing seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load. No current LLM load or generation; current_llm_invocations=0, generated_tokens=0.
     CONCRETE STEPS:
-    1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
-    2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9181-V782 and SCENARIO-REPORT-9181-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Read all callers of check_tautology and its ARC-null descriptor. Freeze the retained original/corrected traces and every original assertion. The corrected trace shows2178 classifier calls and4368 canonical hashes. This establishes repeated work, not a qualified performance gain. Do not rerun a900-second search for an already-localized operation.
-    5. Before code, reproduce one bounded semantic/performance failure with counts and exact flags. Replace per-pair whole-artifact scanning/hashing with lazy invocation-local evaluation of the invariant structural predicate inside check_tautology. Preserve direct helper behavior, pair order, exclusions, severity and details. No global/object-id/pass-fail cache; no historical checker rewrite. Keep mutation detection across calls and original validation_reuse controls; remove only redundant use from the normal path if all callers qualify.
-    6. Give every attempt, child, stdout and stderr a unique immutable path; create exclusively and seal only after exit. Use an explicit diagnostic startup seam in the actual child entrypoints that does not depend on PYTHONPATH. Keep the outside-checkout no-PYTHONPATH execution unchanged. Demonstrate traced PID/PPID/argv and measured operation in a real sanitized child; do not substitute parent wait time. No shared interpreter installation or replacement checker.
-    7. Use one monotonic900-second diagnostic deadline, with planned original/corrected/overhead slices300/450/150 seconds including cleanup. Require same-input flag parity and at most one full structural classification per synchronous tautology call. Compare actual original versus changed work and report censoring; a censored baseline supports a bound only. Do not run the full target module inside the diagnostic slice. Measure hook overhead separately and retain all logs.
-    8. Use the remaining execution allowance up to3300 seconds for the complete original test_forward_evidence_runner_9111 module, all seven rehashed primitive tamper cases, cache mutation/revision/config controls and real private CLI cases. Preserve fixture lifetime, assertions and coverage. Count those checks once when finalizing. This separation replaces the prior130-second leftover module run without increasing any total cap.
-    9. Require exact flag parity, qualified changed-algorithm counts, immutable logs, complete sanitized-child observation, diagnostic elapsed<=900 and complete targeted normal execution before causal_fix_ready_score=1. Emit revision_reference and the full obligation union for Exp9182. Any affected failing test disqualifies. Targeted readiness cannot authorize model work or claim full674-node completion.
-    10. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    11. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark or subprocess that can take minutes. Print inside long loops and supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines; send a progress message between calls. Never use one huge tool call.
+    2. PRECONDITIONS: authenticate exact inputs, immutable producer hashes and named gate operands. Check CPU, memory, private free disk and required tools. Record missing_file, missing_field and observed zero separately in gate_check_summary. External absence is terminal blocked, never partial. Do not repin historical evidence to mutable checkout bytes.
+    3. Before implementation use rg to inspect every caller. Confirm the REQ-REPORT-9195-V783 / SCENARIO-REPORT-9195-V783 in the research-reporting spec, extend the spec first, then add failing controls before code. Preserve original assertions, artifacts and quarantines. Freeze units, formulas, exclusions and the complete affected validation scope before outcomes.
+    4. Authenticate Exp9181 direct_consumers stdout/stderr and node events. It exited -15 after1224.316 seconds with an outer_work_cutoff; the active node recursively decodes results/**/*.json. Treat the planning size census as advisory. Record a fresh complete path/size manifest and bounded read/decode/classifier timings on deterministic size strata before asserting the cost cause. Do not rerun the failed structural-cache experiment.
+    5. Implement one conservative reader for this corpus-impact test: derive all five currently recognized ASCII sentinels from the unchanged classifier constants. Visit every original recursive path. Stream every file to EOF in bounded chunks with enough overlap to detect sentinels and the JSON Unicode escape marker across boundaries. If a sentinel or Unicode escape is present, use the original read_text/json.loads and classifier. Only absence of every sentinel and Unicode escape can skip decoding. Never use filename, directory, size, age, schema or verdict as an exclusion. Keep original malformed/non-dict behavior, checked>0 and offenders==[] assertions.
+    6. Prove parity against the original decoder on escaped keys/values, wrapped declarations, suffix boundaries, duplicate keys, malformed UTF-8/JSON, non-dicts, Unicode-escaped sentinels, cross-chunk markers and nested decoys. Run mutation controls deleting each sentinel and the escape fallback. No pass/fail cache, production validator semantic change, monkeypatch of outcomes, test skip or removal of corpus files is allowed. Audit callers before sharing the reader with any other scan.
+    7. Measure original versus prefilter on the same bounded, preselected corpus strata; retain every byte/path denominator and censoring. Then execute the complete original target test over the full manifest, plus all original V782 targeted controls and every consumer affected by the new reader. No full-corpus original-versus-new speed ratio from a censored original run. Verify stable candidate bytes and record concurrent file additions or changes; unstable input cannot qualify corpus completeness.
+    8. Set corpus_scan_ready_score=1 only when complete path traversal, exact refusal/semantic parity, the full original target module and all affected checks pass within budget. Retain original V782 structural correction code and all unchanged mutation tests. This qualifies the changed corpus walker only; Exp9196 must still run the entire validation union. If the complete corpus does not finish, report the measured remaining work; no subset can pass.
+    9. Run owned unit tests and actual child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Run private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH under E2E-018/021; learning/recovery changes also require E2E-020. Every affected failure disqualifies readiness; record unrelated repository health separately.
+    10. Stop measurement by 3300 seconds using one monotonic deadline for descendants and cleanup. Reserve 1200 seconds for final verification and 300 for publication within the 4800-second cap. Preserve unfinished units and censor reasons. Recompute every claim from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats; publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a queue, change the exclusion manifest, publish externally or modify historical results.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -691,16 +722,21 @@ tasks:
     - validation_receipts: commands, logs, exit codes and coverage references; principle: Self-reported passing checks do not establish readiness.
     - required_checks_passed: boolean; principle: Readiness requires every affected check.
     - acceptance_gates: fixed conditions, each with a principle annotation; principle: Outcome-dependent thresholds cannot manufacture success.
-    - causal_fix_ready_score: integer 0/1; principle: Demonstrated cause, corrective execution and unchanged negative controls must all pass.
-    - causal_evidence: operation, trace references, competing hypotheses, before/after rows and instrumentation overhead; principle: A stack location alone does not establish a cause.
-    - revision_reference: owned code/config hashes and exact obligation union; principle: Full qualification must run the corrected revision.
-    - remaining_obligations: original and added node IDs with reasons; principle: Targeted completion cannot replace full validation.
-    - structural_scan_rows: invocation, artifact size, numeric pairs, full scans, hashes, flags and measured duration; principle: A faster wrapper is insufficient without the formerly repeated work changing.
-    - diagnostic_attempt_rows: immutable log paths/hashes, child identities, total deadline and measured hook overhead; principle: Overwritten or unobserved child evidence cannot qualify a correction.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9181_v782_causal_validation.py --date {date}
+    - protocol_references: source, evaluator labels, static, online, diagnostic and three shard rosters; principle: Consumers share immutable inputs with exact names.
+    - corpus_scan_ready_score: integer 0/1; principle: Complete traversal, unchanged assertions and exact semantic parity are all necessary.
+    - corpus_manifest_reference: ordered paths, sizes, population hashes and change observations; principle: Every original file remains in scope, including raw and nested results.
+    - scan_rows: path, bytes_read, decode_reason, decode_status, original/candidate comparison, duration and censor_reason; principle: Parsing less must not mean checking fewer eligible artifacts.
+    - candidate_counts: visited, decoded, safely_negative, malformed, changed and unfinished; principle: Every path has one accountable outcome.
+    - parity_controls: each sentinel, escape fallback, chunk boundary and mutation; principle: A filter is useful only if false negatives are excluded.
+    - cost_model_rows: same-input read/decode/classification clocks; principle: Size counts alone do not identify the slow operation.
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9195_v783_corpus_prefilter.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9182-forward-qualification
-  title: 'Exp9182: Execute the complete causally corrected validation revision'
+  agent_type: claude
+  operator_override: '2026-05-29 operator directive (standing): versioned lineage continuation vs exp9181-validation-loop-repair;
+    change from structural caching to a lossless full-corpus byte prefilter with exact decoder parity and unchanged
+    assertions.'
+- id: exp9196-forward-qualification
+  title: 'Exp9196: Execute the complete causally corrected validation revision'
   phase: 1
   track: infrastructure
   priority: high
@@ -708,58 +744,68 @@ tasks:
   max_turns: 100
   estimated_wall_time_min: 75
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9182_v782_forward_qualification.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9196_v783_forward_qualification.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   model: opus
   gated_on:
-  - upstream: exp9181-validation-loop-repair
-    artifact_field: causal_fix_ready_score
+  - upstream: exp9195-corpus-prefilter
+    artifact_field: corpus_scan_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9182-forward-qualification
+    verdict: blocked_gate_check_failed
+    addressed_by: Exp9182 never ran because the structural correction gate was zero. Require a separately qualified
+      lossless corpus traversal, then execute the complete original674 and all affected obligations; no retired
+      upstream ID or sampled corpus.
+    retire_if_same_verdict: true
   - experiment_id: exp9168-forward-qualification
     verdict: blocked_gate_check_failed
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9154-forward-qualification
     verdict: blocked_gate_check_failed
-    addressed_by: Run only after a new demonstrated correction passes Exp9181. Preserve the full union and actual
-      process execution, not a revised forecast.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9125-receipt-qualification
     verdict: complete_disqualified_bounded_receipt_qualification
-    addressed_by: Replace the demonstrated 2100-minus-1800 scheduling defect and duplicated unpartitioned reruns
-      with a complete cost-budgeted execution graph. Preserve every assertion and original quarantine; qualify the
-      new revision separately.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   - experiment_id: exp9140-forward-qualification
     verdict: complete_blocked_infeasible_forward_schedule
-    addressed_by: Preserve the already-corrected ceiling accounting. Run complete qualification only after Exp9181
-      emits causal_fix_ready_score=1 from demonstrated cause, corrective execution and unchanged controls.
+    addressed_by: New Exp9195 tests a lossless byte prefilter for the demonstrated full-corpus JSON decode bottleneck,
+      preserving every path and assertion. Only corpus_scan_ready_score=1 permits Exp9196 to execute the entire
+      original and affected validation union. Old structural caching or a changed forecast is insufficient.
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/forward_qualification_9140.py; python/carnot/reporting/validation_schedule_9153.py; python/carnot/reporting/receipt_qualification_9125.py; tests/python/test_forward_qualification_9140.py; results/experiment_9181_v782_causal_validation.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/forward_qualification_9140.py; python/carnot/reporting/validation_schedule_9153.py; python/carnot/reporting/receipt_qualification_9125.py; tests/python/test_forward_qualification_9140.py; results/experiment_9181_v782_causal_validation.json
     TASK:
-    Execute the complete causally corrected validation revision. Deliver results/experiment_9182_v782_forward_qualification.json. Implement scripts/experiments/experiment_9182_v782_forward_qualification.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Execute the complete causally corrected validation revision. Deliver results/experiment_9196_v783_forward_qualification.json. Implement scripts/experiments/experiment_9196_v783_forward_qualification.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9182-V782 and SCENARIO-REPORT-9182-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Authenticate Exp9181 causal_fix_ready_score and exact source revision. Freeze the union of all 621 original nodes, 53 V779 additions, affected V780 tests and new obligations. Preserve assertion bodies and full command roles. Historical completions do not count as current completions.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9196-V783 and SCENARIO-REPORT-9196-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Authenticate Exp9195 corpus_scan_ready_score and exact source revision. Freeze the union of all 621 original nodes, 53 V779 additions, affected V780 tests and new obligations. Preserve assertion bodies and full command roles. Historical completions do not count as current completions.
     5. Execute the complete normal orchestration once with measured-cost accounting and the causal correction. Retain whole-module fixture lifetimes. Record setup/call/teardown, actual process costs, child exits and coverage after exit. Stop measurement at 3300 seconds. Unknown forecasts cannot establish completion.
     6. Count each obligation once in this invocation; consume authenticated same-invocation results in final verification instead of launching the suite twice. Include semantic/count controls, real CLI refusal/tamper/cold replay, lint, strict types and spec checks. Combine only current actual child coverage. Require 100 percent owned statements with zero exclusions.
     7. Emit forward_validation_ready_score=1 only for the full node/command union, exact revision, coverage and checker semantics unchanged by the optimization. Missing nodes, unresolved stalls or exhausted budget leave readiness zero. Save exact remaining work and causes. Do not lower watchdogs, force feasible=true, drop assertions or repin quarantined history.
-    8. Authenticate Exp9181 immutable attempt logs, child coverage and algorithmic parity. Execute all affected V781 and V782 controls in addition to the original union. Do not treat a new task ID as satisfying the retired Exp9168 reopen condition. If the correction is unqualified, the structured gate must skip this task.
-    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Authenticate Exp9195 immutable attempt logs, child coverage and algorithmic parity. Execute all affected V780, V781, V782 and V783 controls in addition to the original union. Do not treat a new task ID as satisfying the retired Exp9168 reopen condition. If the correction is unqualified, the structured gate must skip this task.
+    9. The changed prerequisite is Exp9195 full-corpus reader qualification. Preserve original621+53 nodes and every affected V780-V783 obligation, including full recursive-corpus assertions. Run each obligation once under this current revision with original outcomes. Do not execute a historical cached pass, rename a zero prerequisite, or reclassify an unfinished full scan as unrelated health. Any incomplete obligation keeps forward_validation_ready_score=0.
+    10. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    11. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    12. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -785,42 +831,120 @@ tasks:
     - forward_validation_ready_score: integer 0/1; principle: Only complete normal-path execution authorizes current model evidence.
     - node_completion_rows: original/additional node IDs, phase exits and actual durations; principle: No duplicated or absent node can satisfy the full union.
     - qualified_revision_reference: exact code and configuration plus full validation receipts; principle: Downstream work uses only the revision actually tested.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9182_v782_forward_qualification.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9196_v783_forward_qualification.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  operator_override: '2026-05-29 operator directive (standing): versioned lineage continuation versus exp9168-forward-qualification;
-    new Exp9181 removes per-pair scanning and repairs immutable logs/sanitized-child observation before the complete
-    unchanged validation union. No retired ID is reused.'
-- id: exp9183-logit-runtime
-  title: 'Exp9183: Qualify frozen Qwen forwards and all three shard budgets'
+  operator_override: '2026-05-29 operator directive (standing): versioned lineage continuation vs exp9182-forward-qualification
+    and exp9168-forward-qualification; require changed corpus_scan_ready_score before the complete unchanged validation
+    union.'
+  agent_type: claude
+- id: exp9197-label-ambiguity
+  title: 'Exp9197: Freeze exact human-label ambiguity envelopes without model work'
   phase: 1
   track: research
   priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 45
+  per_unit_rows: true
+  milestone: 2026.11.783
+  deliverable: results/experiment_9197_v783_label_ambiguity.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp9194-contract
+    artifact_field: source_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp9190-decision-audit
+    verdict: blocked_upstream_retired
+    addressed_by: No prediction study ran. This independently freezes exact label-ambiguity endpoints from already
+      authenticated human labels; it needs no absent Qwen logits and makes no verifier-benefit claim.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. Recent label-source papers motivate a sensitivity envelope that remains useful when Qwen collection is blocked. This is a new ambiguity calculation, not another agreement recount or a replacement for A1 evaluation.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/human_contrast_9141.py; python/carnot/reporting/human_authority_9097.py; python/carnot/reporting/logit_methods_9126.py; results/experiment_9141_v779_human_contrast_audit.json; results/experiment_9180_v782_contract.json; research-references.md (V783 scan)
+    TASK:
+    Exp9197: Freeze exact human-label ambiguity envelopes without model work. Deliver results/experiment_9197_v783_label_ambiguity.json. Implement scripts/experiments/experiment_9197_v783_label_ambiguity.py using existing seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load. No current LLM load or generation; current_llm_invocations=0, generated_tokens=0.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark or subprocess that can take minutes. Print inside long loops and supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines; send a progress message between calls. Never use one huge tool call.
+    2. PRECONDITIONS: authenticate exact inputs, immutable producer hashes and named gate operands. Check CPU, memory, private free disk and required tools. Record missing_file, missing_field and observed zero separately in gate_check_summary. External absence is terminal blocked, never partial. Do not repin historical evidence to mutable checkout bytes.
+    3. Before implementation use rg to inspect every caller. Confirm the REQ-REPORT-9197-V783 / SCENARIO-REPORT-9197-V783 in the research-reporting spec, extend the spec first, then add failing controls before code. Preserve original assertions, artifacts and quarantines. Freeze units, formulas, exclusions and the complete affected validation scope before outcomes.
+    4. Authenticate original A1 and actual A2 annotations, qid/sibling IDs and original roles. Preserve A2=-1 as missing. Keep annotator tags, references and evaluator labels out of inference/training views. Retain all900 rows, with no new adjudication, relabeling, consensus target or claimed new independent cohort.
+    5. Build two immutable per-response admissible label sets. Observed-disagreement sensitivity: observed agreement fixes A1, observed disagreement permits0/1, missing A2 fixes A1 but is reported. Missing-annotation envelope: observed agreement fixes A1 and every disagreement or missing A2 permits0/1. These are conditional robustness scenarios, not ground-truth sets or assumptions about actual error rates.
+    6. Implement the exact endpoints for d(y)=(p_control-y)^2-(p_treatment-y)^2=p_control^2-p_treatment^2-2*y*(p_control-p_treatment). Evaluate both admissible endpoints at each original unit and sum with frozen weights. One label variable is shared across repeated appearances of the same qid/sibling, especially retention across ten streams: first sum its weighted coefficients, then optimize endpoints. Never choose a different label per repeated observation or claim that pairwise bounds share one joint worst case.
+    7. Use analytic, binary exhaustive small-panel and permutation/duplicate-retention controls to prove min/max equality, sign correctness, constant predictions, missing labels, exact weights and finite probabilities. Freeze the reducer and masks before any current model prediction. Current900-label masks are empirical source evidence; artificial probabilities are method fixtures only.
+    8. Publish label_ambiguity_ready_score only after all controls and custody checks pass. Report exact eligible/missing counts by TRAIN/CAL/TEST and original online supports; no empirical verifier Brier or learning effect exists here. Exp9205 can consume the reducer and report bounds on genuine predictions independently of primary gates. No automatic source-based exclusion or direction selection.
+    9. Run owned unit tests and actual child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Run private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH under E2E-018/021; learning/recovery changes also require E2E-020. Every affected failure disqualifies readiness; record unrelated repository health separately.
+    10. Stop measurement by 3300 seconds using one monotonic deadline for descendants and cleanup. Reserve 1200 seconds for final verification and 300 for publication within the 4800-second cap. Preserve unfinished units and censor reasons. Recompute every claim from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats; publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a queue, change the exclusion manifest, publish externally or modify historical results.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
+    - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
+    - gate_check_summary: check, upstream, path, sha256, artifact_field, op, expected, observed, passed; principle: Every blocked result names its failed operand; missing evidence differs from an observed zero.
+    - preconditions_checked: resource, available and actual check receipt; principle: Unavailable resources cannot produce invented measurements.
+    - rows: unit_id, qid/group, sibling, arm/condition, seed, absolute metrics, numerator, denominator, status, exclusion_reason, censor_reason; principle: All comparative headlines must be reproducible from their independent units.
+    - sample_size_budget: intended, attempted, completed, failed, censored, effective_independent_groups; principle: Siblings and repeated retention do not multiply independent sample size.
+    - verifier_is_oracle: boolean; principle: Reusing executable truth as the verifier requires circular_positive, not an independent verifier win.
+    - claim_scope: exposure_scope, independent_generalization_score=0 and allowed claims; principle: Exposed development and fixtures cannot close the independent-verifier gaps.
+    - MODEL_SPECS: actual requested list and invocation status; principle: An upstream model reference is not current model work.
+    - inference_substrate_class: actual class and requested_inference_substrate_class; principle: Use blocked_no_run for refusal before loading; attempted loads remain attempted loads.
+    - inference_substrate: operation-accurate work description; principle: Forward work, generation and cached CPU reduction have different evidence requirements.
+    - model_invocation_counts: current_llm_invocations, loads attempted/completed/failed, forward calls, generated_tokens; principle: Counters must agree with actual operation-specific receipts.
+    - duration_s: measured wall time; principle: No artificial sleeping or duration padding may satisfy a substrate floor.
+    - random_seed: fixed before outcomes; principle: A frozen seed permits replay without favorable seed selection.
+    - reproducibility_checksum: inputs and configuration digest; principle: Changed inputs cannot pass as the original experiment.
+    - source_references: original producer paths, SHA256 and imported fields; principle: Historical evidence retains its original authority.
+    - code_config_hashes: owned implementation, tests and configuration; principle: Validation qualifies the executed revision.
+    - current_work_receipts: operation-specific records; principle: Historical receipts cannot certify current inference.
+    - validation_receipts: commands, logs, exit codes and coverage references; principle: Self-reported passing checks do not establish readiness.
+    - required_checks_passed: boolean; principle: Readiness requires every affected check.
+    - acceptance_gates: fixed conditions, each with a principle annotation; principle: Outcome-dependent thresholds cannot manufacture success.
+    - protocol_references: source, evaluator labels, static, online, diagnostic and three shard rosters; principle: Consumers share immutable inputs with exact names.
+    - label_ambiguity_ready_score: integer 0/1; principle: Custody and exact endpoint controls establish a method, not a useful verifier.
+    - ambiguity_masks_reference: every qid/sibling, A1/A2 status and both admissible sets; principle: Missing annotations cannot be invented or silently dropped.
+    - endpoint_control_rows: probabilities, admissible assignments, exact and reducer extrema; principle: Repeated measurements share one underlying label.
+    - label_exposure_scope: exposed_development_only; principle: Reusing the human panel supplies no untouched confirmation.
+    - scientific_effect_measured: false; principle: Fixture probabilities cannot establish a natural-verification benefit.
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9197_v783_label_ambiguity.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp9198-logit-runtime
+  title: 'Exp9198: Qualify frozen Qwen forwards and all three shard budgets'
+  phase: 2
+  track: research
+  priority: high
   requires_gpu: true
-  max_turns: 100
+  max_turns: 50
   estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9183_v782_logit_runtime.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9198_v783_logit_runtime.json
   inference_substrate_class: model_load_no_generation
   MODEL_SPECS:
   - hf_id: unsloth/Qwen3.8-27B-GGUF
     quantization: Q4_K_M
-  model: opus
+  model: gpt-6.1-sol
   gated_on:
-  - upstream: exp9182-forward-qualification
+  - upstream: exp9196-forward-qualification
     artifact_field: forward_validation_ready_score
     op: ==
     value: 1
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: static_methods_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9183-logit-runtime
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9169-logit-runtime
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9155-logit-runtime
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -829,22 +953,23 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/embedding_runtime_9098.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; results/experiment_9098_v776_embedding_runtime.json; results/experiment_9182_v782_forward_qualification.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/embedding_runtime_9098.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; results/experiment_9098_v776_embedding_runtime.json; results/experiment_9182_v782_forward_qualification.json
     TASK:
-    Qualify frozen Qwen forwards and all three shard budgets. Deliver results/experiment_9183_v782_logit_runtime.json. Implement scripts/experiments/experiment_9183_v782_logit_runtime.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
+    Qualify frozen Qwen forwards and all three shard budgets. Deliver results/experiment_9198_v783_logit_runtime.json. Implement scripts/experiments/experiment_9198_v783_logit_runtime.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
     Use frozen Qwen teacher-forced forwards only; generated_tokens=0. model_load_no_generation has a 2-second floor. A small-token canary would require model_bounded_generation (10s); a real generative run requires model_full_generation (60s). Do not add either operation here.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code. Before model work, resolve cached_current_model(gpu_index=0), as documented by cached_sota_pair() in the experiment template. Require the mandated local GGUF, embedded tokenizer, GPU0 lease, free VRAM and actual CUDA offload support. Pin GGUF and llama.cpp build hashes. GPU1 remains with its owner. Cache or resource failure blocks; no download or small-model headline fallback.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9183-V782 and SCENARIO-REPORT-9183-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9198-V783 and SCENARIO-REPORT-9198-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
     4. Bind the Exp9126 frozen tokenization, prefix, caps256/768, full vocabulary and chunk128 protocol. Use only the supported serial forward API. Do not implement embeddings, batching masks or a different tokenizer. Freeze a six-text pilot selected by text-length quantiles from the label-blind roster before model access.
     5. Check logits for serial versus chunk128 parity with atol1e-5/rtol1e-4, identical token IDs and correct first-answer alignment. Compare sufficient statistics and raw vector hashes. Test one-token answers, context reset, adjacent chunk boundaries and nonfinite-output refusal. Classify pilot source exposure honestly; never retain pilot answers as new independent evidence.
     6. Measure actual load, forward, reduction, serialization, checkpoint and memory/disk costs. Project each of the three300-answer shards from its actual capped token lengths and worst observed per-token rate. Include load and checkpoint overhead. Require each full shard projection<=3300 seconds and available disk>=2GiB raw evidence plus measured storage needs. A watchdog ceiling is not a runtime observation. No row dropping or shorter cap rescues infeasibility.
-    7. Validate operation-specific current receipts under Exp9182. Emit logit_runtime_ready_score and shard_feasible_score separately. Both require actual model work; all three shard projections must pass. Generated tokens remain0. Block before collection if any whole shard is infeasible; preserve the unchanged total cohort.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    7. Validate operation-specific current receipts under Exp9196. Emit logit_runtime_ready_score and shard_feasible_score separately. Both require actual model work; all three shard projections must pass. Generated tokens remain0. Block before collection if any whole shard is infeasible; preserve the unchanged total cohort.
+    8. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -871,10 +996,11 @@ tasks:
     - shard_feasible_score: integer 0/1; principle: The complete planned populations must fit measured budgets.
     - runtime_reference: model/build/tokenizer hashes, prefix and role-blind pilot roster, full-vocabulary parity rows and actual counters; principle: A forward-only canary must be reproducible.
     - shard_budget_rows: load, tokens, worst observed rate, overhead, memory, disk and per-shard upper projection; principle: Feasibility includes the whole intended workload.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9183_v782_logit_runtime.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9198_v783_logit_runtime.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9184-logits-a
-  title: 'Exp9184: Collect complete frozen Qwen logit shard A'
+  agent_type: codex
+- id: exp9199-logits-a
+  title: 'Exp9199: Collect complete frozen Qwen logit shard A'
   phase: 2
   track: research
   priority: high
@@ -882,31 +1008,36 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9184_v782_logits_a.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9199_v783_logits_a.json
   inference_substrate_class: model_load_no_generation
   MODEL_SPECS:
   - hf_id: unsloth/Qwen3.8-27B-GGUF
     quantization: Q4_K_M
   gated_on:
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: source_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: logit_runtime_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: shard_feasible_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9184-logits-a
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9170-logits-a
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9156-logits-a
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -915,22 +1046,23 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
     TASK:
-    Collect complete frozen Qwen logit shard A. Deliver results/experiment_9184_v782_logits_a.json. Implement scripts/experiments/experiment_9184_v782_logits_a.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
+    Collect complete frozen Qwen logit shard A. Deliver results/experiment_9199_v783_logits_a.json. Implement scripts/experiments/experiment_9199_v783_logits_a.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
     Use frozen Qwen teacher-forced forwards only; generated_tokens=0. model_load_no_generation has a 2-second floor. A small-token canary would require model_bounded_generation (10s); a real generative run requires model_full_generation (60s). Do not add either operation here.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code. Before model work, resolve cached_current_model(gpu_index=0), as documented by cached_sota_pair() in the experiment template. Require the mandated local GGUF, embedded tokenizer, GPU0 lease, free VRAM and actual CUDA offload support. Pin GGUF and llama.cpp build hashes. GPU1 remains with its owner. Cache or resource failure blocks; no download or small-model headline fallback.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9184-V782 and SCENARIO-REPORT-9184-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Authenticate shard A from Exp9180: lexical qid indices0:100,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9199-V783 and SCENARIO-REPORT-9199-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Authenticate shard A from Exp9194: lexical qid indices0:100,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
     5. Run the frozen Exp9126 forward/statistic protocol. Keep question cap256, answer cap768, prefix bytes, no BOS/chat template and chunk128. Stream float64 sufficient statistics. Retain designated raw full-vocabulary vectors for the original global first20 lexical qids/all siblings/first8 positions. Keep per-token IDs, offsets, selected logits, logsumexp, entropy and hashes.
     6. Checkpoint after each qid. Emit progress within every answer/chunk loop. Resume only matching hashes and unfinished units. Keep failed and empty answers in their intended slots with reasons. Do not rerun completed rows selectively or replace difficult answers. Preserve cross-chunk adjacent pairs and reset context between answers.
     7. Independently recompute sampled raw statistics. Require all300 intended records, valid nonempty forwards, exact model custody and all required fields. Empty source answers retain typed escalation slots under the frozen policy. Model failure prevents complete-shard readiness. Keep evaluator labels separate. Reuse the same collector for all three shards; do not duplicate implementation.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -957,10 +1089,12 @@ tasks:
     - feature_shard_reference: token/statistic rows, model receipts, role and roster hashes; principle: Every feature traces to actual frozen Qwen work.
     - raw_vector_reference: selected full-vocabulary arrays with positions and hashes; principle: Aggregate energy statistics remain independently checkable.
     - checkpoint_reference: completed IDs and exact resume ledger; principle: Resume cannot silently duplicate or replace evidence.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9184_v782_logits_a.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9199_v783_logits_a.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9185-logits-b
-  title: 'Exp9185: Collect complete frozen Qwen logit shard B'
+  agent_type: codex
+  model: gpt-6.1-sol
+- id: exp9200-logits-b
+  title: 'Exp9200: Collect complete frozen Qwen logit shard B'
   phase: 2
   track: research
   priority: high
@@ -968,31 +1102,36 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9185_v782_logits_b.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9200_v783_logits_b.json
   inference_substrate_class: model_load_no_generation
   MODEL_SPECS:
   - hf_id: unsloth/Qwen3.8-27B-GGUF
     quantization: Q4_K_M
   gated_on:
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: source_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: logit_runtime_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: shard_feasible_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9185-logits-b
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9171-logits-b
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9157-logits-b
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1001,22 +1140,23 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
     TASK:
-    Collect complete frozen Qwen logit shard B. Deliver results/experiment_9185_v782_logits_b.json. Implement scripts/experiments/experiment_9185_v782_logits_b.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
+    Collect complete frozen Qwen logit shard B. Deliver results/experiment_9200_v783_logits_b.json. Implement scripts/experiments/experiment_9200_v783_logits_b.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
     Use frozen Qwen teacher-forced forwards only; generated_tokens=0. model_load_no_generation has a 2-second floor. A small-token canary would require model_bounded_generation (10s); a real generative run requires model_full_generation (60s). Do not add either operation here.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code. Before model work, resolve cached_current_model(gpu_index=0), as documented by cached_sota_pair() in the experiment template. Require the mandated local GGUF, embedded tokenizer, GPU0 lease, free VRAM and actual CUDA offload support. Pin GGUF and llama.cpp build hashes. GPU1 remains with its owner. Cache or resource failure blocks; no download or small-model headline fallback.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9185-V782 and SCENARIO-REPORT-9185-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Authenticate shard B from Exp9180: lexical qid indices100:200,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9200-V783 and SCENARIO-REPORT-9200-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Authenticate shard B from Exp9194: lexical qid indices100:200,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
     5. Run the frozen Exp9126 forward/statistic protocol. Keep question cap256, answer cap768, prefix bytes, no BOS/chat template and chunk128. Stream float64 sufficient statistics. Retain designated raw full-vocabulary vectors for the original global first20 lexical qids/all siblings/first8 positions. Keep per-token IDs, offsets, selected logits, logsumexp, entropy and hashes.
     6. Checkpoint after each qid. Emit progress within every answer/chunk loop. Resume only matching hashes and unfinished units. Keep failed and empty answers in their intended slots with reasons. Do not rerun completed rows selectively or replace difficult answers. Preserve cross-chunk adjacent pairs and reset context between answers.
     7. Independently recompute sampled raw statistics. Require all300 intended records, valid nonempty forwards, exact model custody and all required fields. Empty source answers retain typed escalation slots under the frozen policy. Model failure prevents complete-shard readiness. Keep evaluator labels separate. Reuse the same collector for all three shards; do not duplicate implementation.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1043,10 +1183,12 @@ tasks:
     - feature_shard_reference: token/statistic rows, model receipts, role and roster hashes; principle: Every feature traces to actual frozen Qwen work.
     - raw_vector_reference: selected full-vocabulary arrays with positions and hashes; principle: Aggregate energy statistics remain independently checkable.
     - checkpoint_reference: completed IDs and exact resume ledger; principle: Resume cannot silently duplicate or replace evidence.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9185_v782_logits_b.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9200_v783_logits_b.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9186-logits-c
-  title: 'Exp9186: Collect complete frozen Qwen logit shard C'
+  agent_type: codex
+  model: gpt-6.1-sol
+- id: exp9201-logits-c
+  title: 'Exp9201: Collect complete frozen Qwen logit shard C'
   phase: 2
   track: research
   priority: high
@@ -1054,31 +1196,36 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9186_v782_logits_c.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9201_v783_logits_c.json
   inference_substrate_class: model_load_no_generation
   MODEL_SPECS:
   - hf_id: unsloth/Qwen3.8-27B-GGUF
     quantization: Q4_K_M
   gated_on:
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: source_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: logit_runtime_ready_score
     op: ==
     value: 1
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: shard_feasible_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9186-logits-c
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9172-logits-c
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9158-logits-c
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1087,22 +1234,23 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; python/carnot/reporting/embedding_runtime_9098.py; results/experiment_9180_v782_contract.json; results/experiment_9183_v782_logit_runtime.json
     TASK:
-    Collect complete frozen Qwen logit shard C. Deliver results/experiment_9186_v782_logits_c.json. Implement scripts/experiments/experiment_9186_v782_logits_c.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
+    Collect complete frozen Qwen logit shard C. Deliver results/experiment_9201_v783_logits_c.json. Implement scripts/experiments/experiment_9201_v783_logits_c.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
     Use frozen Qwen teacher-forced forwards only; generated_tokens=0. model_load_no_generation has a 2-second floor. A small-token canary would require model_bounded_generation (10s); a real generative run requires model_full_generation (60s). Do not add either operation here.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code. Before model work, resolve cached_current_model(gpu_index=0), as documented by cached_sota_pair() in the experiment template. Require the mandated local GGUF, embedded tokenizer, GPU0 lease, free VRAM and actual CUDA offload support. Pin GGUF and llama.cpp build hashes. GPU1 remains with its owner. Cache or resource failure blocks; no download or small-model headline fallback.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9186-V782 and SCENARIO-REPORT-9186-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Authenticate shard C from Exp9180: lexical qid indices200:300,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9201-V783 and SCENARIO-REPORT-9201-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Authenticate shard C from Exp9194: lexical qid indices200:300,100 qids/all three siblings,300 answers. Preserve original roles and source identities. Use question and answer text only. Forbid labels, references, generator tags and annotation metadata as model features.
     5. Run the frozen Exp9126 forward/statistic protocol. Keep question cap256, answer cap768, prefix bytes, no BOS/chat template and chunk128. Stream float64 sufficient statistics. Retain designated raw full-vocabulary vectors for the original global first20 lexical qids/all siblings/first8 positions. Keep per-token IDs, offsets, selected logits, logsumexp, entropy and hashes.
     6. Checkpoint after each qid. Emit progress within every answer/chunk loop. Resume only matching hashes and unfinished units. Keep failed and empty answers in their intended slots with reasons. Do not rerun completed rows selectively or replace difficult answers. Preserve cross-chunk adjacent pairs and reset context between answers.
     7. Independently recompute sampled raw statistics. Require all300 intended records, valid nonempty forwards, exact model custody and all required fields. Empty source answers retain typed escalation slots under the frozen policy. Model failure prevents complete-shard readiness. Keep evaluator labels separate. Reuse the same collector for all three shards; do not duplicate implementation.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1129,10 +1277,12 @@ tasks:
     - feature_shard_reference: token/statistic rows, model receipts, role and roster hashes; principle: Every feature traces to actual frozen Qwen work.
     - raw_vector_reference: selected full-vocabulary arrays with positions and hashes; principle: Aggregate energy statistics remain independently checkable.
     - checkpoint_reference: completed IDs and exact resume ledger; principle: Resume cannot silently duplicate or replace evidence.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9186_v782_logits_c.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9201_v783_logits_c.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9187-logit-admission
-  title: 'Exp9187: Admit the exact full cohort and retain separate fit views'
+  agent_type: codex
+  model: gpt-6.1-sol
+- id: exp9202-logit-admission
+  title: 'Exp9202: Admit the exact full cohort and retain separate fit views'
   phase: 2
   track: research
   priority: high
@@ -1140,31 +1290,36 @@ tasks:
   max_turns: 30
   estimated_wall_time_min: 45
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9187_v782_logit_admission.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9202_v783_logit_admission.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   agent_type: codex
   model: gpt-6.1-sol
   gated_on:
-  - upstream: exp9184-logits-a
+  - upstream: exp9199-logits-a
     artifact_field: logits_a_ready_score
     op: ==
     value: 1
-  - upstream: exp9185-logits-b
+  - upstream: exp9200-logits-b
     artifact_field: logits_b_ready_score
     op: ==
     value: 1
-  - upstream: exp9186-logits-c
+  - upstream: exp9201-logits-c
     artifact_field: logits_c_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9187-logit-admission
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9173-logit-admission
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9159-logit-admission
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1173,23 +1328,24 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9180_v782_contract.json; results/experiment_9184_v782_logits_a.json; results/experiment_9185_v782_logits_b.json; results/experiment_9186_v782_logits_c.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9180_v782_contract.json; results/experiment_9184_v782_logits_a.json; results/experiment_9185_v782_logits_b.json; results/experiment_9186_v782_logits_c.json
     TASK:
-    Admit the exact full cohort and retain separate fit views. Deliver results/experiment_9187_v782_logit_admission.json. Implement scripts/experiments/experiment_9187_v782_logit_admission.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Admit the exact full cohort and retain separate fit views. Deliver results/experiment_9202_v783_logit_admission.json. Implement scripts/experiments/experiment_9202_v783_logit_admission.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9187-V782 and SCENARIO-REPORT-9187-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9202-V783 and SCENARIO-REPORT-9202-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
     4. Join exactly900 answers/300 qids from three disjoint100-qid shards. Verify original TRAIN150/CAL50/TEST100 membership, sibling order and exact model/tokenizer/build hashes. Prove equality to the original two-shard population. Retain every failed/empty slot. Never select a favorable intersection.
     5. Cold-recompute all retained raw-vector statistics and token indexing. Check full-vocabulary dimensions, prefix/answer boundary, clipping/cap accounting and chunk adjacency. Reject model-input label fields and opaque aggregate-only evidence.
     6. Emit separate static and online feature views. Static preprocessing fits TRAIN150; online initialization fits only its prescribed100 TRAIN groups. Keep evaluator labels outside both scoring views. Record provenance of historical generation separately from current teacher forcing.
     7. Admission passes on a complete well-formed corpus even when every downstream scientific gain may be null. Empty answers follow the frozen escalation/missing-feature rules. Preserve all original denominators and expose exact common support for proper-loss comparisons.
     8. Retain token-entropy sequences in the admitted feature view for the frozen CES diagnostic. They are already required collection statistics; no extra LLM invocation or replacement source is permitted. Preserve distinct TRAIN label authority for reference construction and evaluator-only TEST labels.
-    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    9. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    10. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    11. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1217,10 +1373,10 @@ tasks:
     - online_features_reference: initial100 and stream50 roles; principle: Static150 information cannot leak into online initialization.
     - evaluator_reference: private labels plus original authority; principle: Scoring cannot observe TEST truth.
     - raw_reduction_rows: per-token parity, joins, exclusions and exact support; principle: The admission decision can be recomputed.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9187_v782_logit_admission.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9202_v783_logit_admission.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9188-static-energy
-  title: 'Exp9188: Train the five fixed human energy decision arms'
+- id: exp9203-static-energy
+  title: 'Exp9203: Train the five fixed human energy decision arms'
   phase: 3
   track: research
   priority: high
@@ -1228,49 +1384,55 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 60
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9188_v782_static_energy.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9203_v783_static_energy.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   gated_on:
-  - upstream: exp9187-logit-admission
+  - upstream: exp9202-logit-admission
     artifact_field: admission_ready_score
     op: ==
     value: 1
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: static_methods_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9188-static-energy
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9174-static-energy
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9160-static-energy
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Train only from the new complete admitted feature corpus after causal execution correction; preserve
-      all five original arms and two static bounds.
+    addressed_by: Train only from the new complete admitted feature corpus after causal execution correction;
+      preserve all five original arms and two static bounds.
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; results/experiment_9126_v778_logit_methods.json; results/experiment_9187_v782_logit_admission.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/logit_methods_runner_9126.py; results/experiment_9126_v778_logit_methods.json; results/experiment_9187_v782_logit_admission.json
     TASK:
-    Train the five fixed human energy decision arms. Deliver results/experiment_9188_v782_static_energy.json. Implement scripts/experiments/experiment_9188_v782_static_energy.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Train the five fixed human energy decision arms. Deliver results/experiment_9203_v783_static_energy.json. Implement scripts/experiments/experiment_9203_v783_static_energy.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9188-V782 and SCENARIO-REPORT-9188-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9203-V783 and SCENARIO-REPORT-9203-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
     4. Use the frozen seven features and five arms: prevalence, probability+length logistic, raw-energy logistic, combined logistic, and combined with whole-qid TRAIN donor labels. Treat each classifier as a binary Gibbs energy. Keep original TRAIN150/CAL50/TEST100 roles, ridge0.01, zero start and original convergence checks.
     5. Fit imputation/scaling on TRAIN only. Fit each CAL temperature over[0.5,1,2,4], ascending ties. Emit accept at p(error)<=0.1, reject at>=0.9, otherwise escalate. Retain empty-answer escalation slots. Do not use generator identity or evaluator-only contrast masks as features.
     6. Seal all per-answer TEST probabilities, logits and typed decisions before evaluation. Include original A1 targets only in the evaluator view. Retain A2 as separately observed sensitivity. Record actual changed donor-label counts rather than assuming that a permutation changed every label.
     7. Emit static_predictions_ready_score from completeness, convergence and provenance only. Do not gate the later audit on improvement. Retain fitted parameters and transforms for complete-service replay.
-    8. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    9. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1297,10 +1459,11 @@ tasks:
     - static_prediction_reference: five arms by qid/sibling with prediction seal; principle: Every risk and coverage comparison uses identical units.
     - fitted_heads_reference: parameters, transforms, CAL temperatures and convergence receipts; principle: Service replay must use the measured policy.
     - donor_change_rows: original and permuted training-label identities; principle: An unchanged donor is not a valid information control.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9188_v782_static_energy.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9203_v783_static_energy.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9189-delayed-learning
-  title: 'Exp9189: Measure continuous small-energy learning with exact recovery'
+  model: sonnet
+- id: exp9204-delayed-learning
+  title: 'Exp9204: Measure continuous small-energy learning with exact recovery'
   phase: 3
   track: research
   priority: high
@@ -1308,25 +1471,30 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 70
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9189_v782_delayed_learning.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9204_v783_delayed_learning.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   gated_on:
-  - upstream: exp9187-logit-admission
+  - upstream: exp9202-logit-admission
     artifact_field: admission_ready_score
     op: ==
     value: 1
-  - upstream: exp9180-contract
+  - upstream: exp9194-contract
     artifact_field: online_methods_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9189-delayed-learning
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9175-delayed-learning
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9161-delayed-learning
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1335,23 +1503,24 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/online_methods_9132.py; python/carnot/reporting/online_methods_runner_9132.py; python/carnot/memory/human_online_9099.py; tests/python/test_hard_exit_learning_qualification_8206.py; results/experiment_9132_v778_online_methods.json; results/experiment_9187_v782_logit_admission.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/online_methods_9132.py; python/carnot/reporting/online_methods_runner_9132.py; python/carnot/memory/human_online_9099.py; tests/python/test_hard_exit_learning_qualification_8206.py; results/experiment_9132_v778_online_methods.json; results/experiment_9187_v782_logit_admission.json
     TASK:
-    Measure continuous small-energy learning with exact recovery. Deliver results/experiment_9189_v782_delayed_learning.json. Implement scripts/experiments/experiment_9189_v782_delayed_learning.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Measure continuous small-energy learning with exact recovery. Deliver results/experiment_9204_v783_delayed_learning.json. Implement scripts/experiments/experiment_9204_v783_delayed_learning.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9189-V782 and SCENARIO-REPORT-9189-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9204-V783 and SCENARIO-REPORT-9204-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
     4. Reuse Exp9132 exactly: original100-group initialization, ten disjoint five-qid streams from the other50 TRAIN groups, CAL50 operational guard and TEST100 research retention. Fit every transform only on initialization. Keep the fixed57-column cubic basis and six original arms: frozen spline, adaptive spline, bias-only, adaptive linear, donor spline and temperature-only.
     5. Use original AdaGrad0.05, clipping, anchoring, donor map and temperature bounds. Seal all18 sibling/arm predictions for group g before releasing g-1 labels. Apply siblings in original order and guard once per released qid. Preserve consumed-feedback acknowledgments on rejected updates. Drain final feedback only after predictions finish.
     6. Use only CAL for promotion: Brier increase<=0.005 and classification-error increase<=0 against that arm's initialization. TEST retention never chooses an update. Reset each stream to the same initial state. No static150 fit or future feedback enters initialization.
     7. Persist predictions, parameters, accumulators, temperature, pending feedback and acknowledgments atomically. Run real hard-exit children at prediction fsync, feedback receipt and state replacement. Require exact uninterrupted/resumed predictions and complete states. Record all proposed, accepted and rejected updates and actual coefficient writes.
-    8. Seal complete online and retention predictions, including raw pre-sigmoid logits before and after every update. Key each retained logit by stream, released qid, update, arm, evaluation qid, sibling and state hash. Retain initial logits and explicit pre/post state identities; never recover logits from saturated probabilities. Emit online_predictions_ready_score from valid causal execution and recovery, regardless of gain. Freeze probability-change and classification-flip diagnostic memberships without labels for Exp9190; these never affect updates or promotion.
-    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    8. Seal complete online and retention predictions, including raw pre-sigmoid logits before and after every update. Key each retained logit by stream, released qid, update, arm, evaluation qid, sibling and state hash. Retain initial logits and explicit pre/post state identities; never recover logits from saturated probabilities. Emit online_predictions_ready_score from valid causal execution and recovery, regardless of gain. Freeze probability-change and classification-flip diagnostic memberships without labels for Exp9205; these never affect updates or promotion.
+    9. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    10. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    11. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1380,10 +1549,11 @@ tasks:
     - raw_logit_reference: initial and per-update pre/post logits keyed by stream, released qid, update, arm, qid, sibling and state hash; principle: Scale diagnostics require original logits, not inversion of clipped probabilities.
     - durable_state_reference: all state, release, proposal, rejection and acknowledgment rows; principle: Learning must survive real process failure without data loss.
     - recovery_rows: actual exit codes, state hashes and prediction equality; principle: A simulated exception is not hard-exit recovery.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9189_v782_delayed_learning.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9204_v783_delayed_learning.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9190-decision-audit
-  title: 'Exp9190: Audit energy and learning gains against a frozen entropy reference'
+  model: sonnet
+- id: exp9205-decision-audit
+  title: 'Exp9205: Audit primary gains, entropy controls and human-label ambiguity'
   phase: 3
   track: research
   priority: high
@@ -1391,22 +1561,26 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9190_v782_decision_audit.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9205_v783_decision_audit.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   gated_on:
-  - upstream: exp9187-logit-admission
+  - upstream: exp9202-logit-admission
     artifact_field: admission_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9190-decision-audit
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9176-decision-audit
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification. Add an actual frozen CES reference comparison; keep the two static and seven
-      learning bounds unchanged.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9162-energy-audit
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1425,17 +1599,17 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; python/carnot/reporting/human_contrast_9141.py; python/carnot/verify/restricted_decision_audit_8210.py; results/experiment_9188_v782_static_energy.json; results/experiment_9189_v782_delayed_learning.json; results/experiment_9180_v782_contract.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/logit_methods_9126.py; python/carnot/reporting/online_methods_9132.py; python/carnot/reporting/human_contrast_9141.py; python/carnot/verify/restricted_decision_audit_8210.py; results/experiment_9188_v782_static_energy.json; results/experiment_9189_v782_delayed_learning.json; results/experiment_9180_v782_contract.json
     TASK:
-    Audit energy and learning gains against a frozen entropy reference. Deliver results/experiment_9190_v782_decision_audit.json. Implement scripts/experiments/experiment_9190_v782_decision_audit.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Audit energy and learning gains against a frozen entropy reference. Deliver results/experiment_9205_v783_decision_audit.json. Implement scripts/experiments/experiment_9205_v783_decision_audit.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9190-V782 and SCENARIO-REPORT-9190-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Check static_predictions_ready_score in Exp9188 and online_predictions_ready_score in Exp9189 independently. Audit either complete branch even when the other is absent or blocked. Record each failed operand and branch verdict. The task-level admission gate does not authorize missing predictions. No positive scientific effect is a launch prerequisite.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9205-V783 and SCENARIO-REPORT-9205-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Check static_predictions_ready_score in Exp9203 and online_predictions_ready_score in Exp9204 independently. Audit either complete branch even when the other is absent or blocked. Record each failed operand and branch verdict. The task-level admission gate does not authorize missing predictions. No positive scientific effect is a launch prerequisite.
     5. Recompute the original two static Brier bounds using 10000 paired TEST-qid bootstrap draws, seed777121, tail0.05/2. Preserve all siblings and exact-half-coverage reselection inside each draw. Require both lower bounds>0 versus probability+length and donor, with no accepted-risk increase and defined accepted risk. Recompute original gauge controls and diagnostic masks.
     6. Recompute the original five future contrasts plus two retention bounds using 10000 paired whole-stream draws, seed778135, tail0.05/7. Require every future lower bound>0, retained Brier upper<=0.005, retained error upper<=0 and exact hard-exit recovery. Forty future qids and100 unique retention qids remain the effective supports; repeated evaluations are not extra data.
     7. For each eligible arm and fixed support, calculate mean Brier as (mean(p)-mean(y))^2 + (sd(p)-sd(y))^2 + 2*(sd(p)*sd(y)-cov(p,y)), using population moments and the original equal-qid weighting. Use the covariance expression for zero-variance cases; report correlation as unavailable then. Require agreement with direct mean squared error within1e-12 on fixed test vectors and measured rows. Do not clamp signed roundoff before testing the identity.
@@ -1444,8 +1618,10 @@ tasks:
     10. Independently execute the design CES diagnostic from admitted token rows even if a fitted static/online branch is unavailable. Build F0 only from nonempty original A1-correct TRAIN responses, pooling their token entropies. Reference data, token weighting and all reference hashes seal before TEST reduction. Score sqrt(F0(mean H)*F0(max H)); larger means greater error suspicion. This is a rank score, not p(error); do not apply0.1/0.9 decision thresholds to it.
     11. Compare TEST qid-clustered AUROC against mean H, max H and the probability+length arm when its sealed predictions exist. Use10000 paired qid draws, seed782190, one-sided tail0.05/3, preserving siblings and ties. A one-class bootstrap draw makes that contrast interval unavailable; retain all draw counts and do not drop or redraw invalid draws. Report all planned contrasts; entropy_reference_signal_score=1 requires all three defined lower bounds>0. Missing comparator predictions block only that comparison and the aggregate signal gate; still retain the two available comparisons. Empty/one-class/reference-empty supports remain explicit, never zero-filled.
     12. Report per-answer lag1 entropy correlation when defined, answer length and tied-score fraction. No iid token theorem, self-generation claim or independent-generalization claim transfers from the paper. CES is a secondary registered ranking experiment; it cannot rescue either original static bound or any of the seven learning bounds. Do not tune CDF, clipping, thresholds or direction after seeing TEST.
-    13. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    14. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    13. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    14. Read Exp9197 label_ambiguity_ready_score and its hash-bound reducer. For each eligible static/online contrast compute both ambiguity envelopes on identical original supports, with shared labels across repeated retention. Mark the sensitivity branch blocked if its authority is missing; still evaluate other eligible branches. Report robustness of the point contrast separately from sampling intervals. Never use ambiguous labels to refit, promote, tune or rescue failed primary bounds. Missing A2 remains visible.
+    15. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    16. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1479,35 +1655,42 @@ tasks:
     - entropy_reference_signal_score: integer0/1; principle: All three registered qid-clustered ranking bounds must exceed zero; this never replaces primary scientific gates.
     - entropy_reference_rows: qid, sibling, token count, mean/max entropy, CES, comparator scores, exclusions and correlation; principle: Reference-distribution claims must be reproducible from individual answers.
     - entropy_reference_cdf: TRAIN IDs, A1 authority, token counts, sorted values or authenticated path and hash; principle: TEST labels cannot define a reference distribution.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9190_v782_decision_audit.py --date {date}
+    - label_ambiguity_rows: paired contrast, fixed support, observed-disagreement interval, missing-annotation interval and counts; principle: Conditional label robustness is separate from statistical confidence and primary benefit.
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9205_v783_decision_audit.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9191-complete-cost
-  title: 'Exp9191: Measure complete service costs and operation-matched hardware limits'
+  model: sonnet
+- id: exp9206-complete-cost
+  title: 'Exp9206: Measure complete service costs and operation-matched hardware limits'
   phase: 4
   track: hardware
   priority: high
   requires_gpu: true
-  max_turns: 100
+  max_turns: 50
   estimated_wall_time_min: 70
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9191_v782_complete_cost.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9206_v783_complete_cost.json
   inference_substrate_class: model_load_no_generation
   MODEL_SPECS:
   - hf_id: unsloth/Qwen3.8-27B-GGUF
     quantization: Q4_K_M
-  model: opus
+  model: gpt-6.1-sol
   gated_on:
-  - upstream: exp9183-logit-runtime
+  - upstream: exp9198-logit-runtime
     artifact_field: logit_runtime_ready_score
     op: ==
     value: 1
   prior_failures:
+  - experiment_id: exp9191-complete-cost
+    verdict: blocked_upstream_retired
+    addressed_by: The prior scientific run did not execute. A separately qualified lossless corpus prefilter and
+      complete unchanged validation now gate current model work; preserve all original data, arms and thresholds.
+    retire_if_same_verdict: true
   - experiment_id: exp9177-complete-cost
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
-    addressed_by: Only new Exp9181 invocation-local structural classification, immutable attempt logs and PYTHONPATH-independent
-      child observation may reopen full validation in Exp9182. Every original assertion remains; no model work before
-      complete current qualification.
+    addressed_by: The original scientific scope remains unmeasured. New Exp9195 lossless full-corpus traversal
+      and Exp9196 complete unchanged validation must qualify before current model work; preserve the original
+      data, arms and thresholds.
     retire_if_same_verdict: true
   - experiment_id: exp9164-complete-cost
     verdict: 'GATE_BLOCK: upstream retired; no canonical honest_verdict artifact'
@@ -1516,24 +1699,25 @@ tasks:
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. V781 completed scheduling with contract/source/method readiness but no model collection. Exp9167 was disqualified; Exp9168 was retired after the repeated blocked gate. The new checker-loop correction must qualify before the preserved scientific chain runs. Keep the exposed-development scope and historical failures.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/complete_cost_9150.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9183_v782_logit_runtime.json; results/experiment_9188_v782_static_energy.json; results/experiment_9189_v782_delayed_learning.json; research-hardware-wishlist.md; ops/known-issues.md (2026-09-09 hardware continuity correction)
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/complete_cost_9150.py; python/carnot/reporting/online_methods_9132.py; results/experiment_9183_v782_logit_runtime.json; results/experiment_9188_v782_static_energy.json; results/experiment_9189_v782_delayed_learning.json; research-hardware-wishlist.md; ops/known-issues.md (2026-09-09 hardware continuity correction)
     TASK:
-    Measure complete service costs and operation-matched hardware limits. Deliver results/experiment_9191_v782_complete_cost.json. Implement scripts/experiments/experiment_9191_v782_complete_cost.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
+    Measure complete service costs and operation-matched hardware limits. Deliver results/experiment_9206_v783_complete_cost.json. Implement scripts/experiments/experiment_9206_v783_complete_cost.py using existing library seams. MODEL_SPECS: [{{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}}]. Requested inference_substrate_class: model_load_no_generation.
     Use frozen Qwen teacher-forced forwards only; generated_tokens=0. model_load_no_generation has a 2-second floor. A small-token canary would require model_bounded_generation (10s); a real generative run requires model_full_generation (60s). Do not add either operation here.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code. Before model work, resolve cached_current_model(gpu_index=0), as documented by cached_sota_pair() in the experiment template. Require the mandated local GGUF, embedded tokenizer, GPU0 lease, free VRAM and actual CUDA offload support. Pin GGUF and llama.cpp build hashes. GPU1 remains with its owner. Cache or resource failure blocks; no download or small-model headline fallback.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9191-V782 and SCENARIO-REPORT-9191-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9206-V783 and SCENARIO-REPORT-9206-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
     4. After the structured runtime gate passes, inventory exact source, qualification, admission, static and online readiness. Measure each eligible branch independently. A static service can run without learning. Scientific benefit is not a timing prerequisite. If no service is eligible, write terminal blocked evidence with exact gate_check_summary. No repeated pre-runtime inventory or invented timings.
     5. Use original first20 TEST qids/all60 siblings, three fresh processes and order seed776108. Match scientific probabilities within atol1e-5/rtol1e-4 and typed decisions exactly. Separate cold load, warm uncached raw-text verification and cached-feature head costs. Include tokenization, GPU forwards, transfers, statistics, transforms, scores and serialization.
     6. For available online service, time proposals, all guard scans, rejected updates, durable write/fsync, acknowledgment, final drain and recovery. Include the six arms and every intended unit. Preserve censored work and initialization costs. Reuse qualified heads and methods; do not redesign them during timing.
     7. Map measured operations to CPU, GPU and possible future native/FPGA kernels. Compute Amdahl ceilings only from actual nonoverlapping component times. Explain what fraction would need acceleration for the program's100x target and PRD10x target. Unknown fractions remain unknown. Power/energy stays unavailable unless measured integrals exist.
     8. Preserve KV260 supported Ising fabric and k_max<=5; spline updates require a different qualified kernel. Preserve PolarFire CPU-only evidence and GateMate physical/JTAG block. TSU/NPU/larger FPGA wishlist items need demonstrated operation fit and access. No repeated board probe or procurement is scheduled. Extropic projections are not local measurements.
     9. Keep the GateMate physical/JTAG continuation blocked under its unchanged physical prerequisite. The September9 operator record explicitly rejects another identical probe; no new attestation is invented. Preserve graduated KV260 and PolarFire scope. Map measured sparse-update, guard-scan, storage and Qwen components to compatible future kernels. Amdahl bounds require measured disjoint fractions; unknown fractions stay unknown. No board run, purchase, TSU access or power claim is authorized by a CPU/GPU timing.
-    10. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    11. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    10. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    11. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    12. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1561,105 +1745,11 @@ tasks:
     - adaptation_cost_ready_score: integer 0/1; principle: Durable guard and feedback work belongs in learning cost.
     - cost_rows: unit, arm, cold/warm boundary, component clocks, complete clock and censor reason; principle: A head-only speedup cannot stand in for end-to-end benefit.
     - hardware_operation_rows: actual supported operation, measured fraction, Amdahl ceiling or unavailable reason; principle: Hardware recommendations require matching work.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9191_v782_complete_cost.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_9206_v783_complete_cost.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-- id: exp9192-arc-ordering-compatibility
-  title: 'Exp9192: Reconcile primitive ordering with explicit mechanic precedence'
-  phase: 4
-  track: research
-  priority: high
-  requires_gpu: false
-  max_turns: 50
-  estimated_wall_time_min: 60
-  per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9192_v782_arc_mechanic_routing.json
-  inference_substrate_class: no_model_load
-  MODEL_SPECS: []
   agent_type: codex
-  model: gpt-6.1-sol
-  prompt: |-
-    CONTEXT:
-    Work in {project_root} on {date}. Exp9178 removed22 game-name collisions in124 fixtures but was disqualified by ten direct-consumer regressions. The failures require specialized primitives first; current tuples prepend orchestration operators. Preserve original assertions and prove consumer compatibility before claiming readiness. This is an independent CPU method study, never a solve claim.
-    EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; openspec/capabilities/arc-agi/spec.md; python/carnot/agentic/arc_solver_kit.py; python/carnot/agentic/arc_solve_learning.py; tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py; tests/python/test_experiment_4469_generic_cast_grid_fsm_operator.py; ops/arc_solve_registry.yaml; python/carnot/reporting/arc_mechanic_routing_9178.py; tests/python/test_arc_mechanic_routing_9178.py; tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py; tests/python/test_experiment_4537_reinduction_primitive_persist_transfer.py; python/carnot/agentic/arc_competition_agent.py; results/experiment_9178_v781_arc_mechanic_routing.json
-    TASK:
-    Reconcile primitive ordering with explicit mechanic precedence. Deliver results/experiment_9192_v782_arc_mechanic_routing.json. Implement scripts/experiments/experiment_9192_v782_arc_mechanic_routing.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
-    Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
-    CONCRETE STEPS:
-    1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
-    2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9192-V782 and SCENARIO-REPORT-9192-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Read the retained ten failing assertions and every selector consumer before implementation. Reproduce the ordering failures on the current checkout and on the immutable pre-Exp9178 snapshot to separate inherited regression from the mechanic-precedence change. Registry-precheck prevents re-solving any credited level; run no game solve, source RE or offline ground-truth BFS.
-    5. Freeze a typed compatibility matrix for returned primitive order, explicit recognized mechanics, unknown/absent mechanic fallbacks and dispatcher reachability. First-slot specialists and orchestration dispatch are separate consumer obligations. Reuse the registry and existing dispatcher; do not introduce a per-game adapter or new solver. Keep all historical assertions and add collision controls before the smallest shared fix.
-    6. Preserve the recognized-mechanic game-name invariance measured in Exp9178 while restoring specialized-first ordering for existing consumers. Do not update expected test lists to the currently broken dispatcher-first output. Ensure orchestration still runs where its consumers require it. If the two contracts are genuinely inconsistent, publish the exact minimal conflicting assertions and stop disqualified; do not silently select one.
-    7. Run the original124-row matrix, all ten failed assertions and the full affected consumer modules. Measure the corrected selector through recommend_approach and an existing public live-agent policy entry using label-free scripted observations. Record the reached call/action path; if the live entry never consumes this selector, report that explicitly with live_path_observed=false. Fixtures do not establish a live solve or generalization.
-    8. Emit mechanic_routing_ready_score only for complete behavior parity and passing affected checks. Separate compatibility readiness from measured policy reachability. Keep solve_provenance=development_proxy and independent_generalization_score=0. Do not change any solve-registry credit, agent default or game-specific route.
-    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
-    REQUIRED ARTIFACT FIELDS:
-    - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
-    - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
-    - gate_check_summary: check, upstream, path, sha256, artifact_field, op, expected, observed, passed; principle: Every blocked result names its failed operand; missing evidence differs from an observed zero.
-    - preconditions_checked: resource, available and actual check receipt; principle: Unavailable resources cannot produce invented measurements.
-    - rows: unit_id, qid/group, sibling, arm/condition, seed, absolute metrics, numerator, denominator, status, exclusion_reason, censor_reason; principle: All comparative headlines must be reproducible from their independent units.
-    - sample_size_budget: intended, attempted, completed, failed, censored, effective_independent_groups; principle: Siblings and repeated retention do not multiply independent sample size.
-    - verifier_is_oracle: boolean; principle: Reusing executable truth as the verifier requires circular_positive, not an independent verifier win.
-    - claim_scope: exposure_scope, independent_generalization_score=0 and allowed claims; principle: Exposed development and fixtures cannot close the independent-verifier gaps.
-    - MODEL_SPECS: actual requested list and invocation status; principle: An upstream model reference is not current model work.
-    - inference_substrate_class: actual class and requested_inference_substrate_class; principle: Use blocked_no_run for refusal before loading; attempted loads remain attempted loads.
-    - inference_substrate: operation-accurate work description; principle: Forward work, generation and cached CPU reduction have different evidence requirements.
-    - model_invocation_counts: current_llm_invocations, loads attempted/completed/failed, forward calls, generated_tokens; principle: Counters must agree with actual operation-specific receipts.
-    - duration_s: measured wall time; principle: No artificial sleeping or duration padding may satisfy a substrate floor.
-    - random_seed: fixed before outcomes; principle: A frozen seed permits replay without favorable seed selection.
-    - reproducibility_checksum: inputs and configuration digest; principle: Changed inputs cannot pass as the original experiment.
-    - source_references: original producer paths, SHA256 and imported fields; principle: Historical evidence retains its original authority.
-    - code_config_hashes: owned implementation, tests and configuration; principle: Validation qualifies the executed revision.
-    - current_work_receipts: operation-specific records; principle: Historical receipts cannot certify current inference.
-    - validation_receipts: commands, logs, exit codes and coverage references; principle: Self-reported passing checks do not establish readiness.
-    - required_checks_passed: boolean; principle: Readiness requires every affected check.
-    - acceptance_gates: fixed conditions, each with a principle annotation; principle: Outcome-dependent thresholds cannot manufacture success.
-    - mechanic_routing_ready_score: integer 0/1; principle: Every recognized-mechanic permutation and legacy fallback control must pass.
-    - solve_provenance: development_proxy; principle: Controlled routing tests provide no live-agent level credit.
-    - consumer_reachability: actual callers and measured fixture paths; principle: Offline helper reachability cannot be presented as live hidden-game success.
-    - changed_behavior_rows: mechanic, action_model, game_name, before, after and reference operators; principle: The method correction must be checkable without a game solve.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9192_v782_arc_mechanic_routing.py --date {date}
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-  - experiment_id: exp9178-arc-mechanic-routing
-    verdict: complete_disqualified_arc_mechanic_routing
-    addressed_by: Exp9178 failed ten specialized-first assertions because shared tuples begin with orchestration
-      operators. Compare the pre-change baseline, restore consumer ordering while retaining explicit-mechanic invariance,
-      and test actual policy reachability; keep every old assertion.
-    retire_if_same_verdict: true
-  - experiment_id: exp5727-arc-generalization-live-oracle-gap-v511
-    verdict: 'complete: arc_generalization_live_oracle_gap_4_of_183_levels_gap_179'
-    addressed_by: Preserve the measured live-oracle gap. Test a source-visible explicit-mechanic precedence collision
-      in the shared selector; no live solve or gap-closure rerun.
-    retire_if_same_verdict: true
-  - experiment_id: exp5740-arc-game-blind-primitive-causal-audit
-    verdict: 'complete: game_blind_primitive_causal_audit_positive_count_7_no_policy_or_registry_credit'
-    addressed_by: Preserve the positive primitive audit and its no-policy-credit limit. Change the target to deterministic
-      selector precedence across name permutations, with no trajectory or generalization claim.
-    retire_if_same_verdict: true
-  - experiment_id: exp5766-arc-loo-component-interaction-audit
-    verdict: 'complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions'
-    addressed_by: Preserve the held-out null. This tests and corrects the concrete mechanic/game-name precedence
-      collision, not a rerun of learned component composition or its held-out gain test.
-    retire_if_same_verdict: true
-  - experiment_id: exp5767-arc-game-blind-composition-hardening
-    verdict: blocked_gate_check_failed
-    addressed_by: The shared selector bug is independently reproducible without a learned composition or positive
-      LOO bound. Harden only this deterministic precedence contract; no promotion or live reachability claim.
-    retire_if_same_verdict: true
-  - experiment_id: exp6295-arc-mechanic-router-holdout-audit
-    verdict: blocked_gate_check_failed
-    addressed_by: Preserve the failed 0.91 causal-readiness prerequisite. This changes the technique to a deterministic
-      explicit-mechanic precedence test in select_primitive_operators, independent of the learned router and without
-      a holdout or solve claim.
-    retire_if_same_verdict: true
-- id: exp9193-capstone
-  title: 'Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths'
+- id: exp9207-capstone
+  title: 'Exp9207: Reconcile fourteen outcomes and exact continuation boundaries'
   phase: 4
   track: research
   priority: high
@@ -1667,40 +1757,50 @@ tasks:
   max_turns: 20
   estimated_wall_time_min: 45
   per_unit_rows: true
-  milestone: 2026.11.782
-  deliverable: results/experiment_9193_v782_capstone.json
+  milestone: 2026.11.783
+  deliverable: results/experiment_9207_v783_capstone.json
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   prior_failures:
+  - experiment_id: exp9193-capstone
+    verdict: complete_blocked_declared_gate
+    addressed_by: Unconditional fourteen-outcome accounting for a changed full-corpus prefilter and an independently
+      runnable label-ambiguity method. External absent science stays terminal blocked; historical failures and
+      unmeasured hypotheses remain distinct.
+    retire_if_same_verdict: true
   - experiment_id: exp9179-capstone
     verdict: complete_blocked_declared_gate
-    addressed_by: Unconditional accounting for a changed checker correction and secondary CES test; independently
-      preserve blocked branches and exact field failures. No scientific null is inferred from unavailable inputs.
+    addressed_by: Unconditional accounting for V783 corpus qualification and independently runnable label ambiguity,
+      preserving original human methods. Exact missing operands remain terminal blocked; unavailable science is
+      not a scientific null.
     retire_if_same_verdict: true
   - experiment_id: exp9165-capstone
     verdict: complete_blocked_declared_gate
-    addressed_by: Reconcile a new causally qualified chain, independent audit eligibility and ARC method controls.
-      Missing external results remain terminal blocked, with exact fields and no retryable partial classification.
+    addressed_by: Unconditional accounting for V783 corpus qualification and independently runnable label ambiguity,
+      preserving original human methods. Exact missing operands remain terminal blocked; unavailable science is
+      not a scientific null.
     retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
-    Work in {project_root} on {date}. Account for all fourteen V782 outcomes regardless of any failed scientific gate. Preserve V781 retirement and diagnostic/ARC disqualifications. Distinguish a qualified checker correction, exposed human science, secondary CES evidence and independent-generalization readiness.
+    V783 preserves V782 four-executed/ten-skipped closure and every disqualification. The changed execution prerequisite is the full-corpus byte prefilter, not another structural-cache retry. Work in {project_root} on {date}. Account for all fourteen V783 outcomes regardless of any failed scientific gate. Preserve V781 retirement and diagnostic/ARC disqualifications. Distinguish a qualified checker correction, exposed human science, secondary CES and label-ambiguity evidence and independent-generalization readiness.
     EXISTING CODE TO READ FIRST:
-    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V782 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/v780_capstone.py; python/carnot/reporting/v780_contract.py; scripts/publication_gate.py; scripts/recurring_blocker_ledger.py; results/experiment_9165_v780_capstone.json; research-roadmap-next.yaml; python/carnot/reporting/v781_capstone.py; python/carnot/reporting/v781_capstone_evidence.py; python/carnot/reporting/v781_capstone_reduction.py; results/experiment_9179_v781_capstone.json
+    CLAUDE.md; CODEX.md; ops/north-star.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; research-references.md (V783 scan); openspec/change-proposals/research-roadmap-vNEXT.md; openspec/capabilities/research-reporting/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/v780_capstone.py; python/carnot/reporting/v780_contract.py; scripts/publication_gate.py; scripts/recurring_blocker_ledger.py; results/experiment_9165_v780_capstone.json; research-roadmap-next.yaml; python/carnot/reporting/v781_capstone.py; python/carnot/reporting/v781_capstone_evidence.py; python/carnot/reporting/v781_capstone_reduction.py; results/experiment_9179_v781_capstone.json
     TASK:
-    Reconcile fourteen outcomes and retire unchanged failed paths. Deliver results/experiment_9193_v782_capstone.json. Implement scripts/experiments/experiment_9193_v782_capstone.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
+    Reconcile fourteen outcomes and retire unchanged failed paths. Deliver results/experiment_9207_v783_capstone.json. Implement scripts/experiments/experiment_9207_v783_capstone.py using existing library seams. MODEL_SPECS: []. Requested inference_substrate_class: no_model_load.
     Do not load an LLM. Set current_llm_invocations=0 and generated_tokens=0. Small energy-head training is CPU work. Keep historical model provenance in source_references.
     CONCRETE STEPS:
     1. Emit a flushed progress line at each phase boundary. Emit before and after every model load, generation, benchmark and subprocess that can take minutes. Print inside long loops. Supervise blocking calls with flushed heartbeats every 60 seconds. Keep every silence gap below 600 seconds. Write any file over about 200 lines in several tool calls of at most 200 lines. Send a progress message between writing calls. Never use one huge tool call.
     2. PRECONDITIONS: Authenticate exact required paths, hashes and gate fields before dependent work. Check imports, CPU/memory limits and private free disk. Distinguish missing_file, missing_field and observed zero. Missing external inputs produce terminal blocked evidence with gate_check_summary. Never repin historical evidence to mutable checkout code.
-    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9193-V782 and SCENARIO-REPORT-9193-V782. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
-    4. Read both complete V782 contracts and all fourteen outcomes in order. Accept canonical primaries or explicitly identified scheduler skips; absent scientific artifacts stay absent. Resolve exact original source hashes. Preserve administrative accounting even when the scientific branches are blocked; no positive upstream gate applies to this task.
+    3. Before implementation inspect callers with rg. Confirm REQ-REPORT-9207-V783 and SCENARIO-REPORT-9207-V783. Extend specs first. Write failing controls before code. Freeze units, exclusions, formulas and validation scope before outcomes.
+    4. Read both complete V783 contracts and all fourteen outcomes in order. Accept canonical primaries or explicitly identified scheduler skips; absent scientific artifacts stay absent. Resolve exact original source hashes. Preserve administrative accounting even when the scientific branches are blocked; no positive upstream gate applies to this task.
     5. Reduce the two original static and seven original learning bounds from independently eligible rows. Keep CES completeness and three ranking bounds separate. Preserve original prediction/feedback roles, qid/stream denominators, recovery and source exposure. A positive secondary score does not promote the primary energy method.
-    6. Account for changed checker semantics/parity, complete obligation execution, three source shards, cost boundaries and ARC compatibility/reachability separately. Reconcile the four executed and ten skipped V781 tasks without converting scheduling closure into findings. Keep missing field, missing file and observed zero distinct.
+    6. Account for lossless corpus-input parity with unchanged checker semantics, complete obligation execution, three source shards, cost boundaries and label-ambiguity completeness separately. Reconcile the four executed and ten skipped V782 tasks without converting scheduling closure into findings. Keep missing field, missing file and observed zero distinct.
     7. Apply exact repeated-verdict retirement only to authenticated matching failed scope, with all four prior-failure fields. Keep unmeasured scientific hypotheses separate from retired execution routes. Never depend on a retired task ID. External absence is terminal blocked, never partial. An unconditional capstone can be administratively complete while its scientific verdict is blocked.
     8. Reconcile specs, traceability, architecture scope, status and changelog using actual outcomes. Retain historical FoVer publication gates and current_science_paper_ready=false for this exposed development panel. State exact reopen conditions and whether a later untouched human cohort is warranted. No queue activation, external publication or push.
-    9. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
-    10. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
+    9. Preserve V782 original methods and failures. Exp9195 qualifies only a lossless corpus-input optimization; Exp9196 must execute all original674 and all affected obligations before model work. Do not reduce the corpus, bypass a test, depend on a retired task ID or reactivate ARC work. Read the preserved V782 design for immutable scientific context.
+    10. Account for the independent Exp9197 label method even if all model tasks skip. Preserve Exp9192 disqualified ARC compatibility as history; no ARC experiment is scheduled. Separate all14 ordered outcomes, new scan readiness, complete forward qualification, human science and two sensitivity branches. Keep exp9181/exp9182 retirement untouched; recommend exact retirement in the artifact for the conductor rather than editing the manifest.
+    11. Run owned unit tests and real child-process coverage with 100 percent owned statements and zero exclusions. Preserve original assertions. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py with explicit test paths. Execute private real CLI success, refusal, tamper and cold replay outside the checkout without PYTHONPATH, following E2E-018/021. Learning/recovery changes also require E2E-020. Separate unrelated repository health from affected failures. Affected failures disqualify readiness.
+    12. Stop measurement by 3300 seconds. Use one monotonic deadline for all descendants, including cleanup; do not spend the reserve on another measurement attempt. Reserve 1200 seconds for final verification and 300 seconds for publication within the 4800-second cap. Count each obligation once; distinguish elapsed time from its watchdog ceiling. Save unfinished units and censor reasons. Recompute claims from rows. Run scripts/adversarial_verify.py and scripts/verdict_row_consistency_lint.py --strict with heartbeats. Publish through primary_publication only after actual checker receipts pass. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, quarantines and exclusions. Do not activate a queue or publish externally.
     REQUIRED ARTIFACT FIELDS:
     - honest_verdict: complete_* for terminal outcomes; partial_* only for retryable owned work; principle: A terminal prefix must agree with its verdict class.
     - verdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: External absence, retirement or gate failure is blocked. Only unfinished owned work is partial.
@@ -1727,6 +1827,7 @@ tasks:
     - outcome_rows: fourteen ordered task IDs with actual paths, classes and gate operands; principle: No blocked branch disappears from the milestone record.
     - continuation_decisions: branch, disposition, evidence and exact reopen condition; principle: Renaming a failure cannot authorize a rerun.
     - publication_gates: historical G1-G4, unmet_gates and current_science_paper_ready=false; principle: Historical paper readiness cannot authorize a new exposed-panel claim.
-    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9193_v782_capstone.py --date {date}
+    Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_9207_v783_capstone.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
+  model: sonnet
 ```

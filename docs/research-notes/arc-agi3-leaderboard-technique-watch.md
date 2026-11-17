@@ -753,3 +753,17 @@ Measurements were not independently reproduced; complete submissions remain unau
 
 These mechanisms require neither game-source access nor fixed per-game rules. Not independently reproduced; complete submissions were not audited for exploitation.
 
+## 2026-11-17 14:34 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose click diagnostics.** Every click reports the targeted cell’s pre-action color, connected-region size and bounds. Background clicks identify the nearest non-background cell within three pixels; unchanged boards are explicitly flagged. This exposes coordinate mistakes that otherwise resemble misunderstood mechanics. [Implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/act_client.py#L1362).  
+  **POSSIBLE CARNOT LEVER:** Include actual clicked-object details in tool replies so induction can distinguish targeting errors from incorrect rules.
+
+- **Tufa Labs — (b), general-purpose assumption testing.** Its prompt makes an “impossible level” conclusion trigger an inventory of assumptions and tests of those lacking direct evidence. In **30 runs per arm on one game**, level-five clears increased **6/28→16/28**, and full-game wins **4→13**. This is narrow evidence, rather than an established benchmark-wide gain. [Prompt](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/tests/prompt_golden/default/system.txt), [measurements](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/evidence.md#winnable_line).  
+  **POSSIBLE CARNOT LEVER:** Add an explicit assumption audit when the generator declares a level unsolvable.
+
+- **xz — (b), general-purpose stall recovery, with a negative result.** After **200K generated tokens on one level**, refreshes the conversation using notes and recent functions, boards and actions while retaining the environment state. Refreshed and continuing attempts both reached **49% clearance within another 200K tokens**. A separate paired experiment found hard environment resets cost **4.7 estimated score points**, with a wide **90% interval of −10.7 to +0.9**. Refresh principally creates a boundary for yielding compute to waiting games. [Writeup, §1](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#1-harness).
+
+These mechanisms require no game-source access or per-game hardcoding. Results were not independently reproduced; complete submissions remain unaudited for exploitation.
+
+Kaggle’s live table was unreadable; current contender identities were cross-checked against [standings mirrors](https://clist.by/standings/arc-prize-2026-arc-agi-3-general-knowledge-and-reasoning-artificial-intelligence-custom-metric-66453356/).
+

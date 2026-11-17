@@ -57455,3 +57455,118 @@ is a hypothesis requiring parity and real timing, not an asserted repair.
 Exp9178 separately has ten direct-consumer ordering failures despite its124
 fixture rows. Preserve those assertions and distinguish helper ordering from
 actual live-agent reachability; no game solve follows from the fixtures.
+
+## 2026-11-17 — V783 planning scan: generated judgments and causal calibration
+
+Recorded before writing the V783 experiment design. This scan checks all eight
+requested arXiv topics and all six secondary channels. Paper results below are
+author claims, not Carnot measurements. The existing human panel is exposed
+development data; another use cannot establish independent generalization.
+
+### Findings with a concrete research use
+
+- [The Labeling Problem in Hallucination Detection Benchmarks](https://arxiv.org/abs/2610.08026),
+  October 6, 2026, distinguishes factual correctness from agreement with a short
+  reference. Reuse the authenticated original human labels. A new local judge
+  should receive question and answer only, with an explicit factual-error
+  criterion. Never turn its judgments into evaluation truth.
+- [When Ground Truth Is Not Ground Truth](https://arxiv.org/abs/2611.04697),
+  November 3, 2026, finds substantial dependence on the automatic label source.
+  Add a fixed sensitivity analysis on the actually observed second-annotator
+  subset. Keep missing labels missing, and preserve the primary target.
+- [P(Yes)](https://arxiv.org/abs/2610.25474), October 18, 2026, appeared in the
+  retrieved EBT citation list. It uses option probabilities from frozen decision
+  models to guide answer search, including Qwen3.8-27B. A generated confidence
+  integer is a different observable: test its calibration without claiming to
+  replicate this paper or to obtain next-token probabilities.
+- [Continual Calibration](https://arxiv.org/abs/2604.23987), April 27, 2026,
+  motivates measuring future loss, retained calibration and decision coverage
+  separately. Retain a temperature-only comparator and delayed feedback.
+  Its exchangeability assumptions do not give this exposed stream a coverage
+  guarantee. No large-model weight update follows from small-head adaptation.
+- [Ultrafast On-Chip Online Learning via Spline Locality](https://arxiv.org/abs/2602.02056),
+  February 2, revised June 19, 2026, motivates a fixed-point arithmetic study of
+  the existing small spline learner. CPU emulation can establish numerical
+  compatibility, not FPGA latency, power or complete-service acceleration.
+
+### Complete topic coverage and deferred leads
+
+| Topic | Checked primary source | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 2026; [Energy-Based Reasoners](https://arxiv.org/abs/2611.08977), November 2026 | Keep matched controls and independent human targets. Algorithmic reasoning results do not prove natural factuality. |
+| Neural constraints | [HardNet++](https://arxiv.org/abs/2604.19669), April 2026 | Explicit nonlinear constraints differ from language extraction. No unchanged projection retry. |
+| Ising in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302), January 2026 | Learned optimization dynamics do not establish faithful Gibbs sampling. Defer a new solver. |
+| Hallucinations | The two label papers above; [Spilled Energy](https://arxiv.org/abs/2602.18671), February 2026 | Test generated judgment calibration as a separate method. Leave the forward-logit study unmeasured. |
+| KAN | Spline locality above | Test bounded numerical error and decision parity before hardware work. |
+| Energy-guided generation | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026 | Defer search and repair until the verifier earns value on fixed candidates. |
+| Hardware sampling | [Million-p-bit computer](https://arxiv.org/abs/2606.25313), June 2026 | Include communication and host work; no local hardware result follows. |
+| Continual learning | Continual Calibration above | Compare causal coefficient updates against calibration-only changes and frozen controls. |
+
+[ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 2026,
+remains a probability-model equivalence result. It does not identify factual truth.
+
+### Secondary channels and limits
+
+- **OpenReview:** NeurIPS/ICML/ICLR EBM searches returned
+  [EBT at ICLR 2026](https://openreview.net/pdf?id=ZBj3Qp1bYg), NRGPT and
+  [Scalable EBMs](https://openreview.net/pdf?id=I9iai932rK). The latter direct
+  request encountered browser verification. No current review-score claim.
+- **Semantic Scholar:** browser requests failed, but direct API requests for
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=100)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100)
+  returned 46 and 11 records, respectively, with no next page. These are retrieved
+  records, not exhaustive citation totals. P(Yes) was checked on arXiv.
+- **Hugging Face:** checked the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671).
+  Method statements use author papers, not the feed summary.
+- **GitHub:** checked [weekly Python Trending](https://github.com/trending/python?since=weekly).
+  The returned snapshot was two months old. No current rank is claimed. The
+  author-linked [Extropic sparse-transformers repository](https://github.com/extropic-ai/sparse-transformers)
+  is a concrete JAX code lead, not a verified trending discovery.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/), dated September 4, 2026. The latter
+  describes sparse hardware co-design and estimates involving FPGA coprocessors.
+  It does not establish local TSU access or measured Carnot service efficiency.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona)
+  and the company homepage. Product descriptions do not supply a reproducible
+  new local architecture result or remove the independent-verifier gap.
+
+### Local evidence that changes the continuation
+
+Exp9181's controlled case reduced structural scans from 91 to 1 with zero
+canonical hashes. Its direct-consumer receipt nevertheless ended with exit -15
+after 1224.316 seconds. The retained stderr identifies an outer work cutoff;
+the event log stops in `test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole`.
+That test recursively parses every JSON under `results/`. This identifies the
+unfinished operation, not its precise I/O-versus-parse cost. A new bounded
+diagnostic must retain that distinction and must not remove files or assertions.
+
+Planning inference: ordinary bounded generation can support a distinct judgment
+experiment without using the failed hidden-state/teacher-forcing implementation.
+Its actual generation receipts, original human custody and affected checks must
+qualify independently. This does not rehabilitate Exp9107 or Exp9181/9182, waive
+their original obligations, or establish that verbal confidence is useful.
+
+**Retirement review rejects that alternative for V783.** The complete exclusion
+manifest closes finite-ID GGUF generation transport after Exp5813 and requires
+a materially different non-generation surface. Generated confidence transport
+is too close to that closed mechanism. V783 will retain forward-only model work;
+P(Yes) remains a deferred lead, not a planned generated-judgment experiment.
+
+A read-only planning census found 714,951 recursive JSON paths totaling
+275,757,334,875 bytes; the tracked-file census found 712,659 JSON paths and
+160,685,240,560 bytes among existing regular files. These are path/size snapshots,
+not content hashes or parser timings. Different counting rules explain the two
+totals; neither is a measured throughput result. For the stalled no-LLM duration
+test, every recognized substrate contains a fixed ASCII sentinel. A conservative
+byte prefilter can avoid JSON decoding only when all five sentinel strings and
+the JSON Unicode escape marker are absent. Every potential match or Unicode
+escape must still use the original decoder and classifier. This is a proposed
+lossless optimization of that test's input walk, not an allowlist, sampled corpus,
+cached verdict or relaxed assertion. Real timing and exact controls must qualify it.
+
+The label-source papers also motivate a separate, executable ambiguity analysis.
+For fixed predictions, Brier-loss differences are affine in a binary label.
+Compute exact endpoint bounds over observed annotator disagreements; separately
+show the wider envelope when second annotations are absent. This planning
+derivation is not a theorem claimed by the cited papers. It does not replace
+the original A1 target, statistical intervals or delayed-learning gates.

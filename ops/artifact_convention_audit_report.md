@@ -9,96 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
-
-## experiment_9153_v780_validation_schedule.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Full qualification is deferred because the retained slow subprocess’s cause remains unknown, explicitly recorded in "blocked_prerequisite" and "computational_root_cause".
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Not rerun; assessment is limited to the supplied text.
-
-## experiment_9154_forward_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Execution was blocked because upstream `schedule_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_9165_v780_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Fourteen administrative outcomes are recorded; scientific results remain unmeasured, and measured validation is blocked with `"schedule_ready_score": 0`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Only the supplied text was assessed; it ends mid-entry, so omitted content remains unchecked.
-
-## experiment_9166_v781_contract.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The artifact reports fourteen completed administrative tasks and contract readiness (`"contract_ready_score": 1`), without claiming measured scientific benefit.
-
-## WHAT IS MISSING
-The artifact cuts off inside `"full_task_objects"` → `"previous_outcome_rows"` → `"gate_check_summary"`. Current-run `"honest_verdict"`, `"verdict_class"`, `"gate_check_summary"`, and `"rows"` values are not visible; names listed in `"field_principles"` are not evidence.
-
-## THE CHECK A READER CANNOT DO
-Does the current run declare a blocked verdict with a recorded reason, or complete administrative readiness?
-
-The missing tail was not checked and could change the classification.
-
-## experiment_9167_v781_causal_validation.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Corrective validation remains incomplete: “before_after_receipts” records a corrected-run timeout, and “unfinished_module_nodes” lists outstanding checks.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Assessment uses only the supplied artifact; no rerun or external verification.
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
 ## experiment_9168_forward_qualification.json
 
@@ -108,7 +20,7 @@ Assessment uses only the supplied artifact; no rerun or external verification.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Execution was blocked because upstream `causal_fix_ready_score` was 0, failing the required `== 1` check recorded in "gates_evaluated" and "gate_check_summary".
+Execution was blocked because upstream `causal_fix_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -124,15 +36,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible acceptance targets are reference-equivalent routing for 52 recognized conditions and unchanged routing for 72 legacy controls.
+The stated target is routing invariance for 52 recognized rows and unchanged behavior for 72 legacy controls.
 
 ## WHAT IS MISSING
-The artifact cuts off after "consumer_reachability", before any final verdict or gate results. "acceptance_gates" supplies conditions, "completed_count" reports 124 completions, and "changed_behavior_rows" supplies 22 comparisons, leaving the remaining conditions undocumented in the visible excerpt.
+The artifact is truncated after "consumer_reachability"; "acceptance_gates" gives conditions and "changed_behavior_rows" gives individual comparisons, but the final verdict and complete gate evidence are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Did all 52 recognized conditions match their references and all 72 legacy controls remain unchanged?
+Did all 52 recognized rows match their references and all 72 legacy controls remain unchanged?
 
-Execution and external files were not checked; the truncated artifact leaves the final outcome unknown.
+The omitted remainder was not assessed and could change this classification.
 
 ## experiment_9179_v781_capstone.json
 
@@ -142,12 +54,102 @@ Execution and external files were not checked; the truncated artifact leaves the
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible excerpt reports 124/124 routing equalities and successful FoVer reproduction, while withholding activation.
+The visible fragment reports successful FoVer AUROC and learning-contribution checks, plus operator-list equality on 124/124 routing cases.
 
 ## WHAT IS MISSING
-The supplied artifact ends mid-entry in "arc_summary.rows"; remaining evidence and any diagnostic explaining "required_checks_passed": false are unavailable.
+The artifact ends mid-string inside "arc_summary.rows", leaving remaining evidence and any later blocker diagnostics unavailable. "G2.detail" reports aggregate FoVer intervals; visible rows measure "operator_list_equality", not FoVer performance.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder identify the failed check and its observed value?
+Was the positive FoVer learning contribution consistent across individual seeds and conditions?
 
-The truncated remainder was not checked; its absence prevents establishing either failure category.
+The omitted remainder could change this verdict; it could not be checked.
+
+## experiment_9180_v782_contract.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The fourteen-task administrative contract is ready (“contract_ready_score”: 1), with no measured scientific benefit claimed.
+
+## WHAT IS MISSING
+The artifact is truncated inside “full_task_objects”; current top-level “honest_verdict”, “verdict_class” and “gate_check_summary” values are not visible. Their descriptions in “field_principles” do not supply those values.
+
+## THE CHECK A READER CANNOT DO
+Did this run finish blocked, and if so, which check failed and what value did it observe?
+
+## experiment_9181_v782_causal_validation.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The excerpt reports original-versus-changed diagnostic observations, but its final headline claim and verdict are not visible.
+
+## WHAT IS MISSING
+The artifact cuts off at `"duration_s": 1898`, leaving the final verdict and any current blocker summary unavailable; `"before_after_rows"` and `"historical_failures"` are present.
+
+## THE CHECK A READER CANNOT DO
+Was the task ultimately blocked, and which current check failed?
+
+The truncated remainder is unassessed; it may contain the decisive diagnostics.
+
+## experiment_9182_forward_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Execution was blocked because upstream `causal_fix_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_9192_v782_arc_mechanic_routing.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+
+“acceptance_gates” requires 52 recognized rows to match the empty-game reference and 72 legacy controls to remain unchanged, but no final outcome is visible.
+
+## WHAT IS MISSING
+
+The artifact’s remainder: “changed_behavior_rows” ends mid-string. Visible rows contain “before”, “after”, and “reference”, so they are not aggregate-only evidence; the final verdict and gate outcomes are unavailable.
+
+## THE CHECK A READER CANNOT DO
+
+Did all 124 attempted conditions satisfy the stated gates?
+
+The omitted remainder was not checked; it could contain the outcome and diagnostics.
+
+## experiment_9193_v782_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible excerpt claims routing mismatches fell from 22 to 0, with operator-list equality passing on 124/124 units.
+
+## WHAT IS MISSING
+The complete `"arc_summary.rows"`: the supplied artifact ends mid-row at `"arm": "explicit_mecha"`, leaving insufficient rows to reconcile `"regression_result"`, `"equality_numerator"`, and `"denominator"`.
+
+## THE CHECK A READER CANNOT DO
+Do the results for all 124 units substantiate the reported reduction from 22 mismatches to zero?
+
+The omitted remainder was not checked; it may contain the supporting evidence.

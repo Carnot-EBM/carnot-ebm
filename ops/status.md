@@ -19556,3 +19556,25 @@ cohort and original energy/learning bounds, adds a fixed entropy-reference ranki
 comparison, measures complete cost and separately checks ARC ordering compatibility.
 Exposed development cannot close the independent-verifier gaps. No experiments
 ran during planning. Focused validation results are recorded below when complete.
+
+## V783 research plan staged — 2026-11-17
+
+Proposed milestone 2026.11.783 has fourteen tasks, Exp9194–Exp9207, in four phases.
+V782 scheduled fourteen tasks: four ran and ten skipped. Its structural-control
+success did not complete direct-consumer validation; the trace stopped inside a
+recursive full-corpus JSON test. The separate ARC compatibility route failed.
+The human Qwen panel, energy gains and learning gains remain unmeasured.
+
+The new plan qualifies a lossless full-corpus byte prefilter before the unchanged
+complete validation union. It preserves all original human rows and scientific
+bounds. A source-only annotation-sensitivity method can run even if validation
+blocks model work; later audits apply its exact endpoints to genuine predictions.
+Continuous learning retains delayed feedback, calibration guards and hard exits.
+Complete service costs and unconditional outcome accounting close the plan.
+
+The requested research scan is recorded in `research-references.md`. Matching
+contracts are `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V782 design/queue bytes are preserved separately.
+The active roadmap, conductor and exclusion manifest are unchanged. No experiment
+has run for V783 and no exposed-development result can close independent
+generalization. Planning checks are recorded below after completion.

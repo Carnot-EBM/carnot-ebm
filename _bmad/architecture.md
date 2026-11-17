@@ -1294,3 +1294,30 @@ remains unproved. No active-queue change, conductor edit or publication occurs.
 
 Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Proposed execution: `research-roadmap-next.yaml`.
+
+## Proposed V783 corpus validation and label sensitivity — 2026-11-17
+
+V782 completed scheduling, with four tasks executed and ten skipped. The local
+structural optimization passed its targeted controls but full direct-consumer
+validation did not finish. ARC ordering compatibility also failed its affected
+checks. Neither outcome establishes new scientific or live-solve evidence.
+
+V783 proposes fourteen tasks, Exp9194–Exp9207. A conservative byte prefilter
+visits every original corpus path and sends potential sentinel matches and JSON
+Unicode escapes through the unchanged decoder/classifier. It preserves original
+assertions and requires full-corpus qualification before the complete original
+validation union can authorize model work. Old failure gates remain unchanged.
+
+Frozen Qwen3.8 forward features feed the original three complete shards, static
+energy heads and continuous delayed-learning service. All original scientific
+bounds, feedback ordering, calibration guards and recovery conditions remain.
+An independent CPU method freezes human-label ambiguity sets and exact Brier
+contrast endpoints. Shared labels across repeated retention prevent artificial
+extra freedom. The audit applies that method to available genuine predictions;
+it cannot refit or rescue a primary result. Complete costs retain device limits.
+
+These are proposed changes only. No runtime implementation, model inference,
+queue activation or independent-generalization claim occurs during planning.
+The V782 design/queue are preserved; current contracts are the V783 design and
+`research-roadmap-next.yaml`. This scoped update does not attest whole-repository
+architecture freshness.

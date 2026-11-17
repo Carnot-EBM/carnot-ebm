@@ -23985,3 +23985,19 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-17: Exp9181: Remove repeated structural scans and qualify immutable diagnostic evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_causal_validation; results/experiment_9181_v782_causal_validation.json
 - 2026-11-17: Exp9192: Reconcile primitive ordering with explicit mechanic precedence (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_ordering_compatibility; results/experiment_9192_v782_arc_mechanic_routing.json
 - 2026-11-17: Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9193_v782_capstone.json
+
+## 2026-11-17 — Stage research milestone 2026.11.783
+
+- Record the requested arXiv, citation and secondary-source scan before design.
+  Add annotation uncertainty as a new sensitivity experiment; preserve the
+  original energy, continuous-learning and entropy-reference comparisons.
+- Preserve V782 design and activated queue; create fourteen matching proposed
+  tasks, Exp9194–Exp9207, across four phases.
+- Address the newly located full-corpus decode bottleneck with a proposed lossless
+  reader. Every original file and assertion remains in scope, followed by complete
+  forward qualification. No earlier failure is relabeled as passing.
+- Keep a human-label method independently runnable when model work is blocked.
+  Preserve full Qwen population, original bounds, durable recovery and hardware
+  boundaries. Defer the failed ARC compatibility route.
+- Align planned requirements, traceability, architecture and status. No runtime
+  changes, experiment runs, active-queue edits, conductor edits, activation or push.

@@ -922,3 +922,17 @@ Live Kaggle standings could not be checked; the public placement above comes fro
 
 Live Kaggle standings and the complete discussion feed could not be verified; Turducken’s placement is team-reported.
 
+## 2026-11-17 14:13 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9%, $25,000**; Lord Han Solo **23.8%, $7,500**; Lohit Siriki **22.5%, $5,000**. All three open-sourced their qualifying solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734)
+
+- **November 9 — Tufa Labs:** Published its final “Seal” solution, reporting **second place publicly at 70.2%**, using Qwen3.8-Flash-Next. Released source includes training code and its vLLM fork. [Team writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/general-approaches-now-beat-domain-specific-tricks)
+
+- **November 9 — Claude Fable 5.2:** Official semi-private results reached **81.2% Standard (XHigh)** and **97.7% Provider Adapter (High)**. The evaluated checkpoint’s XHigh tuning differs from the released model. [Official results](https://arcprize.org/results/anthropic-claude-fable-5-2)
+
+- **September 3 — GPT-6 Astra:** Official semi-private results reached **62.7% Standard (Max)** and **99.9% Provider Adapter (High)**. ARC Prize announced separate reporting for both harnesses. [Official blog](https://arcprize.org/blog/astra)
+
+- **Inkling 2 Small:** Official semi-private scores are **0.30% Standard** and **2.55% Provider Adapter**; the latter completed 51/55 games, with scores calculated across all 55. Weights were released November 12. [Official results](https://arcprize.org/results/thinky-inkling-2-small)
+
+Live Kaggle standings and the full discussion feed remained inaccessible; Tufa’s placement is team-reported.
+

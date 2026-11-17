@@ -116432,3 +116432,160 @@ health separately. All subprocesses inherit one monotonic deadline with 3300s
 measurement, 1200s final validation and 300s publication reserves. Status,
 changelog and traceability reconciliation is delegated to the conductor by the
 operator's final instruction.
+
+## V783 proposed research requirements — 2026-11-17
+
+Status: planned only. The normative design is
+`openspec/change-proposals/research-roadmap-vNEXT.md`; its fourteen complete task
+objects SHALL equal `research-roadmap-next.yaml` in order, Exp9194–Exp9207.
+V782 design and activated queue bytes are preserved separately. No implementation,
+model result, activation, historical disqualification repair or publication is
+claimed by this proposal.
+
+All tasks SHALL emit flushed phase/call/loop progress, use supervised 60-second
+heartbeats with gaps below 600 seconds, and split file writes over about 200 lines.
+One descendant-aware deadline reserves 3300 seconds for work, 1200 for validation
+and 300 for publication. Readiness requires all affected checks, original assertions,
+current receipts, per-unit comparative rows and a closed verdict class. External
+absence is terminal blocked with exact `gate_check_summary`; only retryable owned
+incompleteness is partial. Model work uses Qwen3.8-27B-GGUF, forward-only
+`model_load_no_generation`, with actual operation receipts and zero generation.
+
+### REQ-REPORT-9194-V783: Complete contract and original methods
+
+Bind every ordered task field, source/method hash, original human role and shard.
+Preserve V782 failures and the original two static, seven learning and three CES
+bounds. Freeze the new label-ambiguity protocol before current predictions.
+
+SCENARIO-REPORT-9194-V783: Mutated IDs, prompts, gates, role assignments or retained
+producer bytes refuse authority. Source, static and online method readiness remain
+separate from administrative contract readiness. No queue activation occurs.
+
+### REQ-REPORT-9195-V783: Lossless full-corpus reader
+
+Visit every original recursive JSON path. Skip decoding only after EOF proves
+absence of all five recognized ASCII substrate sentinels and any JSON Unicode
+escape marker. Use bounded overlapping byte chunks; candidate files use the
+original decoder/classifier. Preserve malformed/non-dict behavior, checked-count
+and offender assertions. No path, filename, size, age or verdict exclusions.
+
+SCENARIO-REPORT-9195-V783: Escapes, duplicate keys, wrappers, suffixes, invalid
+encoding/JSON, cross-chunk needles and nested decoys retain exact original
+behavior; removing a sentinel or escape fallback fails controls. A stable complete
+manifest, full original target module, V782 controls and all affected consumers
+qualify `corpus_scan_ready_score`. Incomplete traversal or checks keep it zero.
+Bounded size-stratum timings cannot masquerade as a full-corpus speed ratio.
+
+### REQ-REPORT-9196-V783: Complete forward qualification
+
+After the new corpus gate passes, execute all original 621 nodes, 53 additions
+and every affected V780–V783 obligation once under the current revision. Preserve
+whole-module fixture lifetimes, original assertions and all command roles.
+
+SCENARIO-REPORT-9196-V783: Missing nodes, historical cached passes, stale coverage,
+failed checks or unfinished scans refuse `forward_validation_ready_score`.
+Exp9181/9182 remain retired and are not structured dependencies.
+
+### REQ-REPORT-9197-V783: Human annotation sensitivity method
+
+Use all original 900 responses. Preserve primary A1 factuality and actual A2=-1
+missingness. Freeze observed-disagreement sets and a separate missing-A2 envelope.
+Compute exact affine Brier contrast endpoints with original weights. A response
+shares one label across all repeated retention measurements: sum coefficients
+before optimizing. Pairwise extrema imply no jointly attainable worst case.
+
+SCENARIO-REPORT-9197-V783: Exhaustive small-panel, boundary, permutation, duplicate
+retention and missingness controls agree exactly with endpoint reduction. Fixtures
+prove method correctness only. This task requires source custody, not model or
+forward-validation readiness; no empirical verifier benefit is measured here.
+
+### REQ-REPORT-9198-V783: Current forward runtime
+
+Qualify serial and chunk128 Qwen forwards on the original six-text pilot and
+forecast all three complete shards using actual timings and token budgets.
+
+SCENARIO-REPORT-9198-V783: Changed tokenizer/caps, nonfinite statistics, parity
+failures, missing model receipts or an infeasible shard refuse runtime readiness.
+No short generation, small-model headline or artificial duration padding qualifies.
+
+### REQ-REPORT-9199-V783: Original shard A
+
+Collect qids 0:100 and all three siblings using the frozen shared collector.
+
+SCENARIO-REPORT-9199-V783: Exact raw-vector custody, tokenization, all seven
+features and runtime authority are required; any missing unit refuses admission.
+
+### REQ-REPORT-9200-V783: Original shard B
+
+Collect qids 100:200 and all three siblings with distinct resumable checkpoints.
+
+SCENARIO-REPORT-9200-V783: Use the same collector and full-population rules as A;
+no dependency on A's outcome and no favorable substitute or reduced token cap.
+
+### REQ-REPORT-9201-V783: Original shard C
+
+Collect qids 200:300 and all three siblings with exact model/runtime provenance.
+
+SCENARIO-REPORT-9201-V783: Use the same collector and full-population rules as A;
+missing units stay missing. B's success is not a launch prerequisite.
+
+### REQ-REPORT-9202-V783: Complete feature admission
+
+Join exactly 300 original qids and 900 answers. Preserve TRAIN150/CAL50/TEST100,
+the original online TRAIN100 initialization and label-free inference views.
+
+SCENARIO-REPORT-9202-V783: Duplicate, absent, changed or relabeled siblings,
+token/hash drift and incomplete raw-vector authority refuse admission.
+
+### REQ-REPORT-9203-V783: Five unchanged static arms
+
+Fit prevalence, probability+length, raw-energy, combined and donor-control arms
+under the original optimizer, temperature grid, action thresholds and supports.
+
+SCENARIO-REPORT-9203-V783: Predictions seal before TEST reduction; the original
+two paired Brier bounds and accepted-risk conditions alone qualify primary gains.
+Exposed development evidence keeps independent_generalization_score=0.
+
+### REQ-REPORT-9204-V783: Continuous delayed learning
+
+Run the six original arms on ten delayed streams, seal predictions before release,
+use CAL guards, retain exact feedback order and prove genuine hard-exit recovery.
+Preserve fixed spline basis, learning rate and original five future/two retention
+bounds. TEST never selects an update; repeated retention is not new sample size.
+
+SCENARIO-REPORT-9204-V783: Frozen/adaptive/bias/linear/donor/temperature controls,
+durable state, rejected updates and complete costs remain visible. E2E-020 and
+exact resumed-state parity are mandatory before learning readiness.
+
+### REQ-REPORT-9205-V783: Independent primary and sensitivity audits
+
+Audit each eligible static/learning branch independently. Retain original two,
+seven and separate three CES bounds and Brier moment identities. Apply Exp9197
+endpoints only to genuine frozen predictions on their original supports.
+
+SCENARIO-REPORT-9205-V783: Missing label-method authority blocks only sensitivity;
+missing one prediction branch does not discard another. Ambiguity intervals are
+conditional descriptive extrema, not sampling intervals or replacement gates.
+No refitting, relabeling, promotion or primary rescue uses these extrema.
+
+### REQ-REPORT-9206-V783: Complete eligible service costs
+
+Measure original first20 TEST qids/all60 siblings in three fresh processes,
+including cold/warm Qwen work, transforms, guards, rejected updates, fsync and
+recovery. Evaluate each eligible service independently of benefit and other arms.
+
+SCENARIO-REPORT-9206-V783: Censoring and missing components stay explicit. Amdahl
+limits require disjoint measured fractions. KV260 Ising, PolarFire CPU and
+GateMate physical limits remain; no device access, procurement or power is inferred.
+
+### REQ-REPORT-9207-V783: Unconditional fourteen-outcome reconciliation
+
+Account for every ordered task, authenticated scheduler skips, exact failed
+operands, corpus qualification and the independently runnable label method.
+Preserve V782's four executed/ten skipped outcomes and disqualified ARC route.
+
+SCENARIO-REPORT-9207-V783: Blocked science is terminal blocked with zero measured
+denominators, not a scientific null or retryable partial. Recommend exact repeated
+scope retirement in evidence without editing the manifest. Keep independent
+generalization open and current_science_paper_ready=false. Applicable private
+E2E-018/021, owned checks and immutable publication receipts qualify readiness.

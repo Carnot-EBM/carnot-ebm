@@ -5176,3 +5176,31 @@ Full contract: `openspec/change-proposals/research-roadmap-vNEXT.md` and
 `research-roadmap-next.yaml`. Original two static and seven learning bounds
 remain; CES is a separate secondary ranking experiment. No runtime behavior,
 independent generalization, hardware speedup or ARC solve is claimed.
+
+## V783 planned traceability — 2026-11-17
+
+All fourteen tasks are proposed, not implemented. V782 scheduling is complete;
+its validation and ARC disqualifications remain. The original human methods and
+independent-generalization boundary remain unchanged.
+
+| Task | PRD | Requirement / scenario | Deliverable | Status |
+|---|---|---|---|---|
+| exp9194-contract | FR-10/FR-12 | REQ-REPORT-9194-V783 / SCENARIO-REPORT-9194-V783 | results/experiment_9194_v783_contract.json | Planned |
+| exp9195-corpus-prefilter | FR-05/NFR-01 | REQ-REPORT-9195-V783 / SCENARIO-REPORT-9195-V783 | results/experiment_9195_v783_corpus_prefilter.json | Planned |
+| exp9196-forward-qualification | FR-05/NFR-01 | REQ-REPORT-9196-V783 / SCENARIO-REPORT-9196-V783 | results/experiment_9196_v783_forward_qualification.json | Planned |
+| exp9197-label-ambiguity | FR-10/FR-12 | REQ-REPORT-9197-V783 / SCENARIO-REPORT-9197-V783 | results/experiment_9197_v783_label_ambiguity.json | Planned |
+| exp9198-logit-runtime | FR-10/FR-12 | REQ-REPORT-9198-V783 / SCENARIO-REPORT-9198-V783 | results/experiment_9198_v783_logit_runtime.json | Planned |
+| exp9199-logits-a | FR-10/FR-12 | REQ-REPORT-9199-V783 / SCENARIO-REPORT-9199-V783 | results/experiment_9199_v783_logits_a.json | Planned |
+| exp9200-logits-b | FR-10/FR-12 | REQ-REPORT-9200-V783 / SCENARIO-REPORT-9200-V783 | results/experiment_9200_v783_logits_b.json | Planned |
+| exp9201-logits-c | FR-10/FR-12 | REQ-REPORT-9201-V783 / SCENARIO-REPORT-9201-V783 | results/experiment_9201_v783_logits_c.json | Planned |
+| exp9202-logit-admission | FR-10/FR-12 | REQ-REPORT-9202-V783 / SCENARIO-REPORT-9202-V783 | results/experiment_9202_v783_logit_admission.json | Planned |
+| exp9203-static-energy | FR-10/FR-12 | REQ-REPORT-9203-V783 / SCENARIO-REPORT-9203-V783 | results/experiment_9203_v783_static_energy.json | Planned |
+| exp9204-delayed-learning | FR-06/FR-11 | REQ-REPORT-9204-V783 / SCENARIO-REPORT-9204-V783 | results/experiment_9204_v783_delayed_learning.json | Planned |
+| exp9205-decision-audit | FR-10/FR-12 | REQ-REPORT-9205-V783 / SCENARIO-REPORT-9205-V783 | results/experiment_9205_v783_decision_audit.json | Planned |
+| exp9206-complete-cost | FR-05/FR-08/NFR-01 | REQ-REPORT-9206-V783 / SCENARIO-REPORT-9206-V783 | results/experiment_9206_v783_complete_cost.json | Planned |
+| exp9207-capstone | FR-10/FR-12 | REQ-REPORT-9207-V783 / SCENARIO-REPORT-9207-V783 | results/experiment_9207_v783_capstone.json | Planned |
+
+Contracts: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. All five model tasks use the mandated Qwen model
+with forward-only receipts. New annotation sensitivity does not alter primary
+acceptance. No current model, science, hardware or ARC result is claimed.
