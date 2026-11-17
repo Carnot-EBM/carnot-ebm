@@ -22246,3 +22246,4 @@ code |
 | 2026-11-17 05:07 UTC | Exp9175: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9173-logit-admission) |
 | 2026-11-17 05:07 UTC | Exp9176: Audit static and future benefit with exac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9173-logit-admission) |
 | 2026-11-17 05:07 UTC | Exp9177: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9169-logit-runtime) |
+| 2026-11-17 05:48 UTC | Exp9178: Test game-name invariance of explicit ARC | OK | 136 passed, 1 warning in 20.43s |
