@@ -24002,3 +24002,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - Align planned requirements, traceability, architecture and status. No runtime
   changes, experiment runs, active-queue edits, conductor edits, activation or push.
 - 2026-11-17: Exp9194: Bind fourteen tasks and preserve human methods and V782 failures (⚠️ Research Finding) — honest_verdict=complete_disqualified_v783_contract; results/experiment_9194_v783_contract.json
+- 2026-11-17: Exp9207: Reconcile fourteen outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9207_v783_capstone.json
