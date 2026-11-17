@@ -23960,3 +23960,17 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-17: Exp9167: Trace the actual validation work and qualify a causal correction (⚠️ Research Finding) — honest_verdict=complete_disqualified_causal_validation; results/experiment_9167_v781_causal_validation.json
 - 2026-11-17: Exp9178: Test game-name invariance of explicit ARC mechanic routing (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_mechanic_routing; results/experiment_9178_v781_arc_mechanic_routing.json
 - 2026-11-17: Exp9179: Reconcile fourteen outcomes and retire unchanged failed paths (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9179_v781_capstone.json
+
+## 2026-11-17 — Stage research milestone2026.11.782
+
+- Record the requested arXiv and secondary-source scan before design, including
+  CES assumptions, a recent restricted Ising sampler lead and access limits.
+- Preserve V781 design/activated queue; stage14 matching tasks, Exp9180–Exp9193.
+- Replace the failed per-pair structural cache approach with a proposed local
+  invariant computation, immutable diagnostic logs and sanitized-child observation.
+  Complete original qualification remains mandatory before model work.
+- Preserve static and continuous-learning protocols; add a separate frozen
+  entropy-reference comparison without extra model collection. Retain complete
+  cost accounting, ARC consumer compatibility and unconditional reconciliation.
+- Align proposed requirements, traceability and architecture. Active queue and
+  conductor remain unchanged; no implementation, experiment, activation or push.

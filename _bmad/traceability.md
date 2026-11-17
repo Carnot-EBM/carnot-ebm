@@ -5152,3 +5152,27 @@ is claimed during planning. Validation evidence is recorded in ops notes.
 | REQ-REPORT-9177-V781 | SCENARIO-REPORT-9177-V781 | `results/experiment_9177_v781_complete_cost.json` | Planned; not executed |
 | REQ-REPORT-9178-V781 | SCENARIO-REPORT-9178-V781 | `results/experiment_9178_v781_arc_mechanic_routing.json` | Planned; not executed |
 | REQ-REPORT-9179-V781 | SCENARIO-REPORT-9179-V781 | `results/experiment_9179_v781_capstone.json` | Planned; not executed |
+
+## V782 proposed milestone — 2026-11-17
+
+| Task | PRD | Requirement / scenario | Deliverable | Status |
+|---|---|---|---|---|
+| exp9180-contract | FR-10/FR-12 | REQ-REPORT-9180-V782 / SCENARIO-REPORT-9180-V782 | results/experiment_9180_v782_contract.json | Planned |
+| exp9181-validation-loop-repair | FR-10/FR-12 | REQ-REPORT-9181-V782 / SCENARIO-REPORT-9181-V782 | results/experiment_9181_v782_causal_validation.json | Planned |
+| exp9182-forward-qualification | FR-10/FR-12 | REQ-REPORT-9182-V782 / SCENARIO-REPORT-9182-V782 | results/experiment_9182_v782_forward_qualification.json | Planned |
+| exp9183-logit-runtime | FR-10/FR-12 | REQ-REPORT-9183-V782 / SCENARIO-REPORT-9183-V782 | results/experiment_9183_v782_logit_runtime.json | Planned |
+| exp9184-logits-a | FR-10/FR-12 | REQ-REPORT-9184-V782 / SCENARIO-REPORT-9184-V782 | results/experiment_9184_v782_logits_a.json | Planned |
+| exp9185-logits-b | FR-10/FR-12 | REQ-REPORT-9185-V782 / SCENARIO-REPORT-9185-V782 | results/experiment_9185_v782_logits_b.json | Planned |
+| exp9186-logits-c | FR-10/FR-12 | REQ-REPORT-9186-V782 / SCENARIO-REPORT-9186-V782 | results/experiment_9186_v782_logits_c.json | Planned |
+| exp9187-logit-admission | FR-10/FR-12 | REQ-REPORT-9187-V782 / SCENARIO-REPORT-9187-V782 | results/experiment_9187_v782_logit_admission.json | Planned |
+| exp9188-static-energy | FR-10/FR-12 | REQ-REPORT-9188-V782 / SCENARIO-REPORT-9188-V782 | results/experiment_9188_v782_static_energy.json | Planned |
+| exp9189-delayed-learning | FR-06/FR-11 | REQ-REPORT-9189-V782 / SCENARIO-REPORT-9189-V782 | results/experiment_9189_v782_delayed_learning.json | Planned |
+| exp9190-decision-audit | FR-10/FR-12 | REQ-REPORT-9190-V782 / SCENARIO-REPORT-9190-V782 | results/experiment_9190_v782_decision_audit.json | Planned |
+| exp9191-complete-cost | FR-05/FR-08/NFR-01 | REQ-REPORT-9191-V782 / SCENARIO-REPORT-9191-V782 | results/experiment_9191_v782_complete_cost.json | Planned |
+| exp9192-arc-ordering-compatibility | FR-10/FR-12 | REQ-REPORT-9192-V782 / SCENARIO-REPORT-9192-V782 | results/experiment_9192_v782_arc_mechanic_routing.json | Planned |
+| exp9193-capstone | FR-10/FR-12 | REQ-REPORT-9193-V782 / SCENARIO-REPORT-9193-V782 | results/experiment_9193_v782_capstone.json | Planned |
+
+Full contract: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. Original two static and seven learning bounds
+remain; CES is a separate secondary ranking experiment. No runtime behavior,
+independent generalization, hardware speedup or ARC solve is claimed.

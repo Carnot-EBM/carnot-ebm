@@ -19536,3 +19536,17 @@ Repository-wide reconciliation still reports pre-existing document freshness
 and missing test/spec references. Formatting checks also flag the unchanged
 `audit_roadmap_gates.py` and `exclusion_manifest_lint.py` tools. This proposal
 does not claim a whole-repository reconciliation or repair unrelated tooling.
+
+## V782 research plan staged — 2026-11-17
+
+Proposed milestone2026.11.782 contains14 tasks, Exp9180–Exp9193, across four
+phases. The design and complete YAML task objects agree. V781 authority is
+preserved separately; the active roadmap and conductor remain unchanged.
+
+V781 established source/method readiness but no new model or learning result.
+The plan addresses repeated checker scans, overwritten diagnostic logs and missing
+sanitized-child traces before full qualification. It preserves the900-answer
+cohort and original energy/learning bounds, adds a fixed entropy-reference ranking
+comparison, measures complete cost and separately checks ARC ordering compatibility.
+Exposed development cannot close the independent-verifier gaps. No experiments
+ran during planning. Focused validation results are recorded below when complete.

@@ -1272,3 +1272,25 @@ These are planned components, not implemented results; no queue is activated.
 The V780 design and queue are preserved in change-proposals. See
 `openspec/change-proposals/research-roadmap-vNEXT.md` and
 `research-roadmap-next.yaml` for the matching V781 contract.
+
+## Proposed V782 validation and entropy-reference boundary — 2026-11-17
+
+V782 stages fourteen tasks, Exp9180–Exp9193; planning changes no runtime code.
+V781 design and activated queue bytes are preserved. A lazy invariant structural
+predicate inside each synchronous checker invocation replaces repeated per-pair
+whole-artifact scanning only if exact flag parity and original mutation controls
+pass. Immutable attempt logs and observed sanitized children qualify before the
+full original validation union; historical receipts never grant current credit.
+
+Frozen Qwen3.8 forwards retain the900-answer human population, three complete
+execution shards, five static arms and six delayed-learning arms. The two static
+and seven learning bounds are unchanged. A secondary TRAIN-only entropy-reference
+ranking comparison uses existing token statistics and does not alter primary gates.
+Prediction sealing, delayed feedback, CAL guards, untouched research retention
+and real hard-exit recovery remain. Complete costs retain actual hardware limits.
+An independent ARC compatibility study preserves original ordering assertions and
+mechanic invariance; fixtures grant no live solve. Independent human generalization
+remains unproved. No active-queue change, conductor edit or publication occurs.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Proposed execution: `research-roadmap-next.yaml`.

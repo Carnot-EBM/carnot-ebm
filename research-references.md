@@ -57359,3 +57359,99 @@ This is a demonstrated limit of the diagnostic method, not a diagnosis of the
 underlying slow child. A changed attempt must capture the process tree and the
 actual expensive operation, then demonstrate a bounded correction with unchanged
 assertions. A bare wait stack or a larger timeout cannot qualify a rerun.
+## 2026-11-17 — V782 planning scan: complete checks and an entropy reference control
+
+Recorded before designing V782. All eight requested arXiv topics and six
+secondary channels were checked. The completion archive ends at V780; V781's
+primaries, active queue and conductor log establish its scheduling closure.
+The 325 roadmap-named proposal files were indexed for lineage and retirement.
+This entry records external research and planning inferences, not Carnot results.
+
+### Findings to use
+
+- **Rechecked, new local application:** [Entropy Distribution as a Fingerprint
+  for Hallucinations, May 27, 2026](https://arxiv.org/abs/2605.28264),
+  [method and assumptions](https://arxiv.org/html/2605.28264v1). CES evaluates
+  mean and maximum token entropy against a reference empirical CDF. Test the
+  actual reference score on already-planned token statistics, alongside raw
+  mean/max entropy and the normalized-probability head. Freeze the CDF from
+  original correct TRAIN responses; keep TEST labels evaluator-only. A score
+  is not a calibrated error probability. Conditional token independence and
+  the paper's self-generation setting do not automatically hold for Carnot's
+  teacher-forced scoring of other generators' archived answers. Preserve qid
+  resampling and report within-answer dependence; claim no transferred theorem.
+- **Rechecked:** [Spilled Energy, February 2026](https://arxiv.org/abs/2602.18671)
+  and [ARM–EBM equivalence, December 2025, revised May 2026](https://arxiv.org/abs/2512.15605).
+  Keep the registered energy/probability comparison and additive-logit controls.
+  Probabilistic equivalence does not make unnormalized energy factual truth.
+- **Rechecked:** [Continual Calibration, April 2026](https://arxiv.org/abs/2604.23987)
+  motivates separate future-loss, retained-risk and decision-coverage measurements.
+  Complete the existing six-arm delayed learner before changing its optimizer.
+  No generator fine-tuning or conformal guarantee is implied.
+- **Newly inspected sampler lead:** [Near-linear-Time Sampling at the Tree
+  Uniqueness Threshold, November 3, 2026](https://arxiv.org/abs/2611.04786).
+  Its zero-field ferromagnetic regime is narrower than Carnot's signed learned
+  constraints. Keep it as a future sampler lead; it cannot accelerate the
+  current dense Qwen forward or durable small-head update by itself.
+- **Updated citation lead:** [Sequence-Level Supervised Learning,
+  revised November 16, 2026](https://arxiv.org/abs/2611.16736).
+  Preserve frozen generator weights. The limitations concern the studied
+  sequence objectives, not all possible energy training.
+
+### Primary topic coverage
+
+| Topic | Primary source | Planning decision |
+|---|---|---|
+| EBM verification/reasoning | [Distributional EBMs, May 2026](https://arxiv.org/abs/2605.18871); [EBT, July 2025](https://arxiv.org/abs/2507.02092) | Compare learned decisions with matched controls; encoded constraints and independent factual verification remain distinct. |
+| Neural constraints | [Only Project Once, October 2026](https://arxiv.org/abs/2610.04572); [HardNet++, April 2026](https://arxiv.org/abs/2604.19669) | Projection needs explicit constraints and does not solve natural-language extraction. No unchanged retired projection retry. |
+| Ising in ML | [Learning-to-sample phase transition, May 2026](https://arxiv.org/abs/2605.24752) | Parameter fitting and faithful sampling are different claims. |
+| Hallucination detection | CES and Spilled Energy above | Add a fixed reference-distribution comparison without another model collection. |
+| KAN | [Online spline locality, February 2026](https://arxiv.org/abs/2602.02056); [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306) | Reuse small coefficient updates; preserve retention tests and the retired importance-anchor boundary. |
+| Energy-guided generation | [Energy-Based Decoding, May 2026](https://arxiv.org/abs/2605.28020) | Defer changed decoding until useful local verification is measured. |
+| Hardware sampling | [Million-p-bit FPGA computer, June 2026](https://arxiv.org/abs/2606.25313) | Account for host work and communication; no local board speedup follows. |
+| Continual/online learning | Continual Calibration above | Preserve delayed labels, immutable retention, exact recovery and complete cost. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** ICLR/ICML/NeurIPS EBM searches returned indexed
+  [EBT ICLR 2026](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [Scalable EBMs](https://openreview.net/pdf?id=I9iai932rK).
+  The latter direct retrieval required browser verification. Indexed abstracts
+  are discovery aids; this scan did not authenticate current reviews.
+- **Semantic Scholar:** requested citation lists for both specified papers.
+  The [EBT endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=1000)
+  returned HTTP429; browser fallback also failed. The
+  [ARM–EBM endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=1000)
+  returned 11 records with no next page, including the sequence-loss revision
+  above. These are retrieved records, not an exhaustive citation-count claim.
+- **Hugging Face:** inspected the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671).
+  Method statements above use author papers, not generated feed summaries.
+- **GitHub Trending:** inspected [weekly Python](https://github.com/trending/python?since=weekly).
+  The returned snapshot was two months old; no current rank or new trending
+  repository is claimed. The [author EBT repository](https://github.com/alexiglad/EBT)
+  remains a separate implementation reference.
+- **Extropic:** inspected [Writing](https://extropic.ai/writing) and
+  [Z1T, September 4, 2026](https://extropic.ai/writing/z1t/).
+  Vendor projections and sparse co-design do not establish local TSU access
+  or complete-service acceleration of dense Qwen logits and durable storage.
+- **Logical Intelligence:** inspected [Kona 1.0](https://logicalintelligence.com/kona).
+  The product description supplies no new reproducible local architecture result.
+
+### Local continuation evidence
+
+Exp9167's controlled trace localized repeated structural traversal, but its
+top-level correction gate stayed zero. Its cache still hashes the complete
+artifact on each classification request; the retained corrected trace reports
+2178 classification calls and 4368 canonical hashes. Three diagnostic receipts
+refer to an overwritten log; child hooks depend on PYTHONPATH that private CLIs
+remove; diagnostic elapsed925.472 seconds exceeded its900-second budget.
+The full targeted module was killed at130 seconds. None is a scientific null.
+
+A changed attempt must compute invariant classification inside one synchronous
+checker invocation, preserve flags and mutation detection, use immutable
+per-attempt logs, and observe actual children without relying on PYTHONPATH.
+Complete original controls must execute before any model work. The new approach
+is a hypothesis requiring parity and real timing, not an asserted repair.
+Exp9178 separately has ten direct-consumer ordering failures despite its124
+fixture rows. Preserve those assertions and distinguish helper ordering from
+actual live-agent reachability; no game solve follows from the fixtures.

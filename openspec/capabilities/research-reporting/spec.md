@@ -116141,3 +116141,192 @@ Implementation: `v781_capstone.py`, `v781_capstone_evidence.py`,
 operation-receipt, manifest-retirement and private child replay controls.
 The primary artifact's hash-bound executed validation receipts determine
 qualification. Repository health and scientific readiness remain separate.
+
+## V782 proposed research contract — 2026-11-17
+
+Status: planned only. The design and proposed queue contain exactly fourteen tasks,
+Exp9180–Exp9193, with22 structured backward gates. No implementation or new
+scientific qualification is asserted by this planning addition.
+
+### REQ-REPORT-9180-V782 — Bind fourteen tasks and freeze diagnostic supports
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9180_v782_contract.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9180-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9181-V782 — Remove repeated structural scans and qualify immutable diagnostic evidence
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9181_v782_causal_validation.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9181-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9182-V782 — Execute the complete causally corrected validation revision
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9182_v782_forward_qualification.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9182-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9183-V782 — Qualify frozen Qwen forwards and all three shard budgets
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9183_v782_logit_runtime.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9183-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9184-V782 — Collect complete frozen Qwen logit shard A
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9184_v782_logits_a.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9184-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9185-V782 — Collect complete frozen Qwen logit shard B
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9185_v782_logits_b.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9185-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9186-V782 — Collect complete frozen Qwen logit shard C
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9186_v782_logits_c.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9186-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9187-V782 — Admit the exact full cohort and retain separate fit views
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9187_v782_logit_admission.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9187-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9188-V782 — Train the five fixed human energy decision arms
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9188_v782_static_energy.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9188-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9189-V782 — Measure continuous small-energy learning with exact recovery
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9189_v782_delayed_learning.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9189-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9190-V782 — Audit energy and learning gains against a frozen entropy reference
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9190_v782_decision_audit.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9190-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9191-V782 — Measure complete service costs and operation-matched hardware limits
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9191_v782_complete_cost.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9191-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9192-V782 — Reconcile primitive ordering with explicit mechanic precedence
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9192_v782_arc_mechanic_routing.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9192-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
+### REQ-REPORT-9193-V782 — Reconcile fourteen outcomes and retire unchanged failed paths
+
+The planned experiment shall implement its exact V782 design/queue task contract
+and publish `results/experiment_9193_v782_capstone.json`. It shall preserve original
+scientific roles, thresholds, historical authority and terminal failure evidence.
+
+### SCENARIO-REPORT-9193-V782 — Evidence and refusal
+
+Verify the task's frozen conditions with per-unit rows, exact gate operands,
+closed verdict class, operation-accurate model receipts and independent replay.
+Missing external inputs block; failed owned checks disqualify. Use the task's
+scoped tests and applicable private E2E checks before readiness. Planned only.
+
