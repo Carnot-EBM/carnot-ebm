@@ -7772,5 +7772,12 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 6 experiments (1 compute-bound, 5 synthesis-only) completed in 20.0 wall-time minutes (20 minutes / 0.3 hours, averaging 3 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log), led by 5 synthesis-only tasks: Exp9139: Replace duplicated validation with a complete execution schedule (10.07 min / 10min), Exp9151: Reconcile fourteen outcomes and exact continuation limits (5.21 min / 5min), Exp9140: Qualify the complete forward validation revision (4.65 min / 5min), Exp9138: Bind fourteen tasks and reuse qualified human methods (0.09 min / 0min), and Exp9141: Measure human disagreement and freeze calibration slices (0.0 min / 0min), while no data is available this milestone for the exact ID, task name, or duration of the 1 completed compute-bound task (which finished at or below 0.0 minutes / 0min); locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel).
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.780
+- exp_range: exp9152-exp9165 (from the 3 completed compute-bound tasks listed in TIMING DATA: Exp9152, Exp9153, Exp9165)
+- theme: Operational execution analysis of 3 completed compute-bound experiments (0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment).
+- key result: honest operational negative — all 3 completed experiments were compute-bound (0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log): Exp9153: Separate measured validation costs from watchdog ceilings (24.54 min / 25min), Exp9165: Reconcile fourteen outcomes and exact continuation limits (3.13 min / 3min), and Exp9152: Bind fourteen tasks and preserve qualified human methods (0.1 min / 0min); locked gpu_idle_on_compute_bound_tasks is false, the GPU monitor was not available (no data available this milestone for GPU state telemetry), and DualGPURunner did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel).
+- acceptance: no data available this milestone
+
+
 
 

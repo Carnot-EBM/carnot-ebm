@@ -22203,3 +22203,31 @@ code |
 | 2026-11-16 23:25 UTC | Exp9162: Audit energy increments and human contras | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9160-static-energy) |
 | 2026-11-16 23:25 UTC | Exp9163: Audit future benefit and calibration wher | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9161-delayed-learning) |
 | 2026-11-16 23:25 UTC | Exp9164: Measure complete forward and durable adap | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9155-logit-runtime) |
+| 2026-11-17 00:00 UTC | Exp9165: Reconcile fourteen outcomes and exact con | OK | 87 passed, 1 warning in 52.09s |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/test_suite_mutation_check.py age-week 12: OPEN 84 days: SILENT_NON_FIRIN |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_docs_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRI |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | commit 288ea485f9 (REQ-ARC-WMTE-6710) age-week 12: OPEN 84 days: PREVALENCE_FIGU |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6587_v573_constraint_first_method_contract.json age-week 12: OPEN 84  |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_doc_guard.py age-week 12: OPEN 84 days: SILENT_NON_FIRI |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/child_results_guard.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on s |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/artifact_freshness_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING  |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/arc_artifact_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on scr |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | operator_curated_doc_guard.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on op |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | child_results_guard.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on child_res |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | artifact_freshness_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on artif |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_artifact_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on arc_artifac |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | determination_preservation_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING  |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 11: OP |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_arc_claimed_level age-week 8: OPEN 56 days: SILENT_NON_F |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_arc_solve_claim age-week 8: OPEN 56 days: SILENT_NON_ |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_arc_registry_level age-week 8: OPEN 56 days: SILENT_NON_ |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_arc_artifact age-week 8: OPEN 56 days: SILENT_NON_FIR |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_arc_live_claim_text age-week 8: OPEN 56 days: SILENT_NON |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_offline_auroc_metric age-week 8: OPEN 56 days: SILEN |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key age-week 8: OPE |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_goal_energy_claim_text age-week 8: OPEN 56 days: SILENT_ |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_norm age-week 7: OPEN 49 days: SILENT_NON_FIR |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_moat_claim_rigor age-week 7: OPEN 49 days: SILENT_N |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 7: OPEN  |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 7: OPEN 49 days: SIL |
+| 2026-11-17 00:07 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 7: OPEN 49 days: S |

@@ -1,0 +1,49 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.780",
+  "generated_at": "2026-11-17T00:11:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 27.8,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9153: Separate measured validation costs from watchdog ceilings",
+      "duration_minutes": 24.54,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exp9165: Reconcile fourteen outcomes and exact continuation limits",
+      "duration_minutes": 3.13,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exp9152: Bind fourteen tasks and preserve qualified human methods",
+      "duration_minutes": 0.1,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.780 completed 3 compute-bound experiments (0 synthesis-only) in 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 3 completed compute-bound experiments were Exp9153: Separate measured validation costs from watchdog ceilings (24.54 minutes / 25min), Exp9165: Reconcile fourteen outcomes and exact continuation limits (3.13 minutes / 3min), and Exp9152: Bind fourteen tasks and preserve qualified human methods (0.1 minutes / 0min). The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is false, and DualGPURunner did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.",
+  "bottlenecks_identified": [
+    "Validation-cost vs. watchdog-ceiling separation in Exp9153: compute-bound Exp9153: Separate measured validation costs from watchdog ceilings required 24.54 minutes (25min) of the 27.8-minute (28min / 0.5 hours) total wall time, while compute-bound Exp9165: Reconcile fourteen outcomes and exact continuation limits required 3.13 minutes (3min) and compute-bound Exp9152: Bind fourteen tasks and preserve qualified human methods required 0.1 minutes (0min); locked gpu_idle_on_compute_bound_tasks is false, so GPU idle is not flagged as a bottleneck.",
+    "Fourteen-outcome reconciliation latency in Exp9165: compute-bound Exp9165: Reconcile fourteen outcomes and exact continuation limits took 3.13 minutes (3min) after Exp9152 bound the fourteen tasks and preserved qualified human methods in 0.1 minutes (0min).",
+    "Timing fallback reconstruction: the live git-log path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 27.8 wall-time minutes (28 minutes / 0.5 hours).",
+    "Unavailable GPU monitor telemetry: the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization, memory, or hardware state across the 3 compute-bound experiments), and no data is available this milestone indicating any compute-bound task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse measured validation-cost receipts and watchdog-ceiling separation tables in compute-bound Exp9153: Separate measured validation costs from watchdog ceilings (24.54 minutes / 25min) so validation accounting does not re-evaluate unchanged receipts from scratch, without enforcing DualGPURunner on single-model workloads.",
+    "Pass the cached fourteen-task bindings and preserved qualified human methods from compute-bound Exp9152: Bind fourteen tasks and preserve qualified human methods (0.1 minutes / 0min) directly into compute-bound Exp9165: Reconcile fourteen outcomes and exact continuation limits (3.13 minutes / 3min) to eliminate repeated fourteen-task traversal.",
+    "Persist direct per-experiment start and completion timestamps in conductor artifacts to avoid retro_timing_fallback disk-mtime reconstruction when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry prior to running compute-bound experiments (3 compute-bound tasks this milestone) while keeping DualGPURunner restricted strictly to tasks loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache measured validation-cost receipts vs. watchdog ceilings in compute-bound Exp9153 (24.54 minutes / 25min).",
+    "Share cached fourteen-task bindings from compute-bound Exp9152 (0.1 minutes / 0min) directly with fourteen-outcome continuation-limit reconciliation in compute-bound Exp9165 (3.13 minutes / 3min).",
+    "Record direct per-experiment start/end timestamps to eliminate retro_timing_fallback on 0 git-log commits and restore GPU monitor telemetry before compute-bound runs."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "Milestone 2026.11.780 completed 3 compute-bound experiments (0 synthesis-only) in 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment), with wall time dominated by Exp9153: Separate measured validation costs from watchdog ceilings at 24.54 minutes (25min), followed by Exp9165: Reconcile fourteen outcomes and exact continuation limits at 3.13 minutes (3min) and Exp9152: Bind fourteen tasks and preserve qualified human methods at 0.1 minutes (0min). Because the GPU monitor was not available (no data available this milestone for GPU state), locked gpu_idle_on_compute_bound_tasks is false, and no task is shown loading 2+ models in parallel for DualGPURunner, the highest-leverage improvements for the next milestone are caching measured validation-cost vs. watchdog-ceiling artifacts in Exp9153, sharing fourteen-task bindings between Exp9152 and Exp9165, and restoring direct timestamp logging and GPU telemetry."
+}

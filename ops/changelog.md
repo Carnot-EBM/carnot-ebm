@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-17 UTC — Operational retrospective for milestone 2026.11.780
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.780`: updated `results/operational_retro_2026_11_780.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 3 completed experiments (3 compute-bound, 0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment).
+- All 3 completed experiments in `slowest_experiments` were compute-bound (`compute_bound: true`): `Exp9153: Separate measured validation costs from watchdog ceilings` (24.54 minutes / 25min), `Exp9165: Reconcile fourteen outcomes and exact continuation limits` (3.13 minutes / 3min), and `Exp9152: Bind fourteen tasks and preserve qualified human methods` (0.1 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or hardware telemetry); locked `gpu_idle_on_compute_bound_tasks` is `false` (GPU idle is not flagged as a bottleneck), and `DualGPURunner` did not apply because no data is available this milestone for any compute-bound task loading 2+ models in parallel.
+- Suggested improvements (`estimated_time_savings_pct: 40`): pre-index and cache measured validation-cost receipts vs. watchdog ceilings in compute-bound `Exp9153` (24.54 minutes / 25min) without enforcing `DualGPURunner` on single-model tasks, pass cached fourteen-task bindings and preserved qualified human methods from compute-bound `Exp9152` (0.1 minutes / 0min) into compute-bound `Exp9165` (3.13 minutes / 3min), persist direct per-experiment start and end timestamps to eliminate `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor telemetry before compute-bound tasks execute.
+
 ## 2026-11-16 UTC — Stage V780 research plan
 
 - Record the requested arXiv and secondary-channel scan before designing tasks.

@@ -1,5 +1,9 @@
 # Carnot — Operational Status
 
+## 2026-11-17 UTC — Milestone 2026.11.780 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_780.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 3 completed compute-bound experiments (0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment): compute-bound `Exp9153: Separate measured validation costs from watchdog ceilings` (24.54 min / 25min), compute-bound `Exp9165: Reconcile fourteen outcomes and exact continuation limits` (3.13 min / 3min), and compute-bound `Exp9152: Bind fourteen tasks and preserve qualified human methods` (0.1 min / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: pre-index and cache measured validation-cost receipts vs. watchdog ceilings in `Exp9153` (24.54 min / 25min), reuse cached fourteen-task bindings and preserved qualified human methods from `Exp9152` (0.1 min / 0min) in `Exp9165` (3.13 min / 3min), persist direct per-experiment execution timestamps, and restore GPU monitor availability.
+
 ## 2026-11-16 UTC — V780 research plan staged
 
 The next proposal is `2026.11.780`: fourteen tasks, Exp9152–Exp9165, across four
