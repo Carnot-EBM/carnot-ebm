@@ -22271,3 +22271,13 @@ code |
 | 2026-11-17 17:16 UTC | Exp9194: Bind fourteen tasks and preserve human me | OK | 89 passed, 1 warning in 82.45s (0:01:22) |
 | 2026-11-17 17:25 UTC | Exp9195: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9194-contract.contract_ready_score (actual=0 == expected=1) |
 | 2026-11-17 17:27 UTC | Exp9196: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9195-corpus-prefilter) |
+| 2026-11-17 17:33 UTC | Exp9197: Freeze exact human-label ambiguity envelo | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9194-contract.source_ready_score (actual=0 == expected=1) |
+| 2026-11-17 17:35 UTC | Exp9198: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9196-forward-qualification) |
+| 2026-11-17 17:35 UTC | Exp9199: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9198-logit-runtime, exp9198-logit-runtime) |
+| 2026-11-17 17:35 UTC | Exp9200: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9198-logit-runtime, exp9198-logit-runtime) |
+| 2026-11-17 17:35 UTC | Exp9201: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9198-logit-runtime, exp9198-logit-runtime) |
+| 2026-11-17 17:35 UTC | Exp9202: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9199-logits-a, exp9200-logits-b, exp9201-logits-c) |
+| 2026-11-17 17:35 UTC | Exp9203: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9202-logit-admission) |
+| 2026-11-17 17:35 UTC | Exp9204: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9202-logit-admission) |
+| 2026-11-17 17:35 UTC | Exp9205: Audit primary gains, entropy controls and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9202-logit-admission) |
+| 2026-11-17 17:35 UTC | Exp9206: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9198-logit-runtime) |
