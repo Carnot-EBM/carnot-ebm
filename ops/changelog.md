@@ -23977,3 +23977,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-17: Exp9180: Bind fourteen tasks and freeze diagnostic supports (⚠️ Research Finding) — honest_verdict=complete_null_v782_contract; results/experiment_9180_v782_contract.json
 - 2026-11-17: Exp9181: Remove repeated structural scans and qualify immutable diagnostic evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_causal_validation; results/experiment_9181_v782_causal_validation.json
 - 2026-11-17: Exp9192: Reconcile primitive ordering with explicit mechanic precedence (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_ordering_compatibility; results/experiment_9192_v782_arc_mechanic_routing.json
+- 2026-11-17: Exp9193: Reconcile fourteen outcomes and retire unchanged failed paths (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9193_v782_capstone.json
