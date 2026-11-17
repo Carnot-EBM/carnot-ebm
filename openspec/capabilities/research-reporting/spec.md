@@ -116461,6 +116461,38 @@ SCENARIO-REPORT-9194-V783: Mutated IDs, prompts, gates, role assignments or reta
 producer bytes refuse authority. Source, static and online method readiness remain
 separate from administrative contract readiness. No queue activation occurs.
 
+Exp9194 implementation binding (2026-11-17): compare the normative YAML and
+fourteen table rows with the proposed queue, or the already activated queue when
+the proposal file is absent. Authenticate the selected queue and preserved V782
+bytes before use. Check all fourteen IDs against the archived tasks, current queue,
+exclusion manifest and canonical result paths; exclude only Exp9194's own canonical
+output. Preserve the original621 plus53 node bindings, all affected V780–V783
+assertions, the stalled full-corpus duration node and historical quarantine evidence.
+The new corpus_scan_ready_score never replaces causal_fix_ready_score; Exp9181/9182
+remain retired. Historical completions grant zero current execution credit.
+
+Freeze a separate immutable label-ambiguity sidecar with observed A1/A2 disagreement
+and missing-A2 masks, exact affine Brier endpoints, equal-qid/sibling weights and
+original stream weights. Aggregate each response's repeated-retention coefficient
+before endpoint selection. Neither sensitivity interval replaces any original static,
+online, Brier-moment or CES protocol. Authentication failures terminate blocked;
+affected execution failures disqualify readiness. Publish terminal checker-approved
+accounting even when validation fails, with exact failed operands and logs.
+
+SCENARIO-REPORT-9194-V783-CONTROLS: private success, missing file/field, observed
+zero, collision, complete-object mutation, historical tamper, sidecar tamper and
+rehashed aggregate tamper are exercised through real child CLI/cold replay outside
+the checkout without PYTHONPATH. Owned statements require100 percent unit plus
+child-process coverage with zero exclusions; broad repository health runs once.
+
+Exp9194 implementation status (2026-11-17): the contract CLI and owned controls
+are implemented. All8 new tests pass; unit plus actual child-process coverage is
+100 percent of246 owned statements with zero exclusions. Scoped Ruff, formatting,
+strict mypy and explicit-path spec coverage pass. The affected historical controls
+retain69 passes and12 failures. The single full-suite attempt reports failures and
+is censored at its600-second watchdog. Readiness remains disqualified with all four
+scores zero; no activation, model invocation or scientific finding is claimed.
+
 ### REQ-REPORT-9195-V783: Lossless full-corpus reader
 
 Visit every original recursive JSON path. Skip decoding only after EOF proves
