@@ -1,6 +1,21 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-11-12 (Exp9044 participation repair only)
+**Last Updated:** 2026-11-17 (Exp9166 activated queue binding repair only)
+
+## Exp9166 activated queue binding repair — 2026-11-17 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-9166-V781 | `v781-contract-inputs.json` pins the conductor-encoded active queue; all historical producer pins remain unchanged | Eight original tests; 243/243 owned unit/CLI statements, zero exclusions |
+| SCENARIO-REPORT-9166-V781 | Existing full task comparison still permits only the declared prompt encoding | Four added controls bind current bytes, render all prompts and reject changed prompts/model metadata/gates even with matching queue hashes |
+| REQ-CONDUCTOR-FIXGATE-1 | Original tests and conductor remain unchanged; existing queue edits are preserved | Ten repair-gate tests pass |
+
+All 41 direct-consumer/private E2E-018/021 checks, scoped Ruff/format, strict
+mypy and explicit-path spec tracing pass. Evidence is retained in
+`/var/tmp/carnot-v781-fix-UmScSn/coverage.json`. This repair does not renew
+historical experiment receipts or establish repository-wide test health.
+Global reconciliation retains the pre-existing architecture freshness gap and
+1,142 tests without spec references; scoped spec tracing passes.
 
 ## Exp8929 health reuse and compute provenance repair — 2026-11-08 UTC
 

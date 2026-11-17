@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-17 UTC — Repair V781 activated queue binding
+
+- Bind `v781-contract-inputs.json` to the activated queue after the conductor's
+  literal-brace encoding; preserve full task equality and all historical pins.
+- Add four controls for the current byte pin, prompt rendering and changed
+  prompt/model/gate rejection even with a matching queue hash. Preserve the
+  original tests, conductor and existing queue changes.
+- All 63 selected tests pass: 12 V781, 41 direct-consumer/private E2E-018/021
+  and ten repair-gate tests. Owned unit/real-CLI coverage is 243/243 statements
+  with zero exclusions; scoped Ruff/format, strict mypy and spec tracing pass.
+- No repository-wide test result, new measurement or renewed primary receipt
+  is claimed. Validation evidence: `/var/tmp/carnot-v781-fix-UmScSn/coverage.json`.
+- Global reconciliation retains the existing architecture freshness gap and
+  1,142 tests missing spec references; scoped spec tracing passes.
+
 ## 2026-11-16 — Stage V781 causal qualification and learning plan
 
 - Record the requested literature scan before design, including exact Brier

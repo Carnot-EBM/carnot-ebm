@@ -115845,12 +115845,46 @@ claimed. Original authority, thresholds and failure history remain unchanged.
 Produce `results/experiment_9166_v781_contract.json` under the full V781 task contract.
 Require actual per-unit evidence, exact gate operands and a valid verdict class.
 Preserve original scientific bounds, source authority and declared compute class.
+Authenticate preserved V780 design/queue and original Exp9152 producer references
+before importing cohort, labels or method fields. Compare all fourteen ordered
+V781 objects, including prompts, gates and model metadata. Keep administrative,
+source, static and online readiness separate. Freeze equal-qid population Brier
+moments (squared mean bias, variance mismatch, covariance deficit) on identical
+supports before predictions, with signed identity residual tolerance 1e-12,
+unavailable empty supports and unavailable correlation at zero variance.
+Retain Exp9141 masks, V780 ranking/scale definitions, five/six arms and two/seven
+bounds. Bind 621+53 historical node identities and assertion hashes plus affected
+V780/current obligations, with 32 completed/642 censored observations granting
+zero current qualification credit. Do not activate a queue or load a model.
+
+The V781 input manifest SHALL pin the activated queue bytes after conductor
+literal-brace encoding. Task objects must still equal the immutable design,
+allowing only `encode(prompt)` while preserving `{project_root}` and `{date}`.
+Changed prompts, metadata, order or gates SHALL fail even with a matching queue
+byte pin. Preserved V780/V779 producer pins remain unchanged.
 
 ### SCENARIO-REPORT-9166-V781 — evidence and refusal controls
 
 Complete inputs permit the declared work; absent or failed prerequisites block.
 Tampered evidence and incomplete owned validation cannot establish readiness.
-Status: planned; implementation and experiment validation remain pending.
+Controls cover full-object mutations, absent files/fields versus observed zero,
+original-label custody, moment identity/degeneracy, private real CLI success,
+refusal and rehashed tamper/cold replay without PYTHONPATH. Require 100 percent
+owned unit/child statements, zero exclusions, actual lint/type/spec and terminal
+scanner receipts. Broad repository health is recorded once separately. Reporting
+changes do not modify learning/recovery; E2E-020 is inapplicable. Documentation
+reconciliation remains conductor-owned.
+Implementation: `v781_contract.py`, `v781_contract_evidence.py` and the direct
+Exp9166 CLI; `test_v781_contract_9166.py` binds the controls. Qualification is
+recorded by the primary's owned coverage, command and publication receipts.
+
+Repair verification, 2026-11-17 UTC: the input manifest now binds the activated,
+literal-brace-encoded V781 queue. All eight original tests and four added queue
+binding/rendering/tamper controls pass. Real unit/CLI coverage is 243/243
+statements with zero exclusions. The 41 direct-consumer/private E2E-018/021
+checks, ten repair-gate tests, scoped Ruff/format, strict mypy and explicit
+spec tracing pass. Original tests, historical pins and conductor bytes are
+unchanged. No new research measurement or primary publication is claimed.
 
 ### REQ-REPORT-9167-V781 — Trace the actual validation work and qualify a causal correction
 

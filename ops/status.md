@@ -1,5 +1,24 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-17 (Exp9166 activated queue binding repair only)
+
+## 2026-11-17 UTC — Exp9166 activated queue binding repaired
+
+The V781 input manifest now pins the queue after conductor literal-brace
+encoding. All fourteen tasks still match the immutable design; all historical
+producer pins and existing queue edits are preserved. No conductor or original
+test changes were needed. The eight original tests plus four new binding,
+rendering and tamper controls pass with 243/243 owned unit/real-CLI statements
+and zero exclusions. All 41 direct-consumer/private E2E-018/021 checks, ten
+repair-gate tests, scoped Ruff/format, strict mypy and explicit spec tracing pass.
+Coverage evidence: `/var/tmp/carnot-v781-fix-UmScSn/coverage.json`.
+
+No full repository test run, new measurement or primary publication is claimed.
+Stored experiment receipts retain their pre-repair manifest binding. Global
+reconciliation fails on the pre-existing architecture freshness gap and 1,142
+tests missing spec references; this repair's scoped checks pass. The repair
+updates the status and traceability dates only for its own scope.
+
 ## 2026-11-17 UTC — Milestone 2026.11.780 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_780.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 3 completed compute-bound experiments (0 synthesis-only) across 27.8 wall-time minutes (28 minutes / 0.5 hours, averaging 9 minutes per experiment): compute-bound `Exp9153: Separate measured validation costs from watchdog ceilings` (24.54 min / 25min), compute-bound `Exp9165: Reconcile fourteen outcomes and exact continuation limits` (3.13 min / 3min), and compute-bound `Exp9152: Bind fourteen tasks and preserve qualified human methods` (0.1 min / 0min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: pre-index and cache measured validation-cost receipts vs. watchdog ceilings in `Exp9153` (24.54 min / 25min), reuse cached fourteen-task bindings and preserved qualified human methods from `Exp9152` (0.1 min / 0min) in `Exp9165` (3.13 min / 3min), persist direct per-experiment execution timestamps, and restore GPU monitor availability.
