@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-17 UTC — Operational retrospective for milestone 2026.11.783
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.783`: updated `results/operational_retro_2026_11_783.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 2 completed experiments (0 compute-bound, 2 synthesis-only) across 7.7 wall-time minutes (8 minutes / 0.1 hours, averaging 4 minutes per experiment).
+- Both completed experiments in `slowest_experiments` were synthesis-only (`compute_bound: false`): `Exp9207: Reconcile fourteen outcomes and exact continuation boundaries` (7.56 minutes / 8min) and `Exp9194: Bind fourteen tasks and preserve human methods and V782 failures` (0.11 minutes / 0min).
+- The GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU utilization, memory, or hardware telemetry); because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null` (GPU idle is not flagged as a bottleneck), and `DualGPURunner` did not apply.
+- Suggested improvements (`estimated_time_savings_pct: 30`): pass cached fourteen-task bindings, preserved human methods, and V782 failure state from synthesis-only `Exp9194` (0.11 minutes / 0min) directly into synthesis-only `Exp9207` (7.56 minutes / 8min), persist direct per-experiment start and completion timestamps to eliminate `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability before future compute-bound runs.
+
 ## 2026-11-17 UTC — Operational retrospective for milestone 2026.11.782
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.782`: updated `results/operational_retro_2026_11_782.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 4 completed experiments (0 compute-bound, 4 synthesis-only) across 42.2 wall-time minutes (42 minutes / 0.7 hours, averaging 11 minutes per experiment).

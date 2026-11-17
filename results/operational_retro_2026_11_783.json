@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.783",
+  "generated_at": "2026-11-17T18:36:06Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 7.7,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9207: Reconcile fourteen outcomes and exact continuation boundaries",
+      "duration_minutes": 7.56,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9194: Bind fourteen tasks and preserve human methods and V782 failures",
+      "duration_minutes": 0.11,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.783 completed 2 synthesis-only experiments (0 compute-bound) in 7.7 wall-time minutes (8 minutes / 0.1 hours, averaging 4 minutes per experiment) via disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). The 2 completed synthesis-only experiments were Exp9207: Reconcile fourteen outcomes and exact continuation boundaries (7.56 minutes / 8min) and Exp9194: Bind fourteen tasks and preserve human methods and V782 failures (0.11 minutes / 0min). Because 0 compute-bound experiments ran and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state), locked gpu_idle_on_compute_bound_tasks is null and DualGPURunner did not apply.",
+  "bottlenecks_identified": [
+    "Fourteen-outcome and continuation-boundary reconciliation latency in Exp9207: synthesis-only Exp9207: Reconcile fourteen outcomes and exact continuation boundaries required 7.56 minutes (8min) of the 7.7-minute (8min / 0.1 hours) total wall time after synthesis-only Exp9194: Bind fourteen tasks and preserve human methods and V782 failures completed in 0.11 minutes (0min); because 0 compute-bound tasks ran and locked gpu_idle_on_compute_bound_tasks is null, 0% GPU on synthesis-only tasks is expected behavior and not a GPU bottleneck.",
+    "Timing fallback reconstruction: the live git-log path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 7.7 wall-time minutes (8 minutes / 0.1 hours).",
+    "Unavailable GPU monitor telemetry: the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU state), though 0 compute-bound experiments executed and no task loaded 2+ models in parallel requiring DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Pass the cached fourteen-task bindings, preserved human methods, and V782 failure records produced by synthesis-only Exp9194: Bind fourteen tasks and preserve human methods and V782 failures (0.11 minutes / 0min) directly into synthesis-only Exp9207: Reconcile fourteen outcomes and exact continuation boundaries (7.56 minutes / 8min) so fourteen-outcome and continuation-boundary reconciliation avoids redundant sequential checks.",
+    "Persist direct per-experiment start and completion timestamps in conductor artifacts to avoid retro_timing_fallback disk-mtime reconstruction when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability before future compute-bound experiments run while keeping DualGPURunner restricted strictly to compute-bound tasks loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share cached fourteen-task bindings, preserved human methods, and V782 failure state from synthesis-only Exp9194 (0.11 minutes / 0min) directly with fourteen-outcome and continuation-boundary reconciliation in synthesis-only Exp9207 (7.56 minutes / 8min).",
+    "Persist direct per-experiment start and completion timestamps to eliminate retro_timing_fallback when the live git-log path finds 0 commits.",
+    "Restore GPU monitor telemetry before future compute-bound tasks execute while keeping DualGPURunner gated on compute-bound workloads loading 2+ models in parallel."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "Milestone 2026.11.783 completed 2 synthesis-only experiments (0 compute-bound) in 7.7 wall-time minutes (8 minutes / 0.1 hours, averaging 4 minutes per experiment), with wall time concentrated in Exp9207: Reconcile fourteen outcomes and exact continuation boundaries at 7.56 minutes (8min) while Exp9194: Bind fourteen tasks and preserve human methods and V782 failures took 0.11 minutes (0min). Because 0 compute-bound tasks ran, locked gpu_idle_on_compute_bound_tasks is null, GPU monitor telemetry was not available (no data available this milestone), and DualGPURunner did not apply, the highest-leverage improvements for the next milestone are sharing cached fourteen-task bindings from Exp9194 into Exp9207 and restoring direct timestamp logging."
+}
