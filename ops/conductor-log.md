@@ -22269,3 +22269,5 @@ code |
 | 2026-11-17 16:08 UTC | Plan milestone 2026.11.783 | OK | 14 tasks proposed |
 | 2026-11-17 16:25 UTC | Milestone 2026.11.783 activated | OK | 14 tasks queued |
 | 2026-11-17 17:16 UTC | Exp9194: Bind fourteen tasks and preserve human me | OK | 89 passed, 1 warning in 82.45s (0:01:22) |
+| 2026-11-17 17:25 UTC | Exp9195: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9194-contract.contract_ready_score (actual=0 == expected=1) |
+| 2026-11-17 17:27 UTC | Exp9196: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9195-corpus-prefilter) |
