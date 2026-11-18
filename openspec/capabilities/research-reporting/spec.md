@@ -116786,3 +116786,41 @@ SCENARIO-REPORT-9220-V784: Keep nonoverlapping measured fractions and hardware o
 Account for all fourteen tasks including independent label methods and scheduler-only skips. Preserve V783 two-executed/twelve-skipped closure and exact source authority.
 
 SCENARIO-REPORT-9221-V784: External blocking is terminal, not partial; retire only authenticated repeated failed scope. Keep historical G1–G4 separate from exposed-development science.
+
+Exp9221 implementation contract (2026-11-18): freeze the complete V784 queue,
+embedded design, preserved V783/V782 contracts, producer hashes, exclusions and
+scheduler log before reduction. Recompute original human groups, three-shard
+union, costs, donor controls and obligation union through retained V782/V783
+work with original hashes. Account for Exp9208 protocol-owner replay and
+historical input isolation failure alongside Exp9211's independently qualified
+human source custody, target-identifiability audit and exact affine Brier
+ambiguity endpoint reducer. Keep the two static, seven learning and three
+secondary CES bounds separate; missing predictions leave metrics null and
+denominators zero. Keep observed-disagreement and missing-A2 sensitivity
+branches separate from primary energy gates.
+
+SCENARIO-REPORT-9221-V784-CONTROLS: all fourteen ordered outcomes survive missing
+inputs and failed scientific gates. Missing file, missing field, observed zero and
+boolean readiness remain distinct. Authenticate scheduler refusal hashes and log
+skips; refuse rehashed invented science, changed producer bytes and task mutation.
+Retirement requires all four prior-failure fields, an authenticated exact repeated
+verdict and the same logical execution role. Preserve Exp9181/9182 and V781
+retirement without editing the manifest. Owned statement and actual child CLI
+coverage is 100 percent with zero exclusions; private success, refusal, tamper and
+cold replay follow E2E-018/021. Existing recovery controls cover E2E-020; no learner
+or recovery behavior changes. Broad Python health is recorded once, separately
+from affected readiness. No model work, queue activation or external publication.
+
+Exp9221 observed scope (2026-11-18): Exp9208 is disqualified with all five
+readiness scores zero after direct-consumer timeout. Exp9209 has an authenticated
+scheduler refusal artifact on contract_ready_score and replay_authority_ready_score
+observed zero. Exp9210 and Exp9212–9220 have authenticated log-only upstream-retired
+skips and absent scientific primaries. Exp9211 executed and qualified with
+target_identifiability_ready_score=1 and label_ambiguity_ready_score=1, proving
+primary factual_error present on all 900 responses, expressed_uncertainty and
+same-generator re-elicitation absent on all 900 responses (zero identifiable SI/CF
+rows), and exact affine Brier contrast endpoints. With this capstone, V784 has
+three executed tasks and eleven skips. V783 remains two executed and twelve
+skipped; V782 remains four executed and ten skipped. Exposed-panel hypotheses
+stay open and current_science_paper_ready=false.
+
