@@ -22317,3 +22317,5 @@ code |
 | 2026-11-18 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 1: OPEN  |
 | 2026-11-18 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_text age-week 1: OPEN 7 days: REAL_BUG on adversar |
 | 2026-11-18 03:08 UTC | Exp9208: Qualify protocol-owner replay and bind fo | OK | Deliverable already exists in repo |
+| 2026-11-18 03:15 UTC | Exp9209: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9208-contract.contract_ready_score (actual=0 == expected=1) |
+| 2026-11-18 03:17 UTC | Exp9210: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9209-corpus-prefilter) |
