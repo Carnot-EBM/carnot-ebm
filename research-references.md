@@ -57654,3 +57654,122 @@ published required-check gate stayed false. Exp9207 records two executed tasks
 and twelve skips. No lossless corpus prefilter or human-label method ran.
 The next continuation must fix and test these exact failure paths while retaining
 original assertions, pins, receipts and scientific bounds.
+
+
+## 2026-11-18 — V785 planning scan: selective delayed feedback, spline support calibration, and partitioned consumer replay
+
+Recorded before writing the V785 experiment design. This scan checks 2025–2026
+work across all eight primary topics and all six secondary channels. External
+paper claims motivate Carnot experiments; they do not establish local Carnot
+measurements. Existing historical references remain unchanged.
+
+### New findings selected for V785 experiments
+
+- **Selective delayed feedback under expert deferral:** Saketos et al.,
+  [To Defer or Not to Defer? Online Learning with LLMs and Congested Experts,
+  2610.15128](https://arxiv.org/abs/2610.15128), October 2026. Ground-truth
+  human labels arrive with delay and are observed selectively on deferred items.
+  Carnot's existing `Exp9132` online protocol observes all three sibling labels
+  when a past question releases, even for accepted or rejected responses. V785
+  adds an ungated CPU method experiment (`Exp9225`) and non-interfering shadow
+  streams (`Exp9232`/`Exp9233`) comparing full-release feedback, escalation-only
+  feedback (`0.1 < p < 0.9`), and bounded audit-floor deferral
+  (`alpha in {0.10, 0.25}`). Do not replace the frozen primary `Exp9132` arms or
+  import the paper's `KL-PBD` regret bounds to nonlinear spline heads.
+- **Typed CPU decision calibration under sequential drift:** Santillana,
+  [VX-One: Typed, Calibrated Decision Heads for Real-Time Perimeter Triage,
+  2610.30090](https://arxiv.org/abs/2610.30090), October 2026. Small CPU heads
+  outputting temperature-calibrated binary gates and abstain options run under
+  2 ms while remaining vulnerable to calibration drift across sequential streams.
+  Use this to motivate per-slice calibration drift auditing across accepted,
+  rejected, and escalated regions in `Exp9225` and `Exp9233`, without importing
+  network-security domain claims.
+- **Spline support-density calibration:** [PostHoc FREE Calibrating on Kolmogorov
+  Arnold Networks, 2503.01195](https://arxiv.org/abs/2503.01195), March 2025.
+  B-spline parameterizations show systematic overconfidence in dense knot
+  regions and underconfidence in sparse or boundary-clipped zones. Freeze a
+  label-free 57-column cubic B-spline basis-support diagnostic in `Exp9225` and
+  evaluate interior versus boundary/clipped calibration on sealed predictions in
+  `Exp9233`. Do not alter the frozen `Exp9132` training loss or knot vector.
+- **Already-qualified human target and ambiguity authority:** Kim et al.,
+  [2610.38520v2](https://arxiv.org/abs/2610.38520v2), Valjakka et al.,
+  [2610.08026](https://arxiv.org/abs/2610.08026), and [2611.04697](https://arxiv.org/abs/2611.04697).
+  `Exp9211` executed in V784 and qualified both `target_identifiability_ready_score=1`
+  (`factual_error` present on 900/900 responses; `expressed_uncertainty` and
+  same-generator `reelicitation` absent on 900/900, zero identifiable SI/CF rows)
+  and `label_ambiguity_ready_score=1` (exact affine Brier contrast endpoints).
+  Consume `Exp9211`'s immutable artifacts directly in `Exp9233` rather than
+  repeating its completed CPU qualification.
+
+### Primary topic coverage and decisions
+
+| Topic | Checked primary source | Planning decision |
+|---|---|---|
+| EBM verification and reasoning | [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871); [Energy-Based Policy Orchestration, 2611.02546](https://arxiv.org/abs/2611.02546); [LEF-JEPA, 2611.08989](https://arxiv.org/abs/2611.08989) | Keep learned quality scores separate from deterministic checks; complete the human-panel forward logit comparison before policy orchestration or generator training. |
+| Neural constraint satisfaction | [FSNet, 2506.00362](https://arxiv.org/abs/2506.00362); [Constraint-Anchored Attribution, 2605.25235](https://arxiv.org/abs/2605.25235) | Certified feasibility requires explicit analytical constraints and does not solve open-domain factual extraction; retired repair stacks remain closed. |
+| Ising model applications in ML | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752) | Parameter estimation and faithful sampling separate past the spectral threshold; preserve Carnot's verifier-first energy evaluation boundary. |
+| Hallucination detection and mitigation | [Labeling Problem, 2610.08026](https://arxiv.org/abs/2610.08026); [Taxonomy v2, 2610.38520v2](https://arxiv.org/abs/2610.38520v2); [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671) | Score authenticated human responses with frozen Qwen3.8-27B forwards, matched probability/donor controls, gauge shifts, and qualified `Exp9211` bounds. |
+| Kolmogorov-Arnold Networks | [PostHoc FREE KAN Calibration, 2503.01195](https://arxiv.org/abs/2503.01195); [Online spline locality, 2602.02056](https://arxiv.org/abs/2602.02056); [LTBs-KAN, 2604.22034](https://arxiv.org/abs/2604.22034) | Add descriptive spline-support density slices (`Exp9225`/`Exp9233`) while keeping the frozen 57-column basis and AdaGrad update rule unchanged. |
+| Energy-guided and constrained generation | [Constrained Diffusion Decoding, 2607.07026](https://arxiv.org/abs/2607.07026); [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020) | Defer generation steering until the forward-only verifier beats matched probability and donor controls on fixed responses. |
+| Hardware-accelerated sampling | [Million-p-bit FPGA computer, 2606.25313](https://arxiv.org/abs/2606.25313); [Hybrid Ising decomposition, 2602.15985](https://arxiv.org/abs/2602.15985) | Measure whole-service CPU/GPU/storage fractions in `Exp9234` before claiming hardware speedup; preserve KV260 `k_max<=5`, PolarFire CPU, and GateMate JTAG limits. |
+| Continual and online learning | [Selective Delayed Deferral, 2610.15128](https://arxiv.org/abs/2610.15128); [VX-One, 2610.30090](https://arxiv.org/abs/2610.30090); [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987) | Test selective-deferral feedback censoring beside the unchanged six-arm delayed learner, CAL operational guard, TEST retention, and E2E-020 hard-exit recovery. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** Indexed EBM verification searches returned the ICLR 2026 EBT
+  oral (`ZBj3Qp1bYg`), *Spilled Energy in Large Language Models*, and *Energy
+  Landscapes of Truthfulness in LLM Attention* (teacher-forced pre-softmax
+  Hopfield energy proxy). No unverified review-score claim is imported.
+- **Semantic Scholar:** Direct `/citations` API queries succeeded (`HTTP 200`):
+  `ARXIV:2507.02092` (EBT) returned 46 citing records (`next=None`), including
+  `2611.08989` (*LEF-JEPA*), `2611.08977` (*Energy-Based Reasoners*),
+  `2611.02546` (*Energy-Based Policy Orchestration*), and `2610.39073`
+  (*Certified Access*); `ARXIV:2512.15605` (ARM–EBM) returned 11 citing records
+  (`next=None`), including `2611.16736` (sequence-level supervised learning). A
+  follow-up `/paper/batch` call returned `HTTP 429`, and `export.arxiv.org`
+  timed out over direct socket read; individual metadata was verified via arXiv
+  search grounding instead.
+- **Hugging Face papers:** Checked late-2026 verification and calibration pages,
+  surfacing `HalluScoring 2026` (`2609.38355`), `HalluTruthQA-4K` (`2608.03966`),
+  and `VX-One` (`2610.30090`). Method claims rely on the primary arXiv papers.
+- **GitHub:** Checked active KAN and EBM repositories (`KindXiaoming/pykan`,
+  `mintisan/awesome-kan`, `srigas/KAN_Initialization_Schemes`, `datamllab/OpenEBFM`).
+  No live GitHub Trending rank claim is made.
+- **Extropic:** Checked `extropic.ai/writing`, `Z1T` (sparse digital/TSU
+  co-design), `THRML`/`Torx`, and the late-2026 thermodynamic recursive-research
+  post (`baby-thermo-rsi`, targeting 2027 Z1 hardware). Vendor projections are
+  not local Carnot measurements or TSU access.
+- **Logical Intelligence:** Checked `logicalintelligence.com` and `Kona`
+  materials describing continuous-latent energy minimization paired with external
+  language interfaces (`Aleph`). No public code or reproducible local benchmark
+  is provided on the inspected pages.
+
+### Local V784 evidence that changes the V785 continuation
+
+V784 executed three tasks (`Exp9208`, `Exp9211`, `Exp9221`) and skipped eleven
+(`Exp9209` pre-gate artifact skip; `Exp9210` and `Exp9212`–`Exp9220` log-only
+upstream-retired skips). Two concrete facts govern V785:
+
+1. **Replay logic passed, consumer bundling timed out:** In `Exp9208`
+   (`results/experiment_9208_v784_contract.json`), `owned_tests` passed
+   (`exit_code=0`, `605.23s`), proving protocol-owner sidecar validation and
+   isolated V782/V783 historical input roots, and `ruff_check`, `ruff_format`,
+   `strict_mypy`, and `spec_coverage` all passed. Only `direct_consumers` failed
+   (`exit_code=-9`, `timed_out=true` at `1200.044s`) after passing 92 sequential
+   tests with zero assertion failures. Root cause in `v784_contract.py`:
+   `direct_consumers` packed nine subprocess-heavy test modules — including
+   `tests/python/test_causal_validation_9181.py`, whose module-scoped `observed`
+   fixture runs a ~900-second diagnostic (`r.diagnose(..., +900)`) even though
+   `Exp9208` modified zero lines of `causal_validation_9181.py` — into a single
+   serial `pytest -n 0` call under a 1200-second child cap while sharing one
+   `COVERAGE_FILE` path with `owned_tests`. V785 (`Exp9222`) fixes this concrete
+   scheduling defect by isolating V784 historical roots (`CAPSTONES[784]`),
+   giving each concurrent test worker its own `.coverage.<shard>` file, partitioning
+   actual contract/capstone/publication direct consumers into bounded shards, and
+   keeping `test_causal_validation_9181.py` in `Exp9224`'s full obligation union.
+2. **Human target and label-ambiguity methods are now qualified:** `Exp9211`
+   (`results/experiment_9211_v784_label_ambiguity.json`) passed all checks with
+   `target_identifiability_ready_score=1` and `label_ambiguity_ready_score=1`.
+   V785 retains `Exp9211` as immutable upstream authority for `Exp9233` and uses
+   the freed Phase 1 CPU research slot (`Exp9225`) to qualify selective-deferral
+   feedback masks (`2610.15128`) and B-spline support-density diagnostics (`2503.01195`).
