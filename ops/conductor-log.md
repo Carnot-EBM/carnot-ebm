@@ -22319,3 +22319,13 @@ code |
 | 2026-11-18 03:08 UTC | Exp9208: Qualify protocol-owner replay and bind fo | OK | Deliverable already exists in repo |
 | 2026-11-18 03:15 UTC | Exp9209: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9208-contract.contract_ready_score (actual=0 == expected=1) |
 | 2026-11-18 03:17 UTC | Exp9210: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9209-corpus-prefilter) |
+| 2026-11-18 04:11 UTC | Exp9211: Qualify human target identifiability and  | OK | 88 passed, 1 warning in 30.05s |
+| 2026-11-18 04:13 UTC | Exp9212: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9210-forward-qualification) |
+| 2026-11-18 04:13 UTC | Exp9213: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9212-logit-runtime, exp9212-logit-runtime) |
+| 2026-11-18 04:13 UTC | Exp9214: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9212-logit-runtime, exp9212-logit-runtime) |
+| 2026-11-18 04:13 UTC | Exp9215: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9212-logit-runtime, exp9212-logit-runtime) |
+| 2026-11-18 04:13 UTC | Exp9216: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9213-logits-a, exp9214-logits-b, exp9215-logits-c) |
+| 2026-11-18 04:13 UTC | Exp9217: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9216-logit-admission) |
+| 2026-11-18 04:13 UTC | Exp9218: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9216-logit-admission) |
+| 2026-11-18 04:13 UTC | Exp9219: Audit primary gains, entropy controls and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9216-logit-admission) |
+| 2026-11-18 04:13 UTC | Exp9220: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9212-logit-runtime) |
