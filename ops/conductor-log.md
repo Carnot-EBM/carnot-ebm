@@ -22329,3 +22329,4 @@ code |
 | 2026-11-18 04:13 UTC | Exp9218: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9216-logit-admission) |
 | 2026-11-18 04:13 UTC | Exp9219: Audit primary gains, entropy controls and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9216-logit-admission) |
 | 2026-11-18 04:13 UTC | Exp9220: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9212-logit-runtime) |
+| 2026-11-18 05:12 UTC | Exp9221: Reconcile fourteen outcomes and exact con | OK | 87 passed, 1 warning in 180.51s (0:03:00) |

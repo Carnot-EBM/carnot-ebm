@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.784",
+  "generated_at": "2026-11-18T05:24:53Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 19.2,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9221: Reconcile fourteen outcomes and exact continuation boundaries",
+      "duration_minutes": 18.81,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9208: Qualify protocol-owner replay and bind fourteen current tasks",
+      "duration_minutes": 0.43,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9211: Qualify human target identifiability and exact label-ambiguity bounds",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.784 completed 3 experiments (0 compute-bound, 3 synthesis-only) in 19.2 wall-time minutes (19 minutes / 0.3 hours, averaging 6 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). Synthesis-only Exp9221: Reconcile fourteen outcomes and exact continuation boundaries accounted for 18.81 minutes (19min), while synthesis-only Exp9208: Qualify protocol-owner replay and bind fourteen current tasks took 0.43 minutes (0min) and synthesis-only Exp9211: Qualify human target identifiability and exact label-ambiguity bounds took 0.01 minutes (0min). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null, DualGPURunner was not applicable, and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry).",
+  "bottlenecks_identified": [
+    "Synthesis-only Exp9221 ('Reconcile fourteen outcomes and exact continuation boundaries', compute_bound: false) required 18.81 minutes (19min) of the 19.2-minute (19min / 0.3h) milestone wall time, whereas synthesis-only Exp9208 ('Qualify protocol-owner replay and bind fourteen current tasks', compute_bound: false) completed in 0.43 minutes (0min) and synthesis-only Exp9211 ('Qualify human target identifiability and exact label-ambiguity bounds', compute_bound: false) completed in 0.01 minutes (0min); no compute-bound experiments ran (compute_bound_experiments_count: 0, so no data is available this milestone for compute-bound experiment bottlenecks, GPU idle is not flagged because gpu_idle_on_compute_bound_tasks is null, and DualGPURunner did not apply).",
+    "Live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 3 completed synthesis-only experiments.",
+    "GPU monitor telemetry was unavailable during the milestone ('GPU monitor not available' in GPU STATE; no data available this milestone for GPU utilization or hardware state)."
+  ],
+  "improvements_suggested": [
+    "Pass cached fourteen-task bindings and protocol-owner replay qualification artifacts from synthesis-only Exp9208 (0.43 minutes / 0min) together with human target identifiability and exact label-ambiguity bounds from synthesis-only Exp9211 (0.01 minutes / 0min) directly into synthesis-only Exp9221 (18.81 minutes / 19min) so fourteen-outcome and continuation-boundary reconciliation avoids redundant validation passes.",
+    "Persist direct per-experiment start and completion timestamps in the conductor ledger so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability prior to milestones that schedule compute-bound (GGUF/CUDA/requires_gpu) tasks, while keeping DualGPURunner strictly scoped to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share cached fourteen-task bindings from Exp9208 (0.43 minutes / 0min) and human target identifiability bounds from Exp9211 (0.01 minutes / 0min) with Exp9221 (18.81 minutes / 19min) to cut synthesis-only reconciliation wall time.",
+    "Record direct per-experiment execution timestamps to eliminate retro_timing_fallback on 0 git-log commits.",
+    "Restore GPU monitor telemetry before future compute-bound experiments run."
+  ],
+  "estimated_time_savings_pct": 35,
+  "meta_reflection": "All 3 completed experiments in milestone 2026.11.784 were synthesis-only (0 compute-bound) totaling 19.2 minutes (19 minutes / 0.3 hours, averaging 6 minutes per experiment), with Exp9221 consuming 18.81 minutes (19min), Exp9208 consuming 0.43 minutes (0min), and Exp9211 consuming 0.01 minutes (0min) under disk-mtime reconstruction (0 commits in live git-log). With 0 compute-bound tasks executed and the GPU monitor not available, gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not needed."
+}

@@ -1,5 +1,11 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-18 (Milestone 2026.11.784 operational retrospective)
+
+## 2026-11-18 UTC — Milestone 2026.11.784 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_784.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log, `reconstructed_from_disk_mtime: true`) records 3 completed synthesis-only experiments (0 compute-bound) across 19.2 wall-time minutes (19 minutes / 0.3 hours, averaging 6 minutes per experiment): synthesis-only `Exp9221: Reconcile fourteen outcomes and exact continuation boundaries` (18.81 min / 19min), synthesis-only `Exp9208: Qualify protocol-owner replay and bind fourteen current tasks` (0.43 min / 0min), and synthesis-only `Exp9211: Qualify human target identifiability and exact label-ambiguity bounds` (0.01 min / 0min). Because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: reuse cached fourteen-task bindings and protocol-owner replay qualification outputs from `Exp9208` (0.43 min / 0min) and human target identifiability and exact label-ambiguity bounds from `Exp9211` (0.01 min / 0min) in `Exp9221` (18.81 min / 19min), persist direct per-experiment execution timestamps, and restore GPU monitor availability.
+
 **Last Updated:** 2026-11-17 (Milestone 2026.11.783 operational retrospective)
 
 ## 2026-11-17 UTC — Milestone 2026.11.783 operational retrospective
