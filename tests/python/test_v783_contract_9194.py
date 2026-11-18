@@ -10,6 +10,7 @@ import sys
 import pytest
 import yaml
 
+from carnot.reporting.historical_contract_inputs import original_root
 from carnot.reporting import v783_contract as c
 from carnot.reporting import v783_contract_evidence as e
 
@@ -17,7 +18,11 @@ from carnot.reporting import v783_contract_evidence as e
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Real immutable producers qualify custody; fixtures grant no scientific credit."""
-    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9194"), "20261117")
+    return c.measure(
+        original_root(tmp_path_factory.mktemp("inputs9194"), 783),
+        tmp_path_factory.mktemp("contract9194"),
+        "20261117",
+    )
 
 
 def test_original_authority(work):
@@ -52,10 +57,11 @@ def test_original_authority(work):
 
 def tree(tmp_path):
     """Copy only declared contract inputs so negative controls cannot alter the checkout."""
+    source_root = original_root(tmp_path / "original", 783)
     for name in [e.DESIGN, e.ACTIVE, *e.COLLISION_INPUTS]:
         p = tmp_path / name
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_bytes((e.ROOT / name).read_bytes())
+        p.write_bytes((source_root / name).read_bytes())
     (tmp_path / "results").mkdir(exist_ok=True)
     return tmp_path
 
@@ -177,7 +183,7 @@ def test_protocol_and_historical_tamper(work, tmp_path, monkeypatch):
         return v
 
     monkeypatch.setattr(e, "ref", altered)
-    i = e.inspect(e.ROOT)
+    i = e.inspect(Path(work["root"]))
     assert not i["source_ready"] and any(r["observed"] == "missing_file" for r in i["checks"])
     monkeypatch.setattr(e, "ref", original)
     changed = deepcopy(work)
@@ -204,7 +210,7 @@ def test_missing_original_work(work, monkeypatch):
         return v
 
     monkeypatch.setattr(e, "ref", altered)
-    assert not e.inspect(e.ROOT)["source_ready"]
+    assert not e.inspect(Path(work["root"]))["source_ready"]
 
 
 def test_normal_main_and_deadlines(work, tmp_path, monkeypatch):

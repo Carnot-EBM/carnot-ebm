@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 from typing import Any
+from unittest.mock import patch
 
 import yaml
 
@@ -364,7 +365,14 @@ def inspect(root: Path) -> Json:
             checks=artifact["validation_receipts"],
             owned_statement_coverage=artifact["owned_statement_coverage"],
         )
-        receipt_ok = bool(runner.receipts_pass(method_work, validation))
+        method_inputs = {r["path"]: bind(r) for r in method_work["scope"]["code_test_hashes"]}
+        # A historical command keeps its original identity while reading its retained bytes.
+        with patch.object(
+            runner.d,
+            "ref",
+            lambda p: dict(ref(p), sha256=ref(method_inputs.get(str(p), p))["sha256"]),
+        ):
+            receipt_ok = bool(runner.receipts_pass(method_work, validation))
         primitive_ok = artifact["rows"] == (
             method_work["controls"] if number == 9126 else method_work["result"]["rows"]
         )

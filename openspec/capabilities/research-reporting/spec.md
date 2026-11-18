@@ -116672,6 +116672,35 @@ Bind inherited entropy/ambiguity protocols to original owning hashes. Run histor
 
 SCENARIO-REPORT-9208-V784: Missing/rehashed protocols and successor-queue contamination must fail; old failures and pins remain unchanged.
 
+Exp9208 execution contract: entropy belongs to the original V782 configuration;
+ambiguity belongs to the retained pre-CES V783 configuration. Authenticate each
+owner's exact bytes independently of rebound lifecycle evidence. Reject absent,
+changed and rehashed false sidecars and changed owner hashes in a fresh process.
+Construct private V782/V783 roots from their original capstone snapshots and
+producer operands, including design, activated queue, scheduler, configurations
+and historical code. Preserve every original test assertion and mutation; only
+fixture/input construction changes. Current authority still requires the exact
+fourteen ordered V784 objects and conductor literal-brace rendering, without
+activation. Diagnostic agreement alone grants no readiness. Original V783 zeros
+remain zero. Freeze the target-identifiability rubric before prediction work:
+original factual-error criterion, explicit human uncertainty annotation and
+same-generator equivalent-prompt re-elicitation each have present/absent/ambiguous
+evidence; cross-generator siblings do not identify SI/CF. No category is guessed.
+Inventory all 621+53 original nodes and every affected V780–V784 obligation;
+historical receipts grant no current execution credit. All affected suites,
+private E2E-018/021 publication/refusal/tamper/cold replay and 100 percent new
+statement coverage with zero exclusions qualify replay readiness. Record one
+broad Python health run separately. No learning/recovery behavior changes.
+Historical method receipt readers resolve code references through the original
+producer's retained operands, keeping original paths and hashes. Later checker
+changes cannot replace the historical Exp9126/9132 execution authority.
+Private coverage self-tests keep their own data file and configuration when the
+affected union is instrumented by a parent; outer coverage variables cannot
+redirect their shards. Original qualification and tamper assertions remain.
+Owned and direct-consumer suites may execute concurrently with separate private
+pytest roots and one parallel coverage ledger. All frozen commands and checks
+remain mandatory; current receipts alone qualify the resulting code hashes.
+
 ### REQ-REPORT-9209-V784: Lossless complete corpus traversal
 
 Require qualified replay and contract gates. Stream every original recursive JSON path; potential sentinels and Unicode escapes use the original decoder/classifier. Qualify the full target and all affected checks.

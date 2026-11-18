@@ -237,6 +237,8 @@ def test_real_verification_receipts_and_full_coverage(
     monkeypatch.setattr(r, "ROOT", tmp_path)
     monkeypatch.setattr(r, "OWNED", [source.name])
     monkeypatch.setattr(r, "CHANGED", [])
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    monkeypatch.setenv("COVERAGE_RCFILE", str(tmp_path / "coverage.ini"))
     argv = [
         sys.executable,
         "-m",

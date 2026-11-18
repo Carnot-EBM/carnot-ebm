@@ -22285,3 +22285,4 @@ code |
 | 2026-11-17 20:07 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-17 20:46 UTC | Plan milestone 2026.11.784 | OK | 14 tasks proposed |
 | 2026-11-17 21:00 UTC | Milestone 2026.11.784 activated | OK | 14 tasks queued |
+| 2026-11-17 22:24 UTC | Exp9208: Qualify protocol-owner replay and bind fo | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: a _: {}) + |

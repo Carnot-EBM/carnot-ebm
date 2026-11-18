@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from carnot.reporting import v781_contract as prior
 from carnot.reporting import v782_contract_evidence as e
+from carnot.reporting.protocol_owners import validate as validate_protocol
 from carnot.reporting.current_work_receipt import atomic_json as atomic_json
 
 Json = dict[str, Any]
@@ -75,13 +76,10 @@ def replay(path: Path) -> Json:
     """Fresh hashes cannot bless invented entropy protocol bytes or changed aggregates."""
     value = json.loads(path.read_bytes())
     work = json.loads(Path(value["work_reference"]["path"]).read_bytes())
-    reference = work["protocol_sidecars"]["entropy_reference_protocol_reference"]
-    sidecar = Path(reference["path"])
-    if (
-        e.ref(sidecar) != reference
-        or json.loads(sidecar.read_bytes()) != e.FROZEN["entropy_reference_protocol"]
-    ):
-        raise ValueError("entropy_protocol_drift")
+    try:
+        validate_protocol(work, "entropy_reference_protocol")
+    except ValueError as error:
+        raise ValueError("entropy_protocol_drift") from error
     with binding():
         return dict(_replay(path))
 

@@ -9,6 +9,7 @@ import sys
 
 import pytest
 
+from carnot.reporting.historical_contract_inputs import original_root
 from carnot.reporting import v782_capstone as m
 from carnot.reporting import v782_capstone_evidence as e
 from carnot.reporting.current_work_receipt import atomic_json, validate_current_work_receipt
@@ -17,7 +18,11 @@ from carnot.reporting.current_work_receipt import atomic_json, validate_current_
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Retained producer bytes support accounting without rerunning model work."""
-    return m.collect(tmp_path_factory.mktemp("capstone9193"), "20261117")
+    return m.collect(
+        tmp_path_factory.mktemp("capstone9193"),
+        "20261117",
+        original_root(tmp_path_factory.mktemp("inputs9193"), 782),
+    )
 
 
 def test_fourteen_outcomes(work, monkeypatch):

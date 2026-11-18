@@ -16,6 +16,7 @@ from carnot.reporting import v782_contract as prior
 from carnot.reporting import v783_contract_evidence as e
 from carnot.reporting.current_work_receipt import atomic_json as atomic_json
 from carnot.reporting.primary_publication import publish_primary
+from carnot.reporting.protocol_owners import validate as validate_protocol
 
 Json = dict[str, Any]
 legacy = prior.legacy
@@ -116,13 +117,10 @@ def replay(path: Path) -> Json:
     """Rehashed sidecars cannot change the predeclared label sensitivity protocol."""
     value = json.loads(path.read_bytes())
     work = json.loads(Path(value["work_reference"]["path"]).read_bytes())
-    reference = work["protocol_sidecars"]["label_ambiguity_protocol_reference"]
-    sidecar = Path(reference["path"])
-    if (
-        e.ref(sidecar) != reference
-        or json.loads(sidecar.read_bytes()) != e.FROZEN["label_ambiguity_protocol"]
-    ):
-        raise ValueError("label_ambiguity_protocol_drift")
+    try:
+        validate_protocol(work, "label_ambiguity_protocol")
+    except ValueError as error:
+        raise ValueError("label_ambiguity_protocol_drift") from error
     with binding():
         return dict(_replay(path))
 

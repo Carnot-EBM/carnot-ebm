@@ -1,0 +1,166 @@
+{
+  "accepted_risk": "combined empirical accepted error <= probability_length; undefined cannot pass",
+  "arms": {
+    "combined": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "combined_donor": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "prevalence": [],
+    "probability_length": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "raw_energy": [
+      0,
+      4,
+      5,
+      6
+    ]
+  },
+  "binary_energy": "E(0)=0; E(1)=-theta.phi; p(error)=sigmoid(theta.phi)",
+  "bootstrap": {
+    "draws": 10000,
+    "half_coverage": "rerank each draw; floor(N/2); original-order ties",
+    "seed": 777121,
+    "tail": 0.025,
+    "undefined": "retain null risk and support; cannot pass",
+    "unit": "paired TEST qid with all siblings"
+  },
+  "bounds": [
+    "combined Brier improvement lower>0 vs probability_length",
+    "combined Brier improvement lower>0 vs combined_donor"
+  ],
+  "calibration": {
+    "accept_lte": 0.1,
+    "other": "escalate",
+    "reject_gte": 0.9,
+    "seal": "TEST predictions before evaluator access",
+    "selection": "CAL A1 logloss; ascending ties",
+    "temperatures": [
+      0.5,
+      1,
+      2,
+      4
+    ]
+  },
+  "caps": {
+    "answer": 768,
+    "question": 256
+  },
+  "chunk_size": 128,
+  "detokenization": "embedded tokenizer detokenize retained question IDs to exact UTF-8 bytes; concatenate literal prefixes; tokenize prefix without BOS; append retained answer IDs, never retokenize answer",
+  "donor": "sorted whole TRAIN qids cyclic successor (nonidentity), sibling positions fixed; report actual changed labels",
+  "exclusions": [],
+  "features": [
+    "log1p_answer_length",
+    "mean_nll",
+    "mean_entropy",
+    "max_entropy",
+    "mean_marginal_energy",
+    "mean_absolute_spill",
+    "no_adjacent_pair"
+  ],
+  "fit": {
+    "finite_required": true,
+    "ftol": 1e-12,
+    "gradient_infinity_norm_max": 1e-06,
+    "gtol": 1e-07,
+    "maxiter": 2000,
+    "objective": "mean binary logloss+0.5*0.01*sum(nonintercept theta^2)",
+    "optimizer": "L-BFGS-B from zeros",
+    "ridge": 0.01,
+    "scaling": "TRAIN population mean/std ddof0; constant scale1"
+  },
+  "formulas": {
+    "D": "-z_i[a_i]+L_(i+1)",
+    "H": "-sum(p_i*log(p_i))",
+    "L": "logsumexp(z_i)",
+    "M": "-L_i",
+    "NLL": "L_i-z_i[a_i]"
+  },
+  "gauges": {
+    "D_shift": "c_(i+1)-c_i",
+    "M_shift": "-c_i",
+    "alternating": "c_i=3*(-1)^i; zero-based i",
+    "constant": "c_i=3",
+    "interpretation": "representation sensitivity, never probability-chain violation; no favorable gauge selection; later freeze heads for susceptibility",
+    "nll_entropy": "invariant",
+    "probability": "invariant"
+  },
+  "hard_cap_s": 4800,
+  "indexing": "zero-based answer i scored by prefix_length+i-1; no terminal next-step logit; D only for i<length-1",
+  "measurement_cap_s": 3300,
+  "metrics": [
+    "Brier",
+    "logloss",
+    "coverage",
+    "accepted_error",
+    "exact_half_coverage_error"
+  ],
+  "missing": "TRAIN-only median per feature; wholly missing TRAIN feature blocks; one-token spill missing; empty escalates",
+  "prefix_bytes_hex": [
+    "5175657374696f6e3a0a",
+    "0a416e737765723a0a"
+  ],
+  "raw_sample": {
+    "disk_budget_bytes": 2147483648,
+    "order": "lexical original qid",
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "qids": 20,
+    "siblings": "all3"
+  },
+  "retired_null": "Exp6980 complete_null_spilled_energy_requalification_retired remains unchanged; exact-oracle scope",
+  "roles": {
+    "CAL": 50,
+    "TEST": 100,
+    "TRAIN": 150,
+    "siblings": 3
+  },
+  "schema": [
+    "answer_position",
+    "prediction_position",
+    "token_id",
+    "vocabulary_size",
+    "selected_logit",
+    "logsumexp",
+    "nll",
+    "entropy",
+    "max_probability",
+    "marginal_energy",
+    "full_vector_sha256"
+  ],
+  "scope": "whole-answer cross-model archived-answer adaptation; not paper localization or CES; no new Qwen answers",
+  "state": "reset native state and reducer before every answer; retain previous scalar across chunks",
+  "support": "predeclared nonempty answers for shared losses/risks; coverage all300 TEST responses; no label filtering",
+  "target": "original A1:1=error,0=correct,-1=missing; A2 observed-only sensitivity",
+  "tokenizer": "GGUF embedded; question/answer separately; add_bos=False; no special tokens/chat template",
+  "truncation": "right",
+  "validation_reserve_s": 1200,
+  "vector_hash": "SHA256 contiguous little-endian float64 full vector; raw sample stores exact reducer inputs",
+  "version": "v778-whole-answer-v1"
+}

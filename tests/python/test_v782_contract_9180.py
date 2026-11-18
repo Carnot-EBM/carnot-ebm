@@ -10,6 +10,7 @@ import sys
 import pytest
 import yaml
 
+from carnot.reporting.historical_contract_inputs import original_root
 from carnot.reporting import v782_contract as c
 from carnot.reporting import v782_contract_evidence as e
 
@@ -17,7 +18,11 @@ from carnot.reporting import v782_contract_evidence as e
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Freeze genuine sources once; synthetic controls never become scientific evidence."""
-    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9180"), "20261117")
+    return c.measure(
+        original_root(tmp_path_factory.mktemp("inputs9180"), 782),
+        tmp_path_factory.mktemp("contract9180"),
+        "20261117",
+    )
 
 
 def test_authority_and_protocol(work):
@@ -64,10 +69,11 @@ def test_authority_and_protocol(work):
 
 def test_binding_mutations(tmp_path, monkeypatch):
     """SCENARIO-REPORT-9180-V782: fresh byte pins cannot bless changed whole objects."""
+    source_root = original_root(tmp_path / "original", 782)
     for name in [e.DESIGN, e.ACTIVE]:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes((e.ROOT / name).read_bytes())
+        path.write_bytes((source_root / name).read_bytes())
     assert e.authority(tmp_path)["ready"]
     original = yaml.safe_load((tmp_path / e.ACTIVE).read_bytes())
     for field in [
@@ -196,6 +202,7 @@ def test_protocol_tamper(work, tmp_path):
 @pytest.mark.parametrize("kind", ["primary", "work", "scheduler", "arc_log"])
 def test_producer_snapshot_refusal(work, monkeypatch, kind):
     """SCENARIO-REPORT-9180-V782: failed original work bytes block dependent imports."""
+    source_root = Path(work["root"])
     original = e.ref
     source = json.loads((e.ROOT / "results/experiment_9166_v781_contract.json").read_bytes())
     capstone = json.loads((e.ROOT / "results/experiment_9179_v781_capstone.json").read_bytes())
@@ -206,7 +213,7 @@ def test_producer_snapshot_refusal(work, monkeypatch, kind):
         ).read_bytes()
     )
     operand = {
-        "primary": str(e.ROOT / "results/experiment_9166_v781_contract.json"),
+        "primary": str(source_root / "results/experiment_9166_v781_contract.json"),
         "work": source["work_reference"]["path"],
         "scheduler": saved["snapshots"]["ops/conductor-log.md"]["path"],
         "arc_log": next(
@@ -227,7 +234,7 @@ def test_producer_snapshot_refusal(work, monkeypatch, kind):
 
     if kind != "arc_log":
         monkeypatch.setattr(e.prior, "inspect", forbidden)
-    value = e.inspect(e.ROOT)
+    value = e.inspect(source_root)
     assert not value["source_ready"]
     assert any(r["observed"] == "missing_file" for r in value["checks"])
 
@@ -258,7 +265,7 @@ def test_shared_deadline(monkeypatch):
         c.main([])
 
 
-def test_original_source_refusal(monkeypatch):
+def test_original_source_refusal(work, monkeypatch):
     """SCENARIO-REPORT-9180-V782: original method failure cannot inherit readiness."""
     monkeypatch.setattr(
         e.prior,
@@ -269,4 +276,4 @@ def test_original_source_refusal(monkeypatch):
             source_ready=False,
         ),
     )
-    assert not e.inspect(e.ROOT)["source_ready"]
+    assert not e.inspect(Path(work["root"]))["source_ready"]
