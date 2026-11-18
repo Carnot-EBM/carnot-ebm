@@ -24024,3 +24024,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - Retain frozen mandated Qwen, operation-accurate substrates, continuous delayed
   learning, complete costs and hardware limits. Reconcile proposed requirements,
   architecture, traceability and status. No implementation, activation or push.
+- 2026-11-18: Exp9211: Qualify human target identifiability and exact label-ambiguity bounds (⚠️ Research Finding) — honest_verdict=complete_null_v784_label_ambiguity; results/experiment_9211_v784_label_ambiguity.json
