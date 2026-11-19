@@ -261,6 +261,7 @@ def _inspect(root: Path) -> Json:
         )
         if row["passed"] and name.startswith("results/"):
             values[Path(name).name.split("_")[1]] = json.loads(path.read_bytes())
+    prior_roots = list(inherited["historical_input_roots"])
     inherited.update(
         contract=contract,
         checks=checks + inherited["checks"],
@@ -272,18 +273,15 @@ def _inspect(root: Path) -> Json:
     )
     if not {"9208", "9209", "9211", "9221"}.issubset(values):
         return dict(inherited)
-    for generation in [782, 783]:
-        path = original_root(HISTORICAL_BASE / f"v{generation}", generation)
-        manifest = json.loads((path / "historical_inputs.json").read_bytes())
-        inherited["historical_input_roots"].append(dict(root=str(path), **manifest))
-    manifest_784 = json.loads((v784_root / "historical_inputs.json").read_bytes())
-    inherited["historical_input_roots"].append(dict(root=str(v784_root), **manifest_784))
-    for generation in [783, 784]:
-        path = original_root(
-            HISTORICAL_BASE / f"v{generation}_capstone", generation, suite="capstone"
-        )
-        manifest = json.loads((path / "historical_inputs.json").read_bytes())
-        inherited["historical_input_roots"].append(dict(root=str(path), **manifest))
+    cap_784 = original_root(HISTORICAL_BASE / "v784_capstone", 784, suite="capstone")
+    inherited["historical_input_roots"] = [
+        *prior_roots[:2],
+        dict(
+            root=str(v784_root), **json.loads((v784_root / "historical_inputs.json").read_bytes())
+        ),
+        *prior_roots[2:],
+        dict(root=str(cap_784), **json.loads((cap_784 / "historical_inputs.json").read_bytes())),
+    ]
     original_9208 = values["9208"]
     authenticated(original_9208["work_reference"])
     receipt_map = {

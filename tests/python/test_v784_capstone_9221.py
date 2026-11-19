@@ -18,12 +18,15 @@ from carnot.reporting.historical_contract_inputs import original_root
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Authenticate real retained producers once without loading a model."""
-    if not Path.cwd().resolve().is_relative_to(e.ROOT):
-        original_root(Path.cwd(), 784, suite="capstone")
+    inputs = (
+        Path.cwd()
+        if not Path.cwd().resolve().is_relative_to(e.ROOT)
+        else tmp_path_factory.mktemp("inputs9221")
+    )
     return m.collect(
         tmp_path_factory.mktemp("capstone9221"),
         "20261118",
-        original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        original_root(inputs, 784, suite="capstone"),
     )
 
 

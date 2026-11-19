@@ -1,0 +1,391 @@
+...................F......F.....F........F.....F....FF....F......FF..... [ 32%]
+........................................................................ [ 65%]
+........................................................................ [ 98%]
+....                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready __
+
+    def test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready() -> None:
+        """SCENARIO-REPORT-4436: the standing loop can select consolidated operators."""
+    
+        operators = {row.operator: row for row in kit.primitive_operator_registry()}
+    
+        assert set(operators) >= {
+            "glyph_rewrite_matcher",
+            "config_rule_grounding",
+            "graph_astar_action_cost",
+            "object_centric_digest",
+            "active_data_collection",
+        }
+        assert operators["glyph_rewrite_matcher"].derived_from_games == ("tr87",)
+        assert "s5i5" in operators["config_rule_grounding"].derived_from_games
+    
+        selected = kit.select_primitive_operators(mechanic_class="config_substitution")
+>       assert [row.operator for row in selected][:2] == [
+            "glyph_rewrite_rule_verifier",
+            "glyph_rewrite_matcher",
+        ]
+E       AssertionError: assert ['approach_di...fix_operator'] == ['glyph_rewri...rite_matcher']
+E         
+E         At index 0 diff: 'approach_dispatcher_operator' != 'glyph_rewrite_rule_verifier'
+E         Use -v to get more diff
+
+tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py:112: AssertionError
+__ test_req_report_4444_solver_kit_operator_preserves_legacy_marker_grounding __
+
+    def test_req_report_4444_solver_kit_operator_preserves_legacy_marker_grounding() -> None:
+        """REQ-REPORT-4444: config_rule_verifier composes the legacy marker helper."""
+    
+        result = kit.config_rule_verifier(
+            game="s5i5",
+            object_digest={
+                "rule_family": "marker_coverage",
+                "controlled_markers": [[9, 33], [30, 9]],
+                "target_markers": [[9, 51], [51, 9]],
+                "step": 3,
+                "horizontal_label": "h_extend",
+                "vertical_label": "v_extend",
+            },
+            few_shot_examples=_examples(),
+        )
+    
+        assert result["operator"] == "config_rule_verifier"
+        assert result["legacy_operator"] == "config_rule_grounding"
+        assert result["grounded"] is True
+        assert result["predicate_id"] == "marker_coverage"
+        assert result["solution"] == ["h_extend"] * 7 + ["v_extend"] * 6
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "config_rule_grounding" in operators
+        assert "config_rule_verifier" in operators
+        selected = kit.select_primitive_operators(mechanic_class="local_constraint_color_cycle")
+>       assert [row.operator for row in selected][:2] == ["config_rule_verifier", "config_rule_grounding"]
+E       AssertionError: assert ['approach_di...fix_operator'] == ['config_rule...le_grounding']
+E         
+E         At index 0 diff: 'approach_dispatcher_operator' != 'config_rule_verifier'
+E         Use -v to get more diff
+
+tests/python/test_experiment_4444_generic_config_rule_verifier_operator.py:176: AssertionError
+_________ test_req_report_4445_solver_kit_operator_reflects_ar25_slots _________
+
+    def test_req_report_4445_solver_kit_operator_reflects_ar25_slots() -> None:
+        """REQ-REPORT-4445: reflect/translate plans synthesize without ar25's recipe."""
+    
+        result = kit.object_motion_world_model(
+            game="ar25",
+            object_digest=mod.AR25_OBJECT_MOTION_DIGEST,
+            few_shot_examples=mod.DEFAULT_OBJECT_MOTION_EXAMPLES,
+        )
+        cold = kit.object_motion_world_model(
+            game="ar25",
+            object_digest=mod.AR25_OBJECT_MOTION_DIGEST,
+            few_shot_examples=(),
+        )
+    
+        assert result["operator"] == "object_motion_world_model"
+        assert result["grounded"] is True
+        assert result["target_recipe_withheld"] == "ar25"
+        assert result["transition_families"] == ["translate", "reflect"]
+        assert result["solution"] == ["3"] * 5 + ["2"] * 10
+        assert result["verifier"]["grounded_transition_count"] >= 2
+        assert cold["grounded"] is False
+        assert cold["residual"] == "missing_object_motion_few_shot_examples"
+    
+        case = mod.build_active_data_cases()["ar25"][0]
+        observed = result["engine"](np.asarray(case["before"]), case["action"], case["data"])
+        assert np.array_equal(observed, np.asarray(case["expected"]))
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "object_motion_world_model" in operators
+        selected = kit.select_primitive_operators(mechanic_class="reflection world_model object motion")
+>       assert selected[0].operator == "object_motion_world_model"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'object_motion_world_model'
+E         
+E         - object_motion_world_model
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4445_generic_object_motion_world_model_operator.py:103: AssertionError
+__________ test_req_report_4456_solver_kit_grounds_multi_lhs_rewrite ___________
+
+    def test_req_report_4456_solver_kit_grounds_multi_lhs_rewrite() -> None:
+        """REQ-REPORT-4456: greedy multi-glyph LHS rewrite grounds from examples."""
+    
+        result = kit.glyph_rewrite_rule_verifier(
+            game="tr87",
+            object_digest={
+                "rule_family": "glyph_rewrite",
+                "target_sequence": ["X6", "X1", "X5", "X1", "X4", "X2", "X3", "X3"],
+                "editable_sequence": ["Y3", "Y4", "Y4", "Y5", "Y1", "Y4", "Y6"],
+                "rules": [
+                    {"lhs": ["X6"], "rhs": ["Y4"]},
+                    {"lhs": ["X3", "X3"], "rhs": ["Y6", "Y1"]},
+                    {"lhs": ["X4"], "rhs": ["Y7", "Y7"]},
+                    {"lhs": ["X7", "X7"], "rhs": ["Y3"]},
+                    {"lhs": ["X1", "X5", "X1"], "rhs": ["Y6"]},
+                    {"lhs": ["X2"], "rhs": ["Y5"]},
+                ],
+            },
+            few_shot_examples=_examples(),
+        )
+    
+        assert result["operator"] == "glyph_rewrite_rule_verifier"
+        assert result["legacy_operator"] == "glyph_rewrite_matcher"
+        assert result["grounded"] is True
+        assert result["predicate_id"] == "greedy_multi_glyph_lhs_rewrite"
+        assert result["recipe_source"] == "generic_glyph_rewrite_rule_verifier"
+        assert result["target_recipe_withheld"] == "tr87"
+        assert result["required_editable_sequence"] == ["Y4", "Y6", "Y7", "Y7", "Y5", "Y6", "Y1"]
+        assert result["distance"] == 15.0
+        assert result["counterexample_rounds"] == 1
+        assert result["grounded_win_condition"]["fires_on_win"] is False
+        assert result["verifier_is_oracle"] is True
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "glyph_rewrite_matcher" in operators
+        assert "glyph_rewrite_rule_verifier" in operators
+        selected = kit.select_primitive_operators(mechanic_class="config_substitution")
+>       assert [row.operator for row in selected][:2] == [
+            "glyph_rewrite_rule_verifier",
+            "glyph_rewrite_matcher",
+        ]
+E       AssertionError: assert ['approach_di...fix_operator'] == ['glyph_rewri...rite_matcher']
+E         
+E         At index 0 diff: 'approach_dispatcher_operator' != 'glyph_rewrite_rule_verifier'
+E         Use -v to get more diff
+
+tests/python/test_experiment_4456_generic_glyph_rewrite_operator.py:136: AssertionError
+_______ test_req_report_4469_solver_kit_induces_two_phase_cast_grid_fsm ________
+
+    def test_req_report_4469_solver_kit_induces_two_phase_cast_grid_fsm() -> None:
+        """REQ-REPORT-4469: cast-grid toggle CSP transitions to navigation."""
+    
+        result = kit.cast_grid_phase_fsm_world_model(
+            game="sc25",
+            object_digest=mod.SC25_CAST_GRID_DIGEST,
+            few_shot_examples=mod.DEFAULT_CAST_GRID_EXAMPLES,
+        )
+        cold = kit.cast_grid_phase_fsm_world_model(
+            game="sc25",
+            object_digest=mod.SC25_CAST_GRID_DIGEST,
+            few_shot_examples=(),
+        )
+    
+        assert result["operator"] == "cast_grid_phase_fsm_world_model"
+        assert result["grounded"] is True
+        assert result["target_recipe_withheld"] == "sc25"
+        assert result["recipe_source"] == "generic_cast_grid_phase_fsm_world_model"
+        assert result["predicate_id"] == "toggle_csp_then_navigate_exit"
+        assert result["phase_model"]["phases"] == ["config_toggle", "navigate_exit"]
+        assert result["solution"] == list(mod.SC25_GENERIC_L1_EXPECTED)
+        assert result["solution"][:4] == ["cell0,1", "cell1,0", "cell1,2", "cell2,1"]
+        assert result["solution"][4:] == ["move3"] * 12
+        assert result["counterexample_rounds"] == 1
+        assert result["verifier_is_oracle"] is True
+        assert cold["grounded"] is False
+        assert cold["residual"] == "missing_cast_grid_phase_fsm_few_shot_examples"
+    
+        grid = mod.synthetic_sc25_l1_grid()
+        for label in result["solution"]:
+            action, data = mod.sc25_label_to_action_data(label)
+            grid = result["engine"](grid, action, data)
+    
+        assert result["is_level_complete"](grid) is True
+        assert int(np.count_nonzero(grid == mod.SC25_CAST_GRID_DIGEST["cast_active_color"])) == 0
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "cast_grid_phase_fsm_world_model" in operators
+        selected = kit.select_primitive_operators(mechanic_class="two_phase_cast_grid_then_tank_exit")
+>       assert selected[0].operator == "cast_grid_phase_fsm_world_model"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'cast_grid_ph...m_world_model'
+E         
+E         - cast_grid_phase_fsm_world_model
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4469_generic_cast_grid_fsm_operator.py:186: AssertionError
+_____ test_req_report_4470_solver_kit_grounds_ordered_color_slot_sequence ______
+
+    def test_req_report_4470_solver_kit_grounds_ordered_color_slot_sequence() -> None:
+        """REQ-REPORT-4470: the generic operator grounds item->slot matching with undo evidence."""
+    
+        result = kit.color_match_slot_sequence_verifier(
+            game="sb26",
+            object_digest=mod.SB26_L1_COLOR_MATCH_DIGEST,
+            few_shot_examples=mod.DEFAULT_COLOR_MATCH_EXAMPLES,
+        )
+        no_examples = kit.color_match_slot_sequence_verifier(
+            game="sb26",
+            object_digest=mod.SB26_L1_COLOR_MATCH_DIGEST,
+            few_shot_examples=(),
+        )
+        missing_item = kit.color_match_slot_sequence_verifier(
+            game="sb26",
+            object_digest={
+                **mod.SB26_L1_COLOR_MATCH_DIGEST,
+                "items": [dict(row) for row in mod.SB26_L1_COLOR_MATCH_DIGEST["items"] if row["color"] != 15],
+            },
+            few_shot_examples=mod.DEFAULT_COLOR_MATCH_EXAMPLES,
+        )
+    
+        assert result["operator"] == "color_match_slot_sequence_verifier"
+        assert result["grounded"] is True
+        assert result["predicate_id"] == "color_match_slot_sequence"
+        assert result["target_recipe_withheld"] == "sb26"
+        assert result["solution"] == list(mod.SB26_L1_EXPECTED_LABELS)
+        assert result["solution"][-1] == "validate"
+        assert result["counterexample_rounds"] >= 1
+        assert result["counterexamples"][0]["rejected_candidate"] == "unordered_color_bag_match"
+        assert result["undo_recovery_solution"] == ["undo"]
+        assert result["verifier"]["wrong_order_rejected"] is True
+        assert result["verifier"]["undo_aware"] is True
+        assert result["grounded_win_condition"]["fires_on_win"] is True
+        assert result["grounded_win_condition"]["rejects_nonwins"] is True
+        assert result["verifier_is_oracle"] is True
+        assert no_examples["grounded"] is False
+        assert no_examples["residual"] == "missing_color_match_slot_sequence_few_shot_examples"
+        assert missing_item["grounded"] is False
+        assert missing_item["residual"] == "missing_matching_item_for_slot"
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "color_match_slot_sequence_verifier" in operators
+        selected = kit.select_primitive_operators(mechanic_class="color_match_slot_sequence", game="sb26")
+>       assert selected[0].operator == "color_match_slot_sequence_verifier"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'color_match_...ence_verifier'
+E         
+E         - color_match_slot_sequence_verifier
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py:175: AssertionError
+_____ test_req_report_4470_recommend_approach_routes_sb26_to_new_operator ______
+
+    def test_req_report_4470_recommend_approach_routes_sb26_to_new_operator() -> None:
+        """REQ-REPORT-4470: recommend_approach(sb26) surfaces the new generic operator first."""
+    
+        recommendation = learning.recommend_approach("sb26")
+    
+>       assert recommendation["selected_generic_operators"][0]["operator"] == "color_match_slot_sequence_verifier"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'color_match_...ence_verifier'
+E         
+E         - color_match_slot_sequence_verifier
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py:183: AssertionError
+_ test_req_report_4479_solver_kit_operator_matches_overlay_sources_and_cycles __
+
+    def test_req_report_4479_solver_kit_operator_matches_overlay_sources_and_cycles() -> None:
+        """REQ-REPORT-4479: verifier derives executable movement/cycle labels."""
+    
+        digest = {
+            "rule_family": "sprite_overlay_pattern_match",
+            "movement_step": 3,
+            "target_match_ignore_colors": [-1, 4],
+            "actions": {
+                "up": "U",
+                "down": "D",
+                "left": "L",
+                "right": "R",
+                "cycle": "C",
+            },
+            "active_source_index": 1,
+            "sources": [
+                {"id": "eleven", "x": 6, "y": 6, "pixels": _cross(5, 11)},
+                {"id": "nine", "x": 0, "y": 9, "pixels": _cross(5, 9, center_zero=True)},
+            ],
+            "required_pixels": [
+                {"x": 2, "y": 2, "color": 11},
+                {"x": 8, "y": 3, "color": 9},
+            ],
+        }
+    
+        result = kit.sprite_overlay_resize_verifier("fixture", digest, [])
+    
+        assert result["operator"] == "sprite_overlay_resize_verifier"
+        assert result["grounded"] is True
+        assert result["predicate_id"] == "sprite_overlay_pattern_match_resize"
+        assert result["coverage"]["missing_required_pixels"] == []
+        assert result["solution"] == ["U", "U", "R", "R", "C", "U", "U", "L", "L"]
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "sprite_overlay_resize_verifier" in operators
+        selected = kit.select_primitive_operators(mechanic_class="pattern_match_sprite_resize", game="re86")
+>       assert selected[0].operator == "sprite_overlay_resize_verifier"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'sprite_overl...size_verifier'
+E         
+E         - sprite_overlay_resize_verifier
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4479_solve_re86.py:131: AssertionError
+_______ test_req_arc_wmte_4537_solver_kit_operator_reinduces_and_routes ________
+
+    def test_req_arc_wmte_4537_solver_kit_operator_reinduces_and_routes() -> None:
+        """REQ-ARC-WMTE-4537: level-up detection re-induces L_{n+1} and returns a route."""
+    
+        def inducer(goal_level: int, context: dict[str, object]) -> dict[str, object]:
+            return {
+                "predicate_id": f"L{goal_level}_predicate",
+                "signature": f"sig-{goal_level}",
+                "representation_correct": True,
+                "source_level": context["from_level"],
+            }
+    
+        result = kit.per_level_reinduction_operator(
+            [
+                SimpleNamespace(levels_completed=0),
+                SimpleNamespace(levels_completed=1),
+                SimpleNamespace(levels_completed=2),
+            ],
+            predicate_inducer=inducer,
+            route_builder=lambda event: {
+                "route": "depth_primary_goal_bias",
+                "goal_bias_label": event["predicate"]["predicate_id"],
+            },
+        )
+    
+        assert result["operator"] == "per_level_reinduction_operator"
+        assert result["level_ups_detected"] == 2
+        assert result["stale_state_cleared"] is True
+        assert [event["next_goal_level"] for event in result["events"]] == [2, 3]
+        assert result["events"][0]["predicate"]["signature"] == "sig-2"
+        assert result["events"][1]["representation_transfer"] is True
+        assert result["events"][1]["route"]["goal_bias_label"] == "L3_predicate"
+    
+        operators = {row.operator for row in kit.primitive_operator_registry()}
+        assert "per_level_reinduction_operator" in operators
+        selected = kit.select_primitive_operators(mechanic_class="program_editor", game="tn36")
+>       assert selected[0].operator == "per_level_reinduction_operator"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'per_level_re...tion_operator'
+E         
+E         - per_level_reinduction_operator
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4537_reinduction_primitive_persist_transfer.py:74: AssertionError
+_ test_req_arc_wmte_4537_recommend_approach_surfaces_operator_and_registry_gotcha _
+
+    def test_req_arc_wmte_4537_recommend_approach_surfaces_operator_and_registry_gotcha() -> None:
+        """REQ-ARC-WMTE-4537: routing and registry expose the reusable primitive."""
+    
+        recommendation = arc_solve_learning.recommend_approach("tu93")
+        selected = [row["operator"] for row in recommendation["selected_generic_operators"]]
+>       assert selected[0] == "per_level_reinduction_operator"
+E       AssertionError: assert 'approach_dispatcher_operator' == 'per_level_re...tion_operator'
+E         
+E         - per_level_reinduction_operator
+E         + approach_dispatcher_operator
+
+tests/python/test_experiment_4537_reinduction_primitive_persist_transfer.py:82: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py::test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready
+FAILED tests/python/test_experiment_4444_generic_config_rule_verifier_operator.py::test_req_report_4444_solver_kit_operator_preserves_legacy_marker_grounding
+FAILED tests/python/test_experiment_4445_generic_object_motion_world_model_operator.py::test_req_report_4445_solver_kit_operator_reflects_ar25_slots
+FAILED tests/python/test_experiment_4456_generic_glyph_rewrite_operator.py::test_req_report_4456_solver_kit_grounds_multi_lhs_rewrite
+FAILED tests/python/test_experiment_4469_generic_cast_grid_fsm_operator.py::test_req_report_4469_solver_kit_induces_two_phase_cast_grid_fsm
+FAILED tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py::test_req_report_4470_solver_kit_grounds_ordered_color_slot_sequence
+FAILED tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py::test_req_report_4470_recommend_approach_routes_sb26_to_new_operator
+FAILED tests/python/test_experiment_4479_solve_re86.py::test_req_report_4479_solver_kit_operator_matches_overlay_sources_and_cycles
+FAILED tests/python/test_experiment_4537_reinduction_primitive_persist_transfer.py::test_req_arc_wmte_4537_solver_kit_operator_reinduces_and_routes
+FAILED tests/python/test_experiment_4537_reinduction_primitive_persist_transfer.py::test_req_arc_wmte_4537_recommend_approach_surfaces_operator_and_registry_gotcha
+10 failed, 210 passed, 1 warning in 86.70s (0:01:26)

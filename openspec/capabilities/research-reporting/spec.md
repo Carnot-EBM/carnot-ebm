@@ -116886,3 +116886,6 @@ the original capstone's retained references. Their original hashes SHALL remain
 unchanged, including when the current queue has moved to V785.
 The owned/core pair SHALL complete before historical consumer shards start.
 Historical shards SHALL run one at a time to avoid retained-root disk contention.
+Large retained inputs SHALL authenticate existing private targets on every replay;
+digest caches SHALL invalidate on inode, size, mtime or ctime changes. The current
+artifact SHALL retain the requested run date, including 20261119.

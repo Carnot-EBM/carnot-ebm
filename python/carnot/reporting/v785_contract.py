@@ -102,7 +102,7 @@ def measure(root: Path, raw: Path, date: str) -> Json:
     """Freeze partitioned consumer shards, distinct coverage files and isolated historical roots."""
     with binding(), patch.object(e, "HISTORICAL_BASE", raw / "historical", create=True):
         work = dict(_measure(root, raw, date))
-    work["run_date"] = "20261118"
+    work["run_date"] = date
     selective_path = raw / "selective_deferral_protocol.json"
     atomic_json(selective_path, work["inspection"]["selective_deferral_protocol"])
     selective_path.chmod(0o400)
@@ -115,6 +115,8 @@ def measure(root: Path, raw: Path, date: str) -> Json:
             "".join("    " + str(e.ROOT / p) + "\n" for p in MODIFIED_MODULES) + "[report]",
         )
     )
+    shard_cfg = raw / "coverage_shards.ini"
+    shard_cfg.write_text(cfg.read_text().replace("patch = subprocess\n", ""))
     work["scope"]["coverage_config_reference"] = e.ref(cfg)
     py = str(e.ROOT / ".venv/bin/python")
     owned_cmd = dict(
@@ -154,12 +156,11 @@ def measure(root: Path, raw: Path, date: str) -> Json:
                 argv=[
                     "env",
                     "COVERAGE_FILE=" + cov_path,
-                    "COVERAGE_RCFILE=" + str(cfg),
                     py,
                     "-m",
                     "coverage",
                     "run",
-                    "--rcfile=" + str(cfg),
+                    "--rcfile=" + str(shard_cfg),
                     "-m",
                     "pytest",
                     "-n",
@@ -201,6 +202,7 @@ def measure(root: Path, raw: Path, date: str) -> Json:
             "env",
             "--chdir=" + str(private),
             "--unset=PYTHONPATH",
+            "TMPDIR=/var/tmp",
             *[
                 str(e.ROOT / arg) if arg in [e.TEST, *all_consumer_tests] else arg
                 for arg in command["argv"][1:]
@@ -375,11 +377,22 @@ def replay(path: Path) -> Json:
 def main(argv: list[str] | None = None) -> int:
     """Keep real checker publication, private-output refusal and supervised deadlines."""
     args = sys.argv[1:] if argv is None else argv
-    mapped = ["20261117" if a == "20261118" else "invalid" if a == "20261117" else a for a in args]
+    mapped = [
+        "20261117" if a in {"20261118", "20261119"} else "invalid" if a == "20261117" else a
+        for a in args
+    ]
     env = (
         dict(CARNOT_V783_DEADLINE=os.environ["CARNOT_V785_DEADLINE"])
         if "CARNOT_V785_DEADLINE" in os.environ
         else {}
     )
-    with binding(), patch.dict(os.environ, env):
+    requested_date = "20261118" if "20261118" in args else "20261119"
+    original_measure = measure
+    with (
+        patch(
+            __name__ + ".measure", lambda root, raw, _: original_measure(root, raw, requested_date)
+        ),
+        binding(),
+        patch.dict(os.environ, env),
+    ):
         return int(_main(mapped))

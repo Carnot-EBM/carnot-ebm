@@ -1,0 +1,149 @@
+{
+  "design_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9124_v778_contract/invocations/1794805159615746781/authority/openspec/change-proposals/research-roadmap-v777-preserved-20261116.md",
+    "sha256": "sha256:6e6635dadd64b3f59916ce35cd7a879323d480faf6e94ff1c6b76eeccea2c61b"
+  },
+  "measured": false,
+  "name": "static",
+  "protocol": {
+    "annotator2": "descriptive sensitivity on actual observed subset; no forced consensus",
+    "arms": [
+      "prevalence",
+      "text_length_logistic",
+      "projected27_linear",
+      "full_embedding_regularized_linear",
+      "projected27_spline",
+      "donor_projected27_spline"
+    ],
+    "calibration": {
+      "accept_lte": 0.1,
+      "empty_cal": "block; never tune on TEST",
+      "otherwise": "escalate",
+      "probability": "sigmoid(logit/temperature)",
+      "reject_gte": 0.9,
+      "selection": "CAL mean A1 binary logloss",
+      "temperatures": [
+        0.5,
+        1,
+        2,
+        4
+      ],
+      "ties": "ascending"
+    },
+    "donor": {
+      "assignment": "sort original TRAIN group hashes, seeded permutation then one cyclic successor; at least2 groups",
+      "fixed_points": 0,
+      "forbidden": "shuffling only the three siblings within one question",
+      "positions": "keep generator positions in original release order; donor labels from matching generator",
+      "report": "donor map and actual changed-label numerator/denominator/fraction; zero change is retained as degenerate",
+      "seed": 775084,
+      "unit": "whole TRAIN qid"
+    },
+    "embedding": {
+      "empty": "zero vector of runtime hidden width; no synthetic token; flag empty",
+      "frozen": true,
+      "input_columns": [
+        "question",
+        "answer_text"
+      ],
+      "model": "unsloth/Qwen3.8-27B-GGUF Q4_K_M; actual frozen llama.cpp runtime",
+      "normalization": "independent question and answer L2, then concatenate in that order",
+      "padding": "exclude padding from mean; all-padding becomes flagged zero vector",
+      "pooling": "mean_last_layer_nonpadding",
+      "retain": [
+        "full_token_count",
+        "retained_token_count",
+        "truncated",
+        "padding_mask"
+      ],
+      "runtime_binding": "before extraction seal GGUF SHA256, embedded tokenizer metadata and runtime binary/build SHA256; missing or unsupported hidden states block",
+      "special_tokens": "add_bos=False; no chat template, EOS, separator or dataset tags",
+      "token_limits": {
+        "answer_text": 768,
+        "question": 256
+      },
+      "tokenizer": "GGUF embedded tokenizer only",
+      "truncation": "right",
+      "zero_norm": "leave zero vector unchanged"
+    },
+    "extraction_performed": false,
+    "fit": {
+      "architecture_search": false,
+      "coefficient_hashes": "hash actual before/after trained coefficients; require real changes; no metadata-only changes",
+      "convergence": "all six arms require verified finite objective and gradient bound; otherwise disqualify",
+      "gradient_infinity_norm_max": 1e-06,
+      "l2": 0.01,
+      "loss": "mean proper binary logloss +0.5*0.01*sum(nonintercept coefficient squares)",
+      "nce": false,
+      "optimizer": "L-BFGS-B from zeros; maxiter2000, gtol1e-7, ftol1e-12",
+      "penalize_intercept": false,
+      "training": "TRAIN A1 only; no CAL/TEST targets or A2 used in fitting"
+    },
+    "head_training_performed": false,
+    "length_features": "log1p(full embedded-tokenizer question count), log1p(full answer count); TRAIN-only center/std",
+    "metrics": [
+      "Brier",
+      "binary_logloss",
+      "coverage",
+      "accepted_error",
+      "exact_half_coverage_error"
+    ],
+    "partition": "original V726 fit=TRAIN, tune=CAL, test=TEST; no repartition or exclusions for exposure",
+    "projection": {
+      "center_scale": "TRAIN-only population mean/std (ddof=0); constants use scale1",
+      "dimensions": 27,
+      "distribution": "numpy default_rng(seed).normal(0, 1/sqrt(27), (concat_width,27))",
+      "freeze": [
+        "TRAIN means/std",
+        "Gaussian matrix",
+        "projected TRAIN min/max"
+      ],
+      "label_dependent": false,
+      "scaling": "TRAIN-only projected coordinate min/max to[-1,1]; constants0; future clip[-1,1]",
+      "seed": 775084,
+      "shared_by": [
+        "projected27_linear",
+        "projected27_spline",
+        "donor_projected27_spline"
+      ]
+    },
+    "references": "author ref_str and annotations are evaluator/context records only",
+    "scope": "exposed_development_only",
+    "spline": {
+      "columns": "intercept +27 linear +189 fixed basis; identical donor architecture",
+      "degree": 3,
+      "implementation": "carnot.autoresearch.spline_basis_8986.design",
+      "knots": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -0.5,
+        0,
+        0.5,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "strata": "question-level A2 unobserved, observed with any disagreement, observed with no disagreement; retain actual A2 support and missingness",
+    "target": "original annotator1 factuality: 1=error, 0=correct, -1=missing",
+    "uncertainty": {
+      "ci95": [
+        0.025,
+        0.975
+      ],
+      "draws": 10000,
+      "paired": true,
+      "ranking": "ascending p(error), tie original item order, accept floor(N/2) occurrences per draw",
+      "rerank_half_coverage_each_draw": true,
+      "retain": "all arm predictions, numerators, denominators, draw counts and paired contrasts against every control",
+      "scope": "conditional descriptive exposed-development intervals; no confirmatory significance, independent generalization or training-variability coverage",
+      "seed": 775092,
+      "unit": "original TEST qid with all siblings",
+      "zero_denominator": "null metric; report undefined draws and actual support"
+    },
+    "version": "v775-human-embedding-v1"
+  }
+}

@@ -17,6 +17,7 @@ from carnot.reporting import v784_contract as v784
 from carnot.reporting import v785_contract as c
 from carnot.reporting import v785_contract_evidence as e
 from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting import historical_contract_inputs as historical
 from carnot.reporting.historical_contract_inputs import authenticated, original_root
 
 
@@ -108,7 +109,59 @@ def build_v785_fixture_tree(root: Path) -> tuple[Path, dict]:
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Real original sources establish custody, without any new model work."""
-    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9222"), "20261118")
+    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9222"), "20261119")
+
+
+def test_large_historical_target_rejects_pollution(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-9222-V785-CONTROLS: large private targets retain original hashes."""
+    authority = tmp_path / "authority"
+    authority.mkdir()
+    source = authority / "large.json"
+    source.write_bytes(b" " * 70000)
+    config = authority / "openspec/change-proposals/v784-contract-inputs.json"
+    atomic_json(config, dict(pins={}))
+    work = authority / "work.json"
+    atomic_json(
+        work,
+        dict(
+            snapshots={"results/large.json": e.ref(source)},
+            operands={},
+            values={"0": dict(value=dict(code_config_hashes=[e.ref(config)]))},
+        ),
+    )
+    capstone = authority / "results/capstone.json"
+    atomic_json(capstone, dict(work_reference=e.ref(work)))
+    monkeypatch.setattr(historical, "ROOT", authority)
+    monkeypatch.setattr(historical, "CAPSTONES", {784: (capstone.name, e.ref(capstone)["sha256"])})
+    root = original_root(tmp_path / "large", 784)
+    target = root / "results/large.json"
+    target.unlink()
+    target.write_bytes(b"forged private evidence")
+    with pytest.raises(ValueError, match="historical_input_drift"):
+        original_root(root, 784)
+
+
+def test_retained_cold_logs_reject_pollution(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-9222-V785-CONTROLS: restoring missing logs never overwrites tampering."""
+    terminal = tmp_path / "cold"
+    monkeypatch.setattr(historical, "_COLD_TERMINAL", terminal)
+    original_root(tmp_path / "inputs", 784)
+    (terminal / "cold_replay.stdout").write_bytes(b"forged")
+    with pytest.raises(ValueError, match="historical_input_drift"):
+        original_root(tmp_path / "inputs", 784)
+
+
+def test_historical_digest_invalidates_restored_mtime(tmp_path):
+    """SCENARIO-REPORT-9222-V785-CONTROLS: restoring mtime cannot hide same-size tampering."""
+    path = tmp_path / "evidence"
+    path.write_bytes(b"true")
+    reference = e.ref(path)
+    assert historical.authenticated(reference) == b"true"
+    stat = path.stat()
+    path.write_bytes(b"fake")
+    os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+    with pytest.raises(ValueError, match="historical_input_drift"):
+        historical.authenticated(reference)
 
 
 def test_protocol_owners_all_three_and_false_rehash(tmp_path):
@@ -220,6 +273,7 @@ def test_malformed_planner_identity_is_blocked(tmp_path, monkeypatch):
 
 def test_checkout_and_complete_contract_scope(work, tmp_path, monkeypatch):
     """REQ-REPORT-9222-V785: partitioned replay and method custody stay distinct from task count."""
+    assert work["run_date"] == "20261119"
     inspection = work["inspection"]
     non_contract = [r for r in inspection["checks"] if r not in inspection["contract"]["checks"]]
     assert all(r["passed"] for r in non_contract), [r for r in non_contract if not r["passed"]]

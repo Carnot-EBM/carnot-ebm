@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9207_v783_capstone/invocations/1794938047461957349/retained/8af429226e559cce237973c151529b28ebc719ecc8d6ca1bbd33d37cca954ef3/research_conductor.py
