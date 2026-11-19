@@ -22398,3 +22398,5 @@ code |
 | 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_variant_denominators age-week 2: OPEN 14 days: SILENT_NO |
 | 2026-11-19 08:55 UTC | Exp9222: Qualify partitioned consumer replay and b | SKIP | Pre-tests failing, self-heal failed: |
 | 2026-11-19 11:27 UTC | Exp9222: Qualify partitioned consumer replay and b | OK | 101 passed, 1 warning in 499.61s (0:08:19) |
+| 2026-11-19 11:36 UTC | Exp9223: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9222-contract.contract_ready_score (actual=0 == expected=1) |
+| 2026-11-19 11:38 UTC | Exp9224: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9223-corpus-prefilter) |
