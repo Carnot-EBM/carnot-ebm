@@ -12,26 +12,19 @@ import pytest
 from carnot.reporting import v784_capstone as m
 from carnot.reporting import v784_capstone_evidence as e
 from carnot.reporting.current_work_receipt import atomic_json, validate_current_work_receipt
+from carnot.reporting.historical_contract_inputs import original_root
 
 
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Authenticate real retained producers once without loading a model."""
-    root = e.ROOT
-    published = e.ROOT / "results" / (m.NAME + ".json")
-    if (
-        published.is_file()
-        and m.reference(e.ROOT / e.PROTOCOL["active"])["sha256"] != e.PINS[e.PROTOCOL["active"]]
-    ):
-        saved = json.loads(
-            Path(json.loads(published.read_bytes())["work_reference"]["path"]).read_bytes()
-        )
-        root = tmp_path_factory.mktemp("inputs9221")
-        for name, ref in saved["snapshots"].items():
-            target = root / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(Path(ref["path"]).read_bytes())
-    return m.collect(tmp_path_factory.mktemp("capstone9221"), "20261118", root)
+    if not Path.cwd().resolve().is_relative_to(e.ROOT):
+        original_root(Path.cwd(), 784, suite="capstone")
+    return m.collect(
+        tmp_path_factory.mktemp("capstone9221"),
+        "20261118",
+        original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+    )
 
 
 def test_fourteen_terminal_outcomes(work, monkeypatch):

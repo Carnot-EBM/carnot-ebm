@@ -16,6 +16,10 @@ OWNERS = {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9194_v783_contract/invocations/1794933643715263146/requalified_final/pre_ces_binding_config.json",
         "sha256": "sha256:e5459a911a5b0754b31176874a82ea475ae9fedf782cc32651b3ebbde41a662f",
     },
+    "selective_deferral_protocol": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v785-contract-inputs.json",
+        "sha256": "sha256:432181645687a7dbfb0ee292a9ea184348ec41b337b57e3bde344339aca0452e",
+    },
 }
 
 

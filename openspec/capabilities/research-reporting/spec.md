@@ -116824,3 +116824,65 @@ three executed tasks and eleven skips. V783 remains two executed and twelve
 skipped; V782 remains four executed and ten skipped. Exposed-panel hypotheses
 stay open and current_science_paper_ready=false.
 
+## Proposed V785 research milestone — 2026-11-18
+
+Status: planned and scoped for V785 execution. All historical V782, V783 and
+V784 outcomes, quarantines and zero gates remain unchanged history.
+
+### REQ-REPORT-9222-V785: Partitioned consumer replay and V785 contract binding
+
+Exp9222 SHALL authenticate original Exp9097 human source custody (900 responses across
+300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three lexical 100-qid shards),
+Exp9126 five-arm static protocol, Exp9132 six-arm delayed-learning protocol (separate
+`TRAIN100` initialization), Exp9211 qualified target-identifiability and affine
+label-ambiguity artifacts, Exp9208 owned-test pass receipt and timed-out
+direct-consumer receipt (`exit_code=-9` at `1200.04s`), and Exp9221 capstone snapshot.
+Preserve Exp9208's five zero readiness scores as historical fact. Extend
+`historical_contract_inputs.py` with generation 784 pointing to
+`experiment_9221_v784_capstone.json` (excluding `experiment_9209_corpus_prefilter.json`
+and `experiment_9211_v784_label_ambiguity.json` in contract suite mode) and isolate
+V782, V783 and V784 test roots. Partition `direct_consumers` into bounded,
+non-contending shards (`direct_consumers_core`, `direct_consumers_v782_v783`,
+`direct_consumers_v784`), each writing to a distinct `.coverage.<shard>` file before
+coverage combination, while retaining untouched 900-second
+`tests/python/test_causal_validation_9181.py` in the full 1040-unit validation
+obligation manifest for Exp9224. Keep `protocol_owners` strict in fresh cold-replay
+processes for `entropy_reference_protocol`, `label_ambiguity_protocol`, and
+`selective_deferral_protocol`. Compare all fourteen ordered V785 task objects between
+`openspec/change-proposals/research-roadmap-vNEXT.md` and the active queue, accepting
+only conductor literal-brace encoding, and record any absent or mismatched external
+planning slots as terminal `blocked` with `contract_ready_score=0`.
+
+#### SCENARIO-REPORT-9222-V785: Partitioned shards, isolated roots and protocol owners
+
+Owned tests and all three partitioned direct-consumer shards execute against isolated
+V782, V783 and V784 roots with distinct coverage files and 100 percent owned statement
+coverage with zero exclusions. Fresh-process cold replay validates all three protocol
+sidecars against their immutable owning configurations and rejects missing, modified or
+rehashed false protocol sidecars, changed owner hashes, and successor-queue pollution.
+When all partitioned shards, scoped Ruff, strict mypy, spec coverage, and private
+outside-checkout CLI checks pass, `replay_authority_ready_score`, `source_ready_score`,
+`static_methods_ready_score`, and `online_methods_ready_score` qualify (`1`), while
+`contract_ready_score` requires both passing checks and all fourteen ordered V785 task
+objects matching between the design and active queue.
+
+#### SCENARIO-REPORT-9222-V785-CONTROLS: Tamper, interleaved replay and absence controls
+
+Private CLI publication, refusal, tamper and cold replay execute outside the checkout
+without `PYTHONPATH` under E2E-018/021. Interleaved V783, V784 and V785 replays pass on
+authentic artifacts and fail on rehashed tampering. Missing external inputs block with
+`blocked_no_run` and exact `gate_check_summary` operands distinguishing `missing_file`,
+`missing_field` and observed `0`. Owned check failures disqualify all readiness scores.
+
+V784 replay SHALL retain its two original protocol names when V785 adds a third
+owner. Each V785 owned or consumer command SHALL start in a distinct private
+directory outside the checkout with `PYTHONPATH` removed. Commands SHALL retain
+absolute test paths and separate coverage files. The scope SHALL name the
+untouched causal-validation suite as an Exp9224 obligation, with no execution
+credit from contract shards. Missing or malformed planner task fields SHALL
+produce explicit failed operands and never a partial contract success.
+Private V784 capstone fixtures SHALL restore checkout-relative health logs from
+the original capstone's retained references. Their original hashes SHALL remain
+unchanged, including when the current queue has moved to V785.
+The owned/core pair SHALL complete before historical consumer shards start.
+Historical shards SHALL run one at a time to avoid retained-root disk contention.

@@ -1,0 +1,230 @@
+...F..F........F.                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_private_cli_and_interleaved_replays ___________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/contract92080/c...00 kB', 'MemAvailable:   112541200 kB'], 'private_free_disk_bytes': 225540452352}, 'resource': 'host_resources'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0')
+
+    def test_private_cli_and_interleaved_replays(work, tmp_path):
+        """SCENARIO-REPORT-9208-V784: E2E-018/021 real private publication and tamper."""
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (e.NAME + ".json")
+        result = child_cli(tmp_path, "--from-work", str(source), "--output", str(output))
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert child_cli(tmp_path, "--cold-replay", str(output)).returncode == 0
+        previous_work = previous.measure(
+            original_root(tmp_path / "v783", 783), tmp_path / "previous", "20261117"
+        )
+        previous_source = tmp_path / "previous.json"
+        atomic_json(previous_source, previous_work)
+        previous_output = tmp_path / (previous.e.NAME + ".json")
+        assert (
+            child_cli(
+                tmp_path,
+                "--from-work",
+                str(previous_source),
+                "--output",
+                str(previous_output),
+                cli=previous.e.CLI,
+            ).returncode
+            == 0
+        )
+        assert (
+            child_cli(tmp_path, "--cold-replay", str(previous_output), cli=previous.e.CLI).returncode
+            == 0
+        )
+        assert child_cli(tmp_path, "--cold-replay", str(output)).returncode == 0
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        code = "\n".join(
+            [
+                "import sys; from pathlib import Path",
+                "sys.path[:0] = " + repr([str(e.ROOT / "python"), str(e.ROOT)]),
+                "from carnot.reporting import v784_contract as new, v783_contract as old",
+                "assert new.replay(Path(" + repr(str(output)) + "))['passed']",
+                "assert old.replay(Path(" + repr(str(previous_output)) + "))['passed']",
+                "assert new.replay(Path(" + repr(str(output)) + "))['passed']",
+            ]
+        )
+>       result = subprocess.run(
+            [sys.executable, "-c", code],
+            cwd=tmp_path,
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=120,
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_contract_9208.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 299103.229045575, orig_timeout = 120
+stdout_seq = [b'[exp9208] phase=authenticate_inputs_before\n', b'[exp9194] phase=authenticate_inputs_before\n', b'[exp9194] phase=r...f_1514\n', b'[exp9194] phase=retained_bindings_100_of_1514\n', b'[exp9194] phase=retained_bindings_150_of_1514\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-c', "import sys; from pathlib import Path\nsys.path[:0] = ['/home/ianblenke/github.com/ianblenke/carnot/python', '/home/ianblenke/github.com/ianblenke/carnot']\nfrom carnot.reporting import v784_contract as new, v783_contract as old\nassert new.replay(Path('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9208_v784_contract.json'))['passed']\nassert old.replay(Path('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9194_v783_contract.json'))['passed']\nassert new.replay(Path('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9208_v784_contract.json'))['passed']"]' timed out after 120 seconds
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+----------------------------- Captured stdout call -----------------------------
+[test9208] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9208_v784_contract.json')
+[test9208] child_after 0
+[test9208] child_before ('--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9208_v784_contract.json')
+[test9208] child_after 0
+[exp9194] phase=resources_before
+[exp9194] phase=resources_after
+[exp9194] phase=authenticate_inputs_before
+[exp9194] phase=retained_bindings_0_of_1514
+[exp9194] phase=retained_bindings_50_of_1514
+[exp9194] phase=retained_bindings_100_of_1514
+[exp9194] phase=retained_bindings_150_of_1514
+[exp9194] phase=retained_bindings_200_of_1514
+[exp9194] phase=retained_bindings_250_of_1514
+[exp9194] phase=retained_bindings_300_of_1514
+[exp9194] phase=retained_bindings_350_of_1514
+[exp9194] phase=retained_bindings_400_of_1514
+[exp9194] phase=retained_bindings_450_of_1514
+[exp9194] phase=retained_bindings_500_of_1514
+[exp9194] phase=retained_bindings_550_of_1514
+[exp9194] phase=retained_bindings_600_of_1514
+[exp9194] phase=retained_bindings_650_of_1514
+[exp9194] phase=retained_bindings_700_of_1514
+[exp9194] phase=retained_bindings_750_of_1514
+[exp9194] phase=retained_bindings_800_of_1514
+[exp9194] phase=retained_bindings_850_of_1514
+[exp9194] phase=retained_bindings_900_of_1514
+[exp9194] phase=retained_bindings_950_of_1514
+[exp9194] phase=retained_bindings_1000_of_1514
+[exp9194] phase=retained_bindings_1050_of_1514
+[exp9194] phase=retained_bindings_1100_of_1514
+[exp9194] phase=retained_bindings_1150_of_1514
+[exp9194] phase=retained_bindings_1200_of_1514
+[exp9194] phase=retained_bindings_1250_of_1514
+[exp9194] phase=retained_bindings_1300_of_1514
+[exp9194] phase=retained_bindings_1350_of_1514
+[exp9194] phase=retained_bindings_1400_of_1514
+[exp9194] phase=retained_bindings_1450_of_1514
+[exp9194] phase=retained_bindings_1500_of_1514
+[exp9194] phase=authenticate_inputs_after
+[test9208] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/previous.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9194_v783_contract.json')
+[test9208] child_after 0
+[test9208] child_before ('--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9194_v783_contract.json')
+[test9208] child_after 0
+[test9208] child_before ('--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_cli_and_interleav0/experiment_9208_v784_contract.json')
+[test9208] child_after 0
+___________________ test_orchestration_and_failed_owner_work ___________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/contract92080/c...00 kB', 'MemAvailable:   112541200 kB'], 'private_free_disk_bytes': 225540452352}, 'resource': 'host_resources'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_orchestration_and_failed_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f84dda84080>
+
+    def test_orchestration_and_failed_owner_work(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9208-V784: actual orchestration retains the shared deadline and refusal."""
+        monkeypatch.setattr(c, "measure", lambda *_: work)
+        monkeypatch.setattr(c, "qualify", lambda _: {})
+        monkeypatch.setattr(previous, "publish_primary", lambda *_: dict(passed=True))
+>       assert c.main(["--output", str(tmp_path / (e.NAME + ".json"))]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f84dfa4a0c0>(['--output', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_orchestration_and_failed_0/experiment_9208_v784_contract.json'])
+E        +    where <function main at 0x7f84dfa4a0c0> = c.main
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_contract_9208.py:224: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9208] phase=start_no_model_load
+[exp9208] phase=refused:measurement_deadline
+____________________________ test_private_real_cli _____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a9...'sha256': 'sha256:f25010c16721730975526f8cb4db43866b57c3440f9a1342b7bda803b0aa4934'}, 'ended_ns': 300102892853063, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_real_cli0')
+
+    def test_private_real_cli(work, tmp_path):
+        """REQ-REPORT-9221-V784: E2E-018/021 run outside checkout without PYTHONPATH."""
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        argv = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        if env.get("COVERAGE_RCFILE"):
+            argv[1:2] = ["-m", "coverage", "run"]
+    
+        def call(*args):
+            print("[test9221] child_before", args, flush=True)
+            result = subprocess.run(
+                [*argv, *args], cwd=tmp_path, env=env, capture_output=True, timeout=180
+            )
+            print("[test9221] child_after", result.returncode, flush=True)
+            return result
+    
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (m.NAME + ".json")
+>       result = call("--from-work", str(source), "--output", str(output))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:190: in call
+    result = subprocess.run(
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 301007.892591053, orig_timeout = 180
+stdout_seq = [b'[exp9141] phase=group_reduction_0_of_300\n', b'[exp9141] phase=group_reduction_50_of_300\n', b'[exp9141] phase=grou...n_150_of_300\n', b'[exp9141] phase=group_reduction_200_of_300\n', b'[exp9141] phase=group_reduction_250_of_300\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9221_v784_capstone.py', '--from-work', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_real_cli0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_real_cli0/experiment_9221_v784_capstone.json']' timed out after 180 seconds
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+----------------------------- Captured stdout call -----------------------------
+[test9221] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_real_cli0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261118T104310-2315125-3814f911/test_private_real_cli0/experiment_9221_v784_capstone.json')
+=============================== warnings summary ===============================
+../../../../home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+../../../../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 134 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (134): ['openspec/change-proposals/v785-contract-inputs.json', 'ops/conductor-heartbeat.json', 'ops/conductor-log.md', 'ops/conductor-state.json', 'python/carnot/reporting/v785_contract.py'] .... This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_contract_9208.py::test_private_cli_and_interleaved_replays
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_contract_9208.py::test_orchestration_and_failed_owner_work
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_private_real_cli
+3 failed, 14 passed, 2 warnings in 2891.78s (0:48:11)

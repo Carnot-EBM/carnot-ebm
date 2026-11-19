@@ -36,7 +36,11 @@ def child_cli(directory, *args, cli=None):
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Real original sources establish custody, without any new model work."""
-    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9208"), "20261117")
+    return c.measure(
+        original_root(tmp_path_factory.mktemp("inputs9208"), 784),
+        tmp_path_factory.mktemp("contract9208"),
+        "20261117",
+    )
 
 
 def test_protocol_owners_and_false_rehash(tmp_path):
@@ -175,10 +179,11 @@ def test_complete_object_mutations_and_collisions(tmp_path, monkeypatch):
     """SCENARIO-REPORT-9208-V784: new pins cannot bless changed gates or occupied IDs."""
     import yaml
 
+    source_root = original_root(tmp_path / "original", 784)
     for name in [e.DESIGN, e.ACTIVE, *e.COLLISION_INPUTS]:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes((e.ROOT / name).read_bytes())
+        path.write_bytes((source_root / name).read_bytes())
     assert e.authority(tmp_path)["ready"]
     frozen = deepcopy(e.FROZEN)
     original = yaml.safe_load((tmp_path / e.ACTIVE).read_bytes())
@@ -203,7 +208,7 @@ def test_complete_object_mutations_and_collisions(tmp_path, monkeypatch):
         monkeypatch.setattr(e, "FROZEN", frozen)
         assert not e.authority(tmp_path)["ready"]
     monkeypatch.undo()
-    (tmp_path / e.ACTIVE).write_bytes((e.ROOT / e.ACTIVE).read_bytes())
+    (tmp_path / e.ACTIVE).write_bytes((source_root / e.ACTIVE).read_bytes())
     (tmp_path / "results").mkdir()
     (tmp_path / "results/experiment_9209_existing.json").write_text("{}")
     assert not e.authority(tmp_path)["ready"]

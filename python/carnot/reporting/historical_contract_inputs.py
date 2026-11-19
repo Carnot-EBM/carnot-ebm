@@ -16,6 +16,10 @@ CAPSTONES = {
         "experiment_9207_v783_capstone.json",
         "sha256:059f1cf7a832d2c1989c0abc0481fcea9771af60a40e54adf3b4dae73ed07b10",
     ),
+    784: (
+        "experiment_9221_v784_capstone.json",
+        "sha256:54b3a2887c709b5cd3ba9d380e47206efab67499067802e3d97179641cdbb2c7",
+    ),
 }
 
 
@@ -33,6 +37,10 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
     value = json.loads(authenticated(dict(path=str(ROOT / "results" / name), sha256=pin)))
     work = json.loads(authenticated(value["work_reference"]))
     sources = dict(work["snapshots"])
+    if suite == "capstone":
+        for reference in work.get("repository_health_references", []):
+            name = str(Path(reference["original_path"]).relative_to(ROOT))
+            sources.setdefault(name, reference)
     for name, reference in work["operands"].items():
         path = Path(name)
         if path.is_relative_to(ROOT):
@@ -63,12 +71,14 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
     rows = []
     for name, reference in sources.items():
         if (
-            generation == 783
+            generation in {783, 784}
             and suite == "contract"
             and name
             in [
                 "results/experiment_9195_corpus_prefilter.json",
                 "results/experiment_9197_label_ambiguity.json",
+                "results/experiment_9209_corpus_prefilter.json",
+                "results/experiment_9211_v784_label_ambiguity.json",
             ]
         ):
             continue

@@ -1,0 +1,337 @@
+...........EE.EEE                                                        [100%]
+==================================== ERRORS ====================================
+______________ ERROR at setup of test_fourteen_terminal_outcomes _______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """Authenticate real retained producers once without loading a model."""
+>       return m.collect(
+            tmp_path_factory.mktemp("capstone9221"),
+            "20261118",
+            original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v784_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py:56: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+---------------------------- Captured stdout setup -----------------------------
+[exp9221] phase=preconditions_before completed=0 pending=0
+[exp9221] phase=authenticate completed=0 pending=288
+[exp9221] phase=authenticate completed=50 pending=238
+[exp9221] phase=authenticate completed=100 pending=188
+[exp9221] phase=authenticate completed=150 pending=138
+[exp9221] phase=authenticate completed=200 pending=88
+_______________ ERROR at setup of test_missing_and_owned_failure _______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """Authenticate real retained producers once without loading a model."""
+>       return m.collect(
+            tmp_path_factory.mktemp("capstone9221"),
+            "20261118",
+            original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v784_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py:56: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+____________________ ERROR at setup of test_replay_controls ____________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """Authenticate real retained producers once without loading a model."""
+>       return m.collect(
+            tmp_path_factory.mktemp("capstone9221"),
+            "20261118",
+            original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v784_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py:56: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+___________________ ERROR at setup of test_private_real_cli ____________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """Authenticate real retained producers once without loading a model."""
+>       return m.collect(
+            tmp_path_factory.mktemp("capstone9221"),
+            "20261118",
+            original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v784_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py:56: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+_____________________ ERROR at setup of test_orchestration _____________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261118T093449-2298803-59409634'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """Authenticate real retained producers once without loading a model."""
+>       return m.collect(
+            tmp_path_factory.mktemp("capstone9221"),
+            "20261118",
+            original_root(tmp_path_factory.mktemp("inputs9221"), 784, suite="capstone"),
+        )
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v784_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py:56: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/raw/experiment_9221_v784_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+=============================== warnings summary ===============================
+../../../../home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_fourteen_terminal_outcomes
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_missing_and_owned_failure
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_replay_controls
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_private_real_cli
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v784_capstone_9221.py::test_orchestration
+12 passed, 1 warning, 5 errors in 610.68s (0:10:10)

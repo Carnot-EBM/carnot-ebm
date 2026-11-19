@@ -22334,3 +22334,65 @@ code |
 | 2026-11-18 07:20 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-18 08:14 UTC | Plan milestone 2026.11.785 | OK | 5 tasks proposed |
 | 2026-11-18 08:28 UTC | Milestone 2026.11.785 activated | OK | 5 tasks queued |
+| 2026-11-18 10:47 UTC | Exp9222: Qualify partitioned consumer replay and b | FAIL | Agy CLI error: Hard wall-clock cap after 4800s. Last output: k_object") + |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_finite_number age-week 12: OPEN 84 days: SILENT_NON_F |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_numeric_pairs age-week 12: OPEN 84 days: SILENT_NON_FIRI |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_name_tokens age-week 12: OPEN 84 days: SILENT_NON_FIRING |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_count_field age-week 12: OPEN 84 days: SILENT_NON_FIR |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_chance_floor_score age-week 12: OPEN 84 days: SILENT_ |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_identifier_field age-week 12: OPEN 84 days: SILENT_NO |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6654_prospective_repair_memory_evolution.json age-week 12: OPEN 84 da |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 12: OPEN 84 days: SILENT_NON |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 12: OPEN 84 days:  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_placebo_or_replicate_key age-week 11: OPEN 77 days: S |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_degenerate_controls age-week 11: OPEN 77 days: SILE |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_declared_honest_null age-week 11: OPEN 77 days: SILEN |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_control_treatment_qualifier age-week 11: OPEN 77 day |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_key_covers_pair age-week 11: OPEN 77 days: SILENT_ |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor age- |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_compute_in_own_identity age-week 11: OPEN 77 days |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_value_matches age-week 11: OPEN 77 d |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 11: OPEN 77 days: SILEN |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 11: OPEN 77 days:  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_precondition_check_only_blocked age-week 11: OPEN 77  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 11: OPEN 77 days: SILE |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_marker age-week 11: OPEN 77 days: SI |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_cheap_learned_value_methodology age-week 11: OPEN 77 |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_floor_descriptor age-week 11: OPEN 7 |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_aggregation_only age-week 11: OPEN 77 days: SILENT_NO |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_deterministic_verifier age-week 11: OPEN 77 days: SIL |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_descriptor_key_present age-week 11: OPEN 77 days: SILENT |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 11: OPEN 77 d |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_duration_vs_claim age-week 11: OPEN 77 days: SILENT |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_sample_size age-week 11: OPEN 77 days: SILENT_NON_F |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_gate_passed_without_data age-week 11: OPEN 77 days: |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_preconditions_declared age-week 11: OPEN 77 days: S |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 11: OPEN 77 days: SILE |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_tautology age-week 10: OPEN 70 days: SILENT_NON_FIR |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_unwrapped_scalar age-week 10: OPEN 70 days: REAL_BUG on  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 9: OPEN 69 days: REAL_B |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 9: OPEN 68 da |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_rate_metric_field age-week 9: OPEN 63 days: SILENT_NO |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_shape_dims age-week 8: OPEN 56 days: SILENT_NON_FIRING o |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_shape_degenerate_reasons age-week 8: OPEN 56 days:  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_scorer_diagnostics_error_reasons age-week 8: OPEN 56 day |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_zero_lever_delta_reasons age-week 8: OPEN 56 days: SILEN |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_lever_exercise_severity age-week 8: OPEN 56 days: SILENT |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_metric_pair age-week 8: OPEN 56 days: REAL_ |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_first_party_qd_result_field age-week 8: OPEN 56 days |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_qd_energy_fitness_generation_win age-week 8: OPEN |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_qd_random_mutation_ablation_overclaim age-week 8: O |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_value_routing_live_claim age-week 8: OPEN 56 days |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_has_true age-week 8: OPEN 56 days: SILENT_NON |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_harness_target_levels age-week 8: OPEN 56 days: SILENT_N |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_harness_break_at_first_win age-week 8: OPEN 56 days: SIL |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_fixed_multilevel_metric_harness age-week 8: OPEN 56  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_nontrivial_subgoal_decomposition age-week 8: OPEN 56 day |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nontrivial_subgoal_decomposition age-week 8: OPEN 56 |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_subgoal_search_decomposition_overclaim age-week 8:  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8276_v715_current_contract_readiness.json age-week 6: OPEN 42 days: C |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8291_v716_dependency_scoped_admission.json age-week 6: OPEN 42 days:  |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_10030_fover_headline_selection_denominator.json age-week 6: OPEN 42 d |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 5: OPEN 35 days: |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor age- |
+| 2026-11-19 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_variant_denominators age-week 2: OPEN 14 days: SILENT_NO |

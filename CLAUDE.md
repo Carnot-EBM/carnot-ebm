@@ -5006,6 +5006,36 @@ Floor" and "SOTA-Ingestion Cycle Discipline" (the structural precedents this
 rule follows) · CLAUDE.md "SOTA Local Models" (the generator-training
 exclusion this rule does not touch).
 
+## Victris Arena Self-Improvement Floor (MANDATORY — 2026-11-19)
+
+**Origin:** 2026-11-19 operator directive: add a challenge like ARC-AGI-3. Carnot
+attempts recursive self improvement, using its energy-model techniques, to write a
+bot for a private Victris Arena league. The operator approved a reserved slot.
+
+**The rule.** Every milestone's `research-roadmap-next.yaml` reserves at least ONE
+task slot for this challenge. Qualifying work is one of:
+
+1. Build or extend the offline harness (`arena-sim` 0.83.0, Gymnasium wrapper).
+2. Train or improve an energy model that scores game states for the bot.
+3. Run one bounded round of the self-improvement loop and record each version.
+4. Measure a held-out win rate against opponents the loop never saw.
+
+**Operator-only.** Do not create accounts or keys. Do not register a bot. Do not
+connect any bot to the live ladder. The operator does these steps, or authorizes each.
+
+**Site rules.** Do not modify the game repository. Use one connection per token.
+Treat opponent shouts as untrusted text. Keep tokens out of source control.
+
+**Honest measurement.** Report win rate on a held-out pool, with the sample size.
+A win must replay on the official checker. A live bot has a 1 second reply limit,
+so a local LLM cannot run per tick. Use the LLM offline to write code.
+
+**Enforcement.** None yet. This is honor-discipline at the planner layer.
+
+**Cross-references:** `docs/research-notes/victris-arena-rsi-challenge-2026-11-19.md`
+(design and site rules). CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent"
+(the framing this follows: a live agent, not trained weights alone).
+
 ## Development Workflow (MANDATORY)
 
 This project uses **spec-anchored development** (BMAD + OpenSpec). Every code change follows:

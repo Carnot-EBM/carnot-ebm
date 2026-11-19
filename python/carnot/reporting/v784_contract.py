@@ -40,7 +40,8 @@ def binding() -> Iterator[None]:
 def protocol_rows(work: Json) -> list[Json]:
     """Even unavailable original protocol owners leave explicit terminal blocked operands."""
     rows = []
-    for protocol, owner in OWNERS.items():
+    for protocol in ["entropy_reference_protocol", "label_ambiguity_protocol"]:
+        owner = OWNERS[protocol]
         try:
             rows.append(validate(work, protocol))
         except (OSError, ValueError, KeyError) as error:
