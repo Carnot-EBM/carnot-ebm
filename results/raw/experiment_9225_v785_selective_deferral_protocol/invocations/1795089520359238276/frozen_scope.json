@@ -1,0 +1,1555 @@
+{
+  "code_test_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/selective_deferral_9225.py",
+      "sha256": "sha256:8a64bf6b95bcecfcef92bff733efb7d7f3c85bfa3b4ca149d977206f9fe50325"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/selective_deferral_runner_9225.py",
+      "sha256": "sha256:0a5ec1b5d917c0970efec3e87f09cb17c7f52208d574f9d929cb6a1bfb7180ae"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+      "sha256": "sha256:e51c3e22ebda74163bf1f85dbb1104866f180bf3b3ca53379252b978c3f54c47"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_selective_deferral_9225.py",
+      "sha256": "sha256:e50bbe033ec001687ba329a53f823c48f637f868ebda85fd80c56037baabf2c4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/.coverage",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "owned_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "name": "direct_consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py"
+      ],
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "spec_coverage"
+    }
+  ],
+  "coverage_config_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/coverage.ini",
+    "sha256": "sha256:24b7121a58aefd1b038ed0c55225e47db3757c4433bb2ceab4d30e6bd424ffee"
+  },
+  "e2e_scope": "E2E-018/021 private actual CLI success/refusal/tamper/cold replay in owned tests; E2E-020 not applicable: no learning or recovery changes",
+  "excluded_statements": 0,
+  "exclusions": [],
+  "frozen_ns": 389430125410657,
+  "hard_cap_s": 4800,
+  "measurement_cap_s": 3300,
+  "owned_paths": [
+    "python/carnot/reporting/selective_deferral_9225.py",
+    "python/carnot/reporting/selective_deferral_runner_9225.py",
+    "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py"
+  ],
+  "random_seed": 785225,
+  "required_check_names": [
+    "owned_tests",
+    "direct_consumers",
+    "ruff_check",
+    "ruff_format",
+    "strict_mypy",
+    "spec_coverage"
+  ],
+  "selective_deferral_protocol_reference": {
+    "alpha_grid": [
+      0.1,
+      0.25
+    ],
+    "audit_seed_count": 150,
+    "audit_seeds": [
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8295405334133059,
+        "qid": "hotpotqa_s00697",
+        "seed_sha256": "sha256:d45cc4b5b76f73500e655dea6d25f718efbe8a6d5b57315f9bd568b86df7f32d",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.4264234366935978,
+        "qid": "hotpotqa_s00697",
+        "seed_sha256": "sha256:6d2a161ad8d0547c5d2e610aadaf971a52e5e0c6ae135901a72ff95b3da978b9",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.2785365253339207,
+        "qid": "hotpotqa_s00697",
+        "seed_sha256": "sha256:474e2b730cf86105d6d967a04623ef10e0d7f29e04803f00979c7eb1cbcee688",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8441183403794702,
+        "qid": "truthfulqa_s00277",
+        "seed_sha256": "sha256:d81823b9e234fbe0262017e6ea22b51d93bfd65e0a7d138e252be065d1117f5e",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.19421820022851652,
+        "qid": "truthfulqa_s00277",
+        "seed_sha256": "sha256:31b848b244fb355ff4616d40cdfff8c251b4c05f1e47c72c166444aae0f8a745",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.029307356995244133,
+        "qid": "truthfulqa_s00277",
+        "seed_sha256": "sha256:0780afdbd3a7395ba97bc6656fb67633b220b35fc11b01452b6e5a756974361f",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.3518220966546487,
+        "qid": "hotpotqa_s00253",
+        "seed_sha256": "sha256:5a11034f2451672d87c042fade56b0435f107a6815dc827a285924d36f1b0fe1",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6732884342816803,
+        "qid": "hotpotqa_s00253",
+        "seed_sha256": "sha256:ac5ca17e03cdfd767006d535c0a25cbbcff0d817952ccbe10ea67a2a4a09d12e",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.07612044315980675,
+        "qid": "hotpotqa_s00253",
+        "seed_sha256": "sha256:137ca11dedab6aa5ee8d13f02d8d463508ab644e7ba0945a08f557f231f81d58",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.2651471249088882,
+        "qid": "hotpotqa_s01607",
+        "seed_sha256": "sha256:43e0ae961cb2b2fef3f0f9742fcba0546a1928e01bb5fdc3e4d5f3b1b2a1611a",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.21428660578888625,
+        "qid": "hotpotqa_s01607",
+        "seed_sha256": "sha256:36db7cabd588488ad16412864654b31bf771e3bb1059702aaf8f56fd81dee223",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.16188137419180373,
+        "qid": "hotpotqa_s01607",
+        "seed_sha256": "sha256:29710ec7fc3ef1d8cff2a23043543a44e5978e3eb315165027ddfb3168080851",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.07327416275177083,
+        "qid": "truthfulqa_s00298",
+        "seed_sha256": "sha256:12c21874a91f837a98e7939237e855629da549d8dc89b7f2ab62699889b7cce0",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5323492714718631,
+        "qid": "truthfulqa_s00298",
+        "seed_sha256": "sha256:88480ab7056557dcf0f4fc388c877627cd2bf47002a60355fae15dd87c089f81",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.34957441488352864,
+        "qid": "truthfulqa_s00298",
+        "seed_sha256": "sha256:597db577716e6cb34afb4e67f10863cbbdc8208ce17e84139a6389717ea69235",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_00"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9703596038464188,
+        "qid": "hotpotqa_s00857",
+        "seed_sha256": "sha256:f8697cabe1401d3e188ab77b204e84500e3cdb77b36f95cbfb2c60d21aa5d0a0",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1786920896268369,
+        "qid": "hotpotqa_s00857",
+        "seed_sha256": "sha256:2dbec3c9004c5e3fbe36a2c526f0232268dcef4c7c2dfdfd1a1eec21d0502e2b",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.728482743254096,
+        "qid": "hotpotqa_s00857",
+        "seed_sha256": "sha256:ba7dd855fa0975e6f4858d3eb42997ff20aff7daac19949ded1d3d29b15050df",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5519328810743865,
+        "qid": "truthfulqa_s00629",
+        "seed_sha256": "sha256:8d4b7929cd323955ec36cc0c4e4ac7857dc29a2654a8abe92964f7b97407765f",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7175079356430754,
+        "qid": "truthfulqa_s00629",
+        "seed_sha256": "sha256:b7ae999e351d81c4b4848dcbcc6760a7cefc07dfa51c26e61303c9d745ba0b6a",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.49385123132303815,
+        "qid": "truthfulqa_s00629",
+        "seed_sha256": "sha256:7e6d08c79f2cf54b57061f37a57bc388b3284e1d797d8b85bb005618452afb74",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.23276820861435182,
+        "qid": "truthfulqa_s00712",
+        "seed_sha256": "sha256:3b96b2838c11cc7379277ff06118f3744aa36088107bb72a865539619b5afb88",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5465498188101389,
+        "qid": "truthfulqa_s00712",
+        "seed_sha256": "sha256:8beab05d6c9d1951a6e8034586f5e314dcc22b0c26c9eeac9dec28bbdd6f11f7",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9377723292144741,
+        "qid": "truthfulqa_s00712",
+        "seed_sha256": "sha256:f011d8ed11e5b57c3647600a398c6e6a5b7487a092a591b75ea46f4895609e02",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9490568483910445,
+        "qid": "triviaqa_s00332",
+        "seed_sha256": "sha256:f2f563bde265d9222b374f2d1d296e9cbf6d7ace98648fe10f14d31cc4158d23",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.14177052111229327,
+        "qid": "triviaqa_s00332",
+        "seed_sha256": "sha256:244b12a7b6d44f44ddcae5ad1e612580bfd3b6831303a1fecef163f7306885dd",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.39870228539428265,
+        "qid": "triviaqa_s00332",
+        "seed_sha256": "sha256:66115a5c9be10671adde3ad58a6af8cc326b99ddaeab0415a2a5535dcd3834f2",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.43261349188187387,
+        "qid": "triviaqa_s01142",
+        "seed_sha256": "sha256:6ebfc1ff70e604ca764e4d69721de24371176cfa80f6ee3a2f227ec3311e68a1",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.23746961492984836,
+        "qid": "triviaqa_s01142",
+        "seed_sha256": "sha256:3ccacf05eadb84a0c877b60360c8f7c8d833eb3235f7a5bc19916008095dc91a",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7909952812100439,
+        "qid": "triviaqa_s01142",
+        "seed_sha256": "sha256:ca7eaab01663e8761eac6ce2d4a82ca401461192b1714ac53701a3dff01e4359",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_01"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.08772923263482392,
+        "qid": "triviaqa_s01511",
+        "seed_sha256": "sha256:16756c4911dac95c11a46bb8147eb48893d697e9307dab88663a4e262eec202c",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5735094643763274,
+        "qid": "triviaqa_s01511",
+        "seed_sha256": "sha256:92d18429715b8ca83973e1bb8d70faf6e65a2d177b57ded46b755f4248bf5d0a",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.15812358583316644,
+        "qid": "triviaqa_s01511",
+        "seed_sha256": "sha256:287ac98de133f005542801bf332459a96e2dbbf76afd70b9bef1cb7c3d95d661",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.04327356315169576,
+        "qid": "truthfulqa_s00588",
+        "seed_sha256": "sha256:0b13f9ea8496aa8462a1f58cea17d867a35a9ed72b11f2b293fc2e5f1691fed1",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.552244944987067,
+        "qid": "truthfulqa_s00588",
+        "seed_sha256": "sha256:8d5fecba19cc2d310dd04e7f6f17582a4f718f649be69fed3fdc856dcbba2071",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.25013433402564317,
+        "qid": "truthfulqa_s00588",
+        "seed_sha256": "sha256:4008cdc03f335d13c60d5361977564d8d153490d43ea3fa8611a84808f4e1129",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1267176526585516,
+        "qid": "hotpotqa_s01083",
+        "seed_sha256": "sha256:2070916dfe8ecec53b392beba9f2a3c78362e51577a463dfca1b8c17f9fb8621",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.4749927254178129,
+        "qid": "hotpotqa_s01083",
+        "seed_sha256": "sha256:79991f8d81e5e6b9f924ad58e3ecce53db78fee4985b922817a9a201e71c708e",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.44865269310636063,
+        "qid": "hotpotqa_s01083",
+        "seed_sha256": "sha256:72dae7242775f5c6be60acd2c3bc332def15d7538f2a877ebfc151a3f65e83c2",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9015858050425185,
+        "qid": "hotpotqa_s00344",
+        "seed_sha256": "sha256:e6ce53cb3208ecb4028bd0f23c7d517b69c68edd8a29a0c028240de9675f07de",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7150126187019835,
+        "qid": "hotpotqa_s00344",
+        "seed_sha256": "sha256:b70b11258d65f4d2e98092ce3ded05bc19992833bac83adcab647ca9330fd54a",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.24007753645778532,
+        "qid": "hotpotqa_s00344",
+        "seed_sha256": "sha256:3d75b8af9726c949532ce0df16d9b02dec60cd9139ec1851e22f50928dbef366",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.3242109830749186,
+        "qid": "triviaqa_s01861",
+        "seed_sha256": "sha256:52ff7db14f8f996185c374f49b6e2b3a32654c2dd4a28e103009f19e7dfd01df",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.328853832151167,
+        "qid": "triviaqa_s01861",
+        "seed_sha256": "sha256:542fc3c640e7b3eb5fbcefcd0d06a11004c760c4823ab99e478f405dda7dee1d",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.21144596381042652,
+        "qid": "triviaqa_s01861",
+        "seed_sha256": "sha256:3621529b6fde03b7c76cd3bf73ae43d1e43cf21c431c803cf290b85e989e38e6",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_02"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5472757035018363,
+        "qid": "triviaqa_s00814",
+        "seed_sha256": "sha256:8c1a42b06f8f3e85a8701f164c7bdeffb36523085513255a2420a68eb0b19451",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1801209708005397,
+        "qid": "triviaqa_s00814",
+        "seed_sha256": "sha256:2e1c686ee97ea9839a52110bedf2d6e060d4f89b7266536d2d28856fc7e280ef",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.49495184465287595,
+        "qid": "triviaqa_s00814",
+        "seed_sha256": "sha256:7eb52a01e1047ae0a84d747581b67a0cacf553dc35b3e519117da1e070e9bddc",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9235264585715549,
+        "qid": "triviaqa_s01046",
+        "seed_sha256": "sha256:ec6c3ae08e3708c090e34db45295aab66f1931681492cfff8d7dd534536462e8",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9554403034628431,
+        "qid": "triviaqa_s01046",
+        "seed_sha256": "sha256:f497bc58a739e198d03cef4957226501ca287c0d304808463f227d88a79c0143",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.32006613168342485,
+        "qid": "triviaqa_s01046",
+        "seed_sha256": "sha256:51efdaa02335c229b336c26f9c723f11efab25f5c680b48f7bf135280c7b6968",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.3740702716629014,
+        "qid": "triviaqa_s01681",
+        "seed_sha256": "sha256:5fc311bf32afeecb7bfaf3172d9fbf9355a7d10731073ac2a905790d276ab1ba",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1823425601840992,
+        "qid": "triviaqa_s01681",
+        "seed_sha256": "sha256:2eae0084a8dcb5993068add0ed0e972b8fea8729695b566b4a0ce6cdb4ed3cec",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.04452520978179223,
+        "qid": "triviaqa_s01681",
+        "seed_sha256": "sha256:0b66010fdc3f0a78290c16ec3400963a46967de2ed4f1485a4bdf564e6d8ebfd",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5945404746601713,
+        "qid": "truthfulqa_s00150",
+        "seed_sha256": "sha256:9833cdf6d0521817bf6694698b57e60cc7557f561faa33657bacd02e13b2cfa5",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.48269672097717853,
+        "qid": "truthfulqa_s00150",
+        "seed_sha256": "sha256:7b9203267bc15931b5d2428bebb8f45f08ce1dacd9839ccc25861c27efc36dab",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8027960526061411,
+        "qid": "truthfulqa_s00150",
+        "seed_sha256": "sha256:cd840ac74d20222da4cb6a8407599c55dbc619b109fb5ce25cfa6dac52b19a24",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5301767297891181,
+        "qid": "triviaqa_s00480",
+        "seed_sha256": "sha256:87b9a9838b63c79f538e2eb821e3721ce7c3863ef72a40e143d736a71d2bc45c",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.47277751322517125,
+        "qid": "triviaqa_s00480",
+        "seed_sha256": "sha256:7907f2759618f1cdba227500a210a4454fb780fc1a7207fa5939b930a4fe81b0",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5148530932185981,
+        "qid": "triviaqa_s00480",
+        "seed_sha256": "sha256:83cd698d9e4a14ce6f94709eacde0b6e9b63b5ad773c07972d2df8dde3827b77",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_03"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.742974832678288,
+        "qid": "hotpotqa_s00669",
+        "seed_sha256": "sha256:be3399401ab4aba57ba89e57f63b7fb3c63e44afb1826a3fe36df0888e7d7d9d",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.07062552819074168,
+        "qid": "hotpotqa_s00669",
+        "seed_sha256": "sha256:121483bdd78acb7f090cdeeaf106028fccb42615babe00d97ad60be3a0456007",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.898718934263846,
+        "qid": "hotpotqa_s00669",
+        "seed_sha256": "sha256:e61271aef58d9f1176d5594388674dae2c0113946a5fc957295c4dd2bd3da4aa",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1598535933779638,
+        "qid": "triviaqa_s00873",
+        "seed_sha256": "sha256:28ec2a43b4d9079a80ad2bd6addc896c7f71cacc92bcc0718bfe97033699f86c",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8476320436437071,
+        "qid": "triviaqa_s00873",
+        "seed_sha256": "sha256:d8fe69e27dca39c6d63310b47e32ccc1bd6c2c76f44642720a8c44355f979834",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.34270809245530676,
+        "qid": "triviaqa_s00873",
+        "seed_sha256": "sha256:57bbb7b12b8ace380db67d1286a26721eaf049ee9880047c226c58fe5591ec18",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.19209822365555645,
+        "qid": "hotpotqa_s01964",
+        "seed_sha256": "sha256:312d59643866246ebc6e79addcf6dcb2a36028b0f2d49029d0387e338eb73917",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8575847744403836,
+        "qid": "hotpotqa_s01964",
+        "seed_sha256": "sha256:db8aacffc4dc287315964c05ccb497c9dfb8aff0eca4d6ccf64c588cde5d5c6f",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.03809207640039443,
+        "qid": "hotpotqa_s01964",
+        "seed_sha256": "sha256:09c066fe605d8d3fde909a2a1e69f9673df92e37b2d91fd34265b5e345e4425a",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8496935181624968,
+        "qid": "triviaqa_s00473",
+        "seed_sha256": "sha256:d98583b0219026a7d85c8499d871fcaf2700277d2e48574268145245cd959f29",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.33209059513309663,
+        "qid": "triviaqa_s00473",
+        "seed_sha256": "sha256:5503e3a567e442673fe54f82163c9b29e66869eff5cdca6da4f7d55e218bbee7",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5928724944800253,
+        "qid": "triviaqa_s00473",
+        "seed_sha256": "sha256:97c67de67d59a80bae006a759c15eb0f9bbfa7110a8dcfce44b086939186f288",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6318399011424496,
+        "qid": "triviaqa_s01395",
+        "seed_sha256": "sha256:a1c0427fb6f6321272c4684399c727a05cdb7b2adddfb910471087ebdb0deab4",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6434188265132139,
+        "qid": "triviaqa_s01395",
+        "seed_sha256": "sha256:a4b718a181448392581b286266f3425ab86a128380b737865dee5d149883d5be",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5269853694528461,
+        "qid": "triviaqa_s01395",
+        "seed_sha256": "sha256:86e8835f453c51d66314ea75e2a3fe46470c1f8e40bb20ed45bb62f5ccccb7e0",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_04"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.4637616207996672,
+        "qid": "hotpotqa_s01169",
+        "seed_sha256": "sha256:76b914e2797a67a9ec33880b136ed1a3a9afe92511b6039207682f4e578bdd6e",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.3561916971428182,
+        "qid": "hotpotqa_s01169",
+        "seed_sha256": "sha256:5b2f610a55cbc6a541b2636216886f293b5328e35a0dc205205ddb3b53634199",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5816542335597221,
+        "qid": "hotpotqa_s01169",
+        "seed_sha256": "sha256:94e74ab6b80d3dfdda93ede51c8eb734f7ee985ba9ae49d09d1a3bf239913981",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9330379360595376,
+        "qid": "hotpotqa_s00370",
+        "seed_sha256": "sha256:eedb92fd4d94e381b7f3328ff0a8b19a0abb8bcf3a3dafb80142ab9904eba2cc",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.508610818443376,
+        "qid": "hotpotqa_s00370",
+        "seed_sha256": "sha256:8234518f9b28f32a0fa921589050d5dcec5e82b7808c8f2296c150772245b3b4",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.2806839981197019,
+        "qid": "hotpotqa_s00370",
+        "seed_sha256": "sha256:47dae8106f44e9b159ef8e43ba47de0ad9a7b6fc571a7d1c104d1a06682466f2",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.026038065749510435,
+        "qid": "triviaqa_s01954",
+        "seed_sha256": "sha256:06aa6e40d861fab812adcf29afeba63d16676322291f9b2f85a3d66dd9f2c356",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.33251498515237676,
+        "qid": "triviaqa_s01954",
+        "seed_sha256": "sha256:551fb3baa8cd6167553116dc593324344287f10ba4eb3e4facc98af6a8c4f6bd",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5513113077797844,
+        "qid": "triviaqa_s01954",
+        "seed_sha256": "sha256:8d22bce4d4441eda8e3ab01e72f3c523a8ed9e7474d86e7629d41318b3f022b1",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.33265707828038793,
+        "qid": "hotpotqa_s00695",
+        "seed_sha256": "sha256:552903a7ff470e5cd54c29a0cc145ef182dee0476a143710069b97c3566461d4",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7356143418866827,
+        "qid": "hotpotqa_s00695",
+        "seed_sha256": "sha256:bc5138b4df328ee13d42c9844d933dd41fc9a9ef3322496366a453fc116a6b6b",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.039912659724289014,
+        "qid": "hotpotqa_s00695",
+        "seed_sha256": "sha256:0a37b75036529645a24b1b4c627c5e9ffaebcc98eb92370951b935cccb2ac3ca",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.37627508588188,
+        "qid": "truthfulqa_s00573",
+        "seed_sha256": "sha256:60539064298a421a47cb6ccd0b00fe474e5d212ac16ad522447c6e684e1c5bf9",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.859186412769386,
+        "qid": "truthfulqa_s00573",
+        "seed_sha256": "sha256:dbf3a4080316ff3949981a8dddf95a57c427ec03c3dfe784d858f7ed14a97061",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7594861789182018,
+        "qid": "truthfulqa_s00573",
+        "seed_sha256": "sha256:c26dafac37b9fa532e8aaf772d95ea4a56a6a1501d6a1006768698b1d1ba0197",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_05"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6860324413408365,
+        "qid": "truthfulqa_s00182",
+        "seed_sha256": "sha256:af9fd2738dce6ff1e2d8af8775eff70093fc3be764666c5494e676abd02a48e0",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8968934767733598,
+        "qid": "truthfulqa_s00182",
+        "seed_sha256": "sha256:e59acf96bcc0bf519865daf6c750ced20c49f54f6b5f05bf12dcd5c8755ae727",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.645263647979254,
+        "qid": "truthfulqa_s00182",
+        "seed_sha256": "sha256:a52fff995e5973103d3272297b70b347a443420122afc211e39f29443be1411a",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.18378098103632887,
+        "qid": "truthfulqa_s00306",
+        "seed_sha256": "sha256:2f0c45372d862ec328c557c24546610172ba2dce045827b42650f6bb9dfc194b",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6041157095035044,
+        "qid": "truthfulqa_s00306",
+        "seed_sha256": "sha256:9aa753bf514053ea8ecc9d0e666005cc89453b61d4ebae40c8db4344b03f5ec9",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.47297792111781095,
+        "qid": "truthfulqa_s00306",
+        "seed_sha256": "sha256:791514beee5a5217a8205ea6c287e277ca2c6966f2e0481b1ebed9fedce22c80",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.46146555163756836,
+        "qid": "triviaqa_s01831",
+        "seed_sha256": "sha256:76229b3c839293d2555595e8061103abc16e7b0d76ee33aaedd800d20eb6bb8a",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9357906846496723,
+        "qid": "triviaqa_s01831",
+        "seed_sha256": "sha256:ef8ffa7278c75a02a34094e3bdcda4aa2d589c7fefec37a437bb1a22fc90d6e3",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.010143068938501547,
+        "qid": "triviaqa_s01831",
+        "seed_sha256": "sha256:0298bc755f374d2bfde559a1c696aaa51f6f0354151479d5cf14a2d1d30a95b7",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8169522652575711,
+        "qid": "triviaqa_s00540",
+        "seed_sha256": "sha256:d123c89daca47d3de12db3a2d28a320f1d5e160e87d9be8c6f45e0fadee340de",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8208217693613955,
+        "qid": "triviaqa_s00540",
+        "seed_sha256": "sha256:d221601f408643dac0512e52ca4aa14fcda7677a02037f3a64d5abb93aeb3f45",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8391115194449213,
+        "qid": "triviaqa_s00540",
+        "seed_sha256": "sha256:d6d00335b67a66fc8aa937dbb69f14e5bf2db4e9d7681c528743154a18f5d2b1",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9393554516262469,
+        "qid": "truthfulqa_s00292",
+        "seed_sha256": "sha256:f07999500dd598ceab3d88964c313520066319f0f9da76f0a434548c36d554e1",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.33538560717884114,
+        "qid": "truthfulqa_s00292",
+        "seed_sha256": "sha256:55dbd4c661d989cc077b221b7c62d6a61f8dc61eb26663602082ee3d86f8d802",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.11635770227685367,
+        "qid": "truthfulqa_s00292",
+        "seed_sha256": "sha256:1dc99e4deab2d550646a31777bfe6441b7d318d7593e14234f5b99d43e49574f",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_06"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7498909382750986,
+        "qid": "triviaqa_s00557",
+        "seed_sha256": "sha256:bff8da3f755354283cf633e5724af192f9b72b610e93f31b034cac21e360b873",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5498260325531368,
+        "qid": "triviaqa_s00557",
+        "seed_sha256": "sha256:8cc1661c4e1e90b13fce00462f471b7a704bec411b02e46eb653b7a66c67181b",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.06664487433370542,
+        "qid": "triviaqa_s00557",
+        "seed_sha256": "sha256:110fa373b594540cfc0aa1d19d335e2fc39d61dd955b4ee1c55dc840111de318",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.27439242516504503,
+        "qid": "truthfulqa_s00576",
+        "seed_sha256": "sha256:463e94fc5a9f764b1ea59553bcaab5141a55721b4d9cdacfbb6d9892d232da21",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.27418801522174596,
+        "qid": "truthfulqa_s00576",
+        "seed_sha256": "sha256:46312f8e5521f12319fc57276324847066899a8950e8138a9ca51e520ad9d177",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8173006404560674,
+        "qid": "truthfulqa_s00576",
+        "seed_sha256": "sha256:d13a9d61c237d3ab1d07dc156a7ce5275773f922bb320fbec463d1ed3b1a4780",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9852913342894862,
+        "qid": "truthfulqa_s00628",
+        "seed_sha256": "sha256:fc3c0d89ce38532779c467cd9d14674f7b9ed2f6136d6278f4d05a95d2b09554",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.21840914880001025,
+        "qid": "truthfulqa_s00628",
+        "seed_sha256": "sha256:37e9a9773e4516a5467bcbdcf532ce942886e01527a113ccefd7f31b0228e06a",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7326089177845787,
+        "qid": "truthfulqa_s00628",
+        "seed_sha256": "sha256:bb8c420ea4893359581cdcfd362aeb30d69ba59cb737bfaea3a73b186eadf8bb",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6278611974189627,
+        "qid": "hotpotqa_s00564",
+        "seed_sha256": "sha256:a0bb82ed5783223637c6dda0272eebd4b3f4b331d36d866f6a1032b041917193",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.29177541691053394,
+        "qid": "hotpotqa_s00564",
+        "seed_sha256": "sha256:4ab1cb3168527aaff1217fffdf35395bda2665e8e8c47e97db088e4587266dea",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.20234787912692406,
+        "qid": "hotpotqa_s00564",
+        "seed_sha256": "sha256:33cd121343dd96d96954470ee665cdf4e9769d73ffe174881dfbac57622c91d4",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6030974324835934,
+        "qid": "hotpotqa_s01173",
+        "seed_sha256": "sha256:9a6497e4d18fe29913e8614da9eecf496e5c809cf095a32914f593e7fbb83f41",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7975592810318457,
+        "qid": "hotpotqa_s01173",
+        "seed_sha256": "sha256:cc2cd854a72e4d5ce582fb7758785e92c1f478bf7599a0d5933139fb98980132",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.3607714054499152,
+        "qid": "hotpotqa_s01173",
+        "seed_sha256": "sha256:5c5b83cbbd4585ea0cf21f03de42c9a17954239fa4556b87e164939feb087818",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_07"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.9820198395105975,
+        "qid": "hotpotqa_s01852",
+        "seed_sha256": "sha256:fb65a6f6b89f8d9b4a72ba538c617c040f858c687c781721fc2b86a17f9ca91a",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7060149036240178,
+        "qid": "hotpotqa_s01852",
+        "seed_sha256": "sha256:b4bd64898dc272bf0ade804d1184a627034d73c477ab675dab032566c5c3fb90",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.00242054049749367,
+        "qid": "hotpotqa_s01852",
+        "seed_sha256": "sha256:009ea1ee467f3b00ef25d6796709dc32201b3925f5b60ad775ee52790e412ec1",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.030894152646638872,
+        "qid": "hotpotqa_s00894",
+        "seed_sha256": "sha256:07e8addf414420c044aa5c1ab552bfc845b0916921b76909426e13daf00a7613",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.44994869047669817,
+        "qid": "hotpotqa_s00894",
+        "seed_sha256": "sha256:732fd65e79b6c7e03ea8841e8ff5cd0975025f0abfa542085b48e8bb02ddcf50",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.2380215260914611,
+        "qid": "hotpotqa_s00894",
+        "seed_sha256": "sha256:3ceefa8e4e8ccfd5ddfc881818268356c4be0a1c39a713738e066d1654e2a10a",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5740435225946268,
+        "qid": "hotpotqa_s00382",
+        "seed_sha256": "sha256:92f4842c06497ff977107f71b87722a4c1f63ffe9e7285e1206ad2f03200d3c0",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.19692096256242175,
+        "qid": "hotpotqa_s00382",
+        "seed_sha256": "sha256:326969861a39a05a4262b52d7a273ac3c22ba103e75d374ffac30ebdac5e7bcc",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8958871620361671,
+        "qid": "hotpotqa_s00382",
+        "seed_sha256": "sha256:e558dc6dda01db3ae7a0f3269c7a57d348e92030956114c64d32c2886ca34c04",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.2227446174328453,
+        "qid": "hotpotqa_s01126",
+        "seed_sha256": "sha256:3905ca8f3bee1b869a41e8f6649306b1c6a4e7d31dd9ecd3444e1df84f8de9ec",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.15221402355933208,
+        "qid": "hotpotqa_s01126",
+        "seed_sha256": "sha256:26f77f8d2e0e3e953705198d921a4c57fc0e3965c5318bd157413613fae2ebc8",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.09832559321318815,
+        "qid": "hotpotqa_s01126",
+        "seed_sha256": "sha256:192bddb735df91ab59cdd9777ba875fae594584963bc7ed6cbe9a3bd12a8af04",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.8418834764209142,
+        "qid": "triviaqa_s00826",
+        "seed_sha256": "sha256:d785acee4546efc15e4b0f60954cbb0bfd4281f94b9f7402b199c590a7a51c29",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.7150614035366384,
+        "qid": "triviaqa_s00826",
+        "seed_sha256": "sha256:b70e439ed25c455cbee6ddda814b33bc050b627415aca2a548412dc35318fb9e",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.2307072795881496,
+        "qid": "triviaqa_s00826",
+        "seed_sha256": "sha256:3b0fa1dcc7bd35cb69f63cf19dfbe5967b0c8997032a594e2a5e7d420eaf1b88",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_08"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.29906093555181357,
+        "qid": "hotpotqa_s01823",
+        "seed_sha256": "sha256:4c8f41e9b4c9b99a102e23c040bfcbc83acc363b9f42f8b9da338ab32b32ac3e",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.6402551406459427,
+        "qid": "hotpotqa_s01823",
+        "seed_sha256": "sha256:a3e7c2ca2b92810ca3ee879c81837b065f415fb55d6b0a368f079fca3a8ba15b",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.638851071329368,
+        "qid": "hotpotqa_s01823",
+        "seed_sha256": "sha256:a38bbe6a5fcb7ceac5c209844296b25befd4bcd5336b742f7b2e9efa858cacff",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.1367701677521196,
+        "qid": "truthfulqa_s00000",
+        "seed_sha256": "sha256:23035ea590545f0e63628d6c46526179b7edb536a38bdb3295b6ca783ca1062d",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.023902602918319832,
+        "qid": "truthfulqa_s00000",
+        "seed_sha256": "sha256:061e7b21d2ce22186b90ff1f60e5ef99bcb4f630477b816e66ff9977d177089b",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.004758502145156291,
+        "qid": "truthfulqa_s00000",
+        "seed_sha256": "sha256:0137da6b176579472bacc2f50caa0a9c10d98d6fa9b5ec57551b82fefe1ba528",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.27603479453971713,
+        "qid": "triviaqa_s01571",
+        "seed_sha256": "sha256:46aa375f1b2d9927d10045128297bbe6f77d1e05d639e6192e42a4b8b6c17511",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.014150555950320016,
+        "qid": "triviaqa_s01571",
+        "seed_sha256": "sha256:039f5eef06df29436898fdaedcacd4286b47a4545629f96bf2dcbdfce7fc267c",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.24738590417268133,
+        "qid": "triviaqa_s01571",
+        "seed_sha256": "sha256:3f54aebfe9be0e6172f16dec7daaf24e25bcedc31bdb8afb975f8e51daf3d1f4",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.4410347437379344,
+        "qid": "hotpotqa_s01678",
+        "seed_sha256": "sha256:70e7a728c111369de3e13e027703bed6d5881750fc9c17357fb01136ee814854",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.4050415932913304,
+        "qid": "hotpotqa_s01678",
+        "seed_sha256": "sha256:67b0ce4cb4bc3616864071e03987b8423a86487412ee5a09942c05669e12456c",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.474450517932591,
+        "qid": "hotpotqa_s01678",
+        "seed_sha256": "sha256:797596d2173abb4516e8a1691bbb28b83d8cfc76c03b98841ace6a8b93de8efb",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.49994418926075723,
+        "qid": "truthfulqa_s00245",
+        "seed_sha256": "sha256:7ffc57a6b33f6e6bf728ec160709c77102c2831963bca9fe03ce2c49a573244a",
+        "sibling": "llama3-8b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": false,
+        "audit_alpha_0_25": false,
+        "audit_u": 0.5827618942902383,
+        "qid": "truthfulqa_s00245",
+        "seed_sha256": "sha256:952fe22d54e2990ffcf211a161fc0df69d0b8c75967674b1a957af8607651ede",
+        "sibling": "gemma-2-9b",
+        "stream_id": "stream_09"
+      },
+      {
+        "audit_alpha_0_10": true,
+        "audit_alpha_0_25": true,
+        "audit_u": 0.045139974013188276,
+        "qid": "truthfulqa_s00245",
+        "seed_sha256": "sha256:0b8e4b182101c942c87a9caed68961bb6e2bef12095516a4ed062075556998c3",
+        "sibling": "mistral-7b",
+        "stream_id": "stream_09"
+      }
+    ],
+    "audit_seeds_sha256": "sha256:1b251448bda0c3be97c5d2f464b9a404948db768d9bbc1aafe0afb151686ace9",
+    "escalation_interval": [
+      0.1,
+      0.9
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/selective_deferral_protocol.json",
+    "regimes": [
+      "full_release",
+      "escalation_only",
+      "audited_deferral"
+    ],
+    "seed_prefix": "v785-selective-deferral",
+    "sha256": "sha256:31d8bcafc4b6f20cca8da11e1e390515055ec8933c2face8cc9d3d19073bd1ed",
+    "version": "v785-selective-deferral-v1"
+  },
+  "spline_support_protocol_reference": {
+    "basis_columns": 57,
+    "boundary_thresholds": {
+      "boundary_basis_mass_fraction_threshold": 0.1,
+      "clip_abs_threshold": 1.0,
+      "clipped_coordinate_count_threshold": 1,
+      "interior_coord_bound": 0.5
+    },
+    "knot_vector": [
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "labels_read": false,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089520359238276/spline_support_protocol.json",
+    "sha256": "sha256:4304eeb08ee4e7789892ac6eadc788641fb56b03da4176d06767ba60f5f8bd27",
+    "strata": [
+      "interior_dense",
+      "boundary_sparse_or_clipped"
+    ],
+    "version": "v785-spline-support-v1"
+  },
+  "statement_percent": 100,
+  "validation_reserve_s": 1200
+}

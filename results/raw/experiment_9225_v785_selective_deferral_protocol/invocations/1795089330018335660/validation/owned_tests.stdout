@@ -1,0 +1,74 @@
+.F.....                                                                  [100%]
+=================================== FAILURES ===================================
+_______ test_observation_regimes_horvitz_thompson_and_unidentifiability ________
+
+    def test_observation_regimes_horvitz_thompson_and_unidentifiability():
+        """SCENARIO-REPORT-9225-V785: IPW unbiasedness for alpha>0, naive selection bias, and alpha=0 unidentifiability."""
+        assert d.typed_decision(0.1) == "accept"
+        assert d.typed_decision(0.5) == "escalate"
+        assert d.typed_decision(0.9) == "reject"
+        assert d.observation_propensity(0.05, "full_release") == 1.0
+        assert d.observation_propensity(0.05, "escalation_only") == 0.0
+        assert d.observation_propensity(0.50, "escalation_only") == 1.0
+        assert d.observation_propensity(0.05, "audited_deferral", 0.10) == 0.10
+        assert d.observation_propensity(0.95, "audited_deferral", 0.25) == 0.25
+        assert d.observation_propensity(0.50, "audited_deferral", 0.10) == 1.0
+    
+        obs_hit = d.observe_feedback(0.05, "audited_deferral", alpha=0.25, audit_u=0.10)
+        assert obs_hit["observed"] is True and math.isclose(
+            obs_hit["inverse_propensity_weight"], 4.0, abs_tol=1e-15
+        )
+        obs_miss = d.observe_feedback(0.05, "audited_deferral", alpha=0.10, audit_u=0.20)
+        assert obs_miss["observed"] is False and obs_miss["inverse_propensity_weight"] == 0.0
+        obs_esc_miss = d.observe_feedback(0.05, "escalation_only")
+        assert obs_esc_miss["observed"] is False and obs_esc_miss["inverse_propensity_weight"] is None
+    
+        # Synthetic calibrated stream with severe accepted-region drift vs clean accepted region.
+        panel = []
+        for idx in range(60):
+            if idx < 20:
+                p, y = 0.05, int(idx % 4 == 0)
+            elif idx < 40:
+                p, y = 0.50, int(idx % 2 == 0)
+            else:
+                p, y = 0.95, int(idx % 4 != 0)
+            panel.append(
+                dict(
+                    unit_id=f"u_{idx:02d}",
+                    stream_id=f"stream_{idx // 6:02d}",
+                    qid=f"q_{idx // 3:02d}",
+                    sibling=d.GENERATORS[idx % 3],
+                    p=p,
+                    y=y,
+                    weight=1.0 / 60.0,
+                )
+            )
+        full = d.estimate_selective_risk(panel, "full_release")
+        assert full["identifiability_status"] == "identifiable"
+        assert math.isclose(full["ipw_estimate"], full["true_fixture_risk"], abs_tol=1e-15)
+        assert math.isclose(full["naive_estimate"], full["true_fixture_risk"], abs_tol=1e-15)
+        assert math.isclose(
+            full["ipw_accepted_error_conditional"],
+            full["true_accepted_error_conditional"],
+            abs_tol=1e-15,
+        )
+    
+        esc = d.estimate_selective_risk(panel, "escalation_only")
+        assert esc["identifiability_status"] == "unidentifiable"
+        assert esc["accepted_drift_identifiable"] is False
+        assert esc["ipw_estimate"] is None
+        assert esc["ipw_accepted_error_conditional"] is None
+        assert esc["naive_accepted_error_conditional"] is None
+>       assert esc["naive_estimate"] > full["true_fixture_risk"] + 0.08
+E       assert 0.25 > (0.23500000000000001 + 0.08)
+
+tests/python/test_selective_deferral_9225.py:111: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_selective_deferral_9225.py::test_observation_regimes_horvitz_thompson_and_unidentifiability
+1 failed, 6 passed, 1 warning in 41.63s

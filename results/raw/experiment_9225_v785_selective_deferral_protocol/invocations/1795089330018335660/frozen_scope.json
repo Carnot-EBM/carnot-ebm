@@ -1,0 +1,204 @@
+{
+  "code_test_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/selective_deferral_9225.py",
+      "sha256": "sha256:f5d382e1bd839705cffd65d66135d2ec232a75d1c4109b4739a80f89ed0a76e8"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/selective_deferral_runner_9225.py",
+      "sha256": "sha256:0a5ec1b5d917c0970efec3e87f09cb17c7f52208d574f9d929cb6a1bfb7180ae"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+      "sha256": "sha256:e51c3e22ebda74163bf1f85dbb1104866f180bf3b3ca53379252b978c3f54c47"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_selective_deferral_9225.py",
+      "sha256": "sha256:c60b3a0b067056747e8959cfe47033aab9bb59727d3b4591229344bb710b3a65"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/.coverage",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "owned_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "name": "direct_consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/selective_deferral_9225.py",
+        "python/carnot/reporting/selective_deferral_runner_9225.py",
+        "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py"
+      ],
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_selective_deferral_9225.py"
+      ],
+      "name": "spec_coverage"
+    }
+  ],
+  "coverage_config_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/coverage.ini",
+    "sha256": "sha256:24b7121a58aefd1b038ed0c55225e47db3757c4433bb2ceab4d30e6bd424ffee"
+  },
+  "e2e_scope": "E2E-018/021 private actual CLI success/refusal/tamper/cold replay in owned tests; E2E-020 not applicable: no learning or recovery changes",
+  "excluded_statements": 0,
+  "exclusions": [],
+  "frozen_ns": 389239784866265,
+  "hard_cap_s": 4800,
+  "measurement_cap_s": 3300,
+  "owned_paths": [
+    "python/carnot/reporting/selective_deferral_9225.py",
+    "python/carnot/reporting/selective_deferral_runner_9225.py",
+    "scripts/experiments/experiment_9225_v785_selective_deferral_protocol.py"
+  ],
+  "random_seed": 785225,
+  "required_check_names": [
+    "owned_tests",
+    "direct_consumers",
+    "ruff_check",
+    "ruff_format",
+    "strict_mypy",
+    "spec_coverage"
+  ],
+  "selective_deferral_protocol_reference": {
+    "alpha_grid": [
+      0.1,
+      0.25
+    ],
+    "audit_seed_count": 0,
+    "audit_seeds": [],
+    "audit_seeds_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "escalation_interval": [
+      0.1,
+      0.9
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/selective_deferral_protocol.json",
+    "regimes": [
+      "full_release",
+      "escalation_only",
+      "audited_deferral"
+    ],
+    "seed_prefix": "v785-selective-deferral",
+    "sha256": "sha256:31d8bcafc4b6f20cca8da11e1e390515055ec8933c2face8cc9d3d19073bd1ed",
+    "version": "v785-selective-deferral-v1"
+  },
+  "spline_support_protocol_reference": {
+    "basis_columns": 57,
+    "boundary_thresholds": {
+      "boundary_basis_mass_fraction_threshold": 0.1,
+      "clip_abs_threshold": 1.0,
+      "clipped_coordinate_count_threshold": 1,
+      "interior_coord_bound": 0.5
+    },
+    "knot_vector": [
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "labels_read": false,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9225_v785_selective_deferral_protocol/invocations/1795089330018335660/spline_support_protocol.json",
+    "sha256": "sha256:4304eeb08ee4e7789892ac6eadc788641fb56b03da4176d06767ba60f5f8bd27",
+    "strata": [
+      "interior_dense",
+      "boundary_sparse_or_clipped"
+    ],
+    "version": "v785-spline-support-v1"
+  },
+  "statement_percent": 100,
+  "validation_reserve_s": 1200
+}

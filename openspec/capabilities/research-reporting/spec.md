@@ -116889,3 +116889,57 @@ Historical shards SHALL run one at a time to avoid retained-root disk contention
 Large retained inputs SHALL authenticate existing private targets on every replay;
 digest caches SHALL invalidate on inode, size, mtime or ctime changes. The current
 artifact SHALL retain the requested run date, including 20261119.
+
+### REQ-REPORT-9225-V785: Selective-deferral feedback masks and spline-support calibration diagnostics
+
+Exp9225 SHALL independently authenticate original Exp9097 human authority (900 responses
+across 300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three siblings per
+question), Exp9126 static method receipt, Exp9132 online method receipt (`TRAIN100`
+initialization and ten five-qid streams), and Exp9211 qualified target-identifiability
+and affine label-ambiguity primary
+(`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`) directly
+through their immutable custody hashes without depending on Exp9222
+`contract_ready_score` or any GPU task. External source absence SHALL block with
+`blocked_no_run` and exact `gate_check_summary` operands.
+
+Exp9225 SHALL define and freeze three deterministic delayed-feedback observation regimes
+over the ten five-qid streams (50 stream qids / 150 sibling responses), seeded by
+`SHA256('v785-selective-deferral' + stream_id + qid + sibling)` before any model
+outcome: (a) `full_release` (original Exp9132 omniscient release, observation
+probability `pi=1.0`, preserved as sole primary protocol), (b) `escalation_only`
+(`pi=1.0` when sealed pre-release prediction satisfies `0.1 < p < 0.9`, else `pi=0.0`),
+and (c) `audited_deferral` at frozen `alpha in [0.10, 0.25]` (`pi=1.0` when
+`0.1 < p < 0.9`, else deterministic Bernoulli audit draw with probability `alpha`).
+Exp9225 SHALL implement exact Horvitz-Thompson inverse-propensity Brier and
+accepted-error estimators alongside naive observed-only estimators, and SHALL freeze a
+label-free cubic B-spline support-density classifier for the frozen Exp9132 57-column
+basis (`knots = [-1,-1,-1,-1,-0.5,0,0.5,1,1,1,1]` over seven standardized/clipped
+features in `[-1, 1]`) recording per-response clipped-coordinate count, boundary-basis
+mass fraction, and `interior_dense` versus `boundary_sparse_or_clipped` stratum
+membership using feature values only, never evaluator labels. It SHALL publish
+`results/experiment_9225_v785_selective_deferral_protocol.json` with
+`scientific_effect_measured=false`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9225-V785: Unbiased inverse-propensity risk, alpha=0 unidentifiability, and label-free spline strata
+
+When `alpha > 0`, Horvitz-Thompson inverse-propensity Brier and accepted-error
+estimators are unbiased over deterministic and Monte Carlo synthetic audit draws while
+naive observed-only Brier exhibits selection bias under calibrated non-uniform
+predictions. When `alpha == 0` (`escalation_only`), accepted-region drift is
+structurally unidentifiable from observed labels alone and is reported as
+`unidentifiable` rather than zero. On synthetic cubic B-spline basis fixtures, boundary
+clipping, constant-feature zero mapping, out-of-range test inputs, and monotone
+transformations preserve exact basis sum-of-unity and deterministic stratum assignment
+without reading evaluator labels.
+
+#### SCENARIO-REPORT-9225-V785-CONTROLS: Custody, rejection, tamper and private CLI controls
+
+Missing provenance, missing files, missing fields and observed zero remain distinct in
+`gate_check_summary`. Invalid probabilities, non-binary labels, invalid alpha values,
+non-positive weights, malformed feature dimensions and label-contaminated spline inputs
+raise explicit `ValueError` exceptions. Private outside-checkout CLI publication,
+refusal, tamper and cold replay without `PYTHONPATH` under E2E-018/021, scoped Ruff
+check/format, strict mypy, spec coverage, and 100 percent owned unit plus child
+statement coverage with zero exclusions qualify `selective_deferral_ready_score=1` and
+`spline_support_diagnostic_ready_score=1`.
