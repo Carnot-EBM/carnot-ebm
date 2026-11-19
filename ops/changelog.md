@@ -24034,3 +24034,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-18: Exp9211: Qualify human target identifiability and exact label-ambiguity bounds (⚠️ Research Finding) — honest_verdict=complete_null_v784_label_ambiguity; results/experiment_9211_v784_label_ambiguity.json
 - 2026-11-18: Exp9221: Reconcile fourteen outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9221_v784_capstone.json
 - 2026-11-19: Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks (⚠️ Blocked) — honest_verdict=complete_blocked_v785_contract; results/experiment_9222_v785_contract.json
+- 2026-11-19: Exp9225: Qualify selective-deferral feedback masks and spline-support calibration diagnostics (⚠️ Research Finding) — honest_verdict=complete_null_v785_selective_deferral_protocol; results/experiment_9225_v785_selective_deferral_protocol.json
