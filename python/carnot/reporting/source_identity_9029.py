@@ -38,7 +38,9 @@ MANIFEST_PIN = "sha256:f4c8569364fe220a2ee8c17ad22a8d8664a9aa051b5251c4f1bf4f717
 UPSTREAM = ROOT / "results/experiment_9015_v770_human_disagreement_source.json"
 UPSTREAM_PIN = "sha256:94fefec6e66dbbca4974fbfdab9f5c470bfc515a62d1d0314f1793169872d96a"
 MODEL_SPECS: list[Json] = []
-USER_AGENT = "CarnotSourceIdentity/9029 (https://github.com/ianblenke/carnot; metadata research)"
+USER_AGENT = (
+    "CarnotSourceIdentity/9029 (https://github.com/Carnot-EBM/carnot-ebm; metadata research)"
+)
 Fetch = Callable[[str, float, int], tuple[int, dict[str, str], bytes, str | None]]
 
 

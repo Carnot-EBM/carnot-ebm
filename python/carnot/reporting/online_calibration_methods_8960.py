@@ -285,9 +285,7 @@ def development(raw: Path) -> Json:
 
 def checksum(value: Json) -> str:
     """Bind claims and randomness while leaving the digest outside its own input."""
-    return cast(
-        str, canonical_hash({k: v for k, v in value.items() if k != "reproducibility_checksum"})
-    )
+    return canonical_hash({k: v for k, v in value.items() if k != "reproducibility_checksum"})
 
 
 def qualified(validation: Json) -> bool:
