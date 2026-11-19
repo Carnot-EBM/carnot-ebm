@@ -767,3 +767,17 @@ These mechanisms require no game-source access or per-game hardcoding. Results w
 
 Kaggle’s live table was unreadable; current contender identities were cross-checked against [standings mirrors](https://clist.by/standings/arc-prize-2026-arc-agi-3-general-knowledge-and-reasoning-artificial-intelligence-custom-metric-66453356/).
 
+## 2026-11-18 14:33 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose parser diagnostics.** Compares the agent’s own parsed state with raw board changes. It flags both “state unchanged, but pixels changed” and “state changed, but board unchanged,” exposing missed objects or parser contamination. [Implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/act_client.py#L2199).  
+  **POSSIBLE CARNOT LEVER:** Add parser-consistency feedback alongside transition verification, distinguishing faulty perception from faulty mechanics.
+
+- **Tufa Labs — (b), general-purpose compaction ordering.** Rebuilds compacted conversations chronologically: retained observations and calls precede the summary. Previously, an older turn-opening observation placed after the summary could be interpreted as new information. The change is enabled by default and has explicit ordering tests; no isolated gameplay gain is established. [Design](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/design.md), [tests](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/tests/test_seal_chronological_restart.py).  
+  **POSSIBLE CARNOT LEVER:** Test chronological compaction so stale observations cannot supersede the latest verified conclusions.
+
+- **Team Turducken — (b), general-purpose training experiments with negative results.** Tried training on successful “burst” moments, branching rollouts from saved states, tree rollouts, evolution strategies and GRPO. None beat its base model on Kaggle. Some training-game gains failed to transfer; merged adapters also lost much of their effect in INT8 layers. This identifies a concrete deployment failure beyond unsuccessful RL alone. [Writeup, “RL”](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken).
+
+- **xz — (b), general-purpose architecture experiment with a negative result.** Repeating a middle-layer block without training degraded tool use: an early public-game comparison produced **28 malformed calls versus 0–1**, and **16 versus 44 cleared levels** in the first 37 minutes. [Writeup, §3](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#3-what-else-we-tried).
+
+These mechanisms require neither game-source reading nor fixed per-game rules. Results were not independently reproduced; complete submissions remain unaudited for exploitation.
+

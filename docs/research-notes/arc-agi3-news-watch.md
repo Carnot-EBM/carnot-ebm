@@ -936,3 +936,13 @@ Live Kaggle standings and the complete discussion feed could not be verified; Tu
 
 Live Kaggle standings and the full discussion feed remained inaccessible; Tufa’s placement is team-reported.
 
+## 2026-11-18 14:11 UTC -- NEW
+
+- **November 17 — GPT-6.2 Astra:** Official ARC-AGI-3 semi-private scores reached **100.0% Provider Adapter (XHigh)** and **70.3% Standard (Max)**. [Official results](https://arcprize.org/results/openai-gpt-6-2-astra)
+
+- **November 17 — GPT-6.2 Sol:** Official semi-private scores reached **98.2% Provider Adapter (Max)** and **54.9% Standard (Max)**. Published evaluations have partial coverage; scores use full dataset denominators. [Official results](https://arcprize.org/results/openai-gpt-6-2-sol)
+
+- **November 9 — Team Turducken:** Published its final solution writeup, reporting **fifth place publicly at 56.02%**. [Team writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-5th-stuffing-the-turducken)
+
+Live Kaggle standings and the full discussion feed remained inaccessible; Turducken’s placement is team-reported.
+
