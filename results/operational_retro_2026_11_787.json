@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.787",
+  "generated_at": "2026-11-20T09:07:31Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.5,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9241: Qualify split V782-V786 consumer replay and bind fourteen V787 tasks",
+      "duration_minutes": 0.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9244: Qualify cluster-valid conformal risk, CA-OCRC tracking and Mycelium pro",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.787 completed 2 experiments (0 compute-bound, 2 synthesis-only) in 0.5 wall-time minutes (0 minutes / 0.0 hours, averaging 0 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, live git-log path found 0 commits). Both completed experiments were synthesis-only (compute_bound: false): Exp9241: Qualify split V782-V786 consumer replay and bind fourteen V787 tasks (0.47 minutes / 0min) and Exp9244: Qualify cluster-valid conformal risk, CA-OCRC tracking and Mycelium pro (0.01 minutes / 0min). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry).",
+  "bottlenecks_identified": [
+    "Synthesis-only Exp9241 ('Qualify split V782-V786 consumer replay and bind fourteen V787 tasks', compute_bound: false) accounted for 0.47 minutes (0min) and synthesis-only Exp9244 ('Qualify cluster-valid conformal risk, CA-OCRC tracking and Mycelium pro', compute_bound: false) accounted for 0.01 minutes (0min) of the 0.5-minute (0 minutes / 0.0 hours) milestone wall time; 0 compute-bound experiments ran (compute_bound_experiments_count: 0, so no data is available this milestone for compute-bound experiment durations, GPU idle is not flagged as a bottleneck because gpu_idle_on_compute_bound_tasks is null, and DualGPURunner did not apply).",
+    "The live git-log timing path found 0 commits, triggering disk-mtime timing reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 2 completed synthesis-only experiments.",
+    "The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state)."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache split V782-V786 consumer replay artifacts and fourteen-task V787 contract bindings in synthesis-only Exp9241 (0.47 minutes / 0min) alongside cluster-valid conformal risk, CA-OCRC tracking, and Mycelium qualification inputs in synthesis-only Exp9244 (0.01 minutes / 0min).",
+    "Write direct per-experiment start and end timestamps from the conductor so operational retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Restore GPU monitor availability prior to milestones executing compute-bound (GGUF/CUDA/requires_gpu) tasks, while keeping DualGPURunner scoped exclusively to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache split V782-V786 consumer replay receipts and fourteen-task V787 bindings for synthesis-only Exp9241 (0.47 minutes / 0min) alongside Exp9244 (0.01 minutes / 0min).",
+    "Record direct per-experiment execution timestamps in the conductor to avoid retro_timing_fallback when live git-log finds 0 commits.",
+    "Restore GPU monitor telemetry ahead of future compute-bound experiments."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 2 completed experiments in milestone 2026.11.787 were synthesis-only (0 compute-bound) across 0.5 wall-time minutes (0 minutes / 0.0 hours, averaging 0 minutes per experiment), led by Exp9241 at 0.47 minutes (0min) and Exp9244 at 0.01 minutes (0min) under disk-mtime reconstruction (0 commits in live git-log). With 0 compute-bound tasks executed and the GPU monitor not available, gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable."
+}
