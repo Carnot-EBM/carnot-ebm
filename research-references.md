@@ -58024,3 +58024,138 @@ V786 (`2026.11.786`, `Exp9227`–`Exp9240`) executed **1 task** (`Exp9240`,
    (`Exp9243`), frozen Qwen3.8-27B forward shards (`Exp9245`–`Exp9249`), static
    and continuous delayed-learning experiments (`Exp9250`–`Exp9252`), complete
    service cost (`Exp9253`), and unconditional capstone (`Exp9254`).
+
+
+---
+
+## 2026-11-20 V788 Planning Scan (Milestone 2026.11.788)
+
+This scan checked all eight primary arXiv topics and all six secondary channels
+on 2026-11-20 before designing Milestone `2026.11.788` (`Exp9255`–`Exp9268`).
+
+### New primary arXiv and conference findings
+
+- **KANELÉ — Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation**
+  (Hoang, Gupta, Harris & Loncar, Dec 2025 / FPGA '26 Best Paper,
+  [arXiv:2512.12850](https://arxiv.org/abs/2512.12850),
+  [Duchstf/KANELE](https://github.com/Duchstf/KANELE)):
+  Discretizes 1D univariate spline activations directly into FPGA lookup tables
+  (LUTs) with co-optimized quantization and pruning, reporting large speedups
+  over prior KAN-on-FPGA designs.
+  **Carnot use:** Record as a direct future hardware operation-mapping lead for
+  Carnot's 57-column cubic B-spline energy head in `Exp9267` (`complete-cost`);
+  do not claim local FPGA speedup until measured hardware runs exist.
+- **EBFT — Matching Features, Not Tokens: Energy-Based Fine-Tuning of Language Models**
+  (Jelassi et al., Mar 2026, [arXiv:2603.12248](https://arxiv.org/abs/2603.12248)):
+  Optimizes sequence-level completions via strided block-parallel sampling and
+  feature-matching in the activation space of a frozen model without a separate
+  task-specific reward model.
+  **Carnot use:** Reference lead for future representation-level energy scoring;
+  keep frozen `unsloth/Qwen3.8-27B-GGUF` weights unchanged per `CLAUDE.md`.
+- **Energy-Based Policy Orchestration (EPO)**
+  (Nov 2026, [arXiv:2611.02546](https://arxiv.org/abs/2611.02546), citing EBT
+  `2507.02092`):
+  Learns modular composite energies to arbitrate discrete control policies and
+  refine actions at runtime while respecting physical feasibility constraints.
+  **Carnot use:** Architectural inspiration for `Exp9258` (`victris-energy-bot`),
+  which scores tactical Victris Arena actions (`move`, `dash`, `ranged`,
+  `frostburst`, `repulsor`) with a small `GibbsModel`-scale state-energy head
+  inside the strict 1-second tick budget.
+- **Enoki — Efficient Multi-Level Hallucination Detection**
+  (Rykov et al., Sep 2026, Hugging Face Papers / arXiv):
+  Extracts text-anchored relational facts via OpenIE to link claim-level
+  verification with span-level localization without a separate alignment step.
+  **Carnot use:** Future granularity extension motivated by `Exp9244`'s
+  Mycelium audit (`answer_level_present=900`, `span_level_present=0` on
+  `Exp9097`); do not invent span labels for `Exp9097`.
+- **Paraphrase-Aware Conformal Prediction for LLM Uncertainty Quantification**
+  (Xin et al., Oct 2026, OpenReview / Hugging Face Papers / arXiv):
+  Uses paraphrase-aggregated nonconformity scores so conformal sets stay stable
+  under meaning-preserving prompt rewrites.
+  **Carnot use:** Complements `Exp9211` re-elicitation scope and `Exp9244`
+  qid-cluster conformal bounds; record as a future sensitivity lead once
+  whole-answer forward scores exist on `Exp9097`.
+
+### Primary topic coverage and planning decisions
+
+| Topic | Checked primary sources | V788 planning decision |
+|---|---|---|
+| EBM verification and reasoning | [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871); [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977); [EPO, 2611.02546](https://arxiv.org/abs/2611.02546); [EBFT, 2603.12248](https://arxiv.org/abs/2603.12248) | Complete the frozen Qwen3.8-27B five-arm verification pipeline (`Exp9259`–`Exp9266`) and apply `GibbsModel`-scale tactical energy scoring to Victris Arena (`Exp9258`). |
+| Neural constraint satisfaction | [LNS + Neural Constraints, 2603.20801](https://arxiv.org/abs/2603.20801); [CRAM, 2611.17309](https://arxiv.org/abs/2611.17309) | Keep open-domain factual verification on `Exp9097` separate from synthetic CSP solvers; ARC stays opportunistic. |
+| Ising model applications in ML | [1M p-bit FPGA, 2606.25313](https://arxiv.org/abs/2606.25313); [CRAM, 2611.17309](https://arxiv.org/abs/2611.17309) | Map measured whole-service component fractions in `Exp9267` before making any Ising or FPGA speedup claim. |
+| Hallucination detection and mitigation | [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671); [HalluField, 2509.10753](https://arxiv.org/abs/2509.10753); [Mycelium, 2610.33608](https://arxiv.org/abs/2610.33608); Enoki (Sep 2026) | Consume qualified `Exp9244` Mycelium provenance ledger (`900` answer-level rows, `0` span-level) in `Exp9266` without inventing span labels. |
+| Kolmogorov-Arnold Networks | [KANELÉ, 2512.12850](https://arxiv.org/abs/2512.12850); [KORE, 2606.23575](https://arxiv.org/abs/2606.23575); [On-Chip Spline Locality, 2602.02056](https://arxiv.org/abs/2602.02056) | Keep frozen 57-column cubic B-spline basis in `Exp9265`; record KANELÉ LUT mapping as a future spline-head hardware lead in `Exp9267`. |
+| Energy-guided and constrained generation | [EBFT, 2603.12248](https://arxiv.org/abs/2603.12248); [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061); [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | Keep generation steering deferred until the forward-only verifier beats matched probability and donor controls. |
+| Hardware-accelerated sampling | [KANELÉ, 2512.12850](https://arxiv.org/abs/2512.12850); [1M p-bit FPGA, 2606.25313](https://arxiv.org/abs/2606.25313); [CPC, 2610.31339](https://arxiv.org/abs/2610.31339); [Anechoic Onsager, 2610.13368](https://arxiv.org/abs/2610.13368) | Time complete raw-text and durable adaptation services in `Exp9267`; preserve KV260 `k_max<=5`, PolarFire CPU, and GateMate `0xffffffff` limits. |
+| Continual and online learning | [CA-OCRC, 2611.17059](https://arxiv.org/abs/2611.17059); [Corrupted OCP, 2605.20515](https://arxiv.org/abs/2605.20515); [OCPQ, 2608.07139](https://arxiv.org/abs/2608.07139); Paraphrase-Aware CP (Oct 2026) | Consume qualified `Exp9244` CA-OCRC tracking masks alongside `Exp9225` selective-deferral masks as non-interfering shadow streams in `Exp9265` and descriptive audits in `Exp9266`; add Victris offline RSI loop in `Exp9258`. |
+
+### Secondary channels and retrieval limits
+
+- **Semantic Scholar:** Both live `/citations` API queries returned `HTTP 200`
+  on 2026-11-20:
+  - `ARXIV:2507.02092` (EBT): **47** citing records (`next=None`, latest
+    `2611.23053` SPICE, `2611.08989` LEF-JEPA, `2611.08977` Energy-Based
+    Reasoners, `2611.02546` EPO, `2610.39073` Certified Access, `2610.25474`
+    P(Yes)).
+  - `ARXIV:2512.15605` (ARM–EBM): **11** citing records (`next=None`, latest
+    `2611.16736`, `2610.02887`, `2609.35362`, `2607.02154`, `2606.03089`).
+- **arXiv export API:** Direct `export.arxiv.org` query timed out during the
+  2026-11-20 check; web-indexed arXiv records supplied exact paper IDs above.
+- **OpenReview:** Checked ICLR/NeurIPS 2026 EBM verification, Semantic Energy,
+  and Paraphrase-Aware Conformal Prediction submissions. No unverified review
+  scores imported.
+- **Hugging Face papers:** Checked late-2026 verification entries (*Mycelium*
+  `2610.33608`, *Enoki*, *HalluScoring 2026*, *Unifying Conformal Language
+  Tasks with In-Context Ensembles*, paraphrase-aware conformal scoring).
+- **GitHub:** Checked active EBM, KAN, and CSP repos (`Duchstf/KANELE`,
+  `KindXiaoming/pykan`, `yataobian/awesome-ebm`, `datamllab/OpenEBFM`,
+  `BarSGuy/KAN-Graph-Metanetwork`). No live GitHub Trending rank asserted.
+- **Extropic:** Checked `extropic.ai/writing` TSU, `XTR-0`, and `THRML`/`Torx`/
+  `Thermalizers` descriptions. Vendor figures remain projections, not local runs.
+- **Logical Intelligence:** Checked `logicalintelligence.com` Kona 1.0 EBRM
+  descriptions (token-free constraint scoring). No public code or local
+  benchmark exists.
+
+### Local V787 evidence that governs V788
+
+V787 (`2026.11.787`) queued **7 tasks** (`Exp9241`–`Exp9247`) in
+`research-roadmap.yaml` (`sha256:37442df99c095e1288d96f8e84e0f425838f4f8042d328d6f15b3a00ec78eec2`),
+while `openspec/change-proposals/research-roadmap-vNEXT.md`
+(`sha256:27e73f05af455de93477bd14f74a6e9c238724a6a5959cc66f33278aeaaea23a`)
+listed 14 tasks (`Exp9241`–`Exp9254`) in its table and omitted the embedded YAML
+block. Two tasks ran and five skipped at conductor pre-gates:
+
+1. **`Exp9244` qualified all three conformal/CA-OCRC/provenance protocols:**
+   `results/experiment_9244_v787_conformal_risk_protocol.json`
+   (`sha256:36890bc36e8a84c4d91b8d8bff2d60698de061938f591dafbf7845c38fe2e693`,
+   `honest_verdict=complete_null_v787_conformal_risk_protocol`,
+   `required_checks_passed=true`, `conformal_risk_ready_score=1`,
+   `ca_ocrc_ready_score=1`, `provenance_audit_ready_score=1`, 129/129 gate checks
+   passed, 88 tests passed in 29.11s). This frees the independent Phase 1 CPU
+   slot in V788 for the new mandatory Victris Arena Self-Improvement Floor
+   (`Exp9258`, per `CLAUDE.md` 2026-11-19 directive).
+2. **`Exp9241` passed all 6 consumer shards but blocked on TWO specific defects:**
+   `results/experiment_9241_v787_contract.json`
+   (`sha256:32cdfef7df5fb0b829ef9eba8d68a44a0e6b7947afbd402d24129dae27a92f5b`,
+   `honest_verdict=complete_blocked_v787_contract`) passed `owned_tests`
+   (1119.9s), all six consumer shards (`core` 211.1s, `v782` 504.6s, `v783`
+   467.7s, `v784` 798.0s, `v785` 535.9s, `v786` 283.5s), lint, mypy, spec
+   coverage, and 100% owned statement coverage. It failed on two exact bugs:
+   - **Planner contract bug:** `research-roadmap.yaml` had 7 tasks instead of 14
+     and `research-roadmap-vNEXT.md` had no fenced YAML block under
+     `## Full machine-readable contract` (`task_count` observed `[7, 0, 14]`).
+   - **Coverage-list mismatch in `v787_contract.py` lines 238 and 290:**
+     `work["scope"]["owned_changed_paths"]` listed 6 files
+     (`[*e.OWNED, *MODIFIED_MODULES]`, including `v781_capstone.py`), while
+     `legacy.lifecycle.measured(...)` measured only `e.OWNED` (5 files).
+     `receipts_pass` compared both lists and returned `False`, forcing
+     `required_checks_passed=false` and `replay_authority_ready_score=0`.
+3. **V788 fixes both defects mechanically:**
+   V788 preserves V787's design and active queue byte-for-byte, generates
+   `research-roadmap-next.yaml` and the embedded ```` ```yaml ```` block inside
+   `openspec/change-proposals/research-roadmap-vNEXT.md` from one single source
+   with verified 14-task (`Exp9255`–`Exp9268`) exact parity, directs `Exp9255`
+   to pass identical `owned_changed_paths` into `legacy.lifecycle.measured(...)`,
+   isolates the V787 historical root, adds `Exp9258` for the mandatory Victris
+   Arena Self-Improvement Floor, and consumes newly qualified `Exp9244` directly
+   in `Exp9265` and `Exp9266`.

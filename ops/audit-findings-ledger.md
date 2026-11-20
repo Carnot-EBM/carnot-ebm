@@ -304,3 +304,6 @@ of truth, not this line.)
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_documented_identical_controls | REAL_BUG | OPEN | |
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_null | REAL_BUG | OPEN | |
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_passing_positive_control_key | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_legitimate_pair | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_zero_delta | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_compute_in_own_identity | REAL_BUG | OPEN | |
