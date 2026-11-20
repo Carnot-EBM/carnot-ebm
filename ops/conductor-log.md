@@ -22467,3 +22467,4 @@ code |
 | 2026-11-20 14:25 UTC | Exp9255: Qualify split V782-V787 consumer replay,  | OK | 125 passed, 2 warnings in 790.39s (0:13:10) |
 | 2026-11-20 17:11 UTC | Exp9256: Qualify a lossless byte prefilter for the | FAIL | Agy CLI error: Hard wall-clock cap after 4804s. Last output: cation-metadat |
 | 2026-11-20 17:47 UTC | Exp9256: Qualify a lossless byte prefilter for the | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-20 21:08 UTC | Exp9256: Qualify a lossless byte prefilter for the | OK | 106 passed, 18 warnings in 369.39s (0:06:09) |
