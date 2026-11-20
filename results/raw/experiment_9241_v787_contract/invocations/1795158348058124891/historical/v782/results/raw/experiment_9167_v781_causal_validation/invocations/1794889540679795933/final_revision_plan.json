@@ -1,0 +1,121 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_validation_9167.py",
+      "sha256": "sha256:eb228db559034f166c0737b0ff1d7807baaacbd3ce6b39ba706e42c544456bd1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_trace_9167.py",
+      "sha256": "sha256:da8fb84f38214b5b58540c6b83cd559332d3c07fba4c9bf32257d8becae5a23e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_reuse_9167.py",
+      "sha256": "sha256:72fd4ca3a4b8e77e4758696dfd53e77f3c9e9b2aaf6ddf2a73cb7f5c7fdf0df8"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9167_v781_causal_validation.py",
+      "sha256": "sha256:4f3c7282dd05751f9ba90b3d5f0405ae92775ecff0fa7b54d8cfc411cc487e12"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/forward_evidence_runner_9111.py",
+      "sha256": "sha256:779bbcb6f44c928e07d6111595974cc5cdf69693fe0252c82280eb9dad621bcb"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py",
+      "sha256": "sha256:8665301634b26305d83869904c01ce756ad3c167fa0c6275d259ba22851e8bcf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/pyproject.toml",
+      "sha256": "sha256:894adfa5d81b880ec1e16d1c9d63517238de175633e9e510926b1f96efd02249"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794889540679795933/coverage.ini",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794889540679795933/.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794889540679795933/coverage.ini",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_causal_validation_9167.py"
+      ],
+      "name": "owned_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "name": "e2e018_021"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/causal_validation_9167.py",
+        "python/carnot/reporting/validation_trace_9167.py",
+        "python/carnot/reporting/validation_reuse_9167.py",
+        "scripts/experiments/experiment_9167_v781_causal_validation.py",
+        "tests/python/test_causal_validation_9167.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/causal_validation_9167.py",
+        "python/carnot/reporting/validation_trace_9167.py",
+        "python/carnot/reporting/validation_reuse_9167.py",
+        "scripts/experiments/experiment_9167_v781_causal_validation.py",
+        "tests/python/test_causal_validation_9167.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/causal_validation_9167.py",
+        "python/carnot/reporting/validation_trace_9167.py",
+        "python/carnot/reporting/validation_reuse_9167.py",
+        "scripts/experiments/experiment_9167_v781_causal_validation.py"
+      ],
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_causal_validation_9167.py"
+      ],
+      "name": "spec_coverage"
+    }
+  ],
+  "frozen_monotonic_ns": 189810923444967,
+  "reason": "The nested coverage fixture must clear the parent COVERAGE_FILE. Other executed source and check commands are unchanged.",
+  "test_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9167_v781_causal_validation/invocations/1794889540679795933/final_revision/tests/python/test_causal_validation_9167.py",
+    "sha256": "sha256:8665301634b26305d83869904c01ce756ad3c167fa0c6275d259ba22851e8bcf"
+  }
+}

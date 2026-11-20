@@ -1,0 +1,38 @@
+{
+  "accept_lte": 0.1,
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 775092,
+  "chat_template": "cached GGUF embedded template; add_generation_prompt=True",
+  "comparison": "qualified Exp9102 only; absence does not gate baseline",
+  "data_delimiters": "JSON quoted strings; ensure_ascii=False",
+  "exposure_scope": "LPHB exposed development",
+  "frozen_weights": true,
+  "generated_tokens": 0,
+  "half_coverage": "ascending p_error, stable original order; floor(N/2); rerank each draw",
+  "hard_cap_s": 4800,
+  "likelihood": "full raw vocabulary; reset state before each literal Yes and No; sum every continuation token",
+  "measurement_cap_s": 3300,
+  "prompt": "Question: {question}\nAnswer: {answer}\nDoes the answer contain any factually false specific claim? Reply Yes or No.",
+  "prompt_tokens": "embedded tokenizer, add_bos=False, special=True",
+  "random_seed": 7769107,
+  "reject_gte": 0.9,
+  "right_truncation": {
+    "answer_text": 768,
+    "question": 256
+  },
+  "sample_size_budget": {
+    "bootstrap_draws": 10000,
+    "cal_qids": 50,
+    "rows": 450,
+    "test_qids": 100
+  },
+  "selection": "CAL logloss; ascending ties",
+  "temperatures": [
+    0.5,
+    1,
+    2,
+    4
+  ],
+  "text_tokens": "embedded tokenizer, add_bos=False, special=False",
+  "validation_reserve_s": 1200
+}

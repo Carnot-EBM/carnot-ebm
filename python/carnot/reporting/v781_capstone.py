@@ -106,7 +106,7 @@ def collect(raw: Path, run_date: str, root: Path = ROOT) -> Json:
         receipt = json.loads(health.read_bytes())
         work["repository_health_references"] = [
             retain(p, raw, reference(p)["sha256"])
-            for p in [health, Path(receipt["stdout_path"]), Path(receipt["stderr_path"])]
+            for p in [health, ROOT / receipt["stdout_path"], ROOT / receipt["stderr_path"]]
         ]
     with binding(), legacy.binding():
         receipt = runner.run_check(

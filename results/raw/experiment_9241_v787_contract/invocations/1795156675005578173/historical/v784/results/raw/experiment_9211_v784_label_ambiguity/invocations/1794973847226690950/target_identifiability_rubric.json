@@ -1,0 +1,39 @@
+{
+  "SI_CF_unavailable_without_evidence": true,
+  "absent_is_negative": false,
+  "cross_generator_substitution": false,
+  "decisions": [
+    "source_evidence_present",
+    "source_evidence_absent",
+    "source_evidence_ambiguous"
+  ],
+  "expressed_uncertainty": "explicit original human annotation",
+  "factual_error": "original human criterion and factual-error evidence",
+  "keyword_or_llm_inference_allowed": false,
+  "paper": "Kim et al., What Hallucinations Have We Measured? Semantic Illusion, Confabulation, and Expressed Uncertainty, arXiv:2610.38520v2 (2026-11-11)",
+  "predictions_read": false,
+  "reelicitation": "same-generator semantically equivalent original prompts",
+  "statuses": [
+    "present",
+    "absent",
+    "ambiguous"
+  ],
+  "targets": {
+    "expressed_uncertainty": {
+      "column": null,
+      "original_criterion": "Explicit human annotation of expressed uncertainty distinct from missingness",
+      "qualifies": "requires dedicated human uncertainty label; -1 sentinel conflates missing/uncertain or not annotated"
+    },
+    "factual_error": {
+      "column": "annotator1_label",
+      "original_criterion": "Primary human label: 1=hallucination, 0=correct, -1=missing/uncertain (factual_correctness)",
+      "qualifies": "binary factual-error target when authenticated annotator1_label is in {0, 1}"
+    },
+    "reelicitation": {
+      "column": "question",
+      "original_criterion": "Same-generator semantically equivalent prompt re-elicitations with human factuality labels",
+      "qualifies": "requires >=2 equivalent prompts per (qid, generator) with human verification to separate SI from CF"
+    }
+  },
+  "version": "v784-target-identifiability-v2"
+}

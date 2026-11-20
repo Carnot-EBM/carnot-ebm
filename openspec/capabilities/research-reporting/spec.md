@@ -117011,3 +117011,91 @@ primitive rows, protocol references, required historical accounting, and failed
 gate operands. Unused duplicate validation metadata SHALL not multiply replay
 work. Cold replay SHALL compare that same projection with the retained original.
 
+## Proposed V787 research milestone — 2026-11-20
+
+Status: planned and scoped for V787 execution. All historical V782, V783, V784,
+V785, and V786 outcomes, quarantines, and zero gates remain unchanged history.
+
+### REQ-REPORT-9241-V787: Split V782-V786 consumer replay and fourteen-task V787 contract binding
+
+Exp9241 SHALL authenticate original Exp9097 human source custody (900 responses
+across 300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three lexical
+100-qid shards), Exp9126 five-arm static protocol, Exp9132 six-arm delayed
+learning protocol (separate `TRAIN100` initialization), Exp9211 qualified
+target-identifiability and affine label-ambiguity primary
+(`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`),
+Exp9225 qualified selective-deferral and spline-support primary
+(`sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`),
+Exp9222 V785 contract primary
+(`sha256:c54b57079cfd43221a9b2387f208c7603f768e8bf8b6b28816e458c71ac9b3a8`,
+`contract_ready_score=0`, `replay_authority_ready_score=1`), and Exp9240 V786
+capstone primary
+(`sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500`,
+`reconciliation_ready_score=1`, `honest_verdict=complete_blocked_declared_gate`).
+It SHALL preserve V785 and V786 outcomes as historical facts.
+
+Exp9241 SHALL extend `python/carnot/reporting/historical_contract_inputs.py`
+with isolated V785 and V786 historical root construction pointing to preserved
+`research-roadmap-v785-queue-preserved-20261119.yaml`
+(`sha256:df65951514658c58082d5e27b4ce5d06af731cb40607da5cc23d47cb364c1917`),
+preserved `research-roadmap-v784-preserved-20261118.md`
+(`sha256:06ddcee74cab8be574b2892e7773983d2e41a0d733b2003f0712bfe1ff48e811`),
+preserved `research-roadmap-v786-preserved-20261120.md`
+(`sha256:a1c32ac1892b59219fe288446020893822350f866781f89a39088b76d1b7c763`),
+preserved `research-roadmap-v786-queue-preserved-20261120.yaml`
+(`sha256:2681afbc366b7282955350ecfbedf5d4b932d8dae58c32ca0ea329672356c8ec`),
+`experiment_9222_v785_contract.json`, and `experiment_9240_v786_capstone.json`.
+It SHALL partition `direct_consumers` into six bounded, non-contending shards
+with distinct `COVERAGE_FILE` (`.coverage.<shard>`) paths:
+`direct_consumers_core`, `direct_consumers_v782`, `direct_consumers_v783`,
+`direct_consumers_v784`, `direct_consumers_v785`, and `direct_consumers_v786`.
+It SHALL retain untouched `tests/python/test_causal_validation_9181.py` in the
+full validation obligation manifest for `exp9243-forward-qualification`.
+
+Exp9241 SHALL keep `protocol_owners` validation strict in fresh cold-replay
+processes for `entropy_reference_protocol`, `label_ambiguity_protocol`,
+`selective_deferral_protocol`, and the `conformal_risk_protocol` reference
+structure. It SHALL parse the embedded YAML block under
+`## Full machine-readable contract` in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and compare all fourteen
+complete ordered V787 task objects (`exp9241` through `exp9254`) against the
+active queue, accepting only conductor literal-brace encoding. Any missing
+embedded block or omitted active-queue slot SHALL record explicit failed
+operands in `gate_check_summary` with `contract_ready_score=0` and terminal
+`blocked` verdict. Declare `no_model_load`, `MODEL_SPECS=[]`,
+`current_llm_invocations=0`, and `generated_tokens=0`.
+
+#### SCENARIO-REPORT-9241-V787: Six split shards, isolated V782-V786 roots, and four protocol owners
+
+Owned tests and all six partitioned direct-consumer shards execute against
+isolated V782, V783, V784, V785, and V786 historical roots in fresh private
+processes outside the checkout without `PYTHONPATH`. Combined owned statement
+coverage reaches 100 percent with zero exclusions. Fresh-process cold replay
+validates all four protocol sidecars against their immutable owning
+configurations and rejects missing, modified, or rehashed false sidecars,
+changed owner hashes, and successor-queue pollution. When all six shards, owned
+tests, scoped Ruff check/format, strict mypy, spec coverage, and E2E-018/021
+checks pass, `replay_authority_ready_score`, `source_ready_score`,
+`static_methods_ready_score`, and `online_methods_ready_score` qualify (`1`),
+while `contract_ready_score` requires both passing checks and exact fourteen-task
+embedded-YAML parity.
+
+#### SCENARIO-REPORT-9241-V787-CONTROLS: Tamper, interleaved replay, and external absence controls
+
+Private CLI publication, refusal, tamper, and cold replay execute outside the
+checkout without `PYTHONPATH` under E2E-018/021. Interleaved V784, V785, and
+V787 replays pass on authentic artifacts and fail on rehashed tampering.
+Missing external inputs or omitted planner slots block with `blocked_no_run` and
+exact `gate_check_summary` operands that distinguish `missing_file`,
+`missing_field`, and observed `0`. Owned check failures disqualify all readiness
+scores.
+
+Missing contract files SHALL name their actual path. Invalid YAML container
+types SHALL produce a failed operand rather than escape the terminal report.
+All descendants SHALL share the measurement cutoff at 3300 seconds, with
+1200 seconds for final verification and 300 seconds for publication reserved
+inside the 4800-second limit.
+
+Historical capstone receipt paths that are relative SHALL resolve against the
+original producer checkout, including during replay from a private directory.
+

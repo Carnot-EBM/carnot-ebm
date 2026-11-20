@@ -1,0 +1,138 @@
+{
+  "arms": [
+    "frozen_spline",
+    "adaptive_spline",
+    "bias_only_spline",
+    "adaptive_linear",
+    "donor_label_spline"
+  ],
+  "benefit_bounds": {
+    "bounds": [
+      {
+        "contrast": "frozen_spline minus adaptive_spline future Brier",
+        "direction": "lower",
+        "op": ">",
+        "threshold": 0
+      },
+      {
+        "contrast": "bias_only_spline minus adaptive_spline future Brier",
+        "direction": "lower",
+        "op": ">",
+        "threshold": 0
+      },
+      {
+        "contrast": "adaptive_linear minus adaptive_spline future Brier",
+        "direction": "lower",
+        "op": ">",
+        "threshold": 0
+      },
+      {
+        "contrast": "donor_label_spline minus adaptive_spline future Brier",
+        "direction": "lower",
+        "op": ">",
+        "threshold": 0
+      },
+      {
+        "contrast": "adaptive_spline retained Brier increase",
+        "direction": "upper",
+        "op": "<=",
+        "threshold": 0.005
+      },
+      {
+        "contrast": "adaptive_spline retained classification-error increase",
+        "direction": "upper",
+        "op": "<=",
+        "threshold": 0
+      }
+    ],
+    "draws": 10000,
+    "future_groups": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "future_qids": 40,
+    "learning_signal_score": "all six bounds plus exact recovery; methods readiness requires no scientific win",
+    "resampling": "paired stream-bootstrap; per-qid retention changes averaged across streams also reported",
+    "seed": 776105,
+    "small_sample_caution": "Ten streams have limited power; intervals condition on the fixed initial fit, guard and retention. Repeated retention contains100 unique qids, not1000. Null results do not authorize tuning bounds or universal architecture-failure claims.",
+    "tail": 0.008333333333333333
+  },
+  "causality": {
+    "decisions": "accept p_error<=0.1, reject>=0.9, otherwise escalate",
+    "prediction": "seal all15 sibling/arm predictions before releasing group g-1",
+    "reset": "identical initial coefficients and zero accumulators for every stream",
+    "retention": "no labels in learner request; seal end-of-stream predictions before evaluation",
+    "tail": "drain group5 after all predictions; cannot improve preceding scores"
+  },
+  "donors": {
+    "changed_labels": "retain numerator, denominator and fraction against released stream truth; never select the map using truth",
+    "labels": "already-known initialization A1 labels; matching original sibling positions",
+    "mapping": "numpy default_rng(seed).choice(sorted initialization roster, size=50, replace=True) in frozen stream order",
+    "seed": 776099
+  },
+  "fixtures": {
+    "no_signal": "seeded independent Bernoulli labels on the same fixed features",
+    "positive": "constructed online all-one labels and fixed features with separable guard support",
+    "scope": "CPU mechanics only; no human benefit, independent generalization or ARC solve",
+    "seed": 776099
+  },
+  "initialization": {
+    "basis": "intercept +27 linear +189 cubic fixed-knot columns; spline_basis_8986.design",
+    "convergence": "finite objective/coefficients/gradient; gradient infinity norm<=1e-6",
+    "input": "independently L2-normalized question and answer embeddings, concatenated in that order",
+    "loss": "mean binary logloss +0.5*0.01*sum(nonintercept coefficient squares)",
+    "optimizer": "L-BFGS-B from zeros; maxiter2000, gtol1e-7, ftol1e-12",
+    "source": "100 initialization groups/300 siblings only",
+    "temperature": 1,
+    "transform": "initialization-only population mean/std; constants scale1; Gaussian projection seed775084 with std1/sqrt(27); initialization projected min/max to[-1,1], constants0; later clip"
+  },
+  "ordering": "SHA256 of literal v776-online + original qid, ascending hexadecimal digest",
+  "recovery": {
+    "commit": "write temporary snapshot, flush/fsync, atomic replace, directory fsync; acknowledge after commit",
+    "comparison": "exact complete state equality including retained prediction rows",
+    "exit_code": 73,
+    "hard_exits": [
+      "before_prediction_fsync",
+      "after_feedback_receipt",
+      "during_atomic_replace"
+    ],
+    "snapshot": "complete coefficients, accumulators, pending items, acknowledgments, prediction and feedback rows"
+  },
+  "roles": {
+    "guard_qids": 50,
+    "initialization_qids": 100,
+    "online_qids": 50,
+    "qids_per_stream": 5,
+    "retention_qids": 100,
+    "siblings": 3,
+    "streams": 10
+  },
+  "scope": "exploratory_exposed_development_only",
+  "static_comparison": "unchanged; no static150 head or transform initializes this learner",
+  "update_equations": {
+    "accumulator": "accumulator+=gradient**2; initially0",
+    "bias_only": "gradient[1:]=0 before clipping",
+    "clip": "gradient/=max(1,L2norm(gradient))",
+    "coefficients": "theta-=0.05*gradient/sqrt(accumulator+1e-8)",
+    "frozen": "no updates",
+    "gradient": "(sigmoid(theta dot phi)-y)*phi +0.01*(theta-theta_initial), anchor[0]=0",
+    "guard": "all150 original CAL rows; Brier increase<=0.005 and classification-error increase<=0 against arm initial state",
+    "reject": "restore coefficients and accumulator; still acknowledge feedback",
+    "siblings": "three original sibling positions in order; one proposal per released qid"
+  },
+  "validation": {
+    "e2e": [
+      "E2E-018",
+      "E2E-020",
+      "E2E-021"
+    ],
+    "excluded_statements": 0,
+    "hard_cap_s": 4800,
+    "measurement_cap_s": 3300,
+    "statement_percent": 100,
+    "validation_reserve_s": 1200
+  },
+  "version": "v776-online-human-v1"
+}

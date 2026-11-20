@@ -1,9 +1,12 @@
 """REQ-REPORT-9208-V784: private original inputs keep successor queues out of old reducers."""
 
+import hashlib
 import json
 import os
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 from carnot.reporting import (
     encoder_head_diagnosis_8972,
@@ -24,6 +27,7 @@ _RETAINED_COLD = (
     / "results/raw/experiment_9208_v784_contract/invocations/1794952771106715846/retained_cold_replay"
 )
 _COLD_PIN = "sha256:490c68be628eecb98d4492dbbffc1949e7087780dd0f4d830b54d63fd199ce7b"
+_V785_ARCHIVE_PIN = "sha256:58951a5448e3a428a1e49544e28e8e57cdc2df5a523474a9ae868e82aa600634"
 _DIGESTS: dict[tuple[str, int, int, int, int], str] = {}
 CAPSTONES = {
     782: (
@@ -37,6 +41,14 @@ CAPSTONES = {
     784: (
         "experiment_9221_v784_capstone.json",
         "sha256:54b3a2887c709b5cd3ba9d380e47206efab67499067802e3d97179641cdbb2c7",
+    ),
+    785: (
+        "experiment_9240_v786_capstone.json",
+        "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
+    ),
+    786: (
+        "experiment_9240_v786_capstone.json",
+        "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
     ),
 }
 
@@ -55,6 +67,21 @@ logit_methods_9126.sha256_file = _digest
 encoder_head_diagnosis_8972.sha256_file = _digest
 v746_retained_evidence.sha256_file = _digest
 v764_capstone_sources.sha256_file = _digest
+_YAML_CACHE: dict[str, Any] = {}
+_ORIGINAL_SAFE_LOAD = yaml.safe_load
+
+
+def _cached_safe_load(stream: Any) -> Any:
+    """Cache multi-megabyte completion archives across repeated replay checks."""
+    if isinstance(stream, bytes) and len(stream) >= 1_000_000:
+        key = hashlib.sha256(stream).hexdigest()
+        if key not in _YAML_CACHE:
+            _YAML_CACHE[key] = _ORIGINAL_SAFE_LOAD(stream)
+        return _YAML_CACHE[key]
+    return _ORIGINAL_SAFE_LOAD(stream)
+
+
+yaml.safe_load = _cached_safe_load
 
 
 def authenticated(reference: dict[str, Any], *, read: bool = True) -> bytes:
@@ -87,9 +114,61 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
     value = json.loads(authenticated(dict(path=str(ROOT / "results" / name), sha256=pin)))
     work = json.loads(authenticated(value["work_reference"]))
     sources = dict(work["snapshots"])
+    if generation in {785, 786}:
+        sources.update(
+            {
+                "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md"
+                    ),
+                    sha256="sha256:a1c32ac1892b59219fe288446020893822350f866781f89a39088b76d1b7c763",
+                ),
+                "openspec/change-proposals/research-roadmap-v786-queue-preserved-20261120.yaml": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v786-queue-preserved-20261120.yaml"
+                    ),
+                    sha256="sha256:2681afbc366b7282955350ecfbedf5d4b932d8dae58c32ca0ea329672356c8ec",
+                ),
+                "results/experiment_9240_v786_capstone.json": dict(
+                    path=str(ROOT / "results/experiment_9240_v786_capstone.json"),
+                    sha256=pin,
+                ),
+            }
+        )
+    if generation == 786:
+        sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
+            "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md"
+        ]
+        sources["research-roadmap.yaml"] = sources[
+            "openspec/change-proposals/research-roadmap-v786-queue-preserved-20261120.yaml"
+        ]
+    if generation == 785:
+        authenticated(
+            json.loads(authenticated(sources["results/experiment_9222_v785_contract.json"]))[
+                "work_reference"
+            ]
+        )
+        v785_archive = authenticated(sources["research-complete.yaml"]).split(
+            b"- id: 2026.11.785\n", 1
+        )[0]
+        v785_target = _COLD_TERMINAL / "v785_research_complete.yaml"
+        if v785_target.exists():
+            authenticated(dict(path=str(v785_target), sha256=_V785_ARCHIVE_PIN), read=False)
+        else:
+            v785_target.write_bytes(v785_archive)
+        sources["research-complete.yaml"] = dict(path=str(v785_target), sha256=_V785_ARCHIVE_PIN)
+        sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
+            "openspec/change-proposals/research-roadmap-v784-preserved-20261118.md"
+        ]
+        sources["research-roadmap.yaml"] = sources[
+            "openspec/change-proposals/research-roadmap-v785-queue-preserved-20261119.yaml"
+        ]
     if suite == "capstone":
         for reference in work.get("repository_health_references", []):
-            name = str(Path(reference["original_path"]).relative_to(ROOT))
+            orig = Path(reference["original_path"])
+            name = str(orig.relative_to(ROOT) if orig.is_relative_to(ROOT) else orig)
             sources.setdefault(name, reference)
     for name, reference in work["operands"].items():
         path = Path(name)
@@ -100,37 +179,50 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
             path = Path(reference.get("producer_path", reference["path"]))
             if path.is_relative_to(ROOT):
                 sources.setdefault(str(path.relative_to(ROOT)), reference)
-    config = f"openspec/change-proposals/v{generation}-contract-inputs.json"
-    reference = sources.get(
-        config,
-        dict(
+    config = (
+        "openspec/change-proposals/v786-capstone-inputs.json"
+        if generation == 786
+        else f"openspec/change-proposals/v{generation}-contract-inputs.json"
+    )
+    if config not in sources:
+        sources[config] = dict(
             path=str(ROOT / config),
             sha256=next(
                 r["sha256"]
-                for entry in work["values"].values()
-                for r in entry["value"].get("code_config_hashes", [])
-                if r["path"].endswith(config)
+                for r in [
+                    *(
+                        item
+                        for entry in work["values"].values()
+                        for item in entry["value"].get("code_config_hashes", [])
+                    ),
+                    *work.get("code", []),
+                ]
+                if r.get("original_path", r["path"]).endswith(config)
             ),
-        ),
-    )
-    sources[config] = reference
+        )
+    reference = sources[config]
     frozen = json.loads(authenticated(reference))
     for name, pin in frozen["pins"].items():
         sources.setdefault(name, dict(path=str(ROOT / name), sha256=pin))
     destination.mkdir(parents=True, exist_ok=True, mode=0o700)
     rows = []
     for name, reference in sources.items():
-        if (
-            generation in {783, 784}
-            and suite == "contract"
-            and name
-            in [
+        if suite == "contract" and name in {
+            783: {
+                "results/experiment_9195_corpus_prefilter.json",
+                "results/experiment_9197_label_ambiguity.json",
+            },
+            784: {
                 "results/experiment_9195_corpus_prefilter.json",
                 "results/experiment_9197_label_ambiguity.json",
                 "results/experiment_9209_corpus_prefilter.json",
                 "results/experiment_9211_v784_label_ambiguity.json",
-            ]
-        ):
+            },
+            785: {
+                "results/experiment_9223_corpus_prefilter.json",
+                "results/experiment_9225_v785_selective_deferral_protocol.json",
+            },
+        }.get(generation, set()):
             continue
         source = Path(reference["path"])
         large = name.startswith("results/") and source.is_file() and source.stat().st_size >= 65536

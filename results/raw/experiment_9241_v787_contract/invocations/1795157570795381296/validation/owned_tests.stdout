@@ -1,0 +1,88 @@
+....F.........
+=================================== FAILURES ===================================
+_______________ test_historical_roots_v782_to_v786_and_pollution _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T065325-3413827-e1dbae8b/test_historical_roots_v782_to_0')
+
+    def test_historical_roots_v782_to_v786_and_pollution(tmp_path):
+        """SCENARIO-REPORT-9241-V787: isolated V782-V786 roots reject successor pollution."""
+        for generation, module in [(782, v782), (783, v783), (784, v784)]:
+            root = original_root(tmp_path / str(generation), generation)
+            assert module.e.authority(root)["ready"]
+            if generation == 784:
+                assert not (root / "results/experiment_9209_corpus_prefilter.json").exists()
+                assert not (root / "results/experiment_9211_v784_label_ambiguity.json").exists()
+                cap_root = original_root(tmp_path / "784_cap", 784, suite="capstone")
+                assert (cap_root / "results/experiment_9209_corpus_prefilter.json").is_file()
+                assert (cap_root / "results/experiment_9211_v784_label_ambiguity.json").is_file()
+            (root / module.e.ACTIVE).chmod(0o600)
+            (root / module.e.ACTIVE).write_bytes((e.ROOT / e.ACTIVE).read_bytes())
+            assert not module.e.authority(root)["ready"]
+            with pytest.raises(ValueError, match="historical_input_drift"):
+                original_root(root, generation)
+        v785_root = original_root(tmp_path / "785", 785)
+        assert not (v785_root / "results/experiment_9223_corpus_prefilter.json").exists()
+        assert not (
+            v785_root / "results/experiment_9225_v785_selective_deferral_protocol.json"
+        ).exists()
+        v785_auth = v785.e.authority(v785_root)
+        assert len(v785_auth["tasks"]) == 5 and len(v785_auth["rows"]) == 14
+        (v785_root / v785.e.ACTIVE).chmod(0o600)
+        (v785_root / v785.e.ACTIVE).write_bytes((e.ROOT / e.ACTIVE).read_bytes())
+        with pytest.raises(ValueError, match="historical_input_drift"):
+            original_root(v785_root, 785)
+        v786_root = original_root(tmp_path / "786_cap", 786, suite="capstone")
+        assert (v786_root / "results/experiment_9222_v785_contract.json").is_file()
+        assert (v786_root / "results/experiment_9223_corpus_prefilter.json").is_file()
+        assert (v786_root / "results/experiment_9225_v785_selective_deferral_protocol.json").is_file()
+        assert (v786_root / "results/experiment_9240_v786_capstone.json").is_file()
+>       v786_work = v786_cap.collect(tmp_path / "raw9240", "20261120", v786_root)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v787_contract_9241.py:242: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v786_capstone.py:73: in collect
+    return dict(_collect(raw, mapped, root))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v781_capstone.py:108: in collect
+    retain(p, raw, reference(p)["sha256"])
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v764_capstone_sources.py:93: in retain
+    require(sha256_file(path) == pin, "source_bytes:" + str(path))
+            ^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_contract_inputs.py:59: in _digest
+    stat = resolved.stat()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/var/tmp/carnot-9241-1795157570795381296-w33foqq6/owned_tests/results/raw/experiment_9240_v786_capstone/development/global_python_suite.stdout')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/carnot-9241-1795157570795381296-w33foqq6/owned_tests/results/raw/experiment_9240_v786_capstone/development/global_python_suite.stdout'
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:840: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp9240] phase=preconditions_before completed=0 pending=0
+[exp9240] phase=authenticate completed=0 pending=377
+[exp9240] phase=authenticate completed=50 pending=327
+[exp9240] phase=authenticate completed=150 pending=227
+[exp9240] phase=authenticate completed=200 pending=177
+[exp9240] phase=authenticate completed=300 pending=77
+[exp9240] phase=authenticate completed=350 pending=27
+=============================== warnings summary ===============================
+../../../../home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v787_contract_9241.py::test_historical_roots_v782_to_v786_and_pollution
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/selectors.py:415: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+1 failed, 13 passed, 1 warning in 393.85s (0:06:33)

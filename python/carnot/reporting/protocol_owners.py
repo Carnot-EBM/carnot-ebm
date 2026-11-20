@@ -21,11 +21,18 @@ OWNERS = {
         "sha256": "sha256:432181645687a7dbfb0ee292a9ea184348ec41b337b57e3bde344339aca0452e",
     },
 }
+V787_OWNERS = {
+    **OWNERS,
+    "conformal_risk_protocol": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v787-contract-inputs.json",
+        "sha256": "sha256:f39315e3029fd9960717da3028f60e432a0db41b8ad0a6b5e3d60e6ec4c59de9",
+    },
+}
 
 
 def load(protocol: str) -> tuple[dict[str, Any], dict[str, Any]]:
     """Original configuration hashes cannot be supplied by a candidate being verified."""
-    reference = OWNERS[protocol]
+    reference = (OWNERS if protocol in OWNERS else V787_OWNERS)[protocol]
     path = Path(reference["path"])
     if not path.is_file() or sha256_file(path) != reference["sha256"]:
         raise ValueError("protocol_owner_hash")
