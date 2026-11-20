@@ -117417,3 +117417,87 @@ percent owned statement coverage and zero exclusions.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VICTRIS-9258-V788 | Implemented (`python/carnot/victris/__init__.py`, `python/carnot/victris/energy_bot.py`, `python/carnot/victris/rsi_loop.py`, `scripts/experiments/experiment_9258_v788_victris_energy_bot.py`, `results/experiment_9258_v788_victris_energy_bot.json`) | Implemented (`tests/python/test_victris_energy_bot_9258.py`) |
+
+### REQ-REPORT-9268-V788: Unconditional fourteen-outcome V788 reconciliation and continuation boundaries
+
+Exp9268 SHALL authenticate both complete V788 contracts (`research-roadmap.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`) and account for all fourteen V788
+task outcomes in exact order (`exp9255-contract` through `exp9268-capstone`). It SHALL
+accept canonical primaries or explicitly identified scheduler skips while keeping absent
+scientific primaries absent. No positive upstream gate applies to this unconditional
+capstone.
+
+Exp9268 SHALL preserve V787's authenticated seven-task record explicitly:
+- Exp9241 passed all six consumer shards (`core`, `v782` through `v786`) and 100 percent
+  owned statement coverage on five measured files, and blocked with
+  `contract_ready_score=0` and `replay_authority_ready_score=0` on V787's seven-task
+  queue, missing embedded YAML block, and the `v787_contract.py` line-238/290
+  coverage-list mismatch (`5` measured files versus `6` declared paths).
+- Exp9244 qualified `conformal_risk_ready_score=1`, `ca_ocrc_ready_score=1`, and
+  `provenance_audit_ready_score=1` (`scientific_effect_measured=false`).
+- Exp9242 recorded a conductor pre-gate refusal artifact on
+  `exp9241-contract.contract_ready_score` and
+  `exp9241-contract.replay_authority_ready_score`.
+- Exp9243 and Exp9245 through Exp9247 recorded pre-emptive upstream-retired scheduler log
+  skips.
+- Slots 8 through 14 (`exp9248` through `exp9254`) were absent from V787's active queue.
+
+Exp9268 SHALL preserve V786, V785, V784, V783, and V782 historical closures alongside
+qualified Exp9211 target-identifiability and affine label-ambiguity method authority,
+qualified Exp9225 selective-deferral and cubic B-spline support-density method authority,
+and qualified Exp9244 qid-cluster conformal risk, CA-OCRC tracking, and Mycelium
+provenance authority.
+
+Exp9268 SHALL reduce the two original static bounds, seven original learning bounds,
+three secondary CES ranking bounds, descriptive ambiguity, selective-deferral,
+spline-support, conformal-risk, and CA-OCRC branches, and the Victris Arena offline
+state-energy bot and RSI outcome (`exp9258-victris-energy-bot`) from independently
+eligible rows only. It SHALL keep `missing_file`, `missing_field`, and observed `0`
+distinct. It SHALL recompute stable historical G1 through G4 publication gates via
+`scripts/publication_gate.py --json`, report `unmet_gates` separately from
+`current_science_paper_ready=false`, and apply repeated-verdict retirement
+recommendations only to authenticated repeated failed execution scope without editing
+`ops/exclusion_manifest.yaml` directly. Declare `no_model_load`, `MODEL_SPECS=[]`,
+`current_llm_invocations=0`, and `generated_tokens=0`.
+
+#### SCENARIO-REPORT-9268-V788: Fourteen ordered V788 outcomes, Victris Arena RSI status, and preserved V787 record
+
+All fourteen V788 slots (`exp9255-contract` through `exp9268-capstone`) are accounted in
+exact order:
+- Exp9255 qualifies all five readiness scores (`contract_ready_score=1`,
+  `replay_authority_ready_score=1`, `source_ready_score=1`,
+  `static_methods_ready_score=1`, `online_methods_ready_score=1`) across seven passing
+  consumer shards (`core`, `v782` through `v787`) and exact 14-task embedded-YAML parity.
+- Exp9256 completes full 764,150-file recursive traversal and exact semantic parity
+  controls, and disqualifies (`corpus_scan_ready_score=0`,
+  `verdict_class="disqualified"`) on the timed-out full Python suite check.
+- Exp9257 records an authenticated conductor pre-gate skip artifact on
+  `exp9256-corpus-prefilter.corpus_scan_ready_score` (observed `0` versus expected `1`).
+- Exp9258 qualifies `victris_harness_ready_score=1` across six sub-10ms archive versions
+  with strict untrusted-shout isolation and `DEV_SEEDS`/`HELDOUT_SEEDS` disjointness, and
+  blocks (`complete_blocked_arena_sim_wheel_missing`, `heldout_matches_played=0`) on the
+  absent `arena_sim` wheel.
+- Exp9259 through Exp9267 record authenticated pre-emptive upstream-retired scheduler log
+  skips (`primary_status="missing_file"`).
+- Exp9268 records the capstone self slot (`reconciliation_ready_score=1`,
+  `honest_verdict="complete_blocked_declared_gate"`).
+
+Without frozen model predictions, the two static bounds, seven learning bounds, three CES
+ranking bounds, and descriptive ambiguity, selective-deferral, spline-support,
+conformal-risk, and CA-OCRC branches remain terminal blocked with null metrics and zero
+denominators. Administrative completeness (`reconciliation_ready_score=1`) stays separate
+from scientific benefit (`independent_generalization_score=0`,
+`current_science_paper_ready=false`).
+
+#### SCENARIO-REPORT-9268-V788-CONTROLS: Strict operands, tamper rejection, and private CLI controls
+
+All fourteen ordered V788 outcomes and fourteen preserved V787 slots survive missing
+inputs and failed scientific gates. Missing file, missing field, observed zero, and
+boolean readiness remain distinct. Fresh-process cold replay rejects rehashed invented
+science, modified retained producer bytes, and task authority drift. Repeated-verdict
+retirement requires all four prior-failure fields, an authenticated exact repeated
+verdict, and matching logical execution role without mutating
+`ops/exclusion_manifest.yaml`. Owned unit and real CLI child statement coverage is 100
+percent with zero exclusions; scoped Ruff check/format, strict mypy, spec coverage, and
+outside-checkout private CLI E2E-018/021 checks pass.
+
