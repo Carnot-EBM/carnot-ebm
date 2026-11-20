@@ -117350,3 +117350,70 @@ declaration so cited upstream models cannot be mistaken for current inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-9256-V788 | Implemented (`python/carnot/reporting/v788_corpus_prefilter.py`, `python/carnot/reporting/v788_corpus_prefilter_runner.py`, `scripts/experiments/experiment_9256_v788_corpus_prefilter.py`, `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`, `results/experiment_9256_v788_corpus_prefilter.json`) | Implemented (`tests/python/test_v788_corpus_prefilter_9256.py`) |
+
+### Requirement: REQ-VICTRIS-9258-V788 — Offline Victris Arena Gibbs tactical state-energy scorer, untrusted-shout isolation, and bounded RSI archive
+
+The system SHALL provide an offline Victris Arena tactical state-energy scorer
+(`python/carnot/victris/energy_bot.py`) and a bounded recursive self-improvement
+archive runner (`python/carnot/victris/rsi_loop.py`) executed via
+`scripts/experiments/experiment_9258_v788_victris_energy_bot.py` and publishing
+`results/experiment_9258_v788_victris_energy_bot.json` through
+`python/carnot/reporting/primary_publication.py` after passing
+`scripts/adversarial_verify.py` and
+`scripts/verdict_row_consistency_lint.py --strict` plus outside-checkout cold
+replay.
+
+The bot SHALL expose `decide(obs, hello) -> turn` compatible with
+`scripts/victris_offline_harness.py` (`sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002`),
+extract compact tactical state-action features (self HP, enemy distance and
+visibility, zone distance, cooldown availability for `ranged`, `frostburst`,
+`repulsor`, and `dash`, and tile safety), score candidate legal turns using a
+`GibbsModel`-scale state-energy function $E(s, a; \theta)$, and select the
+lowest-energy legal turn inside a sub-10ms per-tick budget (well below the
+1000ms live reply limit). It SHALL enforce strict untrusted-text sanitization by
+ignoring opponent shout text completely and never executing, parsing, or copying
+shout strings into returned turns.
+
+The RSI runner SHALL enforce strict disjointness between `DEV_SEEDS` (`0..999`)
+and `HELDOUT_SEEDS` (`10000..10999`), refuse any overlapping or out-of-range
+seed split, refuse any candidate with `max_tick_ms >= 1000.0`, and record
+versioned archive entries (`version_id`, `parent_id`, `theta_sha256`,
+`dev_win_rate`, `dev_ci95`, `median_tick_ms`, `max_tick_ms`, `kept`). It SHALL
+never contact the live ladder, never modify the game repository, and never
+fabricate `arena_sim` matches when the simulator wheel is absent. Declare
+`no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-VICTRIS-9258-V788: Honest dual-branch offline RSI evaluation and sub-10ms Gibbs tactical energy scoring
+
+When `arena_sim` is importable in `.venv` (or an authenticated local wheel
+matching `sha256:5393811ad663f2b1c9fdf5dac9a83f317894fc04c39463bdda7551762c5a010c`
+is installed), Exp9258 runs one bounded RSI round (`shoot_bot` baseline, initial
+Gibbs energy bot, and 4 deterministic energy-parameter mutations on `n=40`
+`DEV_SEEDS` against `ts-starter` and `random`), selects the best dev candidate
+without reading `HELDOUT_SEEDS`, and evaluates baseline and best candidate
+strictly once on `n=100` `HELDOUT_SEEDS` with Wilson CI95 and per-tick latency.
+When `arena_sim` is absent in `.venv`, Exp9258 executes complete deterministic
+unit, latency (`median_ms < 10.0`, `max_ms < 10.0`), untrusted-shout
+sanitization, and seed-split verification on synthetic tactical observations,
+sets `victris_harness_ready_score=1`, `arena_sim_installed=false`,
+`heldout_matches_played=0`, `scientific_effect_measured=false`,
+`verdict_class="blocked"`, and
+`honest_verdict="complete_blocked_arena_sim_wheel_missing"`, and records the
+missing `arena_sim` import and wheel explicitly in `gate_check_summary`.
+
+#### SCENARIO-VICTRIS-9258-V788-CONTROLS: Untrusted-shout isolation, dev/heldout overlap refusal, latency budget refusal, and private CLI controls
+
+Injecting adversarial prompt-injection or command payloads into opponent shout
+fields produces zero output differences and zero shout leakage. Any overlap
+between `DEV_SEEDS` and `HELDOUT_SEEDS`, any second held-out evaluation call, or
+any tick latency `max_tick_ms >= 1000.0` raises a hard refusal `ValueError`.
+Private outside-checkout CLI execution without `PYTHONPATH` verifies publication,
+date/path refusal, cold replay, and rehashed aggregate-tamper rejection with 100
+percent owned statement coverage and zero exclusions.
+
+## Implementation Status (REQ-VICTRIS-9258-V788)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VICTRIS-9258-V788 | Implemented (`python/carnot/victris/__init__.py`, `python/carnot/victris/energy_bot.py`, `python/carnot/victris/rsi_loop.py`, `scripts/experiments/experiment_9258_v788_victris_energy_bot.py`, `results/experiment_9258_v788_victris_energy_bot.json`) | Implemented (`tests/python/test_victris_energy_bot_9258.py`) |

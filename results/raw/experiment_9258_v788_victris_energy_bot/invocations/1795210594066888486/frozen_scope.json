@@ -1,0 +1,160 @@
+{
+  "code_test_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/__init__.py",
+      "sha256": "sha256:d59c58272d6953c879562bd6c1b77b48f7c714fde2414020fb1e0755d24da4ad"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/energy_bot.py",
+      "sha256": "sha256:a987930993ae263f8fb6e05d0d34a9bf9245035ac5d64508827acbe3bcb02599"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/rsi_loop.py",
+      "sha256": "sha256:dfa83f3b452c8c6efc441b66556aed485e864b3e40bf7d1eb7f50a8984bad35b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9258_v788_victris_energy_bot.py",
+      "sha256": "sha256:bf3a30d698f063b6016aa68addc6e01c119e1b367e9367f20427951fb1359602"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_victris_energy_bot_9258.py",
+      "sha256": "sha256:811d02dd7e8263c6ba098993291a63d70241a9b2942a1e6a30e2840c10853cdf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9258_v788_victris_energy_bot/invocations/1795210594066888486/.coverage",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9258_v788_victris_energy_bot/invocations/1795210594066888486/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9258_v788_victris_energy_bot/invocations/1795210594066888486/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_victris_energy_bot_9258.py"
+      ],
+      "name": "owned_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "name": "direct_consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/victris/__init__.py",
+        "python/carnot/victris/energy_bot.py",
+        "python/carnot/victris/rsi_loop.py",
+        "scripts/experiments/experiment_9258_v788_victris_energy_bot.py",
+        "tests/python/test_victris_energy_bot_9258.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/victris/__init__.py",
+        "python/carnot/victris/energy_bot.py",
+        "python/carnot/victris/rsi_loop.py",
+        "scripts/experiments/experiment_9258_v788_victris_energy_bot.py",
+        "tests/python/test_victris_energy_bot_9258.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/victris/__init__.py",
+        "python/carnot/victris/energy_bot.py",
+        "python/carnot/victris/rsi_loop.py",
+        "scripts/experiments/experiment_9258_v788_victris_energy_bot.py"
+      ],
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_victris_energy_bot_9258.py"
+      ],
+      "name": "spec_coverage"
+    }
+  ],
+  "coverage_config_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9258_v788_victris_energy_bot/invocations/1795210594066888486/coverage.ini",
+    "sha256": "sha256:98eea06f04fd7a920b728ecaefa8a167cba7bbae69a67f95b31a735a7e898c7d"
+  },
+  "e2e_scope": "E2E-018/021 private actual CLI success/refusal/tamper/cold replay in owned tests; E2E-020 not applicable: no learning or recovery changes",
+  "excluded_statements": 0,
+  "exclusions": [],
+  "frozen_ns": 510503842377770,
+  "hard_cap_s": 4800,
+  "measurement_cap_s": 3300,
+  "owned_paths": [
+    "python/carnot/victris/__init__.py",
+    "python/carnot/victris/energy_bot.py",
+    "python/carnot/victris/rsi_loop.py",
+    "scripts/experiments/experiment_9258_v788_victris_energy_bot.py"
+  ],
+  "random_seed": 788258,
+  "required_check_names": [
+    "owned_tests",
+    "direct_consumers",
+    "ruff_check",
+    "ruff_format",
+    "strict_mypy",
+    "spec_coverage"
+  ],
+  "statement_percent": 100,
+  "validation_reserve_s": 1200
+}
