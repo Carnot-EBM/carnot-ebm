@@ -22454,3 +22454,4 @@ code |
 | 2026-11-20 04:39 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-20 05:25 UTC | Plan milestone 2026.11.787 | OK | 7 tasks proposed |
 | 2026-11-20 05:55 UTC | Milestone 2026.11.787 activated | OK | 7 tasks queued |
+| 2026-11-20 08:05 UTC | Exp9241: Qualify split V782-V786 consumer replay a | OK | 121 passed, 1 warning in 627.93s (0:10:27) |
