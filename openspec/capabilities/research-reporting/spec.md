@@ -117099,3 +117099,68 @@ inside the 4800-second limit.
 Historical capstone receipt paths that are relative SHALL resolve against the
 original producer checkout, including during replay from a private directory.
 
+### REQ-REPORT-9244-V787: Cluster-valid conformal risk, CA-OCRC tracking, and Mycelium provenance ledger
+
+Exp9244 SHALL independently authenticate original Exp9097 human authority (900
+responses across 300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three
+siblings per question), Exp9126 static method receipt, Exp9132 online method
+receipt (`TRAIN100` initialization and ten five-qid streams), Exp9211 qualified
+target-identifiability and label-ambiguity primary
+(`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`),
+and Exp9225 qualified selective-deferral and spline-support primary
+(`sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`)
+directly through their immutable custody hashes without depending on Exp9241
+`contract_ready_score` or any GPU task. External source absence SHALL block
+with `blocked_no_run` and exact `gate_check_summary` operands.
+
+Exp9244 SHALL implement exact finite-sample qid-cluster-valid accepted-risk
+upper bounds (`arXiv:2603.24704`, `arXiv:2512.12844`, `arXiv:2602.01637`) for a
+sealed decision policy (primary threshold `p <= 0.10` plus frozen `CAL50`
+conformal risk grid `alpha_risk in [0.05, 0.10, 0.15]` at confidence
+`1 - delta = 0.95`) by aggregating accepted-error and acceptance indicators to
+the independent `qid` cluster first, then computing exact Clopper-Pearson and
+deterministic Waudby-Smith/Ramdas betting e-process upper confidence bounds over
+independent accepted qids, reporting undefined risk as `"unavailable"` when zero
+qids accept. Exp9244 SHALL implement and qualify the CA-OCRC
+capacity-constrained delayed-feedback tracker (`arXiv:2611.17059`) for finite
+pending-buffer capacities `C in [1, 2, 5]` under 1-step and multi-step delayed
+streams (fixed seed `787245`) with randomized proxy-delay IPW risk estimation,
+corrupted-feedback flip-rate bounds (`epsilon in [0.0, 0.05]`,
+`arXiv:2605.20515`), and sealed deterministic shadow masks for Exp9251. Exp9244
+SHALL build and freeze the Mycelium provenance-typology-granularity ledger
+(`arXiv:2610.33608`) over all 900 authenticated Exp9097 responses strictly from
+immutable original metadata (`answer_level` present, `span_level` absent)
+without inventing span annotations or running model judges, and publish
+`results/experiment_9244_v787_conformal_risk_protocol.json` with
+`scientific_effect_measured=false`, `MODEL_SPECS=[]`,
+`current_llm_invocations=0`, and `generated_tokens=0`.
+
+#### SCENARIO-REPORT-9244-V787: Cluster-valid coverage, CA-OCRC IPW unbiasedness, and Mycelium provenance completeness
+
+On deterministic and Monte Carlo synthetic cluster-correlated fixtures (3
+correlated siblings per qid, seed `787244`, 2000 trials), naive i.i.d.
+sibling-level Clopper-Pearson bounds undercover when intra-qid correlation is
+high (`rho >= 0.7`), whereas qid-cluster-aggregated Clopper-Pearson and betting
+e-process bounds retain `>= 0.95` empirical coverage, preserve monotone ordering
+across `alpha_risk in [0.05, 0.10, 0.15]`, and report exact edge behavior at 0
+accepted qids (`unavailable`), 0 errors, and 100 percent errors (`1.0`). Under
+1-step and multi-step delayed streams for capacities `C in [1, 2, 5]` (seed
+`787245`), CA-OCRC randomized proxy-delay IPW risk estimation is unbiased
+whereas naive drop-on-full tracking is biased, and corrupted-feedback bounds for
+`epsilon in [0.0, 0.05]` bracket true risk. The Mycelium ledger accounts for all
+900 responses and 300 qids across `TRAIN150`, `CAL50`, and `TEST100` by source
+dataset, generator sibling, granularity, and factual-error typology.
+
+#### SCENARIO-REPORT-9244-V787-CONTROLS: Custody, rejection, tamper, and private CLI controls
+
+Missing provenance, missing files, missing fields, and observed zero remain
+distinct in `gate_check_summary`. Invalid probabilities, deltas, correlations,
+capacities, delays, flip rates, invented span-level annotations, and model-judge
+overrides raise explicit `ValueError` exceptions. Private outside-checkout CLI
+publication, refusal, tamper, and cold replay without `PYTHONPATH` under
+E2E-018/021, scoped Ruff check/format, strict mypy, spec coverage, and 100
+percent owned unit plus child statement coverage with zero exclusions qualify
+`conformal_risk_ready_score=1`, `ca_ocrc_ready_score=1`, and
+`provenance_audit_ready_score=1`.
+
+
