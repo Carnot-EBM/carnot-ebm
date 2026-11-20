@@ -22450,3 +22450,4 @@ code |
 | 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_rate_metric_field age-week 0: OPEN 1 days: REAL_BUG o |
 | 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_add_variant_denominators_from_value age-week 0: OPEN 1 d |
 | 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_finite_float age-week 0: OPEN 1 days: REAL_BUG on advers |
+| 2026-11-20 03:00 UTC | Exp9240: Reconcile fourteen V786 outcomes and exac | OK | 88 passed, 1 warning in 115.77s (0:01:55) |
