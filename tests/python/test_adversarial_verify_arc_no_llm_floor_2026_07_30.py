@@ -204,20 +204,11 @@ def test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole() -> None:
     ever fails, a real historical artifact has a duration below the floor it declares, and that
     needs a corrigendum decision by the operator -- NOT a quiet loosening of the floor.
     """
-    import json
+    # REQ-REPORT-9256-V788 / SCENARIO-REPORT-9256-V788
+    from carnot.reporting.v788_corpus_prefilter import scan_corpus
 
-    checked = 0
-    offenders = []
-    for path in (REPO / "results").rglob("*.json"):
-        try:
-            d = json.loads(path.read_text())
-        except Exception:
-            continue
-        if not isinstance(d, dict) or not AV._is_arc_live_agent_no_llm(d):
-            continue
-        checked += 1
-        dur = d.get("duration_s")
-        if isinstance(dur, (int, float)) and not isinstance(dur, bool) and float(dur) < 0.01:
-            offenders.append((str(path.relative_to(REPO)), dur))
+    summary = scan_corpus(REPO / "results", AV)
+    checked = int(summary["checked"])
+    offenders = [(f"results/{rel}", dur) for rel, dur in summary["offenders"]]
     assert checked > 0, "expected to find artifacts declaring this substrate"
     assert offenders == [], f"sub-floor artifacts declaring the no-LLM substrate: {offenders}"

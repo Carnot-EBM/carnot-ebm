@@ -795,3 +795,15 @@ These mechanisms require neither game-source reading nor fixed per-game rules. R
 
 These mechanisms require neither game-source access nor fixed per-game rules. Measurements were not independently reproduced; complete submissions remain unaudited for exploits.
 
+## 2026-11-20 14:36 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose coordinate diagnostics.** Beyond camera tracking, the toolkit tests cell-versus-tile scales and selects whichever explains the most observed object movement. Comments document **79/84 misleading reports** when cell displacement was applied to six-cell tile coordinates. No isolated score gain is established. [Implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/act_client.py#L2153)  
+  **POSSIBLE CARNOT LEVER:** Check coordinate units before transition verification so camera motion does not create false mechanics failures.
+
+- **Tufa Labs — (b), general-purpose animation-routing ablation.** Across **three games × 30 passes per arm**, mean scores were **33.74 with requested animation descriptions**, **26.71 with automatic descriptions**, **28.25 with animation markers alone**, and **23.96 without markers**. World models were disabled; requested descriptions beat automatic descriptions on every tested game. This is narrow evaluation evidence, not a hidden-leaderboard gain. [Measurements](https://github.com/Tufalabs/arc-prize-2026/blob/main/arc3/packages/seal/evidence.md#animations-marked-described-on-request)
+
+- **Grigoriy Zatravkin & co — (b), general-purpose sampling optimization.** Compacts each request’s target logits to its **top 32 candidates** for speculative verification, with fallback for unsupported sampling settings. Reported sampler latency fell **2.684→0.342 ms/step**, with zero mismatches across **480 checked rows**. This measures sampler speed, not overall gameplay improvement. [Writeup, §7](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md#7-speculative-decoding-tuned-to-the-workload), [implementation](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/serving/sample_topk.py)  
+  **POSSIBLE CARNOT LEVER:** Benchmark compact sampling when the local generator uses a small top-k, reducing generation overhead without training.
+
+These mechanisms require neither game-source access nor fixed per-game rules. Measurements were not independently reproduced; complete submissions remain unaudited for exploits.
+

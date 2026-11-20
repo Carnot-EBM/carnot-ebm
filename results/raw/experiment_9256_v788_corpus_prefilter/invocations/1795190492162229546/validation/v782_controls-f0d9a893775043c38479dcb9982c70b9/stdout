@@ -1,0 +1,283 @@
+...........................................F.F.....................FF... [ 59%]
+.......EE................................F......F                        [100%]
+==================================== ERRORS ====================================
+_____________ ERROR at setup of test_real_diagnostics_and_refusals _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7fca6f34fed0>)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9181.py:185: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9181] before subprocess=freeze_collection
+[exp9181] after subprocess=freeze_collection exit=4
+_____ ERROR at setup of test_real_verification_receipts_and_full_coverage ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7fca6f34fed0>)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9181.py:185: AssertionError
+=================================== FAILURES ===================================
+_________________________ test_authority_and_protocol __________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+
+    def test_authority_and_protocol(work):
+        """REQ-REPORT-9180-V782: every support, bound and historical failure stays fixed."""
+        i = work["inspection"]
+>       assert all(r["passed"] for r in i["checks"]), [r for r in i["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'sha256', 'check': 'original_assertions', 'expected': 'sha256:30dde5c4fd63097d24010d781f45441f9fca...cb6d3c126882a18d94d5d845', 'observed': 'sha256:5a6e49de3c9984da38f94a448df9162e7663cd0c4a0c5555137b65b94ffdfdd3', ...}]
+E       assert False
+E        +  where False = all(<generator object test_authority_and_protocol.<locals>.<genexpr> at 0x7fca6f1c2cf0>)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v782_contract_9180.py:31: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9180] phase=resources_before
+[exp9180] phase=resources_after
+[exp9180] phase=authenticate_inputs_before
+[exp9166] phase=authenticate_inputs_before
+[exp9152] phase=authenticate_inputs_before
+[exp9138] phase=authenticate_inputs_before
+[exp9138] phase=original_method_receipts_before
+[exp9138] phase=original_method_receipts_after
+[exp9138] phase=authenticate_inputs_after
+[exp9152] phase=authenticate_inputs_after
+[exp9166] phase=authenticate_inputs_after
+[exp9180] phase=authenticate_inputs_after
+__________________________________ test_build __________________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_build0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fca743aea20>
+
+    def test_build(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9180-V782: independent readiness never grants science credit."""
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        value = c.build(work, {})
+>       assert value["experiment_id"] == 9180 and value["verdict_class"] == "null"
+E       AssertionError: assert (9180 == 9180 and 'blocked' == 'null'
+E         
+E         - null
+E         + blocked)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v782_contract_9180.py:114: AssertionError
+__________ test_retained_diagnosis_is_disqualified_and_tamper_evident __________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_retained_diagnosis_is_dis0')
+
+    def test_retained_diagnosis_is_disqualified_and_tamper_evident(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9167-V781: real timed-out module evidence cannot become readiness."""
+        from copy import deepcopy
+        import pytest
+        from carnot.reporting import causal_validation_9167 as r
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        reference = r.ref(r.ROOT / "results/raw" / r.NAME / "diagnosis_manifest.json")
+        diagnosis = r.adopt_diagnosis(reference)
+        work = r.prepare(r.ROOT, tmp_path / "work", "20261117")
+        work["diagnosis"] = diagnosis
+        work["node_events"] = [
+            json.loads(l)
+            for l in (Path(diagnosis["directory"]) / "original/nodes.jsonl").read_text().splitlines()
+        ]
+        status = r.causal_status(work)
+        assert status["cause_demonstrated"] and not status["ready"]
+        assert status["unfinished_module_nodes"]
+        atomic_json(tmp_path / "work/work.json", work)
+        value = r.build(work)
+        assert value["verdict_class"] == "disqualified" and value["causal_fix_ready_score"] == 0
+        assert value["attempted_count"] == sum(row["attempted"] for row in value["rows"]) == 2
+        assert (
+            value["cost_model_rows"][1]["measured_elapsed_s"]
+            == diagnosis["corrected_receipt"]["duration_s"]
+        )
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+>       assert r.replay(path)["passed"]
+               ^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_validation_9167.py:834: in replay
+    bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'imported_fields': ['original_assertion_bytes'], 'path': '/home/ianblenke/github.com/ianblenke/carnot/tests/python/te...y_arc_no_llm_floor_2026_07_30.py', 'sha256': 'sha256:30dde5c4fd63097d24010d781f45441f9fca9db4cb6d3c126882a18d94d5d845'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+____________ test_replay_rejects_input_trace_and_module_scope_drift ____________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_replay_rejects_input_trac0')
+
+    def test_replay_rejects_input_trace_and_module_scope_drift(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9167-V781: rehashing narrowed scope or invented trace does not qualify."""
+        from copy import deepcopy
+        import pytest
+        from carnot.reporting import causal_validation_9167 as r
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        work = r.prepare(r.ROOT, tmp_path / "raw", "20261117")
+        work["diagnosis"] = r.adopt_diagnosis(
+            r.ref(r.ROOT / "results/raw" / r.NAME / "diagnosis_manifest.json")
+        )
+        workpath = tmp_path / "raw/work.json"
+        atomic_json(workpath, work)
+        value = r.build(work)
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+        altered = deepcopy(work)
+        altered["inputs"][next(iter(r.INPUTS))]["contract_ready_score"] = 0
+        atomic_json(workpath, altered)
+        value["work_reference"] = r.ref(workpath)
+        atomic_json(path, value)
+        with pytest.raises(ValueError, match="input_drift"):
+>           r.replay(path)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py:493: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_validation_9167.py:834: in replay
+    bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'imported_fields': ['original_assertion_bytes'], 'path': '/home/ianblenke/github.com/ianblenke/carnot/tests/python/te...y_arc_no_llm_floor_2026_07_30.py', 'sha256': 'sha256:30dde5c4fd63097d24010d781f45441f9fca9db4cb6d3c126882a18d94d5d845'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_replay_rejects_input_trac0')
+
+    def test_replay_rejects_input_trace_and_module_scope_drift(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-9167-V781: rehashing narrowed scope or invented trace does not qualify."""
+        from copy import deepcopy
+        import pytest
+        from carnot.reporting import causal_validation_9167 as r
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        work = r.prepare(r.ROOT, tmp_path / "raw", "20261117")
+        work["diagnosis"] = r.adopt_diagnosis(
+            r.ref(r.ROOT / "results/raw" / r.NAME / "diagnosis_manifest.json")
+        )
+        workpath = tmp_path / "raw/work.json"
+        atomic_json(workpath, work)
+        value = r.build(work)
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+        altered = deepcopy(work)
+        altered["inputs"][next(iter(r.INPUTS))]["contract_ready_score"] = 0
+        atomic_json(workpath, altered)
+        value["work_reference"] = r.ref(workpath)
+        atomic_json(path, value)
+>       with pytest.raises(ValueError, match="input_drift"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'input_drift'
+E         Actual message: 'reference_drift:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py'
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py:492: AssertionError
+________________ test_real_authentication_and_historical_drift _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_real_authentication_and_h0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fca781207a0>
+
+    def test_real_authentication_and_historical_drift(tmp_path: Path, monkeypatch: Any) -> None:
+        work = s.authenticate(s.ROOT, tmp_path / "auth")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object test_real_authentication_and_historical_drift.<locals>.<genexpr> at 0x7fca72c66dc0>)
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_validation_schedule_9139.py:221: AssertionError
+________________ test_replay_source_reduction_and_control_drift ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_replay_source_reduction_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fca782f1400>
+
+    def test_replay_source_reduction_and_control_drift(tmp_path: Path, monkeypatch: Any) -> None:
+        from carnot.reporting import validation_schedule_runner_9139 as r
+    
+        work = s.authenticate(s.ROOT, tmp_path / "real")
+        value = r.build(work, "20261116", 0, 1)
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+>       assert r.replay(path)["passed"]
+               ^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_validation_schedule_9139.py:474: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T163718-3536415-3a984e57/test_replay_source_reduction_a0/candidate.json')
+
+    def replay(path: Path) -> Json:
+        """Reconstruct claims from bound inputs and refuse even rehashed aggregate edits."""
+        value = json.loads(path.read_bytes())
+        saved = value["replay_input"]
+        work = saved["work"]
+        if value["reproducibility_checksum"] != canonical_hash(saved):
+            raise ValueError("replay_hash")
+        for reference in value["source_references"] + value["code_config_hashes"]:
+            s.prior.old.bound(reference)
+        if "historical" in work:
+            source = next(
+                r for r in work["references"] if Path(r["path"]).name == Path(s.PREVIOUS).name
+            )
+            original = json.loads(s.prior.old.bound(source).read_bytes())
+            historical = original["replay_input"]["work"]
+            if (
+                original != work["historical"]
+                or work.get("schedule") != s.schedule(historical)
+                or work.get("semantic_controls") != historical["original_semantic_controls"]
+                or work.get("count_controls") != historical["adversarial_control_rows"]
+            ):
+>               raise ValueError("schedule_drift")
+E               ValueError: schedule_drift
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_runner_9139.py:411: ValueError
+=============================== warnings summary ===============================
+../../../../home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v782_contract_9180.py::test_authority_and_protocol
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v782_contract_9180.py::test_build
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py::test_retained_diagnosis_is_disqualified_and_tamper_evident
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9167.py::test_replay_rejects_input_trace_and_module_scope_drift
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_validation_schedule_9139.py::test_real_authentication_and_historical_drift
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_validation_schedule_9139.py::test_replay_source_reduction_and_control_drift
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9181.py::test_real_diagnostics_and_refusals
+ERROR ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_causal_validation_9181.py::test_real_verification_receipts_and_full_coverage
+6 failed, 113 passed, 1 warning, 2 errors in 340.23s (0:05:40)

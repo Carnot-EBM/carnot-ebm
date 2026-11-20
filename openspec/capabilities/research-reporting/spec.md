@@ -117261,3 +117261,88 @@ Exp9255 coverage ownership SHALL omit unchanged shared protocol-owner code.
 Existing strict protocol-owner checks SHALL remain in the consumer obligations.
 Private publication controls SHALL allow their checker and cold-replay phases
 to finish within the shared measurement deadline.
+
+### REQ-REPORT-9256-V788: Lossless five-sentinel byte prefilter for the complete recursive corpus walk
+
+Exp9256 (`exp9256-corpus-prefilter`, milestone `2026.11.788` on run date
+`20261120`) SHALL qualify a lossless five-sentinel byte prefilter for the
+complete recursive `results/**/*.json` corpus walk and publish
+`results/experiment_9256_v788_corpus_prefilter.json` through
+`carnot.reporting.primary_publication` after passing
+`scripts/adversarial_verify.py` and
+`scripts/verdict_row_consistency_lint.py --strict` plus cold replay.
+
+Before running, Exp9256 SHALL authenticate exact upstream inputs, immutable
+producer hashes, and named gate operands:
+`results/experiment_9255_v788_contract.json`
+(`sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef`,
+`contract_ready_score==1`, `replay_authority_ready_score==1`),
+`results/experiment_9181_v782_causal_validation.json`
+(`sha256:dbdb988f3ce372334dc1634309556987d26f05c73739eeae574624ea601d2934`,
+`direct_consumers` exit code `-15` after `1224.316s` inside
+`test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole`),
+`results/experiment_9241_v787_contract.json`
+(`sha256:32cdfef7df5fb0b829ef9eba8d68a44a0e6b7947afbd402d24129dae27a92f5b`),
+and `results/experiment_9242_corpus_prefilter.json`
+(`sha256:9e5cf741802b6c1202c6bbbb5ff3b008929d2fbd39b079ff64a00a2d50e63063`).
+It SHALL record `missing_file`, `missing_field`, and observed `0` separately in
+`gate_check_summary`; external absence SHALL be terminal `blocked` with
+`inference_substrate_class="blocked_no_run"`, never `partial`.
+
+Exp9256 SHALL derive all five recognized ASCII substrate sentinels directly
+from the unchanged classifier constants in `scripts/adversarial_verify.py`
+(`ARC_LIVE_AGENT_NO_LLM_SUBSTRATE`, `ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE`,
+`ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE`,
+`ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE`, and
+`ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE`). The streaming reader SHALL visit every
+recursive `results/**/*.json` path, stream each file to EOF in bounded chunks
+with overlap at least `max_needle_len - 1` (`72`) bytes to catch sentinels and
+JSON Unicode escape markers (`\u`) across chunk boundaries, route any file
+containing a sentinel or `\u` through the unchanged `read_text`/`json.loads`
+and `_is_arc_live_agent_no_llm` classifier path, and skip JSON decoding only
+at EOF with zero sentinels and zero Unicode escapes. It SHALL never filter by
+path, directory, filename, size, age, schema, or verdict, and SHALL preserve
+malformed/non-dict behavior, `checked > 0`, and `offenders == []` assertions.
+Declare `no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9256-V788: Complete path traversal, exact semantic parity, and stratum cost clocks
+
+When `results/experiment_9255_v788_contract.json` passes both
+`contract_ready_score==1` and `replay_authority_ready_score==1`, Exp9256
+records a complete recursive `results/**/*.json` path/size manifest, compares
+original versus prefilter read/decode/classifier clocks on identical
+predetermined size strata without claiming a full-corpus speedup ratio from a
+censored baseline, proves exact semantic parity across all fixture categories,
+executes the complete original target test module over the full manifest plus
+V782 targeted controls and affected consumers with flushed progress lines, and
+verifies stable candidate bytes (`changed==0`, `unfinished==0`). When all
+checks and 100 percent owned statement coverage pass within budget,
+`corpus_scan_ready_score` equals `1`.
+
+#### SCENARIO-REPORT-9256-V788-CONTROLS: Sentinel deletion mutations, Unicode-escape fallback, cross-chunk boundaries, and private CLI controls
+
+Deleting any of the five recognized ASCII substrate sentinels or disabling the
+JSON Unicode-escape (`\u`) fallback fails its corresponding adversarial
+mutation control (`mutation_detected=true`). Concurrent corpus mutation
+(`changed > 0`), unfinished traversal (`unfinished > 0`), semantic parity
+discrepancy, or any failed validation check sets `corpus_scan_ready_score=0`.
+Private CLI publication, refusal, tamper, and cold replay execute outside the
+checkout without `PYTHONPATH` under E2E-018/021.
+
+## Implementation Status (REQ-REPORT-9256-V788)
+
+Qualification clarification (2026-11-20): every scanned path SHALL have a
+manifest row and an accountable scan row. The reader SHALL reach EOF even
+after finding a sentinel. Hashes and file metadata SHALL detect changed bytes,
+and a second recursive enumeration SHALL detect added or removed paths.
+Upstream gate failure SHALL stop before scanning or running controls.
+Production readiness SHALL require actual child receipts; fixture receipts
+SHALL never be accepted as executed validation. Unfinished owned work SHALL
+remain partial, and readiness SHALL remain zero when any required check fails.
+The no-model operation SHALL use the recognized `read_only_live_artifact_inventory`
+declaration so cited upstream models cannot be mistaken for current inference.
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-9256-V788 | Implemented (`python/carnot/reporting/v788_corpus_prefilter.py`, `python/carnot/reporting/v788_corpus_prefilter_runner.py`, `scripts/experiments/experiment_9256_v788_corpus_prefilter.py`, `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`, `results/experiment_9256_v788_corpus_prefilter.json`) | Implemented (`tests/python/test_v788_corpus_prefilter_9256.py`) |
