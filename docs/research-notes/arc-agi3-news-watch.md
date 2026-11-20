@@ -958,3 +958,9 @@ Live Kaggle standings and the full discussion feed remained inaccessible; Turduc
 
 Live Kaggle standings and the full discussion feed remained unreadable, limiting coverage.
 
+## 2026-11-20 14:08 UTC -- NEW
+
+**November 17 — GPT-6.2 verified results:** Astra reached **100.0% Provider Adapter (XHigh)** and **70.3% Standard (Max)** on ARC-AGI-3. Sol reached **98.2% Provider Adapter** and **54.9% Standard**, both at Max. [Official results](https://arcprize.org/results/openai-gpt-6-2)
+
+Live Kaggle standings and the full discussion feed remained inaccessible, limiting coverage.
+

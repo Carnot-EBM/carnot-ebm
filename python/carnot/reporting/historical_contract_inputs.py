@@ -28,6 +28,8 @@ _RETAINED_COLD = (
 )
 _COLD_PIN = "sha256:490c68be628eecb98d4492dbbffc1949e7087780dd0f4d830b54d63fd199ce7b"
 _V785_ARCHIVE_PIN = "sha256:58951a5448e3a428a1e49544e28e8e57cdc2df5a523474a9ae868e82aa600634"
+_V787_ARCHIVE_PIN = "sha256:37ac114926d62858baa2f09da27d622e2555ac0ffddba7accc7f7d27155f1479"
+_V787_CONFIG_PIN = "sha256:f39315e3029fd9960717da3028f60e432a0db41b8ad0a6b5e3d60e6ec4c59de9"
 _DIGESTS: dict[tuple[str, int, int, int, int], str] = {}
 CAPSTONES = {
     782: (
@@ -47,6 +49,10 @@ CAPSTONES = {
         "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
     ),
     786: (
+        "experiment_9240_v786_capstone.json",
+        "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
+    ),
+    787: (
         "experiment_9240_v786_capstone.json",
         "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
     ),
@@ -114,7 +120,7 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
     value = json.loads(authenticated(dict(path=str(ROOT / "results" / name), sha256=pin)))
     work = json.loads(authenticated(value["work_reference"]))
     sources = dict(work["snapshots"])
-    if generation in {785, 786}:
+    if generation in {785, 786, 787}:
         sources.update(
             {
                 "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md": dict(
@@ -137,6 +143,66 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
                 ),
             }
         )
+    if generation == 787:
+        sources.update(
+            {
+                "openspec/change-proposals/v787-contract-inputs.json": dict(
+                    path=str(ROOT / "openspec/change-proposals/v787-contract-inputs.json"),
+                    sha256=_V787_CONFIG_PIN,
+                ),
+                "openspec/change-proposals/research-roadmap-v787-preserved-20261120.md": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v787-preserved-20261120.md"
+                    ),
+                    sha256="sha256:27e73f05af455de93477bd14f74a6e9c238724a6a5959cc66f33278aeaaea23a",
+                ),
+                "openspec/change-proposals/research-roadmap-v787-queue-preserved-20261120.yaml": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v787-queue-preserved-20261120.yaml"
+                    ),
+                    sha256="sha256:37442df99c095e1288d96f8e84e0f425838f4f8042d328d6f15b3a00ec78eec2",
+                ),
+                "results/experiment_9241_v787_contract.json": dict(
+                    path=str(ROOT / "results/experiment_9241_v787_contract.json"),
+                    sha256="sha256:32cdfef7df5fb0b829ef9eba8d68a44a0e6b7947afbd402d24129dae27a92f5b",
+                ),
+                "results/experiment_9242_corpus_prefilter.json": dict(
+                    path=str(ROOT / "results/experiment_9242_corpus_prefilter.json"),
+                    sha256="sha256:9e5cf741802b6c1202c6bbbb5ff3b008929d2fbd39b079ff64a00a2d50e63063",
+                ),
+                "results/experiment_9244_v787_conformal_risk_protocol.json": dict(
+                    path=str(ROOT / "results/experiment_9244_v787_conformal_risk_protocol.json"),
+                    sha256="sha256:36890bc36e8a84c4d91b8d8bff2d60698de061938f591dafbf7845c38fe2e693",
+                ),
+            }
+        )
+        authenticated(
+            json.loads(authenticated(sources["results/experiment_9241_v787_contract.json"]))[
+                "work_reference"
+            ]
+        )
+        authenticated(
+            json.loads(
+                authenticated(sources["results/experiment_9244_v787_conformal_risk_protocol.json"])
+            )["work_reference"]
+        )
+        v787_archive = (
+            (ROOT / "research-complete.yaml").read_bytes().split(b"- id: 2026.11.787\n", 1)[0]
+        )
+        v787_target = _COLD_TERMINAL / "v787_research_complete.yaml"
+        if v787_target.exists():
+            authenticated(dict(path=str(v787_target), sha256=_V787_ARCHIVE_PIN), read=False)
+        else:
+            v787_target.write_bytes(v787_archive)
+        sources["research-complete.yaml"] = dict(path=str(v787_target), sha256=_V787_ARCHIVE_PIN)
+        sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
+            "openspec/change-proposals/research-roadmap-v787-preserved-20261120.md"
+        ]
+        sources["research-roadmap.yaml"] = sources[
+            "openspec/change-proposals/research-roadmap-v787-queue-preserved-20261120.yaml"
+        ]
     if generation == 786:
         sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
             "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md"
@@ -221,6 +287,10 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
             785: {
                 "results/experiment_9223_corpus_prefilter.json",
                 "results/experiment_9225_v785_selective_deferral_protocol.json",
+            },
+            787: {
+                "results/experiment_9242_corpus_prefilter.json",
+                "results/experiment_9244_v787_conformal_risk_protocol.json",
             },
         }.get(generation, set()):
             continue

@@ -1,0 +1,29 @@
+{
+  "bootstrap_seed": 782190,
+  "cdf": "F0(x)=count(pooled correct TRAIN token entropies<=x)/total pooled correct TRAIN token count",
+  "claim_scope": "secondary ranking only; teacher-forced archived answers; no token independence theorem or independent-verifier gap closure",
+  "comparators": [
+    "mean_entropy",
+    "max_entropy",
+    "probability_length_error_probability"
+  ],
+  "contrast": "AUROC(CES)-AUROC(comparator)",
+  "dependence": "record per-answer token count, lag1 correlation when support/variance permit, ties, mean/max entropy and all scores",
+  "directions": "larger CES, mean entropy, max entropy and probability_length error probability predict error",
+  "draws": 10000,
+  "empty_support": "exclude empty answers; report original900 slots and empty exclusions separately",
+  "invalid_draws": "class absent => affected interval unavailable; retain counts; never drop or redraw",
+  "missing_head": "blocks head contrast only; mean/max comparisons remain",
+  "missing_reference": "blocks CES branch",
+  "one_class_test": "AUROC unavailable",
+  "primary_gate_rescue": false,
+  "reference_labels": "original A1==0, nonempty answers only; no CAL or TEST response",
+  "reference_role": "TRAIN150",
+  "score": "CES=sqrt(F0(mean(H))*F0(max(H)))",
+  "selection": "no TEST tuning, probability threshold, learned feature or online arm",
+  "signal_gate": "every contrast one-sided lower bound>0; completion separate from effect",
+  "tail": 0.016666666666666666,
+  "ties": "half-credit",
+  "unit": "paired TEST100 qids; retain all original siblings",
+  "weighting": "token weighted; retain token count and distinct qid support"
+}

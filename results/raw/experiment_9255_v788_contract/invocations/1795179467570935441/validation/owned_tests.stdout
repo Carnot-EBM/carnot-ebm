@@ -1,0 +1,58 @@
+...................F....                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_private_cli_and_interleaved_replays ___________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/contract92550/c...28 kB', 'MemAvailable:   100115816 kB'], 'private_free_disk_bytes': 751189540864}, 'resource': 'host_resources'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/test_private_cli_and_interleav0')
+
+    def test_private_cli_and_interleaved_replays(work, tmp_path):
+        """SCENARIO-REPORT-9255-V788-CONTROLS: E2E-018/021 private CLI and interleaved replay."""
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (e.NAME + ".json")
+>       result = child_cli(tmp_path, "--from-work", str(source), "--output", str(output))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v788_contract_9255.py:557: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v788_contract_9255.py:35: in child_cli
+    result = subprocess.run(
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 480139.573240104, orig_timeout = 180
+stdout_seq = [b'[exp9255] phase=start_no_model_load\n', b'[exp9255] phase=publication_before\n', b'[exp8205] phase=before_subproces...05] phase=waiting_cold_replay completed=0 pending=1\n', b'[exp8205] phase=waiting_cold_replay completed=0 pending=1\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9255_v788_contract.py', '--from-work', '/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/test_private_cli_and_interleav0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/test_private_cli_and_interleav0/experiment_9255_v788_contract.json']' timed out after 180 seconds
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+----------------------------- Captured stdout call -----------------------------
+[test9255] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/test_private_cli_and_interleav0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261120T125833-3482495-08a408b4/test_private_cli_and_interleav0/experiment_9255_v788_contract.json')
+=============================== warnings summary ===============================
+../../../../home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v788_contract_9255.py::test_private_cli_and_interleaved_replays
+1 failed, 23 passed, 1 warning in 778.55s (0:12:58)

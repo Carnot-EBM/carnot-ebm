@@ -1,0 +1,44 @@
+{
+  "revision": "v784-owner-replay-v1",
+  "seed": 784208,
+  "pins": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:06ddcee74cab8be574b2892e7773983d2e41a0d733b2003f0712bfe1ff48e811",
+    "research-roadmap.yaml": "sha256:b1038a3ccf93857b6461f267e9683f71f61735a87d1f5021c904c47a7d76112f",
+    "research-complete.yaml": "sha256:9ae25edae2cf1fa1f26c6ad097432275251ac250fd8cfe4cbcfb08099b45e754",
+    "ops/exclusion_manifest.yaml": "sha256:d534012dc081b42711f08555bb4632731c297e8b636487266011423c62235477",
+    "openspec/change-proposals/research-roadmap-v783-preserved-20261117.md": "sha256:14f2bec94e215fe965080ff2388f5df0c1b221398b527a98d5a05cd9671dfa08",
+    "openspec/change-proposals/research-roadmap-v783-queue-preserved-20261117.yaml": "sha256:1c0ff24ad77aa6c1f361117cf842aaa1e61cc068be548ccd3e5f99d30ba899df",
+    "results/experiment_9194_v783_contract.json": "sha256:a97cfbd44155f01eca08ff0a02a14bf422b7be29f1077d6d3181e466868b56c2",
+    "results/experiment_9207_v783_capstone.json": "sha256:059f1cf7a832d2c1989c0abc0481fcea9771af60a40e54adf3b4dae73ed07b10"
+  },
+  "exclusions": [],
+  "scheduling_repair_revision": {
+    "changes_scientific_thresholds": false,
+    "gate": "corpus_scan_ready_score",
+    "historical_gate": "causal_fix_ready_score",
+    "historical_gate_score": 0,
+    "name": "v783-lossless-corpus-scan",
+    "retired_tasks": [
+      "exp9181-validation-loop-repair",
+      "exp9182-forward-qualification"
+    ]
+  },
+  "target_identifiability_rubric": {
+    "factual_error": "original human criterion and factual-error evidence",
+    "expressed_uncertainty": "explicit original human annotation",
+    "reelicitation": "same-generator semantically equivalent original prompts",
+    "statuses": [
+      "present",
+      "absent",
+      "ambiguous"
+    ],
+    "absent_is_negative": false,
+    "cross_generator_substitution": false,
+    "predictions_read": false,
+    "SI_CF_unavailable_without_evidence": true
+  },
+  "original_private_cold_replay_reference": {
+    "path": "/var/tmp/pytest-carnot-ianblenke/20261117T164052-1826645-9c4b92b6/test_private_cli0/raw/experiment_9194_v783_contract/invocations/1794933787880253110/terminal/cold_replay.receipt.json",
+    "sha256": "sha256:490c68be628eecb98d4492dbbffc1949e7087780dd0f4d830b54d63fd199ce7b"
+  }
+}

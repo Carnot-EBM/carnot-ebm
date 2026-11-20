@@ -117163,4 +117163,101 @@ percent owned unit plus child statement coverage with zero exclusions qualify
 `conformal_risk_ready_score=1`, `ca_ocrc_ready_score=1`, and
 `provenance_audit_ready_score=1`.
 
+## Proposed V788 research milestone — 2026-11-20
 
+Status: planned and scoped for V788 execution. All historical V782, V783, V784,
+V785, V786, and V787 outcomes, quarantines, and zero gates remain unchanged
+history.
+
+### REQ-REPORT-9255-V788: Split V782-V787 consumer replay, coverage-list parity, and fourteen-task V788 contract binding
+
+Exp9255 SHALL authenticate original Exp9097 human source custody (900 responses
+across 300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three lexical
+100-qid shards), Exp9126 five-arm static protocol, Exp9132 six-arm delayed
+learning protocol (separate `TRAIN100` initialization), Exp9211 qualified
+target-identifiability and affine label-ambiguity primary
+(`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`),
+Exp9225 qualified selective-deferral and spline-support primary
+(`sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`),
+Exp9222 V785 contract primary
+(`sha256:c54b57079cfd43221a9b2387f208c7603f768e8bf8b6b28816e458c71ac9b3a8`),
+Exp9240 V786 capstone primary
+(`sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500`),
+Exp9241 V787 contract primary
+(`sha256:32cdfef7df5fb0b829ef9eba8d68a44a0e6b7947afbd402d24129dae27a92f5b`,
+`honest_verdict=complete_blocked_v787_contract`), Exp9242 V787 pre-gate refusal
+artifact
+(`sha256:9e5cf741802b6c1202c6bbbb5ff3b008929d2fbd39b079ff64a00a2d50e63063`),
+and Exp9244 qualified conformal-risk, CA-OCRC, and Mycelium provenance primary
+(`sha256:36890bc36e8a84c4d91b8d8bff2d60698de061938f591dafbf7845c38fe2e693`,
+`conformal_risk_ready_score=1`, `ca_ocrc_ready_score=1`,
+`provenance_audit_ready_score=1`). It SHALL preserve V787 outcomes as immutable
+historical facts.
+
+Exp9255 SHALL extend `python/carnot/reporting/historical_contract_inputs.py`
+with isolated V787 historical root construction pointing to preserved
+`research-roadmap-v787-preserved-20261120.md`
+(`sha256:27e73f05af455de93477bd14f74a6e9c238724a6a5959cc66f33278aeaaea23a`),
+preserved `research-roadmap-v787-queue-preserved-20261120.yaml`
+(`sha256:37442df99c095e1288d96f8e84e0f425838f4f8042d328d6f15b3a00ec78eec2`),
+`experiment_9241_v787_contract.json`, and
+`experiment_9244_v787_conformal_risk_protocol.json`. It SHALL fix the
+`v787_contract.py` line-238/290 coverage-list defect in `v788_contract.py` by
+passing `work["scope"]["owned_changed_paths"]` identically to
+`legacy.lifecycle.measured(...)`, keeping `owned_changed_paths` strictly limited
+to files owned or modified by Exp9255, and requiring exact file-set equality in
+`receipts_pass` at 100 percent statement coverage with zero exclusions.
+
+Exp9255 SHALL partition `direct_consumers` into seven bounded, non-contending
+shards with distinct `COVERAGE_FILE` (`.coverage.<shard>`) paths:
+`direct_consumers_core`, `direct_consumers_v782`, `direct_consumers_v783`,
+`direct_consumers_v784`, `direct_consumers_v785`, `direct_consumers_v786`, and
+`direct_consumers_v787` (`tests/python/test_v787_contract_9241.py` and
+`tests/python/test_conformal_risk_9244.py`). It SHALL retain untouched
+`tests/python/test_causal_validation_9181.py` in the full validation obligation
+manifest for `exp9257-forward-qualification`.
+
+Exp9255 SHALL keep `protocol_owners` validation strict in fresh cold-replay
+processes for `entropy_reference_protocol`, `label_ambiguity_protocol`,
+`selective_deferral_protocol`, and `conformal_risk_protocol` (backed by
+qualified Exp9244). It SHALL parse the fenced YAML block under
+`## Full machine-readable contract` in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and compare all fourteen
+complete ordered V788 task objects (`exp9255` through `exp9268`) against the
+active queue, accepting only conductor literal-brace encoding. Declare
+`no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9255-V788: Seven split shards, isolated V782-V787 roots, coverage-list parity, and fourteen-task parity
+
+Owned tests and all seven partitioned direct-consumer shards execute against
+isolated V782, V783, V784, V785, V786, and V787 historical roots in fresh
+private processes outside the checkout without `PYTHONPATH`. The measured
+coverage file list equals `work["scope"]["owned_changed_paths"]` and reaches
+100 percent statement coverage with zero exclusions. Fresh-process cold replay
+validates all four protocol sidecars against their immutable owning
+configurations and rejects missing, modified, or rehashed false sidecars,
+changed owner hashes, and successor-queue pollution. When all seven shards,
+owned tests, scoped Ruff check/format, strict mypy, spec coverage, and
+E2E-018/021 checks pass and all fourteen ordered V788 task objects match between
+the embedded YAML contract and active queue, `contract_ready_score`,
+`replay_authority_ready_score`, `source_ready_score`,
+`static_methods_ready_score`, and `online_methods_ready_score` all qualify (`1`).
+
+#### SCENARIO-REPORT-9255-V788-CONTROLS: Coverage-list mismatch rejection, tamper, interleaved replay, and external absence controls
+
+Any mismatch between `work["scope"]["owned_changed_paths"]` and the measured
+coverage file list in `owned_statement_coverage["files"]` is rejected by
+`receipts_pass`, setting `required_checks_passed=false`,
+`contract_ready_score=0`, and `replay_authority_ready_score=0`. Private CLI
+publication, refusal, tamper, and cold replay execute outside the checkout
+without `PYTHONPATH` under E2E-018/021. Interleaved V785, V787, and V788
+replays pass on authentic artifacts and fail on rehashed tampering. Missing
+external inputs or omitted planner slots block with `blocked_no_run` and exact
+`gate_check_summary` operands that distinguish `missing_file`, `missing_field`,
+and observed `0`.
+
+Exp9255 coverage ownership SHALL omit unchanged shared protocol-owner code.
+Existing strict protocol-owner checks SHALL remain in the consumer obligations.
+Private publication controls SHALL allow their checker and cold-replay phases
+to finish within the shared measurement deadline.

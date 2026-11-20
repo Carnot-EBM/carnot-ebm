@@ -1,0 +1,50 @@
+{
+  "entropy_reference_protocol": {
+    "bootstrap_seed": 782190,
+    "cdf": "F0(x)=count(pooled correct TRAIN token entropies<=x)/total pooled correct TRAIN token count",
+    "claim_scope": "secondary ranking only; teacher-forced archived answers; no token independence theorem or independent-verifier gap closure",
+    "comparators": [
+      "mean_entropy",
+      "max_entropy",
+      "probability_length_error_probability"
+    ],
+    "contrast": "AUROC(CES)-AUROC(comparator)",
+    "dependence": "record per-answer token count, lag1 correlation when support/variance permit, ties, mean/max entropy and all scores",
+    "directions": "larger CES, mean entropy, max entropy and probability_length error probability predict error",
+    "draws": 10000,
+    "empty_support": "exclude empty answers; report original900 slots and empty exclusions separately",
+    "invalid_draws": "class absent => affected interval unavailable; retain counts; never drop or redraw",
+    "missing_head": "blocks head contrast only; mean/max comparisons remain",
+    "missing_reference": "blocks CES branch",
+    "one_class_test": "AUROC unavailable",
+    "primary_gate_rescue": false,
+    "reference_labels": "original A1==0, nonempty answers only; no CAL or TEST response",
+    "reference_role": "TRAIN150",
+    "score": "CES=sqrt(F0(mean(H))*F0(max(H)))",
+    "selection": "no TEST tuning, probability threshold, learned feature or online arm",
+    "signal_gate": "every contrast one-sided lower bound>0; completion separate from effect",
+    "tail": 0.016666666666666666,
+    "ties": "half-credit",
+    "unit": "paired TEST100 qids; retain all original siblings",
+    "weighting": "token weighted; retain token count and distinct qid support"
+  },
+  "exclusions": [],
+  "pins": {
+    "openspec/change-proposals/research-roadmap-v781-preserved-20261117.md": "sha256:c889e68dcd772efcdc54948b9a7a4abd6545bd65d858f400b7e6f3baae81a3a9",
+    "openspec/change-proposals/research-roadmap-v781-queue-preserved-20261117.yaml": "sha256:82cc4d3e33aef8e75289ebe5f395f02848d2b23df90a8e7b3bfe953448515f9a",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:02138bd865e065962ba7315e046001a992c88b56fd9497800e2408b2791ca2fc",
+    "research-roadmap.yaml": "sha256:27d0e410faa04e54336c9a06c51edc5fcaea7022fee3a8dea001a0f3de554d45",
+    "results/experiment_9166_v781_contract.json": "sha256:f4c3a8e419b2c956452128d251ac14b351407e08b0552a704cd55dccac747f55",
+    "results/experiment_9167_v781_causal_validation.json": "sha256:4776dc4139c8c65d3f477fc9d37a434265cf5b67d2d2797d0dee26f8b7723ebe",
+    "results/experiment_9179_v781_capstone.json": "sha256:781c337d3b9a3bff574e7d535bda7c9e4dcd41d8495e4d921da4ae1fe4117877"
+  },
+  "revision": "v782-contract-v1",
+  "scheduling_repair_revision": {
+    "changes_scientific_thresholds": false,
+    "historical_receipt_ready_score": 0,
+    "name": "v782-single-pass-validation",
+    "owner": "exp9181-validation-loop-repair",
+    "qualification_owner": "exp9182-forward-qualification"
+  },
+  "seed": 782180
+}
