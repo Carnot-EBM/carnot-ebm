@@ -781,3 +781,17 @@ Kaggle’s live table was unreadable; current contender identities were cross-ch
 
 These mechanisms require neither game-source reading nor fixed per-game rules. Results were not independently reproduced; complete submissions remain unaudited for exploitation.
 
+## 2026-11-19 14:31 UTC -- NEW
+
+- **Yi-Chia Chen — (b), general-purpose feedback preservation.** The final toolkit repeats important action notices, counter changes and the final state at the end of batch output. Code comments report that **70% of action calls were piped through `head`/`tail`, leaving 40% of per-step lines unseen**. No isolated gameplay gain is established. [Implementation](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/src/arcforge/arc_code/act_client.py#L2247), [enabled final configuration](https://github.com/ycchen-tw/ARC-Forge-2026/blob/main/agi3/work/arc_code/configs/kaggle-competition-v14tk5an-c110-p8-dyn-v512r2-review9-cards-click-final.json).  
+  **POSSIBLE CARNOT LEVER:** Append a compact action/verifier receipt to verbose tool output so truncation preserves critical feedback.
+
+- **Tufa Labs — (b), general-purpose perception ablations.** Beyond the previously reported world-model results, removing multimodal board images cost an estimated **2.7 ± 1.6 points**, whereas removing segmentation changed scores **+0.7 ± 1.6**—no established segmentation benefit. These are regression estimates from combined parameter sweeps on public/custom games, with 95% intervals. [Ablation table](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/general-approaches-now-beat-domain-specific-tricks).
+
+- **Tufa Labs — (b), general-purpose distillation failure.** Distilling **Kimi K3.1 Pro into Flash-Next** improved token efficiency but scored below its submitted model on ARC-AGI-3. On ARC-AGI-2, the distilled model also used fewer tokens while getting substantially more tasks wrong. [Writeup, “What didn’t work”](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/general-approaches-now-beat-domain-specific-tricks).
+
+- **xz — (b), general-purpose scheduling.** Parks stalled games by releasing their KV cache while retaining token history. Retries are grouped by previous parking count, then ranked by estimated remaining score attainable before the deadline. One paired rehearsal cleared **278 versus 234 levels after approximately two hours**; the separate ranking comparison remained inconclusive. [Writeup, §1](https://github.com/xz259/arc-prize-2026-solutions/blob/main/arc3/docs/writeup.md#1-harness).  
+  **POSSIBLE CARNOT LEVER:** Schedule generator sessions by stall history and remaining attainable score, freeing cache between attempts.
+
+These mechanisms require neither game-source access nor fixed per-game rules. Measurements were not independently reproduced; complete submissions remain unaudited for exploits.
+

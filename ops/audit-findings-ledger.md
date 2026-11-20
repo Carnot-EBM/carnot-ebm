@@ -295,3 +295,8 @@ of truth, not this line.)
 | 2026-11-07 | experiment_claim_audit | experiment_8897_v761_source_bound_decisions.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-11-11 | qa_layer_authenticity_audit | adversarial_verify.py::_check_terminal_prefix_vs_partial_class | REAL_BUG | OPEN | |
 | 2026-11-11 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_text | REAL_BUG | OPEN | |
+| 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_reference_field | REAL_BUG | OPEN | |
+| 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verified_arithmetic_delta | REAL_BUG | OPEN | |
+| 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_rate_metric_field | REAL_BUG | OPEN | |
+| 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_add_variant_denominators_from_value | REAL_BUG | OPEN | |
+| 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_finite_float | REAL_BUG | OPEN | |

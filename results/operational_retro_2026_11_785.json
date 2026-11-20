@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.785",
+  "generated_at": "2026-11-19T13:03:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.4,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks",
+      "duration_minutes": 0.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9225: Qualify selective-deferral feedback masks and spline-support calibratio",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.785 completed 2 experiments (0 compute-bound, 2 synthesis-only) in 0.4 wall-time minutes (0 minutes / 0.0 hours, averaging 0 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, live git-log path found 0 commits). Synthesis-only Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks required 0.34 minutes (0min), and synthesis-only Exp9225: Qualify selective-deferral feedback masks and spline-support calibratio required 0.01 minutes (0min). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry).",
+  "bottlenecks_identified": [
+    "Synthesis-only Exp9222 ('Qualify partitioned consumer replay and bind fourteen V785 tasks', compute_bound: false) accounted for 0.34 minutes (0min) of the 0.4-minute (0min / 0.0h) milestone wall time, while synthesis-only Exp9225 ('Qualify selective-deferral feedback masks and spline-support calibratio', compute_bound: false) completed in 0.01 minutes (0min); 0 compute-bound experiments ran (compute_bound_experiments_count: 0, so no data is available this milestone for compute-bound experiment durations, GPU idle is not flagged as a bottleneck because gpu_idle_on_compute_bound_tasks is null, and DualGPURunner did not apply).",
+    "Live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 2 completed synthesis-only experiments.",
+    "GPU monitor telemetry was unavailable during the milestone ('GPU monitor not available' in GPU STATE; no data available this milestone for GPU utilization or hardware state)."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache fourteen-task V785 bindings and partitioned consumer replay qualification checks in synthesis-only Exp9222 (0.34 minutes / 0min) alongside selective-deferral feedback masks and spline-support calibration qualification in synthesis-only Exp9225 (0.01 minutes / 0min) to minimize synthesis validation overhead.",
+    "Persist direct per-experiment start and completion timestamps in the conductor ledger so milestone retrospectives do not depend on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability prior to milestones that schedule compute-bound (GGUF/CUDA/requires_gpu) tasks, while keeping DualGPURunner strictly scoped to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache fourteen-task V785 bindings and partitioned consumer replay qualification checks in synthesis-only Exp9222 (0.34 minutes / 0min) alongside synthesis-only Exp9225 (0.01 minutes / 0min).",
+    "Record direct per-experiment execution timestamps to eliminate retro_timing_fallback when live git-log finds 0 commits.",
+    "Restore GPU monitor telemetry before future compute-bound experiments execute."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "All 2 completed experiments in milestone 2026.11.785 were synthesis-only (0 compute-bound) totaling 0.4 wall-time minutes (0 minutes / 0.0 hours, averaging 0 minutes per experiment), with Exp9222 taking 0.34 minutes (0min) and Exp9225 taking 0.01 minutes (0min) under disk-mtime reconstruction (0 commits in live git-log). With 0 compute-bound tasks executed and the GPU monitor not available, gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable."
+}

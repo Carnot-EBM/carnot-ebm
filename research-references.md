@@ -57773,3 +57773,129 @@ upstream-retired skips). Two concrete facts govern V785:
    V785 retains `Exp9211` as immutable upstream authority for `Exp9233` and uses
    the freed Phase 1 CPU research slot (`Exp9225`) to qualify selective-deferral
    feedback masks (`2610.15128`) and B-spline support-density diagnostics (`2503.01195`).
+
+
+## 2026-11-19 — V786 planning scan: conformal selective risk, provenance-conditioned measurement, and continuous/Onsager FPGA sampling
+
+Recorded before writing the V786 experiment design. This scan checks 2025–2026
+work across all eight primary topics and all six secondary channels. External
+paper claims motivate Carnot experiments; they do not establish local Carnot
+measurements. Existing historical references remain unchanged.
+
+### New findings selected for V786 experiments
+
+- **Finite-sample conformal selective risk control:** Bai, Jin et al.,
+  [Conformal Selective Prediction with General Risk Control (SCoRE),
+  2603.24704](https://arxiv.org/abs/2603.24704), March 2026; Xu et al.,
+  [Selective Conformal Risk Control (SCRC),
+  2512.12844](https://arxiv.org/abs/2512.12844), revised April 2026; Mohandas,
+  [Chance-Constrained Inference for Hallucination Risk Control in Large
+  Language Models, 2602.01637](https://arxiv.org/abs/2602.01637), February
+  2026 (TMLR); and Wang et al., [COIN, 2506.20178](https://arxiv.org/abs/2506.20178),
+  AAAI 2026. These works bound accepted-answer hallucination rates using finite-sample
+  calibration sets and e-values or Clopper-Pearson intervals instead of raw point
+  estimates. V786 adds an ungated CPU method experiment (`Exp9230`) that freezes
+  exact **qid-cluster-valid** finite-sample accepted-risk upper bounds (evaluated
+  at independent question-group granularity, never assuming i.i.d. siblings) for
+  descriptive auditing in `Exp9238`. Do not replace the frozen primary `Exp9126`
+  or `Exp9132` acceptance rules.
+- **Provenance-, typology-, and granularity-conditioned hallucination measurement:**
+  Belikova and Rykov, [Mycelium: A Meta-Study of Hallucination Detection Across
+  Provenance, Typology, and Granularities,
+  2610.33608](https://arxiv.org/abs/2610.33608), October 2026. Hallucination
+  detector performance depends strongly on benchmark provenance, error typology,
+  and annotation granularity (answer-level vs span-level). `Exp9230` freezes an
+  exact provenance-typology-granularity ledger over the 900 authenticated
+  `Exp9097` responses without inventing missing span labels, and `Exp9238`
+  reports descriptive per-provenance slices alongside the primary metrics.
+- **Already-qualified human label and selective-deferral authorities:**
+  `Exp9211` (V784) qualified `target_identifiability_ready_score=1` and
+  `label_ambiguity_ready_score=1` (`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`).
+  `Exp9225` (V785) qualified `selective_deferral_ready_score=1` (`2610.15128`,
+  `2610.30090`) and `spline_support_diagnostic_ready_score=1` (`2503.01195`)
+  (`sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`).
+  V786 consumes both immutable authorities directly in `Exp9237` (shadow
+  selective-deferral streams) and `Exp9238` (IPW risk, spline-support slices,
+  target scope, and ambiguity bounds) without repeating either completed CPU task.
+- **Continuous-state and Onsager-corrected FPGA probabilistic sampling:**
+  [First hardware demonstration of a continuous-state probabilistic computer
+  with programmable energy-defined sampling,
+  2610.31339](https://arxiv.org/abs/2610.31339), October 2026, and [Anechoic:
+  Onsager-Corrected Parallel Annealing for Sub-0.1 ms Dense Max-Cut on an FPGA,
+  2610.13368](https://arxiv.org/abs/2610.13368), October 2026. Both advance
+  FPGA energy-based sampling (continuous bounded p-bits and Onsager reaction
+  echo-cancellation for synchronous parallel updates). Record both as future
+  operation-mapping leads in `Exp9239` without inferring dense Qwen forward or
+  durable-storage speedups.
+
+### Primary topic coverage and decisions
+
+| Topic | Checked primary source | Planning decision |
+|---|---|---|
+| EBM verification and reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977); [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871) | Keep latent-energy generators deferred until the frozen human-panel verifier beats matched probability and donor controls. |
+| Neural constraint satisfaction | Young and Htet, *Energy-Conserved Neural Pipelines*, June 2026 | Structural physical-conservation constraints do not solve open-domain factual truth extraction; retired local repair stays closed. |
+| Ising model applications in ML | [Anechoic Onsager FPGA, 2610.13368](https://arxiv.org/abs/2610.13368); [Continuous-State Probabilistic Computer, 2610.31339](https://arxiv.org/abs/2610.31339) | Track Onsager echo-cancellation and continuous p-bits as future FPGA sampler leads in `Exp9239`; preserve KV260 `k_max<=5`. |
+| Hallucination detection and mitigation | [Mycelium, 2610.33608](https://arxiv.org/abs/2610.33608); [SCoRE, 2603.24704](https://arxiv.org/abs/2603.24704); [Chance-Constrained Risk Control, 2602.01637](https://arxiv.org/abs/2602.01637) | Add cluster-valid conformal accepted-risk bounds and a Mycelium provenance ledger in `Exp9230`; audit in `Exp9238`. |
+| Kolmogorov-Arnold Networks | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306); [PostHoc FREE KAN Calibration, 2503.01195](https://arxiv.org/abs/2503.01195); [KAEM, 2506.14167](https://arxiv.org/abs/2506.14167) | Consume `Exp9225`'s qualified B-spline support-density protocol in `Exp9238`; preserve the frozen 57-column basis and AdaGrad rule. |
+| Energy-guided and constrained generation | Nguyen et al., *Thinking Before Constraining*, Jan/May 2026; Ozgu et al., *The Parser Already Knows*, Aug 2026 | Grammar/schema bias correction does not replace factual verification; keep generation steering deferred until verifier benefit is measured. |
+| Hardware-accelerated sampling | [1M p-bit FPGA computer, 2606.25313](https://arxiv.org/abs/2606.25313); [CPC, 2610.31339](https://arxiv.org/abs/2610.31339); [Anechoic, 2610.13368](https://arxiv.org/abs/2610.13368) | Measure whole-service CPU/GPU/storage fractions in `Exp9239` and compute Amdahl limits before selecting a hardware kernel. |
+| Continual and online learning | [SCRC, 2512.12844](https://arxiv.org/abs/2512.12844); [Selective Deferral, 2610.15128](https://arxiv.org/abs/2610.15128); [VX-One, 2610.30090](https://arxiv.org/abs/2610.30090) | Run unchanged six-arm delayed learning plus non-interfering `Exp9225` selective-deferral shadow streams and E2E-020 recovery in `Exp9237`. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** Checked ICLR/ICML 2026 EBM verification papers, including
+  *Spilled Energy in Large Language Models* (ICLR 2026), *Energy Landscapes of
+  Truthfulness in LLM Attention* (ICLR 2026 Workshop, Hopfield energy under
+  teacher forcing), *Semantic Energy*, and *Hallucination Detection from
+  Structural Reasoning Model* (ICML 2026). No unverified review score is claimed.
+- **Semantic Scholar:** Direct `/citations` API query for `ARXIV:2512.15605`
+  (ARM–EBM) succeeded (`HTTP 200`, 11 citing records, `next=None`), including
+  `2611.16736`, `2610.02887`, `2609.35362`, `2607.02154`, and `2606.03089`.
+  `ARXIV:2507.02092` (EBT) returned `HTTP 429` on 2026-11-19; the V785 verified
+  count (46) is retained without inventing a new count.
+- **Hugging Face papers:** Surfaced *Mycelium* (`2610.33608`), *HalluScoring
+  2026* (`2609.38355`), and *REFUTE* (2026 epistemic calibration benchmark).
+  Method claims rely on primary arXiv papers.
+- **GitHub:** Checked active Ising and KAN hubs (`NVIDIA/Ising`,
+  `mintisan/awesome-kan`, `KindXiaoming/pykan`, `alexiglad/EBT`). No live
+  GitHub Trending rank is asserted.
+- **Extropic:** Checked `extropic.ai/writing` updates on the Z1 TSU (269,568
+  p-bits across 8 cores, degree-16 sparse chromatic Gibbs above 50 MHz, under
+  1 W, July 2026 U.S. CHIPS R&D LOI up to $75M, `THRML`/`Torx`/`Z1T` software
+  stack). Vendor figures are projections, not local Carnot hardware runs.
+- **Logical Intelligence:** Checked `logicalintelligence.com` Kona 1.0
+  continuous-latent energy reasoning descriptions. No public code or local
+  reproducible benchmark is available.
+
+### Local V785 evidence that governs V786
+
+V785 executed two tasks (`Exp9222`, `Exp9225`) and skipped three (`Exp9223`
+pre-gate artifact skip; `Exp9224` and `Exp9226` log-only upstream-retired skips).
+Nine tasks (slots 6–14) were omitted by the V785 planner. Two concrete facts
+govern V786:
+
+1. **Partitioned consumer replay PASSED; only the stale V784 design doc and
+   5-task queue blocked `contract_ready_score`:** In `Exp9222`
+   (`results/experiment_9222_v785_contract.json`,
+   `sha256:c54b57079cfd43221a9b2387f208c7603f768e8bf8b6b28816e458c71ac9b3a8`),
+   `required_checks_passed=true`, `replay_authority_ready_score=1`,
+   `source_ready_score=1`, `static_methods_ready_score=1`, and
+   `online_methods_ready_score=1`. Every validation check passed: `owned_tests`
+   (768.7s), `direct_consumers_core` (162.3s), `direct_consumers_v782_v783`
+   (913.4s), `direct_consumers_v784` (757.7s), `ruff_check`, `ruff_format`,
+   `strict_mypy`, and `spec_coverage`. `contract_ready_score` was 0
+   (`honest_verdict=complete_blocked_v785_contract`) ONLY because V785's
+   `research-roadmap.yaml` held 5 tasks while `openspec/change-proposals/research-roadmap-vNEXT.md`
+   remained byte-identical to V784 (`sha256:06ddcee7...`, 14 tasks). V786 ships
+   both files with exact 14-task object parity (`Exp9227`–`Exp9240`), isolates
+   the V785 historical root, and splits `direct_consumers_v782` and
+   `direct_consumers_v783` into separate shards alongside `direct_consumers_v784`
+   and `direct_consumers_v785` so every shard stays well under 1200 seconds.
+2. **Selective-deferral and spline-support methods are now qualified:**
+   `Exp9225` (`results/experiment_9225_v785_selective_deferral_protocol.json`,
+   `sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`)
+   passed all 121 checks (`selective_deferral_ready_score=1`,
+   `spline_support_diagnostic_ready_score=1`). V786 consumes `Exp9225` directly
+   in `Exp9237` and `Exp9238`, and uses the freed independent Phase 1 CPU slot
+   (`Exp9230`) to qualify cluster-valid conformal accepted-risk bounds and the
+   Mycelium provenance-typology-granularity audit ledger.

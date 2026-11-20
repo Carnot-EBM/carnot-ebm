@@ -22400,3 +22400,53 @@ code |
 | 2026-11-19 11:27 UTC | Exp9222: Qualify partitioned consumer replay and b | OK | 101 passed, 1 warning in 499.61s (0:08:19) |
 | 2026-11-19 11:36 UTC | Exp9223: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9222-contract.contract_ready_score (actual=0 == expected=1) |
 | 2026-11-19 11:38 UTC | Exp9224: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9223-corpus-prefilter) |
+| 2026-11-19 12:19 UTC | Exp9225: Qualify selective-deferral feedback masks | OK | 88 passed, 1 warning in 28.42s |
+| 2026-11-19 12:21 UTC | Exp9226: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9224-forward-qualification) |
+| 2026-11-19 14:30 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-19 15:52 UTC | Plan milestone 2026.11.786 | OK | 14 tasks proposed |
+| 2026-11-19 16:22 UTC | Milestone 2026.11.786 activated | OK | 14 tasks queued |
+| 2026-11-19 17:38 UTC | Exp9227: Qualify split consumer replay and bind fo | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-19 18:57 UTC | Exp9227: Qualify split consumer replay and bind fo | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-19 20:11 UTC | Exp9227: Qualify split consumer replay and bind fo | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-19 20:13 UTC | Exp9228: Qualify a lossless byte prefilter for the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9227-contract, exp9227-contract) |
+| 2026-11-19 20:13 UTC | Exp9229: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9228-corpus-prefilter) |
+| 2026-11-19 21:27 UTC | Exp9230: Qualify cluster-valid conformal risk boun | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-19 22:47 UTC | Exp9230: Qualify cluster-valid conformal risk boun | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-20 00:18 UTC | Exp9230: Qualify cluster-valid conformal risk boun | SKIP | Pre-tests failing, self-heal failed: |
+| 2026-11-20 00:20 UTC | Exp9231: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9229-forward-qualification, exp9227-contract) |
+| 2026-11-20 00:20 UTC | Exp9232: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9227-contract, exp9231-logit-runtime, exp9231-logit-runtime) |
+| 2026-11-20 00:20 UTC | Exp9233: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9227-contract, exp9231-logit-runtime, exp9231-logit-runtime) |
+| 2026-11-20 00:20 UTC | Exp9234: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9227-contract, exp9231-logit-runtime, exp9231-logit-runtime) |
+| 2026-11-20 00:20 UTC | Exp9235: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9232-logits-a, exp9233-logits-b, exp9234-logits-c) |
+| 2026-11-20 00:20 UTC | Exp9236: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9235-logit-admission, exp9227-contract) |
+| 2026-11-20 00:20 UTC | Exp9237: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9235-logit-admission, exp9227-contract) |
+| 2026-11-20 00:20 UTC | Exp9238: Audit primary gains, entropy, ambiguity, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9235-logit-admission) |
+| 2026-11-20 00:20 UTC | Exp9239: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9231-logit-runtime) |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 12: OPEN 84 days: SILENT_NON_FIRING on harnes |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 10: OPEN 70 days: S |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 10: OPEN 70 days: SILENT_NON_ |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 10: OPEN 70 days: SILENT_N |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 10: OPEN 70 d |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 10: OPEN 70 days |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 9: OPEN 63 days: |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_novelty_proposal_ablation_overclaim age-week 8: OPE |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_proposal_filter_coverage_up age-week 8: OPEN 56 d |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim age-wee |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_perception_overclaim age-week 8: OPEN 56 days: SILE |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_world_model_trust_pass age-week 8: OPEN 56 days:  |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_changing_correct_evidence age-week 8: OPEN 56 days: |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_s2_schema_signal age-week 8: OPEN 56 days: SILENT_NO |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_engine_selection_game_rows age-week 8: OPEN 56 days: SIL |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_candidate_outcome_values age-week 8: OPEN 56 days: SILEN |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 8: OPEN 56 days |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_top_level_metric age-week 6: OPEN 42 days:  |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_metric_pair age-week 6: OPEN 42 days: SILEN |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_multilevel_solve_rate age-week 6: OPEN 42 d |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_all_true age-week 6: OPEN 42 days: SILENT_NON |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_generation_coverage_up age-week 6: OPEN 42 days:  |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 2: OPEN 14 days: CLAIM_OV |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 0: OPEN 1 days: REAL_BUG on  |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 0: OPEN 1 days: RE |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_rate_metric_field age-week 0: OPEN 1 days: REAL_BUG o |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_add_variant_denominators_from_value age-week 0: OPEN 1 d |
+| 2026-11-20 00:27 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_finite_float age-week 0: OPEN 1 days: REAL_BUG on advers |

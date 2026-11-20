@@ -1,26 +1,23 @@
 # Autoresearch conductor round
 
-- started: 2026-11-18T08:16:07.880289+00:00
+- started: 2026-11-19T15:54:29.262161+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
 - iterations: 5
-- accepted: 0
-- rejected: 5
+- accepted: 1
+- rejected: 4
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 8323
-- breaker_historical_tail_at_start: 20
+- breaker_invocation_start_position: 8332
+- breaker_historical_tail_at_start: 29
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 5
+- breaker_invocation_local_tail_at_end: 2
 - generator_exhausted: False
 - fallback_iterations: none
 
 
 ## Generator failure reasons
-- Python Code: Energy regression on: verifier_auroc
-- By training the fixed `GibbsModel(cfg)` architecture (2 inputs $\to$ 4 hidden units $\to$ 1 output) using real gradient steps with an Adam optimizer and light L2 weight decay ($10^{-4}$), we push correct rows to low energy and incorrect rows to high energy. The weight decay prevents probability saturation and maintains a strong calibration score on held-out data while substantially reducing energy from the untrained baseline.: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f95773efe30>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
-- ---: Energy regression on: verifier_auroc
-- Python Code: Energy regression on: verifier_auroc
-- Implementation: Energy regression on: verifier_auroc
+- Code Implementation: Time budget exceeded
+- Previous attempts failed due to **"Time budget exceeded"** because naive grid searches re-evaluate `.score(step_text, "")` across all corpus rows hundreds of times. We resolve this by precomputing the basis signals using two orthogonal probes—`Probe(1.0, 0.0)` and `Probe(0.0, 1.0)`—requiring only two total corpus passes ($\approx 0.15\text{s}$). The composite scores for any candidate mixture are then computed via vector broadcasting in NumPy, evaluating hundreds of candidates via exact Mann-Whitney U AUROC in milliseconds without invoking the probe again. We also include a degenerate check ($\sigma > 10^{-6}$) and an orientation check to ensure non-degenerate, strictly superior weights that finish within $\approx 0.35\text{s}$.: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.

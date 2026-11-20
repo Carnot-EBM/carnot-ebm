@@ -946,3 +946,15 @@ Live Kaggle standings and the full discussion feed remained inaccessible; Tufa�
 
 Live Kaggle standings and the full discussion feed remained inaccessible; Turducken’s placement is team-reported.
 
+## 2026-11-19 14:10 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9%, $25,000**; Lord Han Solo **23.8%, $7,500**; Lohit Siriki **22.5%, $5,000**. All three open-sourced their solutions. [ARC Prize announcement, mirrored](https://nitter.cf/arcprize/status/2105737436450201734)
+
+- **October 13 — Competition leaderboard:** Tufa Labs reclaimed first place with **68.91%**, up from approximately 56%. [ARC Prize announcement, mirrored](https://nitter.cf/arcprize/status/2110031207601979715)
+
+- **November 9 — Claude Fable 5.2:** Official semi-private scores reached **81.2% Standard (XHigh)** and **97.7% Provider Adapter (High)**. The evaluated checkpoint differs from released medium/XHigh tuning. [Official results](https://arcprize.org/results/anthropic-claude-fable-5-2)
+
+- **November 10 — Gemini 4 Carbon:** Official semi-private scores reached **99.1% Provider Adapter (Medium)** and **65.1% Standard (Low)**. [Official results](https://arcprize.org/results/google-gemini-4-carbon)
+
+Live Kaggle standings and the full discussion feed remained unreadable, limiting coverage.
+
