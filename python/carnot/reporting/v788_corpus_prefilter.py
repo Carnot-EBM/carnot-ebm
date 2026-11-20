@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
+import contextlib
+from functools import partial
 import hashlib
 import importlib.util
 import json
+import multiprocessing
 import os
 from pathlib import Path
 import shutil
@@ -28,7 +32,7 @@ BUDGET_S = 4800.0
 MEASUREMENT_S = 3300.0
 VERIFICATION_S = 1200.0
 PUBLICATION_S = 300.0
-DEFAULT_CHUNK_SIZE = 262144
+DEFAULT_CHUNK_SIZE = 1048576
 SENTINEL_CONSTANTS = (
     "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
     "ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE",
@@ -55,7 +59,7 @@ OWNED_TESTS = (
 MODIFIED = (
     "tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py",
     "python/carnot/reporting/causal_validation_9167.py",
-    "python/carnot/reporting/validation_schedule_9139.py",
+    "python/carnot/reporting/v782_contract_evidence.py",
 )
 UPSTREAM_PINS = {
     "exp9255-contract": (
@@ -168,6 +172,7 @@ def stream_prefilter_path(
     unicode_escape_seen = False
     digest = hashlib.sha256()
     heartbeat = time.monotonic()
+    deadline = float(os.environ.get("CARNOT_9256_DEADLINE", "inf"))
     with path.open("rb") as handle:
         while True:
             chunk = handle.read(step)
@@ -176,25 +181,26 @@ def stream_prefilter_path(
             bytes_read += len(chunk)
             digest.update(chunk)
             chunks_read += 1
-            buf = tail + chunk
-            if not use_fast_prefix or b"live_" in buf:
-                for const_name, _, needle in sentinels:
-                    if needle in buf:
-                        matched_sentinel = const_name
-                        break
-            if (
-                matched_sentinel is None
-                and include_unicode_escape
-                and b"\\" in buf
-                and b"\\u" in buf
-            ):
-                unicode_escape_seen = True
-            tail = buf[-overlap:]
+            if matched_sentinel is None:
+                buf = tail + chunk
+                if not use_fast_prefix or b"live_" in buf:
+                    for const_name, _, needle in sentinels:
+                        if needle in buf:
+                            matched_sentinel = const_name
+                            break
+                if (
+                    matched_sentinel is None
+                    and not unicode_escape_seen
+                    and include_unicode_escape
+                    and b"\\u" in buf
+                ):
+                    unicode_escape_seen = True
+                tail = buf[-overlap:]
             now = time.monotonic()
             if now - heartbeat >= 60:
                 log(f"stream_heartbeat path={path} bytes_read={bytes_read}")
                 heartbeat = now
-            if now >= float(os.environ.get("CARNOT_9256_DEADLINE", "inf")):
+            if now >= deadline:
                 raise TimeoutError(f"stream_deadline:{path}")
     should_decode = matched_sentinel is not None or unicode_escape_seen
     decode_reason = (
@@ -232,11 +238,12 @@ def original_evaluate_path(path: Path, av: Any) -> dict[str, Any]:
     t0 = time.perf_counter()
     read_s = decode_s = classifier_s = 0.0
     try:
+        size_b = path.stat().st_size
         raw_text = path.read_text(encoding="utf-8")
         read_s = time.perf_counter() - t0
-        size_b = len(raw_text.encode("utf-8"))
         decode_start = time.perf_counter()
         data = json.loads(raw_text)
+        del raw_text
         decode_s = time.perf_counter() - decode_start
     except Exception:
         return {
@@ -305,6 +312,55 @@ def prefilter_evaluate_path(
     }
 
 
+_DEFAULT_PREFILTER_EVAL = prefilter_evaluate_path
+_ACTIVE_AV: Any = None
+_ACTIVE_SENTINELS: tuple[tuple[str, str, bytes], ...] = ()
+_ACTIVE_CHUNK_SIZE: int = DEFAULT_CHUNK_SIZE
+_ACTIVE_STOP_MONOTONIC: float = float("inf")
+
+
+def _enumerate_json_files(
+    results_dir: Path,
+) -> dict[str, tuple[Path, tuple[int, int, int, int]]]:
+    found: dict[str, tuple[Path, tuple[int, int, int, int]]] = {}
+    for root_str, _, files in os.walk(results_dir):
+        for name in files:
+            if name.endswith(".json"):
+                path = Path(root_str) / name
+                st = path.stat()
+                rel = path.relative_to(results_dir).as_posix()
+                found[rel] = (path, (st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns))
+    return found
+
+
+def _eval_batch(
+    paths: list[Path],
+) -> list[tuple[Path, os.stat_result, dict[str, Any], os.stat_result]]:
+    out: list[tuple[Path, os.stat_result, dict[str, Any], os.stat_result]] = []
+    for path in paths:
+        if time.monotonic() >= _ACTIVE_STOP_MONOTONIC:
+            raise TimeoutError(f"scan_deadline:{path}")
+        st_before = path.stat()
+        res = prefilter_evaluate_path(
+            path, _ACTIVE_AV, sentinels=_ACTIVE_SENTINELS, chunk_size=_ACTIVE_CHUNK_SIZE
+        )
+        st_after = path.stat()
+        out.append((path, st_before, res, st_after))
+    return out
+
+
+@contextlib.contextmanager
+def _executor_map(enabled: bool) -> Any:
+    if not enabled:
+        yield map
+        return
+    with ProcessPoolExecutor(
+        max_workers=min(16, os.cpu_count() or 1),
+        mp_context=multiprocessing.get_context("fork"),
+    ) as pool:
+        yield partial(pool.map, chunksize=1)
+
+
 def scan_corpus(
     results_dir: Path,
     av: Any | None = None,
@@ -314,12 +370,15 @@ def scan_corpus(
     scan_output: Path | None = None,
     stop_monotonic: float | None = None,
 ) -> dict[str, Any]:
+    global _ACTIVE_AV, _ACTIVE_SENTINELS, _ACTIVE_CHUNK_SIZE, _ACTIVE_STOP_MONOTONIC
     av_mod = load_av() if av is None else av
     s_info = derive_sentinels(av_mod)
     sentinels = s_info["sentinels"]
     t0 = time.perf_counter()
     log(f"enumerate_manifest_start dir={results_dir}")
-    all_paths = sorted(p for p in results_dir.rglob("*.json") if p.is_file())
+    initial_map = _enumerate_json_files(results_dir)
+    initial_paths = sorted(initial_map)
+    all_paths = [initial_map[rel][0] for rel in initial_paths]
     total_files = len(all_paths)
     log(f"scan_corpus_start dir={results_dir} total_files={total_files}")
 
@@ -347,20 +406,20 @@ def scan_corpus(
         for label, _, _ in STRATUM_BOUNDS
     }
     manifest_rows: list[dict[str, Any]] = []
-    for path in all_paths:
-        st = path.stat()
-        rel = path.relative_to(results_dir).as_posix()
+    for rel in initial_paths:
+        path, stat_id = initial_map[rel]
+        size_b = stat_id[1]
         manifest_rows.append(
             {
                 "path": rel,
                 "abs_path": str(path),
-                "size_bytes": st.st_size,
-                "stratum": stratum_for_size(st.st_size),
+                "size_bytes": size_b,
+                "stratum": stratum_for_size(size_b),
                 "sha256": None,
-                "stat_identity": (st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns),
+                "stat_identity": stat_id,
             }
         )
-        pop_hasher.update(f"{rel}\t{st.st_size}\n".encode())
+        pop_hasher.update(f"{rel}\t{size_b}\n".encode())
     stratum_samples: dict[str, int] = {label: 0 for label, _, _ in STRATUM_BOUNDS}
     scan_rows: list[dict[str, Any]] = []
     offenders: list[tuple[str, Any]] = []
@@ -379,125 +438,137 @@ def scan_corpus(
     env_out = os.environ.get("CARNOT_9256_SCAN_OUTPUT")
     out_target = scan_output or (Path(env_out) if env_out else None)
 
-    for idx, path in enumerate(all_paths):
-        if stop_monotonic is not None and time.monotonic() >= stop_monotonic:
-            break
-        rel = path.relative_to(results_dir).as_posix()
-        st_before = path.stat()
-        size_b = int(st_before.st_size)
-        stratum = stratum_for_size(size_b)
-
-        try:
-            res = prefilter_evaluate_path(path, av_mod, sentinels=sentinels, chunk_size=chunk_size)
-        except TimeoutError:
-            log(f"scan_censored_at_deadline path={path}")
-            break
-        st_after = path.stat()
-        identity = (
-            st_before.st_ino,
-            st_before.st_size,
-            st_before.st_mtime_ns,
-            st_before.st_ctime_ns,
-        )
-        after_identity = (
-            st_after.st_ino,
-            st_after.st_size,
-            st_after.st_mtime_ns,
-            st_after.st_ctime_ns,
-        )
-        changed_files += int(identity != after_identity)
-        changed_files += int(identity != tuple(manifest_rows[idx]["stat_identity"]))
-        manifest_rows[idx]["sha256"] = res["sha256"]
-        visited += 1
-        total_bytes += size_b
-        total_bytes_read += int(res["bytes_read"])
-
-        s_bucket = stratum_Quick[stratum]
-        s_bucket["file_count"] += 1
-        s_bucket["total_bytes"] += size_b
-        s_bucket["bytes_read"] += int(res["bytes_read"])
-        s_bucket["elapsed_s"] += float(res["elapsed_s"])
-        if s_bucket["first_path"] is None:
-            s_bucket["first_path"] = rel
-        s_bucket["last_path"] = rel
-
-        status = res["decode_status"]
-        if status == "skipped_eof_negative":
-            safely_neg_count += 1
-            s_bucket["safely_negative_eof_count"] += 1
-        elif status == "malformed_or_unreadable":
-            decoded_count += 1
-            malformed_count += 1
-            s_bucket["decoded_count"] += 1
-            s_bucket["malformed_or_nondict_count"] += 1
-        elif status == "non_dict_json":
-            decoded_count += 1
-            nondict_count += 1
-            s_bucket["decoded_count"] += 1
-            s_bucket["malformed_or_nondict_count"] += 1
-        else:
-            decoded_count += 1
-            s_bucket["decoded_count"] += 1
-            if res["is_positive"]:
-                checked += 1
-                s_bucket["positive_count"] += 1
-                if res["is_offender"]:
-                    offenders.append((rel, res["duration_val"]))
-                    s_bucket["offender_count"] += 1
-
-        keep_sample = stratum_samples[stratum] < (2 if stratum == "gt_16mb" else 16)
-        if keep_sample:
-            stratum_samples[stratum] += 1
-        orig = original_evaluate_path(path, av_mod) if keep_sample and size_b <= 1_048_576 else res
-        p_match = (
-            orig["is_positive"] == res["is_positive"] and orig["is_offender"] == res["is_offender"]
-        )
-        parity_discrepancies += int(not p_match)
-        scan_rows.append(
-            {
-                "path": rel,
-                "stratum": stratum,
-                "size_bytes": size_b,
-                "bytes_read": int(res["bytes_read"]),
-                "decode_reason": res["decode_reason"],
-                "decode_status": status,
-                "original_positive": orig["is_positive"],
-                "candidate_positive": res["is_positive"],
-                "original_offender": orig["is_offender"],
-                "candidate_offender": res["is_offender"],
-                "parity_match": p_match,
-                "comparison_basis": "original_decoder"
-                if orig is not res
-                else ("same_unchanged_decoder" if res["should_decode"] else "eof_absence_proof"),
-                "duration_s": round(float(res["elapsed_s"]), 6),
-                "censor_reason": "none",
-            }
-        )
-
-        if (
-            time.monotonic() - heartbeat >= 60
-            or (idx + 1) % progress_every == 0
-            or (idx + 1) == total_files
-        ):
-            log(
-                f"scan_progress visited={visited}/{total_files} decoded={decoded_count} "
-                f"safely_negative={safely_neg_count} checked={checked} offenders={len(offenders)}"
-            )
-            heartbeat = time.monotonic()
-
-    for row in manifest_rows:
-        path = Path(row["abs_path"])
-        if not path.exists():
-            changed_files += 1
-            continue
-        st = path.stat()
-        changed_files += int(
-            (st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns) != tuple(row["stat_identity"])
-        )
-    final_paths = sorted(
-        p.relative_to(results_dir).as_posix() for p in results_dir.rglob("*.json") if p.is_file()
+    _ACTIVE_AV = av_mod
+    _ACTIVE_SENTINELS = sentinels
+    _ACTIVE_CHUNK_SIZE = chunk_size
+    _ACTIVE_STOP_MONOTONIC = stop_monotonic
+    use_pool = prefilter_evaluate_path is _DEFAULT_PREFILTER_EVAL and (
+        total_files == 0 or total_files >= 32
     )
-    initial_paths = [p.relative_to(results_dir).as_posix() for p in all_paths]
+    max_batch = 256 if use_pool else 1
+    batches: list[list[Path]] = []
+    for row in manifest_rows:
+        if not batches or len(batches[-1]) >= max_batch or int(row["size_bytes"]) > 65536:
+            batches.append([])
+        batches[-1].append(Path(row["abs_path"]))
+
+    idx = -1
+    try:
+        with _executor_map(use_pool) as mapper:
+            for batch_out in mapper(_eval_batch, batches):
+                for path, st_before, res, st_after in batch_out:
+                    idx += 1
+                    rel = manifest_rows[idx]["path"]
+                    size_b = int(st_before.st_size)
+                    stratum = stratum_for_size(size_b)
+                    identity = (
+                        st_before.st_ino,
+                        st_before.st_size,
+                        st_before.st_mtime_ns,
+                        st_before.st_ctime_ns,
+                    )
+                    after_identity = (
+                        st_after.st_ino,
+                        st_after.st_size,
+                        st_after.st_mtime_ns,
+                        st_after.st_ctime_ns,
+                    )
+                    changed_files += int(identity != after_identity)
+                    changed_files += int(identity != tuple(manifest_rows[idx]["stat_identity"]))
+                    manifest_rows[idx]["sha256"] = res["sha256"]
+                    visited += 1
+                    total_bytes += size_b
+                    total_bytes_read += int(res["bytes_read"])
+
+                    s_bucket = stratum_Quick[stratum]
+                    s_bucket["file_count"] += 1
+                    s_bucket["total_bytes"] += size_b
+                    s_bucket["bytes_read"] += int(res["bytes_read"])
+                    s_bucket["elapsed_s"] += float(res["elapsed_s"])
+                    if s_bucket["first_path"] is None:
+                        s_bucket["first_path"] = rel
+                    s_bucket["last_path"] = rel
+
+                    status = res["decode_status"]
+                    if status == "skipped_eof_negative":
+                        safely_neg_count += 1
+                        s_bucket["safely_negative_eof_count"] += 1
+                    elif status == "malformed_or_unreadable":
+                        decoded_count += 1
+                        malformed_count += 1
+                        s_bucket["decoded_count"] += 1
+                        s_bucket["malformed_or_nondict_count"] += 1
+                    elif status == "non_dict_json":
+                        decoded_count += 1
+                        nondict_count += 1
+                        s_bucket["decoded_count"] += 1
+                        s_bucket["malformed_or_nondict_count"] += 1
+                    else:
+                        decoded_count += 1
+                        s_bucket["decoded_count"] += 1
+                        if res["is_positive"]:
+                            checked += 1
+                            s_bucket["positive_count"] += 1
+                            if res["is_offender"]:
+                                offenders.append((rel, res["duration_val"]))
+                                s_bucket["offender_count"] += 1
+
+                    keep_sample = stratum_samples[stratum] < (2 if stratum == "gt_16mb" else 16)
+                    if keep_sample:
+                        stratum_samples[stratum] += 1
+                    orig = (
+                        original_evaluate_path(path, av_mod)
+                        if keep_sample and size_b <= 1_048_576
+                        else res
+                    )
+                    p_match = (
+                        orig["is_positive"] == res["is_positive"]
+                        and orig["is_offender"] == res["is_offender"]
+                    )
+                    parity_discrepancies += int(not p_match)
+                    scan_rows.append(
+                        {
+                            "path": rel,
+                            "stratum": stratum,
+                            "size_bytes": size_b,
+                            "bytes_read": int(res["bytes_read"]),
+                            "decode_reason": res["decode_reason"],
+                            "decode_status": status,
+                            "original_positive": orig["is_positive"],
+                            "candidate_positive": res["is_positive"],
+                            "original_offender": orig["is_offender"],
+                            "candidate_offender": res["is_offender"],
+                            "parity_match": p_match,
+                            "comparison_basis": "original_decoder"
+                            if orig is not res
+                            else (
+                                "same_unchanged_decoder"
+                                if res["should_decode"]
+                                else "eof_absence_proof"
+                            ),
+                            "duration_s": round(float(res["elapsed_s"]), 6),
+                            "censor_reason": "none",
+                        }
+                    )
+
+                    if (
+                        time.monotonic() - heartbeat >= 60
+                        or (idx + 1) % progress_every == 0
+                        or (idx + 1) == total_files
+                    ):
+                        log(
+                            f"scan_progress visited={visited}/{total_files} decoded={decoded_count} "
+                            f"safely_negative={safely_neg_count} checked={checked} offenders={len(offenders)}"
+                        )
+                        heartbeat = time.monotonic()
+    except TimeoutError:
+        log("scan_censored_at_deadline")
+
+    final_map = _enumerate_json_files(results_dir)
+    for row in manifest_rows:
+        final_entry = final_map.get(row["path"])
+        changed_files += int(final_entry is None or final_entry[1] != tuple(row["stat_identity"]))
+    final_paths = sorted(final_map)
     added_paths = sorted(set(final_paths) - set(initial_paths))
     removed_paths = sorted(set(initial_paths) - set(final_paths))
 
@@ -549,7 +620,8 @@ def scan_corpus(
     }
     if out_target is not None:
         out_target.parent.mkdir(parents=True, exist_ok=True)
-        out_target.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+        with out_target.open("w", encoding="utf-8") as handle:
+            json.dump(summary, handle)
     return summary
 
 

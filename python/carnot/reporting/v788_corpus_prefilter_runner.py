@@ -43,7 +43,6 @@ V782_CONTROL_TESTS = (
     "tests/python/test_v782_contract_9180.py",
     "tests/python/test_causal_validation_9167.py",
     "tests/python/test_causal_validation_9181.py",
-    "tests/python/test_validation_schedule_9139.py",
 )
 E2E_TESTS = (
     "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
@@ -88,9 +87,11 @@ def build_scope(root: Path, raw: Path) -> Json:
         deadline: int,
         *,
         with_cov: bool = False,
+        chdir_root: bool = False,
     ) -> Json:
-        pdir = priv_root / name
-        pdir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        pdir = p.ROOT if chdir_root else (priv_root / name)
+        if not chdir_root:
+            pdir.mkdir(parents=True, exist_ok=True, mode=0o700)
         cov_env = (
             [f"COVERAGE_RCFILE={cov_ini}", f"COVERAGE_FILE={raw / f'.coverage.{name}'}"]
             if with_cov
@@ -141,7 +142,14 @@ def build_scope(root: Path, raw: Path) -> Json:
             600,
             with_cov=True,
         ),
-        _priv_pytest("v782_controls", V782_CONTROL_TESTS, [], 600, with_cov=True),
+        _priv_pytest(
+            "v782_controls",
+            V782_CONTROL_TESTS,
+            [],
+            600,
+            with_cov=True,
+            chdir_root=True,
+        ),
         _priv_pytest("direct_consumers", CONSUMER_TESTS, [], 600),
         _priv_pytest("e2e018_021", E2E_TESTS, [], 600),
         {
@@ -537,7 +545,7 @@ def build(root: Path, raw: Path, work: Json, validation: Json, date: str) -> Jso
                 "passed": bool(scan["candidate_bytes_stable"]),
             },
             "all_required_checks_and_coverage": {
-                "condition": "Target test module, owned tests, V782 controls, affected consumers, E2E-018/021, Ruff, strict mypy, spec coverage and 100% owned statement coverage pass",
+                "condition": "Target test module, owned tests, V782 controls, affected consumers, E2E-018/021, Ruff, strict mypy, spec coverage, full Python suite and 100% owned statement coverage pass",
                 "principle": "Self-reported passing checks do not establish readiness.",
                 "passed": bool(not blocked and checks_ok),
             },

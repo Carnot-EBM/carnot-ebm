@@ -117340,6 +117340,10 @@ Upstream gate failure SHALL stop before scanning or running controls.
 Production readiness SHALL require actual child receipts; fixture receipts
 SHALL never be accepted as executed validation. Unfinished owned work SHALL
 remain partial, and readiness SHALL remain zero when any required check fails.
+The frozen validation scope SHALL include `.venv/bin/pytest tests/python -q`
+exactly once. A failed or deadline-censored suite SHALL retain its actual
+receipt and SHALL prevent readiness. Verification SHALL not launch a second
+full suite to chase coverage in code outside this experiment.
 The no-model operation SHALL use the recognized `read_only_live_artifact_inventory`
 declaration so cited upstream models cannot be mistaken for current inference.
 

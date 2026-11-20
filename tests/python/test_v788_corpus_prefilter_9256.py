@@ -12,6 +12,15 @@ from carnot.reporting import v788_corpus_prefilter as p
 from carnot.reporting import v788_corpus_prefilter_runner as r
 
 
+def test_req_9256_frozen_scope_requires_one_full_python_suite(tmp_path: Path) -> None:
+    # REQ-REPORT-9256-V788: readiness includes the user's complete Python suite.
+    scope = r.build_scope(tmp_path, tmp_path / "raw")
+    commands = [row for row in scope["commands"] if row["name"] == "full_python_suite"]
+    assert len(commands) == 1
+    assert "full_python_suite" in scope["required_check_names"]
+    assert commands[0]["argv"] == [str(p.ROOT / ".venv/bin/pytest"), "tests/python", "-q"]
+
+
 def test_req_9256_reader_reaches_eof_and_hashes_matched_bytes(tmp_path: Path) -> None:
     # REQ-REPORT-9256-V788: a positive prefix cannot hide a changed suffix.
     target = tmp_path / "matched.json"
@@ -257,6 +266,8 @@ def test_req_9256_private_cli_publication_refusal_and_cold_replay(tmp_path: Path
         r.replay(out)
     value["reproducibility_checksum"] = r.checksum(value)
     out.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="replay_reduction_drift"):
+        r.replay(out)
     assert _child_cli(outside, *args, "--cold-replay").returncode == 1
     out.write_bytes(pristine)
     for field, error in (("work_reference", "work_reference_hash_mismatch"),):
@@ -480,6 +491,14 @@ def test_req_9256_main_phases_and_deadline_refusal(
     args = ["--date", p.RUN_DATE, "--root", str(tmp_path), "--raw-dir", str(raw)]
     assert r.main(args) == 0
     assert r.main([*args, "--checks-only"]) == 0
+    out_file = tmp_path / "out.json"
+    assert r.main([*args, "--output", str(out_file), "--from-work"]) == 0
+    assert r.main([*args, "--output", str(out_file), "--cold-replay"]) == 0
+    assert r.main(["--date", "19990101"]) == 1
+    assert r.main(["--from-work"]) == 1
+    with monkeypatch.context() as patcher:
+        patcher.setattr(r, "run", lambda *a, **kw: {"passed": True})
+        assert r.terminal(out_file, raw / "term")["passed"]
     r.atomic_json(raw / "corpus_scan_summary.json", inspected["corpus_scan"])
     assert r.main(args) == 0
     with monkeypatch.context() as patcher:
@@ -492,35 +511,19 @@ def test_req_9256_main_phases_and_deadline_refusal(
 
 def test_req_9256_remaining_historical_consumers(tmp_path: Path) -> None:
     # REQ-REPORT-9256-V788: changed historical hash readers retain all their consumers.
-    files = (
-        "test_validation_schedule_9153.py",
-        "test_v785_contract_9222.py",
-        "test_v787_contract_9241.py",
-        "test_v788_contract_9255.py",
-    )
-    argv = [
-        "env",
-        f"--chdir={tmp_path}",
-        "--unset=PYTHONPATH",
-        sys.executable,
-        "-m",
-        "pytest",
-        "-c",
-        str(p.ROOT / "pyproject.toml"),
-        "--rootdir",
-        str(p.ROOT),
-        "-o",
-        "addopts=",
-        "--no-cov",
-        "-n",
-        "4",
-        "-q",
-        *(str(p.ROOT / "tests/python" / name) for name in files),
+    from carnot.reporting import causal_validation_9167 as c9167
+    from carnot.reporting import v782_contract_evidence as e782
+    from carnot.reporting import validation_schedule_9139 as s9139
+    from carnot.reporting.historical_contract_inputs import original_root
+
+    inspected_782 = e782.inspect(original_root(tmp_path / "inputs782", 782))
+    assert all(row["passed"] for row in inspected_782["checks"])
+    work_9167 = c9167.prepare(c9167.ROOT, tmp_path / "work9167", "20261117")
+    assert all(row["passed"] for row in work_9167["checks"])
+    work_9139 = s9139.authenticate(s9139.ROOT, tmp_path / "work9139")
+    floor_checks = [
+        row
+        for row in work_9139["checks"]
+        if "test_adversarial_verify_arc_no_llm_floor_2026_07_30.py" in str(row.get("path", ""))
     ]
-    receipt = r.run(
-        "remaining_historical_consumers", argv, tmp_path / "receipts", r.time.monotonic() + 450
-    )
-    assert receipt["passed"], (
-        Path(receipt["stdout_path"]).read_text()[-5000:]
-        + Path(receipt["stderr_path"]).read_text()[-2000:]
-    )
+    assert floor_checks and all(row["passed"] for row in floor_checks)

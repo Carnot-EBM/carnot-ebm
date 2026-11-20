@@ -670,19 +670,19 @@ def prepare(root: Path, raw: Path, date: str) -> Json:
         ):
             path = Path(reference["path"])
             hist_floor = (
-                ROOT
-                / "results/raw/experiment_9256_v788_corpus_prefilter/baseline/"
+                ROOT / "results/raw/experiment_9256_v788_corpus_prefilter/baseline/"
                 "test_adversarial_verify_arc_no_llm_floor_2026_07_30.py"
             )
-            if (
-                path == ROOT / "tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py"
+            source_path = (
+                hist_floor
+                if path
+                == ROOT / "tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py"
                 and reference["sha256"]
                 == "sha256:30dde5c4fd63097d24010d781f45441f9fca9db4cb6d3c126882a18d94d5d845"
                 and hist_floor.exists()
-            ):
-                observed = ref(hist_floor)["sha256"] or "missing_file"
-            else:
-                observed = ref(path)["sha256"] or "missing_file"
+                else path
+            )
+            observed = ref(source_path)["sha256"] or "missing_file"
             work["checks"].append(
                 gate(
                     path,
@@ -697,6 +697,7 @@ def prepare(root: Path, raw: Path, date: str) -> Json:
                 work["references"].append(
                     dict(
                         reference,
+                        path=str(source_path),
                         producer_path=reference["path"],
                         imported_fields=["original_assertion_bytes"],
                     )

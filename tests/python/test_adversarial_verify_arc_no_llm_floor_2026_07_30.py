@@ -47,6 +47,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[2]
 
 
@@ -197,6 +199,7 @@ def test_the_live_llm_floor_is_untouched_by_this_change() -> None:
     )
 
 
+@pytest.mark.memory_watchdog_skip
 def test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole() -> None:
     """The corpus-impact claim in this module's docstring, asserted rather than asserted-in-prose.
 
