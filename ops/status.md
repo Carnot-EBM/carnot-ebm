@@ -1,5 +1,11 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-20 (Milestone 2026.11.788 operational retrospective)
+
+## 2026-11-20 UTC — Milestone 2026.11.788 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_788.json` (schema `carnot.operational_retro.v64`), with updates appended to `ops/changelog.md` and `docs/research-log.md`. Disk-mtime timing reconstruction (`retro_timing_fallback`, live git-log path found 0 commits, `reconstructed_from_disk_mtime: true`) records 4 completed synthesis-only experiments (0 compute-bound) across 54.3 total wall-time minutes (54 minutes / 0.9 hours, averaging 14 minutes per experiment): synthesis-only `Exp9256: Qualify a lossless byte prefilter for the complete corpus walk` (47.67 min / 48min, `compute_bound: false`), synthesis-only `Exp9268: Reconcile fourteen V788 outcomes and exact continuation boundaries` (6.06 min / 6min, `compute_bound: false`), synthesis-only `Exp9255: Qualify split V782-V787 consumer replay, fix coverage-list parity, and ` (0.6 min / 1min, `compute_bound: false`), and synthesis-only `Exp9258: Implement offline Victris Arena Gibbs tactical scorer and archive` (0.0 min / 0min, `compute_bound: false`). Because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and GPU STATE reported `GPU monitor not available` (no data available this milestone for GPU telemetry). Next operational focus: pre-index and cache complete corpus-walk byte-prefilter qualification artifacts in `Exp9256` (47.67 min / 48min), pass cached split V782-V787 consumer replay and coverage-list parity outputs from `Exp9255` (0.6 min / 1min) and offline Victris Arena Gibbs tactical scorer archive outputs from `Exp9258` (0.0 min / 0min) into fourteen-outcome V788 reconciliation in `Exp9268` (6.06 min / 6min), persist direct per-experiment timestamps in the conductor to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability ahead of future compute-bound workloads.
+
 **Last Updated:** 2026-11-20 (Milestone 2026.11.787 operational retrospective)
 
 ## 2026-11-20 UTC — Milestone 2026.11.787 operational retrospective

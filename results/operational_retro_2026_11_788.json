@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.788",
+  "generated_at": "2026-11-20T23:06:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 54.3,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9256: Qualify a lossless byte prefilter for the complete corpus walk",
+      "duration_minutes": 47.67,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9268: Reconcile fourteen V788 outcomes and exact continuation boundaries",
+      "duration_minutes": 6.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9255: Qualify split V782-V787 consumer replay, fix coverage-list parity, and ",
+      "duration_minutes": 0.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp9258: Implement offline Victris Arena Gibbs tactical scorer and archive",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.788 completed 4 experiments (0 compute-bound, 4 synthesis-only) in 54.3 total wall-time minutes (54 minutes / 0.9 hours, averaging 14 minutes per experiment) via disk-mtime timing reconstruction (retro_timing_fallback, live git-log found 0 commits). All 4 completed experiments were synthesis-only: Exp9256 (47.67 minutes / 48min), Exp9268 (6.06 minutes / 6min), Exp9255 (0.6 minutes / 1min), and Exp9258 (0.0 minutes / 0min). With 0 compute-bound tasks and GPU STATE reporting 'GPU monitor not available', gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable.",
+  "bottlenecks_identified": [
+    "No data available this milestone for compute-bound experiment durations (compute_bound_experiments_count is 0); 100% of measured milestone wall time (54.3 minutes / 54 minutes / 0.9 hours across 4 synthesis-only experiments averaging 14 minutes per experiment) was spent in synthesis-only tasks led by Exp9256: Qualify a lossless byte prefilter for the complete corpus walk (47.67 minutes / 48min, compute_bound: false) and Exp9268: Reconcile fourteen V788 outcomes and exact continuation boundaries (6.06 minutes / 6min, compute_bound: false), alongside Exp9255: Qualify split V782-V787 consumer replay, fix coverage-list parity, and  (0.6 minutes / 1min, compute_bound: false) and Exp9258: Implement offline Victris Arena Gibbs tactical scorer and archive (0.0 minutes / 0min, compute_bound: false).",
+    "Timing telemetry required disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) because the live git-log path found 0 commits.",
+    "GPU STATE reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null (0% GPU on synthesis-only tasks is expected behavior and not a bottleneck) and DualGPURunner was not applicable (0 tasks loaded 2+ models in parallel)."
+  ],
+  "improvements_suggested": [
+    "Cache and pre-index corpus-walk byte-prefilter qualification artifacts for synthesis-only Exp9256 (47.67 minutes / 48min) so lossless byte-prefilter validation does not dominate milestone wall time (47.67 of 54.3 minutes).",
+    "Pass pre-indexed split V782-V787 consumer replay and coverage-list parity outputs from synthesis-only Exp9255 (0.6 minutes / 1min) and offline Victris Arena Gibbs tactical scorer archive outputs from synthesis-only Exp9258 (0.0 minutes / 0min) directly into fourteen-outcome reconciliation in synthesis-only Exp9268 (6.06 minutes / 6min).",
+    "Record authoritative per-experiment start and end timestamps directly in the conductor ledger so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability before scheduling future compute-bound milestones so GPU utilization telemetry is captured when compute-bound tasks execute."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and incrementally cache complete corpus-walk byte-prefilter checks in synthesis-only Exp9256 (47.67 minutes / 48min) and forward cached outputs from Exp9255 (0.6 minutes / 1min) and Exp9258 (0.0 minutes / 0min) into V788 fourteen-outcome reconciliation in Exp9268 (6.06 minutes / 6min).",
+    "Persist direct per-experiment start and finish timestamps in the conductor execution log to eliminate retro_timing_fallback when live git-log finds 0 commits.",
+    "Add a pre-flight GPU monitor check to restore GPU state telemetry ahead of future compute-bound workloads."
+  ],
+  "estimated_time_savings_pct": 45,
+  "meta_reflection": "Execution in milestone 2026.11.788 completed 4 synthesis-only experiments in 54.3 wall-time minutes (54 minutes / 0.9 hours, 14 minutes average per experiment), dominated by Exp9256 at 47.67 minutes (48min) and Exp9268 at 6.06 minutes (6min) while Exp9255 took 0.6 minutes (1min) and Exp9258 took 0.0 minutes (0min). Because 0 compute-bound experiments ran and GPU STATE reported 'GPU monitor not available', no GPU idle bottleneck or DualGPURunner failure occurred, and the highest-leverage improvements are caching the corpus-walk byte prefilter in Exp9256, forwarding cached receipts into Exp9268, and persisting direct conductor timing logs."
+}
