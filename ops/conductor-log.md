@@ -22479,3 +22479,4 @@ code |
 | 2026-11-20 22:02 UTC | Exp9265: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9263-logit-admission) |
 | 2026-11-20 22:02 UTC | Exp9266: Audit primary gains, entropy, ambiguity, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9263-logit-admission) |
 | 2026-11-20 22:02 UTC | Exp9267: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9259-logit-runtime) |
+| 2026-11-20 22:54 UTC | Exp9268: Reconcile fourteen V788 outcomes and exac | OK | 88 passed, 1 warning in 111.24s (0:01:51) |
