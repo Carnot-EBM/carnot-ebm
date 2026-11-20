@@ -22468,3 +22468,4 @@ code |
 | 2026-11-20 17:11 UTC | Exp9256: Qualify a lossless byte prefilter for the | FAIL | Agy CLI error: Hard wall-clock cap after 4804s. Last output: cation-metadat |
 | 2026-11-20 17:47 UTC | Exp9256: Qualify a lossless byte prefilter for the | SKIP | Pre-tests failing, self-heal failed: |
 | 2026-11-20 21:08 UTC | Exp9256: Qualify a lossless byte prefilter for the | OK | 106 passed, 18 warnings in 369.39s (0:06:09) |
+| 2026-11-20 21:18 UTC | Exp9257: Execute the complete causally corrected v | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9256-corpus-prefilter.corpus_scan_ready_score (actual=0 == expected=1) |
