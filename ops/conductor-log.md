@@ -22455,3 +22455,5 @@ code |
 | 2026-11-20 05:25 UTC | Plan milestone 2026.11.787 | OK | 7 tasks proposed |
 | 2026-11-20 05:55 UTC | Milestone 2026.11.787 activated | OK | 7 tasks queued |
 | 2026-11-20 08:05 UTC | Exp9241: Qualify split V782-V786 consumer replay a | OK | 121 passed, 1 warning in 627.93s (0:10:27) |
+| 2026-11-20 08:14 UTC | Exp9242: Qualify a lossless byte prefilter for the | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9241-contract.contract_ready_score (actual=0 == expected=1) |
+| 2026-11-20 08:16 UTC | Exp9243: Execute the complete causally corrected v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9242-corpus-prefilter) |
