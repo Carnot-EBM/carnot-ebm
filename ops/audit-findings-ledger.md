@@ -300,3 +300,7 @@ of truth, not this line.)
 | 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_rate_metric_field | REAL_BUG | OPEN | |
 | 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_add_variant_denominators_from_value | REAL_BUG | OPEN | |
 | 2026-11-19 | qa_layer_authenticity_audit | adversarial_verify.py::_finite_float | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_is_control_arm_key | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_documented_identical_controls | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_null | REAL_BUG | OPEN | |
+| 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_passing_positive_control_key | REAL_BUG | OPEN | |

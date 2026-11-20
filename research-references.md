@@ -57899,3 +57899,128 @@ govern V786:
    in `Exp9237` and `Exp9238`, and uses the freed independent Phase 1 CPU slot
    (`Exp9230`) to qualify cluster-valid conformal accepted-risk bounds and the
    Mycelium provenance-typology-granularity audit ledger.
+
+---
+
+## 2026-11-20 V787 Planning Scan (Milestone 2026.11.787)
+
+This scan checked all eight primary arXiv topics and all six secondary channels
+on 2026-11-20 before designing Milestone `2026.11.787` (`Exp9241`–`Exp9254`).
+
+### New primary arXiv findings
+
+- **CA-OCRC — Capacity-Constrained Delayed Feedback for Online Conformal Risk Control**
+  (Wang & Simeone, Nov 2026, [arXiv:2611.17059](https://arxiv.org/abs/2611.17059)):
+  Models delayed feedback under finite tracking capacity where untracked pending
+  predictions lose feedback. Uses a randomized proxy-delay tracking policy plus
+  Inverse Probability Weighting (IPW) to preserve long-term risk guarantees.
+  **Carnot use:** Extend `Exp9244` (`conformal-risk-protocol`) and the
+  non-interfering shadow stream in `Exp9251` (`delayed-learning`) to test
+  capacity-constrained delayed-feedback tracking with IPW alongside `Exp9225`
+  selective deferral, without altering the frozen six-arm `Exp9132` primary rule.
+- **CRAM — Classical Energies Learn to Reason 1,000x Faster than Looped Models**
+  (Hoover et al., Nov 2026, [arXiv:2611.17309](https://arxiv.org/abs/2611.17309)):
+  Continuous classical Hopfield/Tank energy architectures accelerate algorithmic
+  and constraint-satisfaction reasoning over looped transformers.
+  **Carnot use:** Record as a future hardware/architecture operation-mapping lead
+  in `Exp9253` (`complete-cost`); do not reopen the refuted energy-as-generator
+  path for text generation.
+- **Thermodynamic Signatures of Reasoning: Free-Energy and Spectral-Form-Factor Diagnostics for Hallucination Detection**
+  ([arXiv:2606.19404](https://arxiv.org/abs/2606.19404)):
+  Computes free-energy and spectral-form-factor statistics over layer-wise
+  attention graph Laplacians as training-free hallucination signals.
+  **Carnot use:** Future hidden-state/attention comparator lead once
+  `output_attentions` / `output_hidden_states` extraction is active; keep V787
+  focused on completing the frozen Qwen3.8-27B forward-logit comparison first.
+- **KORE — Kolmogorov-Optimal Scaling Laws for Spline Regression**
+  (Bay & Yearick, Jun 2026, [arXiv:2606.23575](https://arxiv.org/abs/2606.23575)):
+  Leverage-calibrated closed-form spline resolution selection avoids grid search.
+  **Carnot use:** Reference lead for future adaptive KAN knot refinement; keep
+  the frozen 57-column cubic B-spline basis in `Exp9251` unchanged.
+- **Online Conformal Prediction with Corrupted Feedback**
+  (Wang, Zecchin & Simeone, May 2026, [arXiv:2605.20515](https://arxiv.org/abs/2605.20515))
+  and **Online Conformal Prediction Beyond Feedback (OCPQ)**
+  (Skalse, Pona, Simeone & Paoletti, Aug 2026, [arXiv:2608.07139](https://arxiv.org/abs/2608.07139)):
+  Formalize active compensation for noisy feedback flips and query-vs-deploy
+  partial monitoring.
+  **Carnot use:** Complements `Exp9211` label-ambiguity envelopes and `Exp9225`
+  audited deferral; informs `Exp9244` robustness controls without changing
+  frozen `Exp9126`/`Exp9132` primary criteria.
+- **Large Neighborhood Search meets Iterative Neural Constraint Heuristics**
+  ([arXiv:2603.20801](https://arxiv.org/abs/2603.20801)):
+  Combines neural constraint scores with destroy-and-repair search for Sudoku,
+  Graph Coloring, and MaxCut.
+  **Carnot use:** Reference lead for future ARC/CSP hybrid search; ARC stays
+  opportunistic and unscheduled in V787.
+
+### Primary topic coverage and planning decisions
+
+| Topic | Checked primary sources | V787 planning decision |
+|---|---|---|
+| EBM verification and reasoning | [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871); [Thermodynamic Signatures, 2606.19404](https://arxiv.org/abs/2606.19404); [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977); [CRAM, 2611.17309](https://arxiv.org/abs/2611.17309) | Complete the frozen Qwen3.8-27B whole-answer logit comparison (`Exp9245`–`Exp9252`) before testing attention-Laplacian or latent-energy verifiers. |
+| Neural constraint satisfaction | [T-SKM-Net, 2506.00362](https://arxiv.org/abs/2506.00362); [LNS + Neural Constraints, 2603.20801](https://arxiv.org/abs/2603.20801) | Explicit analytical constraints do not solve open-domain factual verification; keep ARC/CSP work opportunistic. |
+| Ising model applications in ML | [1M p-bit FPGA computer, 2606.25313](https://arxiv.org/abs/2606.25313); [CRAM, 2611.17309](https://arxiv.org/abs/2611.17309) | Map measured whole-service component fractions in `Exp9253` before claiming Ising/FPGA acceleration. |
+| Hallucination detection and mitigation | [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671); [Mycelium, 2610.33608](https://arxiv.org/abs/2610.33608); [Thermodynamic Signatures, 2606.19404](https://arxiv.org/abs/2606.19404) | Execute unrun `Exp9244` Mycelium provenance audit on 900 `Exp9097` responses and complete the frozen Qwen3.8-27B five-arm audit (`Exp9250`/`Exp9252`). |
+| Kolmogorov-Arnold Networks | [PostHoc FREE KAN Calibration, 2503.01195](https://arxiv.org/abs/2503.01195); [On-Chip Spline Locality, 2602.02056](https://arxiv.org/abs/2602.02056); [KORE, 2606.23575](https://arxiv.org/abs/2606.23575) | Keep frozen 57-column cubic B-spline basis in `Exp9251` and consume `Exp9225` spline-support calibration slices in `Exp9252`. |
+| Energy-guided and constrained generation | [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061); [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | Keep generation steering deferred until the forward-only verifier beats matched probability and donor controls. |
+| Hardware-accelerated sampling | [1M p-bit FPGA, 2606.25313](https://arxiv.org/abs/2606.25313); [CPC, 2610.31339](https://arxiv.org/abs/2610.31339); [Anechoic Onsager, 2610.13368](https://arxiv.org/abs/2610.13368); p-dit QAP hardware | Measure whole-service CPU/GPU/storage fractions and Amdahl limits in `Exp9253`; preserve KV260 `k_max<=5`, PolarFire CPU, and GateMate JTAG limits. |
+| Continual and online learning | [CA-OCRC, 2611.17059](https://arxiv.org/abs/2611.17059); [Corrupted OCP, 2605.20515](https://arxiv.org/abs/2605.20515); [OCPQ, 2608.07139](https://arxiv.org/abs/2608.07139); [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987) | Qualify qid-cluster conformal risk bounds and CA-OCRC capacity-constrained IPW tracking in `Exp9244`; run unchanged six-arm delayed learner plus `Exp9225`/`Exp9244` non-interfering shadow streams and E2E-020 recovery in `Exp9251`. |
+
+### Secondary channels and retrieval limits
+
+- **Semantic Scholar:** Both direct `/citations` API queries returned `HTTP 200`
+  on 2026-11-20:
+  - `ARXIV:2507.02092` (EBT): **47** citing records (`next=None`, up from 46 in
+    V785/V786), adding `2611.23053` (*SPICE: Sparse Parameter Gossip for LLM
+    Pretraining*) alongside `2611.08989` (*LEF-JEPA*), `2611.08977`
+    (*Energy-Based Reasoners*), `2611.02546` (*Energy-Based Policy
+    Orchestration*), and `2610.39073` (*Certified Access*). Also noted
+    *Energy-Based Transformers as Predictors of Reading Difficulty* (Dotlacil &
+    Takmaz, EMNLP 2026).
+  - `ARXIV:2512.15605` (ARM–EBM): **11** citing records (`next=None`), unchanged
+    from V786 (`2611.16736`, `2610.02887`, `2609.35362`, `2607.02154`,
+    `2606.03089`).
+- **OpenReview:** Checked ICLR/NeurIPS 2026 EBM verification and online
+  calibration tracks (EBT, Spilled Energy, ORCA online reasoning calibration,
+  on-chip spline locality). No unverified review scores imported.
+- **Hugging Face papers:** Checked late-2026 hallucination verification and
+  shared tasks (*HalluScoring 2026*, *Mycelium* `2610.33608`, *CRAM*
+  `2611.17309`). Method claims rely on primary arXiv papers.
+- **GitHub:** Checked active EBM and KAN repositories (`alexiglad/EBT`,
+  `KindXiaoming/pykan`, `torch-conv-kan`, `All-KAN`). No live GitHub Trending
+  rank asserted.
+- **Extropic:** Checked `extropic.ai/writing` updates on the Z1 TSU, `Torx`,
+  and `Thermalizers`. Vendor figures remain projections, not local Carnot runs.
+- **Logical Intelligence:** Checked `logicalintelligence.com` Kona 1.0
+  continuous-latent energy reasoning descriptions. No public code or local
+  benchmark exists.
+
+### Local V786 evidence that governs V787
+
+V786 (`2026.11.786`, `Exp9227`–`Exp9240`) executed **1 task** (`Exp9240`,
+`results/experiment_9240_v786_capstone.json`,
+`sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500`,
+`honest_verdict=complete_blocked_declared_gate`, `reconciliation_ready_score=1`,
+88 tests passed in 115.77s) and skipped **13 tasks**:
+
+1. **Pre-test skips cleared, plus missing embedded YAML fixed:** `Exp9227` and
+   `Exp9230` each hit 3 conductor pre-test skips (`SKIP | Pre-tests failing,
+   self-heal failed`) before commit `5930e6195a` shifted `HEAD~1` and cleared
+   the smart pre-test subset (after which `Exp9240` ran and passed cleanly).
+   Because `exp9227-contract` was retired, all 11 gated downstream tasks
+   (`Exp9228`, `Exp9229`, `Exp9231`–`Exp9239`) pre-emptively skipped.
+   Additionally, V786's `openspec/change-proposals/research-roadmap-vNEXT.md`
+   (`sha256:a1c32ac1892b59219fe288446020893822350f866781f89a39088b76d1b7c763`)
+   ended at `## Full machine-readable contract` with **no embedded YAML block**,
+   which would have caused `authority()` (`v785_contract_evidence.py`) to fail.
+2. **V787 preserves V786 byte-for-byte and fixes the full-contract block:**
+   V787 preserves V786's design (`research-roadmap-v786-preserved-20261120.md`)
+   and active queue (`research-roadmap-v786-queue-preserved-20261120.yaml`),
+   embeds the complete 14-task YAML inside `research-roadmap-vNEXT.md` with
+   mechanically verified object parity to `research-roadmap-next.yaml`,
+   isolates V785/V786 historical roots, splits `v782`/`v783`/`v784`/`v785`/`v786`
+   consumer shards, and runs the unexecuted conformal/CA-OCRC/Mycelium protocol
+   (`Exp9244`), lossless corpus prefilter (`Exp9242`), full validation union
+   (`Exp9243`), frozen Qwen3.8-27B forward shards (`Exp9245`–`Exp9249`), static
+   and continuous delayed-learning experiments (`Exp9250`–`Exp9252`), complete
+   service cost (`Exp9253`), and unconditional capstone (`Exp9254`).

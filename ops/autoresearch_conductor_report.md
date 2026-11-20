@@ -1,23 +1,30 @@
 # Autoresearch conductor round
 
-- started: 2026-11-19T15:54:29.262161+00:00
+- started: 2026-11-20T04:39:14.898053+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
 - iterations: 5
-- accepted: 1
-- rejected: 4
+- accepted: 0
+- rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 8332
-- breaker_historical_tail_at_start: 29
+- breaker_invocation_start_position: 8337
+- breaker_historical_tail_at_start: 2
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 2
+- breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
 - fallback_iterations: none
 
 
 ## Generator failure reasons
-- Code Implementation: Time budget exceeded
-- Previous attempts failed due to **"Time budget exceeded"** because naive grid searches re-evaluate `.score(step_text, "")` across all corpus rows hundreds of times. We resolve this by precomputing the basis signals using two orthogonal probes—`Probe(1.0, 0.0)` and `Probe(0.0, 1.0)`—requiring only two total corpus passes ($\approx 0.15\text{s}$). The composite scores for any candidate mixture are then computed via vector broadcasting in NumPy, evaluating hundreds of candidates via exact Mann-Whitney U AUROC in milliseconds without invoking the probe again. We also include a degenerate check ($\sigma > 10^{-6}$) and an orientation check to ensure non-degenerate, strictly superior weights that finish within $\approx 0.35\text{s}$.: Energy regression on: verifier_auroc
+- Implementation: Energy regression on: verifier_auroc
+- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f2a55673f50>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
+- Implementation: Energy regression on: verifier_auroc
+- Optimization Procedure**:
+1. Calibrate target orientation at runtime by evaluating baseline weights $(0.5, 0.5)$ against both label assignments (`label == "incorrect"` vs `label == "correct"`). The orientation yielding $\text{AUROC} > 0.5$ uniquely identifies the harness's evaluation metric.
+2. Verify linearity of probe outputs across rows to evaluate candidate weight pairs efficiently.
+3. Perform a stratified 5-fold cross-validated sweep over normalized positive combinations $w_e = \alpha, w_f = 1 - \alpha$ ($\alpha \in [0.01, 0.99]$) as well as full angular directions.
+4. Select the weight pair maximizing cross-validated AUROC, gracefully falling back to baseline weights if no candidate reliably outperforms $(0.5, 0.5)$.: Energy regression on: verifier_auroc
+- ---: Sandbox failed: TypeError: attribute name must be string, not 'NoneType'
 No hypothesis both won this round and committed cleanly.
