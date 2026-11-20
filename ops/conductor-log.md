@@ -22469,3 +22469,13 @@ code |
 | 2026-11-20 17:47 UTC | Exp9256: Qualify a lossless byte prefilter for the | SKIP | Pre-tests failing, self-heal failed: |
 | 2026-11-20 21:08 UTC | Exp9256: Qualify a lossless byte prefilter for the | OK | 106 passed, 18 warnings in 369.39s (0:06:09) |
 | 2026-11-20 21:18 UTC | Exp9257: Execute the complete causally corrected v | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9256-corpus-prefilter.corpus_scan_ready_score (actual=0 == expected=1) |
+| 2026-11-20 22:00 UTC | Exp9258: Implement offline Victris Arena Gibbs tac | OK | 85 passed, 1 warning in 20.59s |
+| 2026-11-20 22:02 UTC | Exp9259: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9257-forward-qualification) |
+| 2026-11-20 22:02 UTC | Exp9260: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9259-logit-runtime, exp9259-logit-runtime) |
+| 2026-11-20 22:02 UTC | Exp9261: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9259-logit-runtime, exp9259-logit-runtime) |
+| 2026-11-20 22:02 UTC | Exp9262: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9259-logit-runtime, exp9259-logit-runtime) |
+| 2026-11-20 22:02 UTC | Exp9263: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9260-logits-a, exp9261-logits-b, exp9262-logits-c) |
+| 2026-11-20 22:02 UTC | Exp9264: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9263-logit-admission) |
+| 2026-11-20 22:02 UTC | Exp9265: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9263-logit-admission) |
+| 2026-11-20 22:02 UTC | Exp9266: Audit primary gains, entropy, ambiguity, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9263-logit-admission) |
+| 2026-11-20 22:02 UTC | Exp9267: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9259-logit-runtime) |
