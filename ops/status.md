@@ -1,5 +1,11 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-20 (Milestone 2026.11.786 operational retrospective)
+
+## 2026-11-20 UTC — Milestone 2026.11.786 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_786.json` (schema `carnot.operational_retro.v64`), with updates appended to `ops/changelog.md` and `docs/research-log.md`. Disk-mtime timing reconstruction (`retro_timing_fallback`, live git-log path found 0 commits, `reconstructed_from_disk_mtime: true`) records 1 completed synthesis-only experiment (0 compute-bound) across 5.7 total wall-time minutes (6 minutes / 0.1 hours, averaging 6 minutes per experiment): synthesis-only `Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries` (5.68 min / 6min, `compute_bound: false`). Because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and GPU STATE reported `GPU monitor not available` (no data available this milestone for GPU telemetry). Next operational focus: pre-index and cache fourteen V786 outcome receipts and exact continuation-boundary verification inputs in `Exp9240` (5.68 min / 6min), persist direct per-experiment timestamps in the conductor to avoid `retro_timing_fallback` on 0 git-log commits, and restore GPU monitor availability ahead of future compute-bound workloads.
+
 **Last Updated:** 2026-11-19 (Milestone 2026.11.785 operational retrospective)
 
 ## 2026-11-19 UTC — Milestone 2026.11.785 operational retrospective

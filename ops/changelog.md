@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-20 UTC — Operational retrospective for milestone 2026.11.786
+
+- Triggered by user instruction to write the operational retrospective for milestone `2026.11.786`: populated interpretive fields in `results/operational_retro_2026_11_786.json` (`carnot.operational_retro.v64`). Disk-mtime timing reconstruction (`retro_timing_fallback`, live git-log path found 0 commits, `reconstructed_from_disk_mtime: true`) records 1 completed experiment (0 compute-bound, 1 synthesis-only) in 5.7 total wall-time minutes (6 minutes / 0.1 hours, 6 minutes average per experiment).
+- The sole completed experiment in `slowest_experiments` was synthesis-only (`compute_bound: false`): `Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries` (5.68 minutes / 6min); no data is available this milestone for compute-bound experiment durations (`compute_bound_experiments_count: 0`).
+- GPU STATE reported `GPU monitor not available` (no data available this milestone for GPU utilization or hardware telemetry); with 0 compute-bound tasks executed, locked `gpu_idle_on_compute_bound_tasks` is `null` (0% GPU on synthesis-only tasks is expected behavior and not flagged as a bottleneck), and `DualGPURunner` did not apply (0 tasks loaded 2+ models in parallel).
+- Suggested tooling improvements (`estimated_time_savings_pct: 30`): pre-index and cache fourteen V786 outcome receipts and exact continuation-boundary verification inputs in synthesis-only `Exp9240` (5.68 minutes / 6min), record direct per-experiment start and end timestamps in the conductor to avoid `retro_timing_fallback` when live git-log finds 0 commits, and restore GPU monitor availability ahead of future compute-bound workloads.
+
 ## 2026-11-19 UTC — Operational retrospective for milestone 2026.11.785
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.785`: populated interpretive fields in `results/operational_retro_2026_11_785.json` (`carnot.operational_retro.v64`). Disk-mtime timing reconstruction (`retro_timing_fallback`, live git-log path found 0 commits, `reconstructed_from_disk_mtime: true`) records 2 completed experiments (0 compute-bound, 2 synthesis-only) in 0.4 total wall-time minutes (0 minutes / 0.0 hours, 0 minutes average per experiment).

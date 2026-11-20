@@ -7808,5 +7808,12 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 2 synthesis-only experiments (0 compute-bound) finished in 0.4 wall-time minutes (0 minutes / 0.0 hours, 0 minutes average per experiment) under disk-mtime reconstruction (retro_timing_fallback, live git-log path found 0 commits), comprising Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks (0.34 min / 0min, compute_bound: false) and Exp9225: Qualify selective-deferral feedback masks and spline-support calibratio (0.01 min / 0min, compute_bound: false); with 0 compute-bound tasks executed, locked gpu_idle_on_compute_bound_tasks is null, DualGPURunner was not applicable, and GPU STATE reported GPU monitor not available (no data available this milestone for GPU telemetry).
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.786
+- exp_range: exp9240-exp9240 (derived from the 1 completed synthesis-only task in TIMING DATA: Exp9240)
+- theme: Operational execution analysis for milestone 2026.11.786 covering 1 completed synthesis-only experiment (0 compute-bound) across 5.7 wall-time minutes (6 minutes / 0.1 hours, averaging 6 minutes per experiment).
+- key result: honest operational negative — 1 synthesis-only experiment (0 compute-bound) finished in 5.7 wall-time minutes (6 minutes / 0.1 hours, 6 minutes average per experiment) under disk-mtime reconstruction (retro_timing_fallback, live git-log path found 0 commits), comprising Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries (5.68 min / 6min, compute_bound: false); with 0 compute-bound tasks executed, locked gpu_idle_on_compute_bound_tasks is null, DualGPURunner was not applicable, and GPU STATE reported GPU monitor not available (no data available this milestone for GPU telemetry).
+- acceptance: no data available this milestone
+
+
 
 

@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.786",
+  "generated_at": "2026-11-20T03:12:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.7,
+  "experiments_completed": 1,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries",
+      "duration_minutes": 5.68,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.786 completed 1 experiment (0 compute-bound, 1 synthesis-only) in 5.7 wall-time minutes (6 minutes / 0.1 hours, averaging 6 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, live git-log path found 0 commits). The sole completed experiment was synthesis-only Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries, which ran in 5.68 minutes (6min, compute_bound: false). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and the GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware telemetry).",
+  "bottlenecks_identified": [
+    "Synthesis-only Exp9240 ('Reconcile fourteen V786 outcomes and exact continuation boundaries', compute_bound: false) required 5.68 minutes (6min) out of the 5.7-minute (6 minutes / 0.1 hours) milestone wall time; 0 compute-bound experiments ran (compute_bound_experiments_count: 0, so no data is available this milestone for compute-bound experiment durations, GPU idle is not flagged as a bottleneck because gpu_idle_on_compute_bound_tasks is null, and DualGPURunner did not apply).",
+    "The live git-log timing path found 0 commits, triggering disk-mtime timing reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) for the 1 completed synthesis-only experiment.",
+    "The GPU STATE block reported 'GPU monitor not available' (no data available this milestone for GPU utilization or hardware state)."
+  ],
+  "improvements_suggested": [
+    "Pre-index and cache the fourteen V786 outcome artifacts and exact continuation-boundary verification inputs consumed by synthesis-only Exp9240 (5.68 minutes / 6min) to reduce reconciliation latency.",
+    "Write direct per-experiment start and end timestamps from the conductor so operational retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Restore GPU monitor availability prior to milestones executing compute-bound (GGUF/CUDA/requires_gpu) tasks, while keeping DualGPURunner scoped exclusively to compute-bound workloads loading 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-index and cache fourteen V786 outcome receipts and continuation-boundary check inputs for synthesis-only Exp9240 (5.68 minutes / 6min).",
+    "Record direct per-experiment execution timestamps in the conductor to avoid retro_timing_fallback when live git-log finds 0 commits.",
+    "Restore GPU monitor telemetry ahead of future compute-bound experiments."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "The 1 completed experiment in milestone 2026.11.786 was synthesis-only (0 compute-bound) across 5.7 wall-time minutes (6 minutes / 0.1 hours, averaging 6 minutes per experiment), with Exp9240 taking 5.68 minutes (6min) under disk-mtime reconstruction (0 commits in live git-log). With 0 compute-bound tasks executed and the GPU monitor not available, gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable."
+}
