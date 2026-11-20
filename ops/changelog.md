@@ -24050,3 +24050,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-19: Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks (⚠️ Blocked) — honest_verdict=complete_blocked_v785_contract; results/experiment_9222_v785_contract.json
 - 2026-11-19: Exp9225: Qualify selective-deferral feedback masks and spline-support calibration diagnostics (⚠️ Research Finding) — honest_verdict=complete_null_v785_selective_deferral_protocol; results/experiment_9225_v785_selective_deferral_protocol.json
 - 2026-11-20: Exp9240: Reconcile fourteen V786 outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9240_v786_capstone.json
+- 2026-11-20: Exp9241: Qualify split V782-V786 consumer replay and bind fourteen V787 tasks (⚠️ Blocked) — honest_verdict=complete_blocked_v787_contract; results/experiment_9241_v787_contract.json
