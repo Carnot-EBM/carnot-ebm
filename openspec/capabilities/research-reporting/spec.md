@@ -116943,3 +116943,71 @@ refusal, tamper and cold replay without `PYTHONPATH` under E2E-018/021, scoped R
 check/format, strict mypy, spec coverage, and 100 percent owned unit plus child
 statement coverage with zero exclusions qualify `selective_deferral_ready_score=1` and
 `spline_support_diagnostic_ready_score=1`.
+
+## Proposed V786 research milestone — 2026-11-20
+
+Status: planned and scoped for V786 execution. All historical V782, V783, V784
+and V785 outcomes, quarantines and zero gates remain unchanged history.
+
+### REQ-REPORT-9240-V786: Unconditional fourteen-outcome V786 reconciliation
+
+Exp9240 SHALL authenticate both complete V786 contracts (`research-roadmap.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`) and account for all fourteen V786
+task outcomes in exact order (`exp9227-contract` through `exp9240-capstone`), accepting
+canonical primaries or explicitly identified scheduler skips while keeping absent
+scientific primaries absent. No positive upstream gate applies to this unconditional
+capstone. It SHALL preserve V785's authenticated record explicitly: Exp9222 passed split
+consumer replay (`replay_authority_ready_score=1`, `source_ready_score=1`,
+`static_methods_ready_score=1`, `online_methods_ready_score=1`) while blocking
+`contract_ready_score=0` on stale V784 markdown and a five-task queue; Exp9225 qualified
+`selective_deferral_ready_score=1` and `spline_support_diagnostic_ready_score=1` without
+measuring scientific effect; Exp9223 had a scheduler pre-gate artifact skip on
+`exp9222-contract.contract_ready_score`; Exp9224 and Exp9226 had scheduler log-only
+upstream-retired skips; and V785 slots 6–14 were omitted. It SHALL preserve V784
+three-executed/eleven-skipped, V783 two-executed/twelve-skipped, and V782
+four-executed/ten-skipped closures alongside Exp9211's qualified target-identifiability
+and affine label-ambiguity method authority. It SHALL reduce the two original static
+bounds, seven original learning bounds, three CES ranking bounds, and descriptive
+ambiguity, selective-deferral, spline-support, and conformal-risk/Mycelium branches from
+independently eligible rows only, keeping `missing_file`, `missing_field` and observed
+`0` distinct. It SHALL recompute stable historical G1–G4 publication gates using
+`scripts/publication_gate.py --json`, report `unmet_gates` separately from
+`current_science_paper_ready=false`, and apply repeated-verdict retirement
+recommendations only to authenticated repeated failed execution scope without editing
+`ops/exclusion_manifest.yaml` directly. Declare `no_model_load`, `MODEL_SPECS=[]`,
+`current_llm_invocations=0`, and `generated_tokens=0`.
+
+#### SCENARIO-REPORT-9240-V786: Fourteen ordered V786 outcomes and preserved V785 record
+
+All fourteen V786 slots (`exp9227-contract` through `exp9240-capstone`) are accounted in
+exact order, distinguishing scheduler pre-test log skips (`exp9227-contract`,
+`exp9230-conformal-risk-protocol`) from pre-emptive upstream-retired log skips
+(`exp9228-corpus-prefilter`, `exp9229-forward-qualification`,
+`exp9231-logit-runtime`–`exp9239-complete-cost`) and the self slot (`exp9240-capstone`).
+Preserved V785 history retains Exp9222's three passing consumer shards and zero contract
+score, Exp9223's scheduler refusal artifact, Exp9224/Exp9226 log skips, Exp9225's
+qualified selective-deferral masks and spline-support diagnostics, and nine omitted
+planner slots. Without frozen model predictions, the two static bounds, seven learning
+bounds, three CES ranking bounds, and descriptive ambiguity, selective-deferral,
+spline-support, and conformal-risk branches remain terminal blocked with null metrics
+and zero denominators. Administrative completeness (`reconciliation_ready_score=1`)
+stays separate from scientific benefit (`independent_generalization_score=0`,
+`current_science_paper_ready=false`).
+
+#### SCENARIO-REPORT-9240-V786-CONTROLS: Strict operands, tamper rejection and private CLI controls
+
+All fourteen ordered V786 outcomes survive missing inputs and failed scientific gates.
+Missing file, missing field, observed zero and boolean readiness remain distinct.
+Fresh-process cold replay rejects rehashed invented science, modified retained producer
+bytes and task authority drift. Repeated-verdict retirement requires all four
+prior-failure fields, an authenticated exact repeated verdict and matching logical
+execution role without mutating `ops/exclusion_manifest.yaml`. Owned unit and real CLI
+child statement coverage is 100 percent with zero exclusions; scoped Ruff check/format,
+strict mypy, spec coverage and outside-checkout private CLI E2E-018/021 checks pass.
+
+Current work SHALL retain complete authenticated producer bytes while projecting
+only imported fields into its reduction input. The projection SHALL preserve
+primitive rows, protocol references, required historical accounting, and failed
+gate operands. Unused duplicate validation metadata SHALL not multiply replay
+work. Cold replay SHALL compare that same projection with the retained original.
+

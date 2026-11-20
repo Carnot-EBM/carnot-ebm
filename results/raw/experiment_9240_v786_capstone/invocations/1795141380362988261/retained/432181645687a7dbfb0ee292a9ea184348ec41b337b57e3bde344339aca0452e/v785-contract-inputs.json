@@ -1,0 +1,80 @@
+{
+  "revision": "v785-partitioned-replay-v1",
+  "seed": 785222,
+  "pins": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:06ddcee74cab8be574b2892e7773983d2e41a0d733b2003f0712bfe1ff48e811",
+    "research-roadmap.yaml": "sha256:df65951514658c58082d5e27b4ce5d06af731cb40607da5cc23d47cb364c1917",
+    "research-complete.yaml": "sha256:58951a5448e3a428a1e49544e28e8e57cdc2df5a523474a9ae868e82aa600634",
+    "ops/exclusion_manifest.yaml": "sha256:d534012dc081b42711f08555bb4632731c297e8b636487266011423c62235477",
+    "openspec/change-proposals/research-roadmap-v784-preserved-20261118.md": "sha256:06ddcee74cab8be574b2892e7773983d2e41a0d733b2003f0712bfe1ff48e811",
+    "openspec/change-proposals/research-roadmap-v784-queue-preserved-20261118.yaml": "sha256:b1038a3ccf93857b6461f267e9683f71f61735a87d1f5021c904c47a7d76112f",
+    "results/experiment_9208_v784_contract.json": "sha256:ccd51a311d44b66e06f5615c7f223415fd4968dbbce888d35a59ec6e260db7f2",
+    "results/experiment_9209_corpus_prefilter.json": "sha256:68985b1f24ceb2e0373ffb9f58bf80aa8e9c01ede77761da8cc1e71633665406",
+    "results/experiment_9211_v784_label_ambiguity.json": "sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610",
+    "results/experiment_9221_v784_capstone.json": "sha256:54b3a2887c709b5cd3ba9d380e47206efab67499067802e3d97179641cdbb2c7"
+  },
+  "exclusions": [],
+  "scheduling_repair_revision": {
+    "changes_scientific_thresholds": false,
+    "gate": "corpus_scan_ready_score",
+    "historical_gate": "causal_fix_ready_score",
+    "historical_gate_score": 0,
+    "name": "v783-lossless-corpus-scan",
+    "retired_tasks": [
+      "exp9181-validation-loop-repair",
+      "exp9182-forward-qualification"
+    ]
+  },
+  "target_identifiability_rubric": {
+    "factual_error": "original human criterion and factual-error evidence",
+    "expressed_uncertainty": "explicit original human annotation",
+    "reelicitation": "same-generator semantically equivalent original prompts",
+    "statuses": [
+      "present",
+      "absent",
+      "ambiguous"
+    ],
+    "absent_is_negative": false,
+    "cross_generator_substitution": false,
+    "predictions_read": false,
+    "SI_CF_unavailable_without_evidence": true
+  },
+  "selective_deferral_protocol": {
+    "alpha_grid": [
+      0.1,
+      0.25
+    ],
+    "escalation_interval": [
+      0.1,
+      0.9
+    ],
+    "primary_gate_rescue": false,
+    "primary_protocol": "full_release",
+    "regimes": [
+      "full_release",
+      "escalation_only",
+      "audited_deferral"
+    ],
+    "seed_prefix": "v785-selective-deferral",
+    "spline_basis_columns": 57,
+    "spline_strata": [
+      "interior_dense",
+      "boundary_sparse_or_clipped"
+    ],
+    "spline_support_knots": [
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "unobserved_accepted_drift_at_alpha_zero": "unidentifiable",
+    "version": "v785-selective-deferral-v1"
+  }
+}

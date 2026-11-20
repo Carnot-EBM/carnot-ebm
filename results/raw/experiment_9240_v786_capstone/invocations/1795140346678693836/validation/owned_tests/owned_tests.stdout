@@ -1,0 +1,129 @@
+[exp9240] phase=preconditions_before completed=0 pending=0
+[exp9240] phase=authenticate completed=0 pending=377
+[exp9240] phase=authenticate completed=50 pending=327
+[exp9240] phase=authenticate completed=150 pending=227
+[exp9240] phase=authenticate completed=200 pending=177
+[exp9240] phase=authenticate completed=300 pending=77
+[exp9240] phase=authenticate completed=350 pending=27
+[exp9240] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9240] phase=after_publication_gate completed=1 pending=0
+[exp9240] phase=preconditions_after completed=287 pending=1
+FF..[test9240] child_before ('--from-work', '/var/tmp/carnot9179-3nsihidt/owned_tests/test_private_real_cli0/work.json', '--output', '/var/tmp/carnot9179-3nsihidt/owned_tests/test_private_real_cli0/experiment_9240_v786_capstone.json')
+[test9240] child_after 0
+[test9240] child_before ('--cold-replay', '/var/tmp/carnot9179-3nsihidt/owned_tests/test_private_real_cli0/experiment_9240_v786_capstone.json')
+[test9240] child_after 0
+[test9240] child_before ('--date', '20261119')
+[test9240] child_after 2
+[test9240] child_before ('--from-work', '/var/tmp/carnot9179-3nsihidt/owned_tests/test_private_real_cli0/work.json')
+[test9240] child_after 2
+F[exp9240] phase=owned_validation_before completed=0 pending=0
+[exp9240] phase=owned_validation_after completed=0 pending=0
+[exp9240] phase=complete completed=14 pending=0
+{"primary_path": "/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0/experiment_9240_v786_capstone.json", "primary_sha256": "sha256:08fc9f290e6dd63b638cf7ad6a23e25663aeb2f399fbe97ce22edb513a6f1f13", "sidecar_path": "/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0/raw/experiment_9240_v786_capstone/validators/08fc9f290e6dd63b638cf7ad6a23e25663aeb2f399fbe97ce22edb513a6f1f13.json"}
+[exp9240] phase=owned_validation_before completed=0 pending=0
+[exp9240] phase=owned_validation_after completed=0 pending=0
+[exp9240] phase=complete completed=14 pending=0
+{"primary_path": "/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0/experiment_9240_v786_capstone.json", "primary_sha256": "sha256:d8d07b45fa50f0549de3b6d83d627542a3bc159d30a792189f7de361d610c0f1", "sidecar_path": "/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0/raw/experiment_9240_v786_capstone/validators/d8d07b45fa50f0549de3b6d83d627542a3bc159d30a792189f7de361d610c0f1.json"}
+F
+=================================== FAILURES ===================================
+_______________________ test_fourteen_terminal_outcomes ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a9...'sha256': 'sha256:04f1ce9ee640f1e58aea0eec223b94d7e2ba18660a3b517e9b7242009703953e'}, 'ended_ns': 440268821381871, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc14e7b5d30>
+
+    def test_fourteen_terminal_outcomes(work, monkeypatch):
+        """SCENARIO-REPORT-9240-V786: fourteen V786 outcomes and preserved V785 history stay distinct."""
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        value = m.build(work)
+>       assert all(r["passed"] for r in work["checks"]), [r for r in work["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'run_date', 'check': 'date', 'expected': '20261118', 'observed': '20261120', ...}]
+E       assert False
+E        +  where False = all(<generator object test_fourteen_terminal_outcomes.<locals>.<genexpr> at 0x7fc13a957ed0>)
+
+tests/python/test_v786_capstone_9240.py:31: AssertionError
+________________________ test_missing_and_owned_failure ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a9...'sha256': 'sha256:04f1ce9ee640f1e58aea0eec223b94d7e2ba18660a3b517e9b7242009703953e'}, 'ended_ns': 440268821381871, ...}
+tmp_path = PosixPath('/var/tmp/carnot9179-3nsihidt/owned_tests/test_missing_and_owned_failure0')
+
+    def test_missing_and_owned_failure(work, tmp_path):
+        """REQ-REPORT-9240-V786: external absence blocks; affected failures disqualify."""
+>       assert m.build(work)["verdict_class"] == "disqualified"
+E       AssertionError: assert 'blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked
+
+tests/python/test_v786_capstone_9240.py:196: AssertionError
+____________________________ test_private_real_cli _____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a9...'sha256': 'sha256:04f1ce9ee640f1e58aea0eec223b94d7e2ba18660a3b517e9b7242009703953e'}, 'ended_ns': 440268821381871, ...}
+tmp_path = PosixPath('/var/tmp/carnot9179-3nsihidt/owned_tests/test_private_real_cli0')
+
+    def test_private_real_cli(work, tmp_path):
+        """REQ-REPORT-9240-V786: E2E-018/021 run outside checkout without PYTHONPATH."""
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        argv = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        if env.get("COVERAGE_RCFILE"):
+            argv[1:2] = ["-m", "coverage", "run"]
+    
+        def call(*args):
+            print("[test9240] child_before", args, flush=True)
+            result = subprocess.run(
+                [*argv, *args], cwd=tmp_path, env=env, capture_output=True, timeout=180
+            )
+            print("[test9240] child_after", result.returncode, flush=True)
+            return result
+    
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (m.NAME + ".json")
+        result = call("--from-work", str(source), "--output", str(output))
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert call("--cold-replay", str(output)).returncode == 0
+        assert call("--date", "20261119").returncode == 2
+        assert call("--from-work", str(source)).returncode == 2
+        changed = json.loads(output.read_bytes())
+>       changed["two_bound_rows"][0]["absolute_metric"] = 1
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'two_bound_rows'
+
+tests/python/test_v786_capstone_9240.py:273: KeyError
+______________________________ test_orchestration ______________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a9...'sha256': 'sha256:04f1ce9ee640f1e58aea0eec223b94d7e2ba18660a3b517e9b7242009703953e'}, 'ended_ns': 440268821381871, ...}
+tmp_path = PosixPath('/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc135e85e80>
+
+    def test_orchestration(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9240-V786: orchestration retains validation and shared deadlines."""
+        monkeypatch.setattr(m, "collect", lambda raw, *_: dict(deepcopy(work), raw=str(raw)))
+        monkeypatch.setattr(m.legacy, "validate", lambda _: dict(receipts=[], coverage={}))
+        monkeypatch.setattr(m.runner, "terminal", lambda *_: dict(passed=True, receipts=[]))
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        output = tmp_path / (m.NAME + ".json")
+        assert m.main(["--date", "20261120", "--output", str(output)]) == 0
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: False)
+>       assert m.main(["--output", str(output)]) == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <function main at 0x7fc14e7e07c0>(['--output', '/var/tmp/carnot9179-3nsihidt/owned_tests/test_orchestration0/experiment_9240_v786_capstone.json'])
+E        +    where <function main at 0x7fc14e7e07c0> = m.main
+
+tests/python/test_v786_capstone_9240.py:289: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v786_capstone_9240.py::test_fourteen_terminal_outcomes
+FAILED tests/python/test_v786_capstone_9240.py::test_missing_and_owned_failure
+FAILED tests/python/test_v786_capstone_9240.py::test_private_real_cli - KeyEr...
+FAILED tests/python/test_v786_capstone_9240.py::test_orchestration - Assertio...
+4 failed, 2 passed, 1 warning in 740.67s (0:12:20)
