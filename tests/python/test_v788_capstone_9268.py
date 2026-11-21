@@ -13,6 +13,7 @@ import pytest
 from carnot.reporting import v788_capstone as m
 from carnot.reporting import v788_capstone_evidence as e
 from carnot.reporting.current_work_receipt import atomic_json, validate_current_work_receipt
+from carnot.reporting.historical_contract_inputs import original_root
 
 
 @pytest.fixture(scope="module")
@@ -21,7 +22,7 @@ def work(tmp_path_factory):
     return m.collect(
         tmp_path_factory.mktemp("capstone9268"),
         "20261120",
-        e.ROOT,
+        original_root(tmp_path_factory.mktemp("inputs9268"), 788, suite="capstone"),
     )
 
 

@@ -1,0 +1,90 @@
+{
+  "evaluator_mask_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9141_v779_human_contrast_audit/invocations/1794847010585176269/evaluator_masks.json",
+    "role": "evaluator_only_after_prediction_seal",
+    "sha256": "sha256:1d98305d3c5b325f0d497d128a802a651d24fa77b259cf6ac08bc89b38404a4d"
+  },
+  "inherited": {
+    "acceptance": "complete authenticated custody and executed checks, independent of favorable counts; preserve original two static/seven online bounds",
+    "agreement": {
+      "ci95": [
+        0.025,
+        0.975
+      ],
+      "empty": "unavailable",
+      "estimand": "mean within-qid observed A1/A2 agreement fraction",
+      "missing": "omit unobserved pairs; report observed qid and sibling support",
+      "truth_ceiling": false,
+      "unit": "paired whole qid with all siblings"
+    },
+    "draws": 10000,
+    "empty_slice_rule": "unavailable with numerator/denominator/counts; never a win",
+    "exclusions": [],
+    "interval_scope": "descriptive conditional on original fit/guard/retention; no independent generalization",
+    "metrics": {
+      "Brier": "mean((p-y)^2)",
+      "signed_calibration_residual": "mean(p-y)"
+    },
+    "online": {
+      "classification_threshold": 0.5,
+      "future_unit": "paired whole stream preserving order, siblings and membership",
+      "initial_reference": "same row initial frozen_spline probability",
+      "membership": "one reference-adaptive sealed mask shared by every arm, never arm-specific subsets",
+      "probability_change_gte": 0.05,
+      "reference_arm": "adaptive_spline",
+      "retention_unit": "paired whole stream conditional on fixed TEST100; repeated retention never new qids",
+      "slices": [
+        "changed",
+        "unchanged"
+      ],
+      "threshold_flips": "(p_adaptive>=0.5)!=(p_initial>=0.5), reported separately in both slices"
+    },
+    "online_bounds": [
+      "frozen_spline minus adaptive_spline future Brier lower>0",
+      "bias_only_spline minus adaptive_spline future Brier lower>0",
+      "adaptive_linear minus adaptive_spline future Brier lower>0",
+      "donor_label_spline minus adaptive_spline future Brier lower>0",
+      "temperature_only_spline minus adaptive_spline future Brier lower>0",
+      "adaptive_spline retained Brier increase upper<=0.005",
+      "adaptive_spline retained classification-error increase upper<=0"
+    ],
+    "resolution": {
+      "best_case_two_sided_sign_test": "6/n at alpha0.05: six concordant nonzero qid changes have p=2^(1-6)=0.03125; not guaranteed power",
+      "maximum_normal95_width": "1.96/sqrt(n), Bernoulli approximation",
+      "qid_rate_grid": "1/n",
+      "sibling_rate_grid": "1/(3*n), not independent"
+    },
+    "scope": "exposed_development; no training selection, model selection or promotion",
+    "seed": 779141,
+    "static": {
+      "access": "evaluator_only_after_prediction_seal",
+      "definition": "mixed iff 0<A1 error siblings<sibling count",
+      "slices": [
+        "mixed",
+        "homogeneous"
+      ],
+      "unit": "paired whole qid"
+    },
+    "static_bounds": [
+      "combined Brier improvement lower>0 vs probability_length",
+      "combined Brier improvement lower>0 vs combined_donor"
+    ],
+    "target": "A1:0 correct,1 error; A2:-1/null missing, never imputed or consensus",
+    "version": "v779-human-contrast-v1"
+  },
+  "inherited_protocol_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9141_v779_human_contrast_audit/invocations/1794847010585176269/diagnostic_protocol.json",
+    "sha256": "sha256:841a3736fcd1fd07618389f9235808e35ad45d7a52ad06db85a53dcfae2bcaeb"
+  },
+  "scale_ranking": {
+    "AUROC": "P(s_error>s_correct)+0.5*P(tie); all error/correct pairs",
+    "Brier": "mean((sigmoid(s)-y)**2)",
+    "RMS": "sqrt(mean(s**2))",
+    "counts": "error and correct sibling counts; independent support in qids",
+    "one_class_auroc": "unavailable",
+    "raw_logits": "s before sigmoid",
+    "selection": "none; descriptive only, no new acceptance bound",
+    "timing": "before and after each update; rejected updates retain unchanged state",
+    "unit": "fixed TEST100 qids/all siblings, every arm, every stream/released-group update"
+  }
+}

@@ -56,6 +56,10 @@ CAPSTONES = {
         "experiment_9240_v786_capstone.json",
         "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
     ),
+    788: (
+        "experiment_9268_v788_capstone.json",
+        "sha256:12059727652a55d93a267b186f01cbbb3ed1a043fc79799b67a455aae9eb6d17",
+    ),
 }
 
 
@@ -74,7 +78,15 @@ encoder_head_diagnosis_8972.sha256_file = _digest
 v746_retained_evidence.sha256_file = _digest
 v764_capstone_sources.sha256_file = _digest
 _YAML_CACHE: dict[str, Any] = {}
-_ORIGINAL_SAFE_LOAD = yaml.safe_load
+_FAST_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+_TRIM_PAIRS: dict[bytes, tuple[bytes, bytes]] = {
+    b'  "scan_rows": [\n': (b"  ],\n", b'  "scan_rows": [],\n'),
+    b'    "ordered_paths": [\n': (b"    ],\n", b'    "ordered_paths": [],\n'),
+    b'  "historical_input_roots": [\n': (b"  ],\n", b'  "historical_input_roots": [],\n'),
+    b'  "validation_obligations": {\n': (b"  },\n", b'  "validation_obligations": {},\n'),
+    b'  "validation_scope_manifest": {\n': (b"  },\n", b'  "validation_scope_manifest": {},\n'),
+}
+_COMPACT_CACHE: dict[str, dict[str, Any]] = {}
 
 
 def _cached_safe_load(stream: Any) -> Any:
@@ -82,12 +94,35 @@ def _cached_safe_load(stream: Any) -> Any:
     if isinstance(stream, bytes) and len(stream) >= 1_000_000:
         key = hashlib.sha256(stream).hexdigest()
         if key not in _YAML_CACHE:
-            _YAML_CACHE[key] = _ORIGINAL_SAFE_LOAD(stream)
+            _YAML_CACHE[key] = yaml.load(stream, Loader=_FAST_LOADER)
         return _YAML_CACHE[key]
-    return _ORIGINAL_SAFE_LOAD(stream)
+    return yaml.load(stream, Loader=_FAST_LOADER)
 
 
 yaml.safe_load = _cached_safe_load
+_cached_safe_load((ROOT / "research-complete.yaml").read_bytes())
+
+
+def load_compact_primary(path: Path) -> dict[str, Any]:
+    """Stream primary JSON metadata without allocating multi-hundred-megabyte inline tables."""
+    digest = _digest(path)
+    if digest not in _COMPACT_CACHE:
+        out = bytearray()
+        skip_until: bytes | None = None
+        with path.open("rb") as stream:
+            for line in stream:
+                if skip_until is not None:
+                    if line == skip_until:
+                        skip_until = None
+                    continue
+                hit = _TRIM_PAIRS.get(line)
+                if hit is not None:
+                    skip_until, replacement = hit
+                    out.extend(replacement)
+                else:
+                    out.extend(line)
+        _COMPACT_CACHE[digest] = json.loads(out)
+    return dict(json.loads(json.dumps(_COMPACT_CACHE[digest])))
 
 
 def authenticated(reference: dict[str, Any], *, read: bool = True) -> bytes:
@@ -203,6 +238,65 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
         sources["research-roadmap.yaml"] = sources[
             "openspec/change-proposals/research-roadmap-v787-queue-preserved-20261120.yaml"
         ]
+    if generation == 788:
+        sources.update(
+            {
+                "openspec/change-proposals/research-roadmap-v788-preserved-20261121.md": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v788-preserved-20261121.md"
+                    ),
+                    sha256="sha256:c7b13576b7bf8c46c51410dc9905c26924c02e75c4f509ebea3ae8bf31f897cd",
+                ),
+                "openspec/change-proposals/research-roadmap-v788-queue-preserved-20261121.yaml": dict(
+                    path=str(
+                        ROOT
+                        / "openspec/change-proposals/research-roadmap-v788-queue-preserved-20261121.yaml"
+                    ),
+                    sha256="sha256:bbf68a85425cde6bf1328dae29db817d2db38b8b26cf809ce139e7d13a8d675b",
+                ),
+                "results/experiment_9255_v788_contract.json": dict(
+                    path=str(ROOT / "results/experiment_9255_v788_contract.json"),
+                    sha256="sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef",
+                ),
+                "results/experiment_9256_v788_corpus_prefilter.json": dict(
+                    path=str(ROOT / "results/experiment_9256_v788_corpus_prefilter.json"),
+                    sha256="sha256:d1ac40d315f6a740c5cb30d853045f6c92ed51d2cebeef14e09b7b945f17481a",
+                ),
+                "results/experiment_9257_forward_qualification.json": dict(
+                    path=str(ROOT / "results/experiment_9257_forward_qualification.json"),
+                    sha256="sha256:10bbcaf0b653f5b8b73f55393af7f8b805520316dc211911a089603c01b86ac6",
+                ),
+                "results/experiment_9258_v788_victris_energy_bot.json": dict(
+                    path=str(ROOT / "results/experiment_9258_v788_victris_energy_bot.json"),
+                    sha256="sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+                ),
+                "results/experiment_9268_v788_capstone.json": dict(
+                    path=str(ROOT / "results/experiment_9268_v788_capstone.json"),
+                    sha256=pin,
+                ),
+            }
+        )
+        authenticated(work["values"]["exp9255-contract"]["value"]["work_reference"], read=False)
+        authenticated(
+            work["values"]["exp9258-victris-energy-bot"]["value"]["work_reference"], read=False
+        )
+        from carnot.reporting import v788_capstone_evidence as _v788_cap_e
+
+        for big_name in [
+            "results/experiment_9255_v788_contract.json",
+            "results/experiment_9256_v788_corpus_prefilter.json",
+        ]:
+            big_ref = sources[big_name]
+            _v788_cap_e._PROJECTED_CACHE[big_ref["sha256"]] = _v788_cap_e.project(
+                load_compact_primary(Path(big_ref["path"]))
+            )
+        sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
+            "openspec/change-proposals/research-roadmap-v788-preserved-20261121.md"
+        ]
+        sources["research-roadmap.yaml"] = sources[
+            "openspec/change-proposals/research-roadmap-v788-queue-preserved-20261121.yaml"
+        ]
     if generation == 786:
         sources["openspec/change-proposals/research-roadmap-vNEXT.md"] = sources[
             "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md"
@@ -291,6 +385,12 @@ def original_root(destination: Path, generation: int, *, suite: str = "contract"
             787: {
                 "results/experiment_9242_corpus_prefilter.json",
                 "results/experiment_9244_v787_conformal_risk_protocol.json",
+            },
+            788: {
+                "results/experiment_9256_v788_corpus_prefilter.json",
+                "results/experiment_9257_forward_qualification.json",
+                "results/experiment_9258_v788_victris_energy_bot.json",
+                "results/experiment_9268_v788_capstone.json",
             },
         }.get(generation, set()):
             continue

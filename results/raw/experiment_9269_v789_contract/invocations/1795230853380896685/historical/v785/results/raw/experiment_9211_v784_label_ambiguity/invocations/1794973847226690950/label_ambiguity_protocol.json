@@ -1,0 +1,23 @@
+{
+  "contrast": "d(y)=(p_control-y)^2-(p_treatment-y)^2=p_control^2-p_treatment^2-2*y*(p_control-p_treatment)",
+  "joint_simultaneous_worst_case_claimed": false,
+  "pairwise_only": true,
+  "primary_gate_rescue": false,
+  "primary_target": "original A1 factual-error binary label in {0, 1}; A2=-1 remains missing",
+  "repeated_retention": "one binary label variable per unique response (unit_id); sum weighted coefficients across repeated appearances before optimizing endpoints",
+  "scenarios": {
+    "missing_annotation_envelope": "observed agreement (A1==A2, A2 in {0,1}) fixes [A1]; observed disagreement or missing A2 permits [0, 1]",
+    "observed_disagreement": "observed agreement (A1==A2, A2 in {0,1}) and missing A2 (A2==-1) fix [A1]; observed disagreement (A1!=A2, A2 in {0,1}) permits [0, 1]"
+  },
+  "seed": 784211,
+  "selection": "no mask, A2, endpoint or sensitivity result selects training, temperature, promotion or primary acceptance",
+  "version": "v784-label-ambiguity-v1",
+  "weights": {
+    "future_qid_within_stream": "1/4",
+    "retention_TEST_qid": "1/100",
+    "retention_measurement": "1/3000 per stream-qid-sibling appearance; 1/300 per unique TEST response across 10 streams",
+    "sibling": "1/3",
+    "static_TEST_qid": "1/100",
+    "stream": "1/10"
+  }
+}

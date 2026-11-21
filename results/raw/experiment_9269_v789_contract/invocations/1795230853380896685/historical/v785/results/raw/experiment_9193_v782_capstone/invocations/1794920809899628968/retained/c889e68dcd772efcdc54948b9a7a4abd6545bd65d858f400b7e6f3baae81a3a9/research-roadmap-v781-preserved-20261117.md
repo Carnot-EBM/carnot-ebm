@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9240_v786_capstone/invocations/1795142085672571325/retained/c889e68dcd772efcdc54948b9a7a4abd6545bd65d858f400b7e6f3baae81a3a9/research-roadmap-v781-preserved-20261117.md

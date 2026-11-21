@@ -1,0 +1,33 @@
+{
+  "version": "v776-online-human-v1",
+  "scope": "exploratory_exposed_development_only",
+  "static_comparison": "unchanged; no static150 head or transform initializes this learner",
+  "ordering": "SHA256 of literal v776-online + original qid, ascending hexadecimal digest",
+  "roles": {"initialization_qids": 100, "online_qids": 50, "streams": 10, "qids_per_stream": 5, "siblings": 3, "guard_qids": 50, "retention_qids": 100},
+  "donors": {"seed": 776099, "mapping": "numpy default_rng(seed).choice(sorted initialization roster, size=50, replace=True) in frozen stream order", "labels": "already-known initialization A1 labels; matching original sibling positions", "changed_labels": "retain numerator, denominator and fraction against released stream truth; never select the map using truth"},
+  "arms": ["frozen_spline", "adaptive_spline", "bias_only_spline", "adaptive_linear", "donor_label_spline"],
+  "initialization": {"source": "100 initialization groups/300 siblings only", "input": "independently L2-normalized question and answer embeddings, concatenated in that order", "transform": "initialization-only population mean/std; constants scale1; Gaussian projection seed775084 with std1/sqrt(27); initialization projected min/max to[-1,1], constants0; later clip", "basis": "intercept +27 linear +189 cubic fixed-knot columns; spline_basis_8986.design", "loss": "mean binary logloss +0.5*0.01*sum(nonintercept coefficient squares)", "optimizer": "L-BFGS-B from zeros; maxiter2000, gtol1e-7, ftol1e-12", "convergence": "finite objective/coefficients/gradient; gradient infinity norm<=1e-6", "temperature": 1},
+  "update_equations": {"gradient": "(sigmoid(theta dot phi)-y)*phi +0.01*(theta-theta_initial), anchor[0]=0", "bias_only": "gradient[1:]=0 before clipping", "clip": "gradient/=max(1,L2norm(gradient))", "accumulator": "accumulator+=gradient**2; initially0", "coefficients": "theta-=0.05*gradient/sqrt(accumulator+1e-8)", "siblings": "three original sibling positions in order; one proposal per released qid", "guard": "all150 original CAL rows; Brier increase<=0.005 and classification-error increase<=0 against arm initial state", "reject": "restore coefficients and accumulator; still acknowledge feedback", "frozen": "no updates"},
+  "causality": {"prediction": "seal all15 sibling/arm predictions before releasing group g-1", "tail": "drain group5 after all predictions; cannot improve preceding scores", "reset": "identical initial coefficients and zero accumulators for every stream", "retention": "no labels in learner request; seal end-of-stream predictions before evaluation", "decisions": "accept p_error<=0.1, reject>=0.9, otherwise escalate"},
+  "recovery": {"snapshot": "complete coefficients, accumulators, pending items, acknowledgments, prediction and feedback rows", "commit": "write temporary snapshot, flush/fsync, atomic replace, directory fsync; acknowledge after commit", "hard_exits": ["before_prediction_fsync", "after_feedback_receipt", "during_atomic_replace"], "exit_code": 73, "comparison": "exact complete state equality including retained prediction rows"},
+  "benefit_bounds": {
+    "future_qids": 40,
+    "future_groups": [2, 3, 4, 5],
+    "draws": 10000,
+    "seed": 776105,
+    "resampling": "paired stream-bootstrap; per-qid retention changes averaged across streams also reported",
+    "tail": 0.008333333333333333,
+    "bounds": [
+      {"contrast": "frozen_spline minus adaptive_spline future Brier", "direction": "lower", "op": ">", "threshold": 0},
+      {"contrast": "bias_only_spline minus adaptive_spline future Brier", "direction": "lower", "op": ">", "threshold": 0},
+      {"contrast": "adaptive_linear minus adaptive_spline future Brier", "direction": "lower", "op": ">", "threshold": 0},
+      {"contrast": "donor_label_spline minus adaptive_spline future Brier", "direction": "lower", "op": ">", "threshold": 0},
+      {"contrast": "adaptive_spline retained Brier increase", "direction": "upper", "op": "<=", "threshold": 0.005},
+      {"contrast": "adaptive_spline retained classification-error increase", "direction": "upper", "op": "<=", "threshold": 0}
+    ],
+    "small_sample_caution": "Ten streams have limited power; intervals condition on the fixed initial fit, guard and retention. Repeated retention contains100 unique qids, not1000. Null results do not authorize tuning bounds or universal architecture-failure claims.",
+    "learning_signal_score": "all six bounds plus exact recovery; methods readiness requires no scientific win"
+  },
+  "fixtures": {"seed": 776099, "positive": "constructed online all-one labels and fixed features with separable guard support", "no_signal": "seeded independent Bernoulli labels on the same fixed features", "scope": "CPU mechanics only; no human benefit, independent generalization or ARC solve"},
+  "validation": {"statement_percent": 100, "excluded_statements": 0, "measurement_cap_s": 3300, "validation_reserve_s": 1200, "hard_cap_s": 4800, "e2e": ["E2E-018", "E2E-020", "E2E-021"]}
+}

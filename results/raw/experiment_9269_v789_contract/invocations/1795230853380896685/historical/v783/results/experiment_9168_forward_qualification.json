@@ -1,0 +1,51 @@
+{
+  "experiment": 9168,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-17",
+  "started_at": "2026-11-17T04:58:15.637394+00:00",
+  "finished_at": "2026-11-17T04:58:15.637394+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp9168: Execute the complete causally corrected validation revision",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp9167-causal-validation",
+  "failed_field": "causal_fix_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9167_v781_causal_validation.json",
+  "failed_evidence_sha256": "sha256:4776dc4139c8c65d3f477fc9d37a434265cf5b67d2d2797d0dee26f8b7723ebe",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp9167-causal-validation",
+    "failed_field": "causal_fix_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9167_v781_causal_validation.json",
+    "failed_evidence_sha256": "sha256:4776dc4139c8c65d3f477fc9d37a434265cf5b67d2d2797d0dee26f8b7723ebe"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9167-causal-validation.causal_fix_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp9167-causal-validation",
+      "artifact_field": "causal_fix_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9167_v781_causal_validation.json",
+      "artifact_sha256": "sha256:4776dc4139c8c65d3f477fc9d37a434265cf5b67d2d2797d0dee26f8b7723ebe"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

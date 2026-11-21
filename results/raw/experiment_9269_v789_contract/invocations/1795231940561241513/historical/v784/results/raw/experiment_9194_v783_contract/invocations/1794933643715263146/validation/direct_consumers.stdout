@@ -1,0 +1,492 @@
+.........................................FFF...FFF...................... [ 88%]
+.FF.FFF.F                                                                [100%]
+=================================== FAILURES ===================================
+_________________________ test_authority_and_protocol __________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+
+    def test_authority_and_protocol(work):
+        """REQ-REPORT-9180-V782: every support, bound and historical failure stays fixed."""
+        i = work["inspection"]
+>       assert all(r["passed"] for r in i["checks"]), [r for r in i["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'sha256', 'check': 'contract_bytes', 'expected': 'sha256:02138bd865e065962ba7315e046001a992c88b56f...fee3a8dea001a0f3de554d45', 'observed': 'sha256:1c0ff24ad77aa6c1f361117cf842aaa1e61cc068be548ccd3e5f99d30ba899df', ...}]
+E       assert False
+E        +  where False = all(<generator object test_authority_and_protocol.<locals>.<genexpr> at 0x7f1eb6122cf0>)
+
+tests/python/test_v782_contract_9180.py:26: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9180] phase=resources_before
+[exp9180] phase=resources_after
+[exp9180] phase=authenticate_inputs_before
+____________________________ test_binding_mutations ____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_binding_mutations0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1eb61d10d0>
+
+    def test_binding_mutations(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-9180-V782: fresh byte pins cannot bless changed whole objects."""
+        for name in [e.DESIGN, e.ACTIVE]:
+            path = tmp_path / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes((e.ROOT / name).read_bytes())
+>       assert e.authority(tmp_path)["ready"]
+E       assert False
+
+tests/python/test_v782_contract_9180.py:71: AssertionError
+__________________________________ test_build __________________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_build0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1dfeccf770>
+
+    def test_build(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9180-V782: independent readiness never grants science credit."""
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        value = c.build(work, {})
+>       assert value["experiment_id"] == 9180 and value["verdict_class"] == "null"
+E       AssertionError: assert (9180 == 9180 and 'blocked' == 'null'
+E         
+E         - null
+E         + blocked)
+
+tests/python/test_v782_contract_9180.py:108: AssertionError
+_____________________ test_producer_snapshot_refusal[work] _____________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1e00293020>
+kind = 'work'
+
+    @pytest.mark.parametrize("kind", ["primary", "work", "scheduler", "arc_log"])
+    def test_producer_snapshot_refusal(work, monkeypatch, kind):
+        """SCENARIO-REPORT-9180-V782: failed original work bytes block dependent imports."""
+        original = e.ref
+        source = json.loads((e.ROOT / "results/experiment_9166_v781_contract.json").read_bytes())
+        capstone = json.loads((e.ROOT / "results/experiment_9179_v781_capstone.json").read_bytes())
+        saved = json.loads(Path(capstone["work_reference"]["path"]).read_bytes())
+        arc = json.loads(
+            Path(
+                saved["snapshots"]["results/experiment_9178_v781_arc_mechanic_routing.json"]["path"]
+            ).read_bytes()
+        )
+        operand = {
+            "primary": str(e.ROOT / "results/experiment_9166_v781_contract.json"),
+            "work": source["work_reference"]["path"],
+            "scheduler": saved["snapshots"]["ops/conductor-log.md"]["path"],
+            "arc_log": next(
+                r["stdout_path"] for r in arc["validation_receipts"] if r["name"] == "direct_consumers"
+            ),
+        }[kind]
+    
+        def tampered(path):
+            reference = original(path)
+            if str(path) == operand:
+                reference["sha256"] = None
+            return reference
+    
+        monkeypatch.setattr(e, "ref", tampered)
+    
+        def forbidden(_):
+            raise AssertionError("dependent labels inspected before producer authentication")
+    
+        if kind != "arc_log":
+            monkeypatch.setattr(e.prior, "inspect", forbidden)
+        value = e.inspect(e.ROOT)
+        assert not value["source_ready"]
+>       assert any(r["observed"] == "missing_file" for r in value["checks"])
+E       assert False
+E        +  where False = any(<generator object test_producer_snapshot_refusal.<locals>.<genexpr> at 0x7f1df6cc8ee0>)
+
+tests/python/test_v782_contract_9180.py:232: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9180] phase=authenticate_inputs_before
+__________________ test_producer_snapshot_refusal[scheduler] ___________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1df927a060>
+kind = 'scheduler'
+
+    @pytest.mark.parametrize("kind", ["primary", "work", "scheduler", "arc_log"])
+    def test_producer_snapshot_refusal(work, monkeypatch, kind):
+        """SCENARIO-REPORT-9180-V782: failed original work bytes block dependent imports."""
+        original = e.ref
+        source = json.loads((e.ROOT / "results/experiment_9166_v781_contract.json").read_bytes())
+        capstone = json.loads((e.ROOT / "results/experiment_9179_v781_capstone.json").read_bytes())
+        saved = json.loads(Path(capstone["work_reference"]["path"]).read_bytes())
+        arc = json.loads(
+            Path(
+                saved["snapshots"]["results/experiment_9178_v781_arc_mechanic_routing.json"]["path"]
+            ).read_bytes()
+        )
+        operand = {
+            "primary": str(e.ROOT / "results/experiment_9166_v781_contract.json"),
+            "work": source["work_reference"]["path"],
+            "scheduler": saved["snapshots"]["ops/conductor-log.md"]["path"],
+            "arc_log": next(
+                r["stdout_path"] for r in arc["validation_receipts"] if r["name"] == "direct_consumers"
+            ),
+        }[kind]
+    
+        def tampered(path):
+            reference = original(path)
+            if str(path) == operand:
+                reference["sha256"] = None
+            return reference
+    
+        monkeypatch.setattr(e, "ref", tampered)
+    
+        def forbidden(_):
+            raise AssertionError("dependent labels inspected before producer authentication")
+    
+        if kind != "arc_log":
+            monkeypatch.setattr(e.prior, "inspect", forbidden)
+        value = e.inspect(e.ROOT)
+        assert not value["source_ready"]
+>       assert any(r["observed"] == "missing_file" for r in value["checks"])
+E       assert False
+E        +  where False = any(<generator object test_producer_snapshot_refusal.<locals>.<genexpr> at 0x7f1e58083370>)
+
+tests/python/test_v782_contract_9180.py:232: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9180] phase=authenticate_inputs_before
+___________________ test_producer_snapshot_refusal[arc_log] ____________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/contract91800/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1e580ecb00>
+kind = 'arc_log'
+
+    @pytest.mark.parametrize("kind", ["primary", "work", "scheduler", "arc_log"])
+    def test_producer_snapshot_refusal(work, monkeypatch, kind):
+        """SCENARIO-REPORT-9180-V782: failed original work bytes block dependent imports."""
+        original = e.ref
+        source = json.loads((e.ROOT / "results/experiment_9166_v781_contract.json").read_bytes())
+        capstone = json.loads((e.ROOT / "results/experiment_9179_v781_capstone.json").read_bytes())
+        saved = json.loads(Path(capstone["work_reference"]["path"]).read_bytes())
+        arc = json.loads(
+            Path(
+                saved["snapshots"]["results/experiment_9178_v781_arc_mechanic_routing.json"]["path"]
+            ).read_bytes()
+        )
+        operand = {
+            "primary": str(e.ROOT / "results/experiment_9166_v781_contract.json"),
+            "work": source["work_reference"]["path"],
+            "scheduler": saved["snapshots"]["ops/conductor-log.md"]["path"],
+            "arc_log": next(
+                r["stdout_path"] for r in arc["validation_receipts"] if r["name"] == "direct_consumers"
+            ),
+        }[kind]
+    
+        def tampered(path):
+            reference = original(path)
+            if str(path) == operand:
+                reference["sha256"] = None
+            return reference
+    
+        monkeypatch.setattr(e, "ref", tampered)
+    
+        def forbidden(_):
+            raise AssertionError("dependent labels inspected before producer authentication")
+    
+        if kind != "arc_log":
+            monkeypatch.setattr(e.prior, "inspect", forbidden)
+        value = e.inspect(e.ROOT)
+        assert not value["source_ready"]
+>       assert any(r["observed"] == "missing_file" for r in value["checks"])
+E       assert False
+E        +  where False = any(<generator object test_producer_snapshot_refusal.<locals>.<genexpr> at 0x7f1df169f5e0>)
+
+tests/python/test_v782_contract_9180.py:232: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9180] phase=authenticate_inputs_before
+____________________________ test_fourteen_outcomes ____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1df9278920>
+
+    def test_fourteen_outcomes(work, monkeypatch):
+        """SCENARIO-REPORT-9193-V782: failed science never prevents complete accounting."""
+        monkeypatch.setattr(m.legacy.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+>       value = m.build(work)
+                ^^^^^^^^^^^^^
+
+tests/python/test_v782_capstone_9193.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v782_capstone.py:79: in build
+    value = _build(normalized)
+            ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_capstone.py:216: in build
+    outcomes = evidence.outcomes(work)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+
+    def outcomes(work: Json) -> list[Json]:
+        """Missing scientific primaries stay absent even when scheduler accounting is complete."""
+        with patch.multiple(history, TASKS=TASKS, SUFFIXES=SUFFIXES, edge=edge):
+            rows = history.outcomes(work)
+        for index, row in enumerate(rows):
+            row.update(experiment_id=9180 + index, primary_path=PROTOCOL["primary_paths"][index])
+            row["task"]["deliverable"] = PROTOCOL["primary_paths"][index]
+            row["honest_verdict"] = row["honest_verdict"] or row["accounting_honest_verdict"]
+            row["primary_sha256"] = (
+                row["reference"]["sha256"] if row["primary_status"] == "present" else None
+            )
+            row["quarantine"] = (
+                "preserve_disqualified_original_and_current_diagnostics"
+                if index == 1
+                else "preserve_disqualified_original_and_current_ARC"
+                if index == 12
+                else None
+            )
+            for operand in row["gate_check_summary"]:
+                operand["path"] = operand.get("path") or str(
+>                   ROOT / PROTOCOL["primary_paths"][TASKS.index(operand["upstream"])]
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                )
+E               ValueError: 'exp9194-contract' is not in list
+
+python/carnot/reporting/v782_capstone_evidence.py:183: ValueError
+---------------------------- Captured stdout setup -----------------------------
+[exp9193] phase=preconditions_before completed=0 pending=0
+[exp9193] phase=producer_bindings completed=0 pending=197
+[exp9193] phase=producer_bindings completed=20 pending=177
+[exp9193] phase=producer_bindings completed=60 pending=137
+[exp9193] phase=producer_bindings completed=80 pending=117
+[exp9193] phase=producer_bindings completed=100 pending=97
+[exp9193] phase=producer_bindings completed=120 pending=77
+[exp9193] phase=producer_bindings completed=140 pending=57
+[exp9193] phase=producer_bindings completed=160 pending=37
+[exp9193] phase=producer_bindings completed=180 pending=17
+[exp9193] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9193] phase=after_publication_gate completed=1 pending=0
+[exp9193] phase=preconditions_after completed=206 pending=9
+________________________ test_missing_and_owned_failure ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_missing_and_owned_failure0')
+
+    def test_missing_and_owned_failure(work, tmp_path):
+        """REQ-REPORT-9193-V782: external absence blocks; owned failure disqualifies."""
+>       assert m.build(work)["verdict_class"] == "disqualified"
+               ^^^^^^^^^^^^^
+
+tests/python/test_v782_capstone_9193.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v782_capstone.py:79: in build
+    value = _build(normalized)
+            ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_capstone.py:216: in build
+    outcomes = evidence.outcomes(work)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+
+    def outcomes(work: Json) -> list[Json]:
+        """Missing scientific primaries stay absent even when scheduler accounting is complete."""
+        with patch.multiple(history, TASKS=TASKS, SUFFIXES=SUFFIXES, edge=edge):
+            rows = history.outcomes(work)
+        for index, row in enumerate(rows):
+            row.update(experiment_id=9180 + index, primary_path=PROTOCOL["primary_paths"][index])
+            row["task"]["deliverable"] = PROTOCOL["primary_paths"][index]
+            row["honest_verdict"] = row["honest_verdict"] or row["accounting_honest_verdict"]
+            row["primary_sha256"] = (
+                row["reference"]["sha256"] if row["primary_status"] == "present" else None
+            )
+            row["quarantine"] = (
+                "preserve_disqualified_original_and_current_diagnostics"
+                if index == 1
+                else "preserve_disqualified_original_and_current_ARC"
+                if index == 12
+                else None
+            )
+            for operand in row["gate_check_summary"]:
+                operand["path"] = operand.get("path") or str(
+>                   ROOT / PROTOCOL["primary_paths"][TASKS.index(operand["upstream"])]
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                )
+E               ValueError: 'exp9194-contract' is not in list
+
+python/carnot/reporting/v782_capstone_evidence.py:183: ValueError
+_________________________ test_replay_and_row_controls _________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_replay_and_row_controls0')
+
+    def test_replay_and_row_controls(work, tmp_path):
+        """SCENARIO-REPORT-9193-V782: rehashing cannot bless changed rows or producers."""
+        path = tmp_path / "candidate.json"
+>       value = m.build(work)
+                ^^^^^^^^^^^^^
+
+tests/python/test_v782_capstone_9193.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v782_capstone.py:79: in build
+    value = _build(normalized)
+            ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_capstone.py:216: in build
+    outcomes = evidence.outcomes(work)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+
+    def outcomes(work: Json) -> list[Json]:
+        """Missing scientific primaries stay absent even when scheduler accounting is complete."""
+        with patch.multiple(history, TASKS=TASKS, SUFFIXES=SUFFIXES, edge=edge):
+            rows = history.outcomes(work)
+        for index, row in enumerate(rows):
+            row.update(experiment_id=9180 + index, primary_path=PROTOCOL["primary_paths"][index])
+            row["task"]["deliverable"] = PROTOCOL["primary_paths"][index]
+            row["honest_verdict"] = row["honest_verdict"] or row["accounting_honest_verdict"]
+            row["primary_sha256"] = (
+                row["reference"]["sha256"] if row["primary_status"] == "present" else None
+            )
+            row["quarantine"] = (
+                "preserve_disqualified_original_and_current_diagnostics"
+                if index == 1
+                else "preserve_disqualified_original_and_current_ARC"
+                if index == 12
+                else None
+            )
+            for operand in row["gate_check_summary"]:
+                operand["path"] = operand.get("path") or str(
+>                   ROOT / PROTOCOL["primary_paths"][TASKS.index(operand["upstream"])]
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                )
+E               ValueError: 'exp9194-contract' is not in list
+
+python/carnot/reporting/v782_capstone_evidence.py:183: ValueError
+____________________________ test_private_real_cli _____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_private_real_cli0')
+
+    def test_private_real_cli(work, tmp_path):
+        """SCENARIO-REPORT-9193-V782: real CLI succeeds, refuses and rejects tampering."""
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        argv = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        if env.get("COVERAGE_RCFILE"):
+            argv[1:2] = ["-m", "coverage", "run"]
+    
+        def call(*args):
+            print("[test9193] child_before", args, flush=True)
+            result = subprocess.run(
+                [*argv, *args], cwd=tmp_path, env=env, capture_output=True, timeout=180
+            )
+            print("[test9193] child_after", result.returncode, flush=True)
+            return result
+    
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (m.NAME + ".json")
+        result = call("--from-work", str(source), "--output", str(output))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: b'{"passed": false, "reason": "\'exp9194-contract\' is not in list"}
+E         '
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...stone.json'], returncode=1, stdout=b'{"passed": false, "reason": "\'exp9194-contract\' is not in list"}\n', stderr=b'').returncode
+
+tests/python/test_v782_capstone_9193.py:149: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[test9193] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_private_real_cli0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_private_real_cli0/experiment_9193_v782_capstone.json')
+[test9193] child_after 1
+_______________________________ test_main_paths ________________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_main_paths0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1dfa9c0f20>
+
+    def test_main_paths(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9193-V782: shared orchestration retains refusal and validation gates."""
+    
+        def collect(raw, *_):
+            return dict(deepcopy(work), raw=str(raw))
+    
+        monkeypatch.setattr(m, "collect", collect)
+        monkeypatch.setattr(m.legacy, "validate", lambda _: dict(receipts=[], coverage={}))
+        monkeypatch.setattr(m.runner, "terminal", lambda *_: dict(passed=True, receipts=[]))
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        output = tmp_path / (m.NAME + ".json")
+>       assert m.main(["--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f1e00205e40>(['--output', '/var/tmp/pytest-carnot-ianblenke/20261117T164349-1827387-e5dc67ec/test_main_paths0/experiment_9193_v782_capstone.json'])
+E        +    where <function main at 0x7f1e00205e40> = m.main
+
+tests/python/test_v782_capstone_9193.py:172: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9193] phase=owned_validation_before completed=0 pending=0
+[exp9193] phase=owned_validation_after completed=0 pending=0
+{"passed": false, "reason": "'exp9194-contract' is not in list"}
+___________________________ test_retirement_manifest ___________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+
+    def test_retirement_manifest(work):
+        """REQ-REPORT-9193-V782: exact failed execution routes enter existing exclusions."""
+>       value = m.build(work)
+                ^^^^^^^^^^^^^
+
+tests/python/test_v782_capstone_9193.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v782_capstone.py:79: in build
+    value = _build(normalized)
+            ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v775_capstone.py:216: in build
+    outcomes = evidence.outcomes(work)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:c889e68dcd772efcdc54948b9a7a4abd...'sha256': 'sha256:0c6803f361e53a99bab6827e8d633989851871e82a329b8b97f0d5d289fd25c2'}, 'ended_ns': 233962081909987, ...}
+
+    def outcomes(work: Json) -> list[Json]:
+        """Missing scientific primaries stay absent even when scheduler accounting is complete."""
+        with patch.multiple(history, TASKS=TASKS, SUFFIXES=SUFFIXES, edge=edge):
+            rows = history.outcomes(work)
+        for index, row in enumerate(rows):
+            row.update(experiment_id=9180 + index, primary_path=PROTOCOL["primary_paths"][index])
+            row["task"]["deliverable"] = PROTOCOL["primary_paths"][index]
+            row["honest_verdict"] = row["honest_verdict"] or row["accounting_honest_verdict"]
+            row["primary_sha256"] = (
+                row["reference"]["sha256"] if row["primary_status"] == "present" else None
+            )
+            row["quarantine"] = (
+                "preserve_disqualified_original_and_current_diagnostics"
+                if index == 1
+                else "preserve_disqualified_original_and_current_ARC"
+                if index == 12
+                else None
+            )
+            for operand in row["gate_check_summary"]:
+                operand["path"] = operand.get("path") or str(
+>                   ROOT / PROTOCOL["primary_paths"][TASKS.index(operand["upstream"])]
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                )
+E               ValueError: 'exp9194-contract' is not in list
+
+python/carnot/reporting/v782_capstone_evidence.py:183: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v782_contract_9180.py::test_authority_and_protocol
+FAILED tests/python/test_v782_contract_9180.py::test_binding_mutations - asse...
+FAILED tests/python/test_v782_contract_9180.py::test_build - AssertionError: ...
+FAILED tests/python/test_v782_contract_9180.py::test_producer_snapshot_refusal[work]
+FAILED tests/python/test_v782_contract_9180.py::test_producer_snapshot_refusal[scheduler]
+FAILED tests/python/test_v782_contract_9180.py::test_producer_snapshot_refusal[arc_log]
+FAILED tests/python/test_v782_capstone_9193.py::test_fourteen_outcomes - Valu...
+FAILED tests/python/test_v782_capstone_9193.py::test_missing_and_owned_failure
+FAILED tests/python/test_v782_capstone_9193.py::test_replay_and_row_controls
+FAILED tests/python/test_v782_capstone_9193.py::test_private_real_cli - Asser...
+FAILED tests/python/test_v782_capstone_9193.py::test_main_paths - AssertionEr...
+FAILED tests/python/test_v782_capstone_9193.py::test_retirement_manifest - Va...
+12 failed, 69 passed, 1 warning in 187.35s (0:03:07)

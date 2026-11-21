@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9137_v778_capstone/invocations/1794825097687226021/retained/cc2318d082c9212e7c75a0a94feb8e27727231486493b95171a80ad9dd45faa8/spec.md

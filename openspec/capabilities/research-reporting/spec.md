@@ -117501,3 +117501,124 @@ verdict, and matching logical execution role without mutating
 percent with zero exclusions; scoped Ruff check/format, strict mypy, spec coverage, and
 outside-checkout private CLI E2E-018/021 checks pass.
 
+
+## Implementation Status (REQ-REPORT-9255-V788 and REQ-REPORT-9268-V788)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-9255-V788 | Implemented (`python/carnot/reporting/v788_contract.py`, `python/carnot/reporting/v788_contract_evidence.py`, `python/carnot/reporting/historical_contract_inputs.py`, `scripts/experiments/experiment_9255_v788_contract.py`, `results/experiment_9255_v788_contract.json`) | Implemented (`tests/python/test_v788_contract_9255.py`) |
+| REQ-REPORT-9268-V788 | Implemented (`python/carnot/reporting/v788_capstone.py`, `python/carnot/reporting/v788_capstone_evidence.py`, `python/carnot/reporting/v788_capstone_reduction.py`, `scripts/experiments/experiment_9268_v788_capstone.py`, `results/experiment_9268_v788_capstone.json`) | Implemented (`tests/python/test_v788_capstone_9268.py`) |
+
+## Proposed V789 research milestone — 2026-11-21
+
+Status: planned and scoped for V789 execution. All historical V782, V783, V784,
+V785, V786, V787, and V788 outcomes, quarantines, and zero gates remain unchanged
+history.
+
+### REQ-REPORT-9269-V789: Split V782-V788 consumer replay, compact hashed sidecars, and fourteen-task V789 contract binding
+
+Exp9269 SHALL authenticate original Exp9097 human source custody (900 responses
+across 300 question groups, `TRAIN=150`, `CAL=50`, `TEST=100`, three lexical
+100-qid shards `0:100`, `100:200`, `200:300`), Exp9126 five-arm static protocol,
+Exp9132 six-arm delayed learning protocol (separate `TRAIN100` initialization),
+Exp9211 qualified target-identifiability and affine label-ambiguity primary
+(`sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610`),
+Exp9225 qualified selective-deferral and spline-support primary
+(`sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af`),
+Exp9244 qualified conformal-risk, CA-OCRC, and Mycelium provenance primary
+(`sha256:36890bc36e8a84c4d91b8d8bff2d60698de061938f591dafbf7845c38fe2e693`),
+Exp9255 V788 contract primary
+(`sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef`,
+`contract_ready_score=1`, `replay_authority_ready_score=1`), Exp9256 V788 corpus
+prefilter primary
+(`sha256:d1ac40d315f6a740c5cb30d853045f6c92ed51d2cebeef14e09b7b945f17481a`,
+`corpus_scan_ready_score=0`), Exp9257 V788 pre-gate refusal artifact
+(`sha256:10bbcaf0b653f5b8b73f55393af7f8b805520316dc211911a089603c01b86ac6`),
+Exp9258 V788 Victris Arena state-energy harness primary
+(`sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640`,
+`victris_harness_ready_score=1`), and Exp9268 V788 capstone primary
+(`sha256:12059727652a55d93a267b186f01cbbb3ed1a043fc79799b67a455aae9eb6d17`,
+`reconciliation_ready_score=1`) without copying bulky inline arrays into the V789
+primary JSON. It SHALL preserve V788 outcomes as immutable historical facts.
+
+Exp9269 SHALL extend `python/carnot/reporting/historical_contract_inputs.py`
+with isolated V788 historical root construction pointing to preserved
+`research-roadmap-v788-preserved-20261121.md`
+(`sha256:c7b13576b7bf8c46c51410dc9905c26924c02e75c4f509ebea3ae8bf31f897cd`),
+preserved `research-roadmap-v788-queue-preserved-20261121.yaml`
+(`sha256:bbf68a85425cde6bf1328dae29db817d2db38b8b26cf809ce139e7d13a8d675b`),
+and V788 primaries. It SHALL keep exact `owned_changed_paths` coverage-list parity
+in `v789_contract.py` by passing `work["scope"]["owned_changed_paths"]`
+identically to `legacy.lifecycle.measured(...)` and requiring exact file-set
+equality in `receipts_pass` at 100 percent statement coverage with zero
+exclusions. It SHALL store bulky `validation_scope_manifest`,
+`validation_obligations`, and `historical_input_roots` tables as hashed sidecar
+files under `results/raw/experiment_9269_v789_contract/` while keeping compact
+summary dictionaries and exact `path`/`sha256`/count references in the primary
+JSON so `results/experiment_9269_v789_contract.json` stays under 10 MB.
+
+Exp9269 SHALL partition `direct_consumers` into eight bounded, non-contending
+shards with distinct `COVERAGE_FILE` (`.coverage.<shard>`) paths:
+`direct_consumers_core`, `direct_consumers_v782`, `direct_consumers_v783`,
+`direct_consumers_v784`, `direct_consumers_v785`, `direct_consumers_v786`,
+`direct_consumers_v787`, and `direct_consumers_v788`
+(`tests/python/test_v788_contract_9255.py`,
+`tests/python/test_v788_capstone_9268.py`, and
+`tests/python/test_victris_energy_bot_9258.py`). It SHALL retain
+`tests/python/test_v788_corpus_prefilter_9256.py` and untouched
+`tests/python/test_causal_validation_9181.py` in the obligation manifests for
+`exp9270-corpus-prefilter` and `exp9271-forward-qualification`.
+
+Exp9269 SHALL keep `protocol_owners` validation strict in fresh cold-replay
+processes for `entropy_reference_protocol`, `label_ambiguity_protocol`,
+`selective_deferral_protocol`, and `conformal_risk_protocol`. It SHALL parse the
+fenced YAML block under `## Full machine-readable contract` in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and compare all fourteen
+complete ordered V789 task objects (`exp9269` through `exp9282`) against the
+active queue, accepting only conductor literal-brace encoding. Declare
+`no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9269-V789: Eight split shards, isolated V782-V788 roots, compact hashed sidecars, coverage-list parity, and fourteen-task parity
+
+Owned tests and all eight partitioned direct-consumer shards execute against
+isolated V782, V783, V784, V785, V786, V787, and V788 historical roots in fresh
+private processes outside the checkout without `PYTHONPATH`. The measured
+coverage file list equals `work["scope"]["owned_changed_paths"]` and reaches
+100 percent statement coverage with zero exclusions. Bulky
+`validation_scope_manifest`, `validation_obligations`, and
+`historical_input_roots` tables are written to hashed sidecars under `raw` and
+referenced by compact summary objects in the primary JSON (`< 10 MB`). Fresh
+cold replay validates all four protocol sidecars against their immutable owning
+configurations and verifies all compact sidecar hashes. When all eight shards,
+owned tests, scoped Ruff check/format, strict mypy, spec coverage, and
+E2E-018/021 checks pass and all fourteen ordered V789 task objects match between
+the embedded YAML contract and active queue, `contract_ready_score`,
+`replay_authority_ready_score`, `source_ready_score`,
+`static_methods_ready_score`, and `online_methods_ready_score` all qualify (`1`).
+
+#### SCENARIO-REPORT-9269-V789-CONTROLS: Primary-JSON compactness guard, coverage-list mismatch rejection, tamper, interleaved replay, and external absence controls
+
+The primary JSON deliverable `results/experiment_9269_v789_contract.json` remains
+strictly below 10 MB (`10_485_760` bytes), with `receipts_pass` or replay
+rejecting any bloated inline primary or tampered compact sidecar. Any mismatch
+between `work["scope"]["owned_changed_paths"]` and the measured coverage file
+list in `owned_statement_coverage["files"]` is rejected by `receipts_pass`,
+setting `required_checks_passed=false`, `contract_ready_score=0`, and
+`replay_authority_ready_score=0`. Private CLI publication, refusal, tamper, and
+cold replay execute outside the checkout without `PYTHONPATH` under E2E-018/021.
+Interleaved V787, V788, and V789 replays pass on authentic artifacts and fail on
+rehashed tampering. Missing external inputs or omitted planner slots block with
+`blocked_no_run` and exact `gate_check_summary` operands that distinguish
+`missing_file`, `missing_field`, and observed `0`.
+
+## Implementation Status (REQ-REPORT-9269-V789)
+
+Compact sidecar replay SHALL reauthenticate the sidecar bytes, counts, and
+isolated root summaries before rebuilding a primary. A rehashed replacement
+cannot acquire original authority. The compactness guard SHALL run before
+publication and cold replay, including for externally blocked candidates.
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-9269-V789 | Implemented (`python/carnot/reporting/v789_contract.py`, `python/carnot/reporting/v789_contract_evidence.py`, `python/carnot/reporting/historical_contract_inputs.py`, `scripts/experiments/experiment_9269_v789_contract.py`, `results/experiment_9269_v789_contract.json`) | Implemented (`tests/python/test_v789_contract_9269.py`) |

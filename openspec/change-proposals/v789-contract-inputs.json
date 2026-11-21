@@ -1,0 +1,135 @@
+{
+  "revision": "v789-split-consumer-replay-compact-sidecars-v1",
+  "seed": 789269,
+  "pins": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:3919f12ad042205f9603e7a9acc8420d908f8091084931ad9f75f8f4c1bc8158",
+    "research-roadmap.yaml": "sha256:4348b28ecb3adc28c39d2406bf3a59e2a1fdcfbc6c922accdefc8f011788391f",
+    "research-complete.yaml": "sha256:097e20d9d610a344ce446d7c4fe30eeb19dc9c937e77eec609eee704f28c022e",
+    "ops/exclusion_manifest.yaml": "sha256:d534012dc081b42711f08555bb4632731c297e8b636487266011423c62235477",
+    "openspec/change-proposals/research-roadmap-v784-preserved-20261118.md": "sha256:06ddcee74cab8be574b2892e7773983d2e41a0d733b2003f0712bfe1ff48e811",
+    "openspec/change-proposals/research-roadmap-v784-queue-preserved-20261118.yaml": "sha256:b1038a3ccf93857b6461f267e9683f71f61735a87d1f5021c904c47a7d76112f",
+    "openspec/change-proposals/research-roadmap-v785-queue-preserved-20261119.yaml": "sha256:df65951514658c58082d5e27b4ce5d06af731cb40607da5cc23d47cb364c1917",
+    "openspec/change-proposals/research-roadmap-v786-preserved-20261120.md": "sha256:a1c32ac1892b59219fe288446020893822350f866781f89a39088b76d1b7c763",
+    "openspec/change-proposals/research-roadmap-v786-queue-preserved-20261120.yaml": "sha256:2681afbc366b7282955350ecfbedf5d4b932d8dae58c32ca0ea329672356c8ec",
+    "openspec/change-proposals/research-roadmap-v787-preserved-20261120.md": "sha256:27e73f05af455de93477bd14f74a6e9c238724a6a5959cc66f33278aeaaea23a",
+    "openspec/change-proposals/research-roadmap-v787-queue-preserved-20261120.yaml": "sha256:37442df99c095e1288d96f8e84e0f425838f4f8042d328d6f15b3a00ec78eec2",
+    "openspec/change-proposals/research-roadmap-v788-preserved-20261121.md": "sha256:c7b13576b7bf8c46c51410dc9905c26924c02e75c4f509ebea3ae8bf31f897cd",
+    "openspec/change-proposals/research-roadmap-v788-queue-preserved-20261121.yaml": "sha256:bbf68a85425cde6bf1328dae29db817d2db38b8b26cf809ce139e7d13a8d675b",
+    "results/experiment_9211_v784_label_ambiguity.json": "sha256:00da04356c958a063793c21d85287653e38eda69c85c65ca1819426519852610",
+    "results/experiment_9222_v785_contract.json": "sha256:c54b57079cfd43221a9b2387f208c7603f768e8bf8b6b28816e458c71ac9b3a8",
+    "results/experiment_9223_corpus_prefilter.json": "sha256:3b9c0ffc52fa8e17728e7122252416710789d9b3e4138d10ba330921c3108073",
+    "results/experiment_9225_v785_selective_deferral_protocol.json": "sha256:73125a9151fc8be16793ccd1daf3e2b369c5ac0929eac5a088cea7863ed8a4af",
+    "results/experiment_9240_v786_capstone.json": "sha256:b19a3b647f573f5b74c1dead4584137e25c0301dc47a08efb9cdd3b4e95c9500",
+    "results/experiment_9241_v787_contract.json": "sha256:32cdfef7df5fb0b829ef9eba8d68a44a0e6b7947afbd402d24129dae27a92f5b",
+    "results/experiment_9242_corpus_prefilter.json": "sha256:9e5cf741802b6c1202c6bbbb5ff3b008929d2fbd39b079ff64a00a2d50e63063",
+    "results/experiment_9244_v787_conformal_risk_protocol.json": "sha256:36890bc36e8a84c4d91b8d8bff2d60698de061938f591dafbf7845c38fe2e693",
+    "results/experiment_9255_v788_contract.json": "sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef",
+    "results/experiment_9256_v788_corpus_prefilter.json": "sha256:d1ac40d315f6a740c5cb30d853045f6c92ed51d2cebeef14e09b7b945f17481a",
+    "results/experiment_9257_forward_qualification.json": "sha256:10bbcaf0b653f5b8b73f55393af7f8b805520316dc211911a089603c01b86ac6",
+    "results/experiment_9258_v788_victris_energy_bot.json": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+    "results/experiment_9268_v788_capstone.json": "sha256:12059727652a55d93a267b186f01cbbb3ed1a043fc79799b67a455aae9eb6d17",
+    "scripts/victris_offline_harness.py": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002"
+  },
+  "exclusions": [],
+  "scheduling_repair_revision": {
+    "changes_scientific_thresholds": false,
+    "gate": "corpus_scan_ready_score",
+    "historical_gate": "causal_fix_ready_score",
+    "historical_gate_score": 0,
+    "name": "v783-lossless-corpus-scan",
+    "retired_tasks": [
+      "exp9181-validation-loop-repair",
+      "exp9182-forward-qualification"
+    ]
+  },
+  "target_identifiability_rubric": {
+    "factual_error": "original human criterion and factual-error evidence",
+    "expressed_uncertainty": "explicit original human annotation",
+    "reelicitation": "same-generator semantically equivalent original prompts",
+    "statuses": [
+      "present",
+      "absent",
+      "ambiguous"
+    ],
+    "absent_is_negative": false,
+    "cross_generator_substitution": false,
+    "predictions_read": false,
+    "SI_CF_unavailable_without_evidence": true
+  },
+  "selective_deferral_protocol": {
+    "alpha_grid": [
+      0.1,
+      0.25
+    ],
+    "escalation_interval": [
+      0.1,
+      0.9
+    ],
+    "primary_gate_rescue": false,
+    "primary_protocol": "full_release",
+    "regimes": [
+      "full_release",
+      "escalation_only",
+      "audited_deferral"
+    ],
+    "seed_prefix": "v785-selective-deferral",
+    "spline_basis_columns": 57,
+    "spline_strata": [
+      "interior_dense",
+      "boundary_sparse_or_clipped"
+    ],
+    "spline_support_knots": [
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "unobserved_accepted_drift_at_alpha_zero": "unidentifiable",
+    "version": "v785-selective-deferral-v1"
+  },
+  "conformal_risk_protocol": {
+    "alpha_risk_grid": [
+      0.05,
+      0.1,
+      0.15
+    ],
+    "bound_methods": [
+      "clopper_pearson_cluster",
+      "betting_e_process_cluster"
+    ],
+    "ca_ocrc_capacities": [
+      1,
+      2,
+      5
+    ],
+    "ca_ocrc_seed": 787245,
+    "cluster_fixture_seed": 787244,
+    "cluster_fixture_trials": 2000,
+    "cluster_unit": "qid",
+    "confidence_level": 0.95,
+    "corrupted_feedback_epsilons": [
+      0.0,
+      0.05
+    ],
+    "delta": 0.05,
+    "high_correlation_rho_threshold": 0.7,
+    "mycelium_granularity": {
+      "answer_level": "present",
+      "span_level": "absent"
+    },
+    "mycelium_provenance_responses": 900,
+    "primary_gate_rescue": false,
+    "primary_threshold": 0.1,
+    "role": "descriptive_and_shadow_only",
+    "siblings_per_qid": 3,
+    "version": "v787-conformal-ca-ocrc-mycelium-v1",
+    "zero_accepted_qids": "unavailable"
+  }
+}

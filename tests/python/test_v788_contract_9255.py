@@ -54,11 +54,12 @@ def test_private_cli_budget_includes_publication_and_replay(tmp_path, monkeypatc
 
 def build_v788_fixture_tree(root: Path) -> tuple[Path, dict]:
     """Construct a complete 14-task V788 fixture tree in tmp_path for positive/mutation controls."""
+    source_root = original_root(root.parent / (root.name + "_v788_src"), 788)
     for name in e.COLLISION_INPUTS:
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((e.ROOT / name).read_bytes())
-    queue = yaml.safe_load((e.ROOT / e.ACTIVE).read_bytes())
+        target.write_bytes((source_root / name).read_bytes())
+    queue = yaml.safe_load((source_root / e.ACTIVE).read_bytes())
     existing = list(queue["tasks"])
     tasks = []
     machine_tasks = []
@@ -130,7 +131,11 @@ def build_v788_fixture_tree(root: Path) -> tuple[Path, dict]:
 @pytest.fixture(scope="module")
 def work(tmp_path_factory):
     """Real original sources establish custody, without any new model work."""
-    return c.measure(e.ROOT, tmp_path_factory.mktemp("contract9255"), "20261120")
+    return c.measure(
+        original_root(tmp_path_factory.mktemp("inputs9255"), 788),
+        tmp_path_factory.mktemp("contract9255"),
+        "20261120",
+    )
 
 
 def test_large_historical_target_rejects_pollution(tmp_path, monkeypatch):
