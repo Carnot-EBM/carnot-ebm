@@ -22515,3 +22515,4 @@ code |
 | 2026-11-21 01:37 UTC | Plan milestone 2026.11.789 | OK | 14 tasks proposed |
 | 2026-11-21 02:04 UTC | Milestone 2026.11.789 activated | OK | 14 tasks queued |
 | 2026-11-21 05:12 UTC | Exp9269: Qualify split V782-V788 consumer replay w | OK | 128 passed, 1 warning in 707.22s (0:11:47) |
+| 2026-11-21 06:50 UTC | Exp9270: Qualify scoped lossless byte prefilter wi | OK | 88 passed, 1 warning in 25.26s |
