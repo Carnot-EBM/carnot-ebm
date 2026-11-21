@@ -1,0 +1,1601 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "dev_heldout_split_enforcement": {
+      "condition": "DEV_SEEDS (0..999) and HELDOUT_SEEDS (10000..10999) remain strictly disjoint with hard refusal on overlap or out-of-split reset",
+      "principle": "Held-out evaluation runs once on unseen seeds with Wilson intervals."
+    },
+    "epo_composite_nce_convergence": {
+      "condition": "Four-module EPO composite Gibbs trainer strictly reduces pairwise Bradley-Terry / NCE loss and pairwise Brier score across gradient epochs",
+      "principle": "Gradient-trained energy weights must report verifiable optimization trajectories."
+    },
+    "owned_validation_and_coverage": {
+      "condition": "All 6 owned/affected checks pass with 100 percent owned statement coverage and zero exclusions",
+      "principle": "Composite EPO Gibbs trainer, Gymnasium adapter, untrusted-shout isolation, sub-5ms tick latency and split enforcement must pass 100 percent coverage."
+    },
+    "sub5ms_tick_latency": {
+      "condition": "All archive candidates verify median_ms < 5.0, max_ms < 5.0, and max_ms < 1000.0 live reply budget",
+      "principle": "Live Victris requires sub-second replies without per-tick LLM calls."
+    },
+    "untrusted_shout_isolation": {
+      "condition": "Opponent shout text is stripped by VictrisGymAdapter and energy_bot before feature extraction and never executed or copied into turns",
+      "principle": "Site rules and anti-cheat boundaries are mechanically checked."
+    }
+  },
+  "archive_versions": [
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": true,
+      "max_tick_ms": 0.0656,
+      "median_tick_ms": 0.043,
+      "parent_id": null,
+      "theta_sha256": "sha256:51dfa9f2805e4c440702977eb089e40686a86b2bd86823ef7a52e66736295ab4",
+      "version_id": "v0_shoot_baseline"
+    },
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": true,
+      "max_tick_ms": 0.6025,
+      "median_tick_ms": 0.1992,
+      "parent_id": "v0_shoot_baseline",
+      "theta_sha256": "sha256:d23df3d87b8b8305c352fdc628310e051f21c4048baeafdfab833e3d723658a4",
+      "version_id": "v1_exp9258_gibbs_hand"
+    },
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": true,
+      "max_tick_ms": 1.4076,
+      "median_tick_ms": 0.3878,
+      "parent_id": "v1_exp9258_gibbs_hand",
+      "theta_sha256": "sha256:162a9bb0ec5ca7e3dafa1119323eabe6e2fb7b87f8c1672bb91e0e7df42de20f",
+      "version_id": "v2_epo_composite_init"
+    },
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": false,
+      "max_tick_ms": 1.3927,
+      "median_tick_ms": 0.3872,
+      "parent_id": "v2_epo_composite_init",
+      "theta_sha256": "sha256:aa6b97a82abba945f4772fbe7a7f22f1bf6bedad1cbbbadf40bdbb0746fe0f46",
+      "version_id": "v3_epo_composite_step4"
+    },
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": false,
+      "max_tick_ms": 1.3884,
+      "median_tick_ms": 0.3857,
+      "parent_id": "v3_epo_composite_step4",
+      "theta_sha256": "sha256:b52ed4cc16b75cf40d534293056c9c79ff479c7ce6ddcd34c1e829159d427e1e",
+      "version_id": "v4_epo_composite_step8"
+    },
+    {
+      "dev_ci95": null,
+      "dev_win_rate": null,
+      "kept": true,
+      "max_tick_ms": 1.3869,
+      "median_tick_ms": 0.3849,
+      "parent_id": "v4_epo_composite_step8",
+      "theta_sha256": "sha256:985e65e4814d25256e9f9c706a113660a55a3e5ff1587837d0e928d80068546b",
+      "version_id": "v5_epo_composite_trained"
+    }
+  ],
+  "arena_sim_installed": false,
+  "claim_scope": {
+    "allowed_claims": [
+      "four-module EPO composite Gibbs state-action energy trainer (E_zone, E_combat, E_cooldown, E_safety) trained via pairwise Bradley-Terry / NCE contrastive loss",
+      "Gymnasium-compatible offline Victris wrapper with strict untrusted opponent shout stripping, sub-5ms per-tick latency, and DEV_SEEDS/HELDOUT_SEEDS disjointness",
+      "honest method qualification on synthetic_tactical_fixture_not_arena_sim with zero fabricated simulator matches"
+    ],
+    "exposure_scope": "synthetic_tactical_fixture_not_arena_sim",
+    "independent_generalization_score": 0
+  },
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/epo_trainer.py",
+      "sha256": "sha256:ce0b051dfaee60c49d8074e5cd09ae5405bcca2489a2a21c7f9353b2ac30040b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/gym_adapter.py",
+      "sha256": "sha256:0d76009e5f2d7e24854122f5a50c7efe5a9393dd23e75d79cb80972653c7d138"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+      "sha256": "sha256:7cca7a8ae368d1cf9f8017ca69aaa255f9a0095aa69decc7dfa06ed965ea8a8a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_victris_epo_trainer_9272.py",
+      "sha256": "sha256:5464a851ab6edb9118be8a042d904ffd99533d4936cc933e2157b0f477575256"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_victris_energy_bot_9258.py",
+      "sha256": "sha256:811d02dd7e8263c6ba098993291a63d70241a9b2942a1e6a30e2840c10853cdf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    }
+  ],
+  "current_llm_invocations": 0,
+  "current_work_receipts": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/current_work.json",
+      "sha256": "sha256:9664fedabd1fb10c4220ab65c9fc67159631f410a4241e4b65453b574014f604"
+    }
+  ],
+  "duration_s": 0.130837332,
+  "experiment_id": 9272,
+  "field_principles": {
+    "MODEL_SPECS": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "acceptance_gates": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "archive_versions": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "arena_sim_installed": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "claim_scope": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "code_config_hashes": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "current_llm_invocations": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "current_work_receipts": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "duration_s": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "experiment_id": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "flagged_adversarial": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "gate_check_summary": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "generated_tokens": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "heldout_matches_played": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "heldout_summary": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "honest_verdict": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "independent_generalization_score": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "inference_substrate": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "inference_substrate_class": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "milestone": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "model_invocation_counts": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "model_invocation_status": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "owned_statement_coverage": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "preconditions_checked": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "random_seed": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "requested_inference_substrate_class": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "required_checks_passed": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "rows": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "run_date": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "sample_size_budget": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "schema": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "scientific_effect_measured": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "site_rules_checks": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "source_references": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "task_id": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "tick_latency_rows": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "training_convergence_rows": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "validation_receipts": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "validation_scope_manifest": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "verdict_class": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "verifier_is_oracle": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "victris_trainer_ready_score": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches.",
+    "work_reference": "Bound by authenticated Exp9258 primary and scripts/victris_offline_harness.py, 4-module EPO composite Gibbs NCE training, Gymnasium wrapper, sub-5ms tick latency, untrusted shout sanitization, and strict DEV/HELDOUT seed split enforcement; zero LLM work and zero fabricated matches."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_field": "sha256",
+      "check": "exp9258_primary_sha256",
+      "expected": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+      "observed": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9258_v788_victris_energy_bot.json",
+      "sha256": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+      "upstream": "exp9258-victris-energy-bot"
+    },
+    {
+      "artifact_field": "victris_harness_ready_score",
+      "check": "exp9258_victris_harness_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9258_v788_victris_energy_bot.json",
+      "sha256": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640",
+      "upstream": "exp9258-victris-energy-bot"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "victris_offline_harness_sha256",
+      "expected": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002",
+      "observed": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/victris_offline_harness.py",
+      "sha256": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002",
+      "upstream": "exp9272-victris-epo-trainer"
+    },
+    {
+      "artifact_field": "arena_sim_importable",
+      "check": "arena_sim_module_import",
+      "expected": true,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/arena_sim-0.83.0.whl",
+      "sha256": null,
+      "upstream": "exp9272-victris-epo-trainer"
+    },
+    {
+      "artifact_field": "arena_sim_wheel_sha256",
+      "check": "arena_sim_wheel_sha256",
+      "expected": "sha256:5393811ad663f2b1c9fdf5dac9a83f317894fc04c39463bdda7551762c5a010c",
+      "observed": "missing_file",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/arena_sim-0.83.0.whl",
+      "sha256": null,
+      "upstream": "exp9272-victris-epo-trainer"
+    },
+    {
+      "artifact_field": "epo_composite_trainer_gym_adapter_and_sub5ms_latency",
+      "check": "victris_epo_trainer_and_gym_controls",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/victris_offline_harness.py",
+      "sha256": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002",
+      "upstream": "exp9272-victris-epo-trainer"
+    },
+    {
+      "artifact_field": "free_disk_bytes>=2GiB",
+      "check": "resource_disk",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263",
+      "sha256": null,
+      "upstream": "exp9258-victris-energy-bot"
+    },
+    {
+      "artifact_field": "address_space_at_least_256MiB",
+      "check": "resource_memory",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263",
+      "sha256": null,
+      "upstream": "exp9258-victris-energy-bot"
+    },
+    {
+      "artifact_field": "cpu_available",
+      "check": "resource_cpu",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263",
+      "sha256": null,
+      "upstream": "exp9258-victris-energy-bot"
+    },
+    {
+      "artifact_field": "required_tools_and_float64",
+      "check": "resource_tools",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263",
+      "sha256": null,
+      "upstream": "exp9258-victris-energy-bot"
+    }
+  ],
+  "generated_tokens": 0,
+  "heldout_matches_played": 0,
+  "heldout_summary": [
+    {
+      "baseline_win_rate": null,
+      "ci95": null,
+      "draws": 0,
+      "max_tick_ms": 1.3869,
+      "n": 0,
+      "opponent": "ts-starter",
+      "win_rate": null,
+      "wins": 0
+    },
+    {
+      "baseline_win_rate": null,
+      "ci95": null,
+      "draws": 0,
+      "max_tick_ms": 1.3869,
+      "n": 0,
+      "opponent": "random",
+      "win_rate": null,
+      "wins": 0
+    }
+  ],
+  "honest_verdict": "complete_null_victris_epo_trainer_qualified_no_arena_sim",
+  "independent_generalization_score": 0,
+  "inference_substrate": "offline_victris_epo_composite_gibbs_trainer_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "milestone": "2026.11.789",
+  "model_invocation_counts": {
+    "current_llm_invocations": 0,
+    "forward_calls": 0,
+    "generated_tokens": 0,
+    "loads_attempted": 0,
+    "loads_completed": 0,
+    "loads_failed": 0
+  },
+  "model_invocation_status": "not_requested_empty_model_specs",
+  "owned_statement_coverage": {
+    "complete": true,
+    "data_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/combined_coverage/.coverage",
+      "sha256": "sha256:a07d7c1e266f0a3d636f170aeb7f356bd6b6e07ee56d6cdf596bc63843b0afc5"
+    },
+    "files": [
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "python/carnot/victris/epo_trainer.py",
+        "statements": 542
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "python/carnot/victris/gym_adapter.py",
+        "statements": 86
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+        "statements": 10
+      }
+    ],
+    "percent": 100.0,
+    "report_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/combined_coverage/coverage.json",
+      "sha256": "sha256:d285769abaefe07c898607817314f42e44c9360bd167598523f7058ea6a31194"
+    },
+    "rows": [
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 136,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 137,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 138,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 139,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 140,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 141,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 142,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 143,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 151,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 152,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 157,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 205,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 206,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 207,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      }
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "check_receipt": {
+        "free_bytes": 1025829015552,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263",
+        "required_bytes": 2147483648
+      },
+      "resource": "private_disk"
+    },
+    {
+      "available": true,
+      "check_receipt": {
+        "minimum_bytes": 268435456,
+        "rlimit_as": -1
+      },
+      "resource": "memory"
+    },
+    {
+      "available": true,
+      "check_receipt": {
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "cpu_count": 24
+      },
+      "resource": "cpu"
+    },
+    {
+      "available": true,
+      "check_receipt": {
+        "numpy_float64_bytes": 8,
+        "tools": {
+          "coverage": true,
+          "jax": true,
+          "mypy": true,
+          "numpy": true,
+          "pytest": true,
+          "ruff": true
+        }
+      },
+      "resource": "required_tools"
+    },
+    {
+      "available": false,
+      "check_receipt": {
+        "arena_sim_installed": false,
+        "arena_sim_origin": "missing_module",
+        "wheel_env_var": "unset",
+        "wheel_expected_sha256": "sha256:5393811ad663f2b1c9fdf5dac9a83f317894fc04c39463bdda7551762c5a010c",
+        "wheel_observed": "missing_file",
+        "wheel_path": "/home/ianblenke/github.com/ianblenke/carnot/arena_sim-0.83.0.whl",
+        "wheel_sha256_matched": false
+      },
+      "resource": "arena_sim_simulator"
+    }
+  ],
+  "random_seed": 789272,
+  "reproducibility_checksum": "sha256:52adf12ba9d314c032a0bc11eb288f2fd7c97c0a255361c1de03433d17979b16",
+  "requested_inference_substrate_class": "no_model_load",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.820817,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.564008,
+      "energy_score": -2.180864,
+      "exclusion_reason": null,
+      "group": "tactical_q00",
+      "numerator": 1,
+      "pairwise_brier": 0.027436,
+      "qid": "tactical_q00",
+      "seed": 0,
+      "sibling": "low_hp_defense",
+      "status": "completed",
+      "tactical_advantage": 1.616856,
+      "unit_id": "victris_synth_00"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.305271,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.00077,
+      "energy_score": -1.012117,
+      "exclusion_reason": null,
+      "group": "tactical_q01",
+      "numerator": 1,
+      "pairwise_brier": 0.071138,
+      "qid": "tactical_q01",
+      "seed": 1,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.011346,
+      "unit_id": "victris_synth_01"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.565294,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.110063,
+      "energy_score": -1.680606,
+      "exclusion_reason": null,
+      "group": "tactical_q02",
+      "numerator": 1,
+      "pairwise_brier": 0.029632,
+      "qid": "tactical_q02",
+      "seed": 2,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.570543,
+      "unit_id": "victris_synth_02"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.391685,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.086451,
+      "energy_score": -1.205382,
+      "exclusion_reason": null,
+      "group": "tactical_q03",
+      "numerator": 1,
+      "pairwise_brier": 0.060619,
+      "qid": "tactical_q03",
+      "seed": 3,
+      "sibling": "fog_zone_seek",
+      "status": "completed",
+      "tactical_advantage": 1.118931,
+      "unit_id": "victris_synth_03"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.638883,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.265051,
+      "energy_score": -1.810071,
+      "exclusion_reason": null,
+      "group": "tactical_q04",
+      "numerator": 1,
+      "pairwise_brier": 0.030908,
+      "qid": "tactical_q04",
+      "seed": 4,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.545021,
+      "unit_id": "victris_synth_04"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.572184,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.08755,
+      "energy_score": -1.72222,
+      "exclusion_reason": null,
+      "group": "tactical_q05",
+      "numerator": 1,
+      "pairwise_brier": 0.026632,
+      "qid": "tactical_q05",
+      "seed": 5,
+      "sibling": "low_hp_defense",
+      "status": "completed",
+      "tactical_advantage": 1.63467,
+      "unit_id": "victris_synth_05"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.782082,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.475678,
+      "energy_score": -2.116116,
+      "exclusion_reason": null,
+      "group": "tactical_q06",
+      "numerator": 1,
+      "pairwise_brier": 0.026376,
+      "qid": "tactical_q06",
+      "seed": 6,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.640438,
+      "unit_id": "victris_synth_06"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.169552,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": 0.418933,
+      "energy_score": -0.763962,
+      "exclusion_reason": null,
+      "group": "tactical_q07",
+      "numerator": 1,
+      "pairwise_brier": 0.055005,
+      "qid": "tactical_q07",
+      "seed": 7,
+      "sibling": "stunned_root",
+      "status": "completed",
+      "tactical_advantage": 1.182895,
+      "unit_id": "victris_synth_07"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.629737,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.244767,
+      "energy_score": -1.792265,
+      "exclusion_reason": null,
+      "group": "tactical_q08",
+      "numerator": 1,
+      "pairwise_brier": 0.030782,
+      "qid": "tactical_q08",
+      "seed": 8,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.547498,
+      "unit_id": "victris_synth_08"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.729112,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.360012,
+      "energy_score": -2.025627,
+      "exclusion_reason": null,
+      "group": "tactical_q09",
+      "numerator": 1,
+      "pairwise_brier": 0.025284,
+      "qid": "tactical_q09",
+      "seed": 9,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.665615,
+      "unit_id": "victris_synth_09"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.642078,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.237184,
+      "energy_score": -1.844586,
+      "exclusion_reason": null,
+      "group": "tactical_q10",
+      "numerator": 1,
+      "pairwise_brier": 0.027872,
+      "qid": "tactical_q10",
+      "seed": 10,
+      "sibling": "low_hp_defense",
+      "status": "completed",
+      "tactical_advantage": 1.607402,
+      "unit_id": "victris_synth_10"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.182667,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": 0.190066,
+      "energy_score": -0.79092,
+      "exclusion_reason": null,
+      "group": "tactical_q11",
+      "numerator": 1,
+      "pairwise_brier": 0.074363,
+      "qid": "tactical_q11",
+      "seed": 11,
+      "sibling": "fog_zone_seek",
+      "status": "completed",
+      "tactical_advantage": 0.980986,
+      "unit_id": "victris_synth_11"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.839044,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.596863,
+      "energy_score": -2.213978,
+      "exclusion_reason": null,
+      "group": "tactical_q12",
+      "numerator": 1,
+      "pairwise_brier": 0.027424,
+      "qid": "tactical_q12",
+      "seed": 12,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.617115,
+      "unit_id": "victris_synth_12"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.309164,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.007643,
+      "energy_score": -1.018972,
+      "exclusion_reason": null,
+      "group": "tactical_q13",
+      "numerator": 1,
+      "pairwise_brier": 0.07114,
+      "qid": "tactical_q13",
+      "seed": 13,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.011329,
+      "unit_id": "victris_synth_13"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.569133,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.116858,
+      "energy_score": -1.68747,
+      "exclusion_reason": null,
+      "group": "tactical_q14",
+      "numerator": 1,
+      "pairwise_brier": 0.029628,
+      "qid": "tactical_q14",
+      "seed": 14,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.570612,
+      "unit_id": "victris_synth_14"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.443489,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.190216,
+      "energy_score": -1.294793,
+      "exclusion_reason": null,
+      "group": "tactical_q15",
+      "numerator": 1,
+      "pairwise_brier": 0.061943,
+      "qid": "tactical_q15",
+      "seed": 15,
+      "sibling": "fog_zone_seek",
+      "status": "completed",
+      "tactical_advantage": 1.104577,
+      "unit_id": "victris_synth_15"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.642624,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.271688,
+      "energy_score": -1.816789,
+      "exclusion_reason": null,
+      "group": "tactical_q16",
+      "numerator": 1,
+      "pairwise_brier": 0.030904,
+      "qid": "tactical_q16",
+      "seed": 16,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.545101,
+      "unit_id": "victris_synth_16"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.298919,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": 0.013999,
+      "energy_score": -0.998992,
+      "exclusion_reason": null,
+      "group": "tactical_q17",
+      "numerator": 1,
+      "pairwise_brier": 0.070966,
+      "qid": "tactical_q17",
+      "seed": 17,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.012991,
+      "unit_id": "victris_synth_17"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.785808,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.48236,
+      "energy_score": -2.12287,
+      "exclusion_reason": null,
+      "group": "tactical_q18",
+      "numerator": 1,
+      "pairwise_brier": 0.026372,
+      "qid": "tactical_q18",
+      "seed": 18,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.64051,
+      "unit_id": "victris_synth_18"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.17332,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": 0.412341,
+      "energy_score": -0.770546,
+      "exclusion_reason": null,
+      "group": "tactical_q19",
+      "numerator": 1,
+      "pairwise_brier": 0.055006,
+      "qid": "tactical_q19",
+      "seed": 19,
+      "sibling": "stunned_root",
+      "status": "completed",
+      "tactical_advantage": 1.182887,
+      "unit_id": "victris_synth_19"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.631679,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.2146,
+      "energy_score": -1.824546,
+      "exclusion_reason": null,
+      "group": "tactical_q20",
+      "numerator": 1,
+      "pairwise_brier": 0.027754,
+      "qid": "tactical_q20",
+      "seed": 20,
+      "sibling": "low_hp_defense",
+      "status": "completed",
+      "tactical_advantage": 1.609947,
+      "unit_id": "victris_synth_20"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.732768,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.366545,
+      "energy_score": -2.032229,
+      "exclusion_reason": null,
+      "group": "tactical_q21",
+      "numerator": 1,
+      "pairwise_brier": 0.025281,
+      "qid": "tactical_q21",
+      "seed": 21,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.665685,
+      "unit_id": "victris_synth_21"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.582109,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": -0.143996,
+      "energy_score": -1.712157,
+      "exclusion_reason": null,
+      "group": "tactical_q22",
+      "numerator": 1,
+      "pairwise_brier": 0.029749,
+      "qid": "tactical_q22",
+      "seed": 22,
+      "sibling": "combat_engage",
+      "status": "completed",
+      "tactical_advantage": 1.568161,
+      "unit_id": "victris_synth_22"
+    },
+    {
+      "arm": "v5_epo_composite_trained",
+      "baseline_energy": -0.186307,
+      "censor_reason": "arena_sim_wheel_missing",
+      "condition": "synthetic_tactical_fixture_not_arena_sim",
+      "denominator": 1,
+      "dominated_energy": 0.183696,
+      "energy_score": -0.797275,
+      "exclusion_reason": null,
+      "group": "tactical_q23",
+      "numerator": 1,
+      "pairwise_brier": 0.074365,
+      "qid": "tactical_q23",
+      "seed": 23,
+      "sibling": "fog_zone_seek",
+      "status": "completed",
+      "tactical_advantage": 0.980971,
+      "unit_id": "victris_synth_23"
+    }
+  ],
+  "run_date": "20261121",
+  "sample_size_budget": {
+    "archive_candidates": 6,
+    "attempted": 24,
+    "censored": 200,
+    "completed": 24,
+    "dev_seeds": 40,
+    "effective_independent_groups": 24,
+    "failed": 0,
+    "heldout_seeds": 100,
+    "intended": 24,
+    "opponents": 2,
+    "training_pairs": 24
+  },
+  "schema": "carnot.v789_victris_epo_trainer.v1",
+  "scientific_effect_measured": false,
+  "site_rules_checks": {
+    "dev_heldout_disjoint": true,
+    "game_repo_modified": false,
+    "live_ladder_contacted": false,
+    "opponent_shout_ignored": true
+  },
+  "source_references": [
+    {
+      "imported_fields": [
+        "victris_harness_ready_score",
+        "archive_versions",
+        "tick_latency_rows"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9258_v788_victris_energy_bot.json",
+      "producer_path": "results/experiment_9258_v788_victris_energy_bot.json",
+      "sha256": "sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640"
+    },
+    {
+      "imported_fields": [
+        "DEV_SEEDS",
+        "HELDOUT_SEEDS",
+        "shoot_bot",
+        "wilson"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/victris_offline_harness.py",
+      "producer_path": "scripts/victris_offline_harness.py",
+      "sha256": "sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002"
+    }
+  ],
+  "task_id": "exp9272-victris-epo-trainer",
+  "tick_latency_rows": [
+    {
+      "candidate_id": "v0_shoot_baseline",
+      "max_ms": 0.0656,
+      "median_ms": 0.043,
+      "n_ticks": 24,
+      "p99_ms": 0.062,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    },
+    {
+      "candidate_id": "v1_exp9258_gibbs_hand",
+      "max_ms": 0.6025,
+      "median_ms": 0.1992,
+      "n_ticks": 24,
+      "p99_ms": 0.601,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    },
+    {
+      "candidate_id": "v2_epo_composite_init",
+      "max_ms": 1.4076,
+      "median_ms": 0.3878,
+      "n_ticks": 24,
+      "p99_ms": 1.4021,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    },
+    {
+      "candidate_id": "v3_epo_composite_step4",
+      "max_ms": 1.3927,
+      "median_ms": 0.3872,
+      "n_ticks": 24,
+      "p99_ms": 1.389,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    },
+    {
+      "candidate_id": "v4_epo_composite_step8",
+      "max_ms": 1.3884,
+      "median_ms": 0.3857,
+      "n_ticks": 24,
+      "p99_ms": 1.3879,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    },
+    {
+      "candidate_id": "v5_epo_composite_trained",
+      "max_ms": 1.3869,
+      "median_ms": 0.3849,
+      "n_ticks": 24,
+      "p99_ms": 1.3846,
+      "within_1000ms_budget": true,
+      "within_5ms_target": true
+    }
+  ],
+  "training_convergence_rows": [
+    {
+      "epoch": 0,
+      "grad_inf_norm": 0.201968,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.509162,
+      "pairwise_nll": 0.507137,
+      "step": 0,
+      "synthetic_or_dev_pairwise_brier": 0.158389,
+      "theta_sha256": "sha256:162a9bb0ec5ca7e3dafa1119323eabe6e2fb7b87f8c1672bb91e0e7df42de20f"
+    },
+    {
+      "epoch": 1,
+      "grad_inf_norm": 0.206591,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.486464,
+      "pairwise_nll": 0.484405,
+      "step": 1,
+      "synthetic_or_dev_pairwise_brier": 0.147622,
+      "theta_sha256": "sha256:ffa4ae855f2af2583af033c266fae2f76c69281d7c4cb56bc224e20938cec49b"
+    },
+    {
+      "epoch": 2,
+      "grad_inf_norm": 0.210092,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.462619,
+      "pairwise_nll": 0.460523,
+      "step": 2,
+      "synthetic_or_dev_pairwise_brier": 0.136482,
+      "theta_sha256": "sha256:d87185496fa51d1794896f1810f1c38c149c8ee9018ab75a0d3ca7c673658768"
+    },
+    {
+      "epoch": 3,
+      "grad_inf_norm": 0.212313,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.437889,
+      "pairwise_nll": 0.435751,
+      "step": 3,
+      "synthetic_or_dev_pairwise_brier": 0.125141,
+      "theta_sha256": "sha256:5278abd913603b6bc1000f4347225cc135ba278f9f844803db9190cb62958f03"
+    },
+    {
+      "epoch": 4,
+      "grad_inf_norm": 0.213145,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.412586,
+      "pairwise_nll": 0.410402,
+      "step": 4,
+      "synthetic_or_dev_pairwise_brier": 0.113792,
+      "theta_sha256": "sha256:aa6b97a82abba945f4772fbe7a7f22f1bf6bedad1cbbbadf40bdbb0746fe0f46"
+    },
+    {
+      "epoch": 5,
+      "grad_inf_norm": 0.212539,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.387059,
+      "pairwise_nll": 0.384826,
+      "step": 5,
+      "synthetic_or_dev_pairwise_brier": 0.102637,
+      "theta_sha256": "sha256:bc55b13b38c7fc1291d6fef470f574fc0d49090ea30f66893475cca1bab6ac74"
+    },
+    {
+      "epoch": 6,
+      "grad_inf_norm": 0.210514,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.361669,
+      "pairwise_nll": 0.359383,
+      "step": 6,
+      "synthetic_or_dev_pairwise_brier": 0.091872,
+      "theta_sha256": "sha256:6519e8a5ab77dc32d00355fc22763e0c32337668defb0e19d70b1888ae9f3da6"
+    },
+    {
+      "epoch": 7,
+      "grad_inf_norm": 0.207153,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.336766,
+      "pairwise_nll": 0.334424,
+      "step": 7,
+      "synthetic_or_dev_pairwise_brier": 0.081669,
+      "theta_sha256": "sha256:c735940c0e2400b2491fdd975f6fbb0b0ac19ddd527af337ac33504997f8a38f"
+    },
+    {
+      "epoch": 8,
+      "grad_inf_norm": 0.202596,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.312666,
+      "pairwise_nll": 0.310265,
+      "step": 8,
+      "synthetic_or_dev_pairwise_brier": 0.072164,
+      "theta_sha256": "sha256:b52ed4cc16b75cf40d534293056c9c79ff479c7ce6ddcd34c1e829159d427e1e"
+    },
+    {
+      "epoch": 9,
+      "grad_inf_norm": 0.197027,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.289632,
+      "pairwise_nll": 0.287171,
+      "step": 9,
+      "synthetic_or_dev_pairwise_brier": 0.063451,
+      "theta_sha256": "sha256:731f8118292600080bdc15072d8ba2e3bd9529c4bcd8bdf9f03f008e4685207b"
+    },
+    {
+      "epoch": 10,
+      "grad_inf_norm": 0.190653,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.267866,
+      "pairwise_nll": 0.265342,
+      "step": 10,
+      "synthetic_or_dev_pairwise_brier": 0.055579,
+      "theta_sha256": "sha256:6c511aa1c921d4d10c56d576710dbff51734f4316fd956416a0ec2f3ed2077bc"
+    },
+    {
+      "epoch": 11,
+      "grad_inf_norm": 0.18369,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.247503,
+      "pairwise_nll": 0.244916,
+      "step": 11,
+      "synthetic_or_dev_pairwise_brier": 0.048556,
+      "theta_sha256": "sha256:e857df817ddc28134c715b97e46f6ea0721bc190346423632b826ae479cd3cea"
+    },
+    {
+      "epoch": 12,
+      "grad_inf_norm": 0.176344,
+      "pairwise_accuracy": 1.0,
+      "pairwise_nce_loss": 0.228613,
+      "pairwise_nll": 0.225963,
+      "step": 12,
+      "synthetic_or_dev_pairwise_brier": 0.042357,
+      "theta_sha256": "sha256:985e65e4814d25256e9f9c706a113660a55a3e5ff1587837d0e928d80068546b"
+    }
+  ],
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "env",
+        "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/.coverage",
+        "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_victris_epo_trainer_9272.py"
+      ],
+      "command": "env COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/.coverage COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_victris_epo_trainer_9272.py",
+      "deadline_s": 600,
+      "duration_s": 107.048962462,
+      "ended_monotonic_ns": 554182829275452,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/owned_tests.stdout",
+      "log_sha256": "sha256:6abd53c155e5f576d78ffe57e90a74ac0efe550863f062db00272a29fe7380d9",
+      "name": "owned_tests",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554075780312990,
+      "started_wall_ns": 1795254166014762667,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/owned_tests.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/owned_tests.stdout",
+      "stdout_sha256": "sha256:6abd53c155e5f576d78ffe57e90a74ac0efe550863f062db00272a29fe7380d9",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_victris_energy_bot_9258.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_primary_publication_7928.py tests/python/test_current_work_receipt.py tests/python/test_victris_energy_bot_9258.py tests/python/test_experiment_7891_v685_authority_lifecycle.py tests/python/test_restricted_decision_audit_8210.py",
+      "deadline_s": 600,
+      "duration_s": 115.388898146,
+      "ended_monotonic_ns": 554298368804898,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/direct_consumers.stdout",
+      "log_sha256": "sha256:4da48a343be1b22dbeb990c3cd511e81cb73b2531518d074e8dd93d23b6cb56d",
+      "name": "direct_consumers",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554182979906752,
+      "started_wall_ns": 1795254273214357872,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/direct_consumers.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/direct_consumers.stdout",
+      "stdout_sha256": "sha256:4da48a343be1b22dbeb990c3cd511e81cb73b2531518d074e8dd93d23b6cb56d",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/victris/epo_trainer.py",
+        "python/carnot/victris/gym_adapter.py",
+        "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+        "tests/python/test_victris_epo_trainer_9272.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m ruff check python/carnot/victris/epo_trainer.py python/carnot/victris/gym_adapter.py scripts/experiments/experiment_9272_v789_victris_epo_trainer.py tests/python/test_victris_epo_trainer_9272.py",
+      "deadline_s": 600,
+      "duration_s": 0.064055298,
+      "ended_monotonic_ns": 554298434186306,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_check.stdout",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554298370131008,
+      "started_wall_ns": 1795254388604580334,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/victris/epo_trainer.py",
+        "python/carnot/victris/gym_adapter.py",
+        "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+        "tests/python/test_victris_epo_trainer_9272.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m ruff format --check python/carnot/victris/epo_trainer.py python/carnot/victris/gym_adapter.py scripts/experiments/experiment_9272_v789_victris_epo_trainer.py tests/python/test_victris_epo_trainer_9272.py",
+      "deadline_s": 600,
+      "duration_s": 0.064670714,
+      "ended_monotonic_ns": 554298500223887,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_format.stdout",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554298435553173,
+      "started_wall_ns": 1795254388670003030,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/ruff_format.stdout",
+      "stdout_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/victris/epo_trainer.py",
+        "python/carnot/victris/gym_adapter.py",
+        "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m mypy --strict --follow-imports=silent python/carnot/victris/epo_trainer.py python/carnot/victris/gym_adapter.py scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+      "deadline_s": 600,
+      "duration_s": 0.164523326,
+      "ended_monotonic_ns": 554298666240857,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/strict_mypy.stdout",
+      "log_sha256": "sha256:f6d28ce9ccb001f4fc29c5d8af039c4191b8d03dd1b906a2179bf7e32b6dac7c",
+      "name": "strict_mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554298501717531,
+      "started_wall_ns": 1795254388736167690,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/strict_mypy.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/strict_mypy.stdout",
+      "stdout_sha256": "sha256:f6d28ce9ccb001f4fc29c5d8af039c4191b8d03dd1b906a2179bf7e32b6dac7c",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_victris_epo_trainer_9272.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_victris_epo_trainer_9272.py",
+      "deadline_s": 600,
+      "duration_s": 0.032331305,
+      "ended_monotonic_ns": 554298702098252,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/spec_coverage.stdout",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "scope_sha256": "sha256:6255b5d57c8ad8b7484343f1307231efe310dad199ba4473454db955c005f089",
+      "started_monotonic_ns": 554298669766947,
+      "started_wall_ns": 1795254388904216675,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/validation/spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    }
+  ],
+  "validation_scope_manifest": {
+    "code_test_hashes": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/epo_trainer.py",
+        "sha256": "sha256:ce0b051dfaee60c49d8074e5cd09ae5405bcca2489a2a21c7f9353b2ac30040b"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/victris/gym_adapter.py",
+        "sha256": "sha256:0d76009e5f2d7e24854122f5a50c7efe5a9393dd23e75d79cb80972653c7d138"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+        "sha256": "sha256:7cca7a8ae368d1cf9f8017ca69aaa255f9a0095aa69decc7dfa06ed965ea8a8a"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_victris_epo_trainer_9272.py",
+        "sha256": "sha256:5464a851ab6edb9118be8a042d904ffd99533d4936cc933e2157b0f477575256"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+        "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_victris_energy_bot_9258.py",
+        "sha256": "sha256:811d02dd7e8263c6ba098993291a63d70241a9b2942a1e6a30e2840c10853cdf"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+        "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+      }
+    ],
+    "commands": [
+      {
+        "argv": [
+          "env",
+          "COVERAGE_FILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/.coverage",
+          "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "coverage",
+          "run",
+          "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini",
+          "-m",
+          "pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "-q",
+          "tests/python/test_victris_epo_trainer_9272.py"
+        ],
+        "name": "owned_tests"
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "-q",
+          "tests/python/test_primary_publication_7928.py",
+          "tests/python/test_current_work_receipt.py",
+          "tests/python/test_victris_energy_bot_9258.py",
+          "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+          "tests/python/test_restricted_decision_audit_8210.py"
+        ],
+        "name": "direct_consumers"
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "python/carnot/victris/epo_trainer.py",
+          "python/carnot/victris/gym_adapter.py",
+          "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+          "tests/python/test_victris_epo_trainer_9272.py"
+        ],
+        "name": "ruff_check"
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "ruff",
+          "format",
+          "--check",
+          "python/carnot/victris/epo_trainer.py",
+          "python/carnot/victris/gym_adapter.py",
+          "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py",
+          "tests/python/test_victris_epo_trainer_9272.py"
+        ],
+        "name": "ruff_format"
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "mypy",
+          "--strict",
+          "--follow-imports=silent",
+          "python/carnot/victris/epo_trainer.py",
+          "python/carnot/victris/gym_adapter.py",
+          "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py"
+        ],
+        "name": "strict_mypy"
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_victris_epo_trainer_9272.py"
+        ],
+        "name": "spec_coverage"
+      }
+    ],
+    "coverage_config_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/coverage.ini",
+      "sha256": "sha256:f6209ba21cb9e17ebdc37b876e844fa8b632514af8dce10241208cb621a5ae57"
+    },
+    "e2e_scope": "E2E-018/021 private actual CLI success/refusal/tamper/cold replay in owned tests; E2E-020 not applicable: no learning or recovery changes",
+    "excluded_statements": 0,
+    "exclusions": [],
+    "frozen_ns": 554075648283860,
+    "hard_cap_s": 4800,
+    "measurement_cap_s": 3300,
+    "owned_paths": [
+      "python/carnot/victris/epo_trainer.py",
+      "python/carnot/victris/gym_adapter.py",
+      "scripts/experiments/experiment_9272_v789_victris_epo_trainer.py"
+    ],
+    "random_seed": 789272,
+    "required_check_names": [
+      "owned_tests",
+      "direct_consumers",
+      "ruff_check",
+      "ruff_format",
+      "strict_mypy",
+      "spec_coverage"
+    ],
+    "statement_percent": 100,
+    "validation_reserve_s": 1200
+  },
+  "verdict_class": "null",
+  "verifier_is_oracle": false,
+  "victris_trainer_ready_score": 1,
+  "work_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_9272_v789_victris_epo_trainer/invocations/1795254165881735263/work.json",
+    "sha256": "sha256:f5f069d90775a28f98acd2a5f3e4639dbaaaffb5f5af7e56e24fdc9ee3d6349b"
+  }
+}

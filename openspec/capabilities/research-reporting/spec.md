@@ -117796,3 +117796,82 @@ unchanged revision hashes and authenticated same-invocation node events and logs
 Measurement and verification SHALL use deadlines derived from one invocation
 start; publication SHALL end within the 4800-second cap. Coverage tools SHALL use
 the existing heartbeat supervisor. Historical primaries SHALL remain unchanged.
+
+### REQ-VICTRIS-9272-V789: Offline Victris Arena four-module EPO composite Gibbs trainer and Gymnasium adapter
+
+Exp9272 SHALL authenticate `results/experiment_9258_v788_victris_energy_bot.json`
+(`sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640`,
+`victris_harness_ready_score==1`) and `scripts/victris_offline_harness.py`
+(`sha256:2db2ebdf1c6988d7c0dd6fbabcf5d9f62fb6c1ba2943c04e85f61c812b496002`),
+check host preconditions (Python, JAX/NumPy float64, CPU, memory, private free
+disk), and inspect whether `arena_sim` is importable in `.venv` (verifying
+`CARNOT_ARENA_SIM_WHEEL` against
+`sha256:5393811ad663f2b1c9fdf5dac9a83f317894fc04c39463bdda7551762c5a010c` when
+present) without downloading wheels, contacting live ladder URLs, modifying the
+game repository, or fabricating simulator matches.
+
+Exp9272 SHALL implement:
+- `python/carnot/victris/epo_trainer.py`: a four-module Energy-Based Policy
+  Orchestration (EPO, arXiv:2611.02546) composite Gibbs scorer
+  `E_total(s, a; Theta) = w_zone * E_zone + w_combat * E_combat + w_cooldown * E_cooldown + w_safety * E_safety`,
+  where each module is a compact `GibbsModel`-scale quadratic + SiLU energy head
+  over sanitized 10-dimensional tactical features from `energy_bot.py`, trained
+  by deterministic L2-regularized pairwise Bradley-Terry / NCE contrastive energy
+  loss on `(preferred_action, dominated_action)` trajectory pairs with tracked
+  convergence diagnostics (`epoch`, `step`, `pairwise_nce_loss`, `grad_inf_norm`,
+  `synthetic_or_dev_pairwise_brier`, `theta_sha256`) and verified `<5.0ms`
+  per-tick inference latency.
+- `python/carnot/victris/gym_adapter.py`: an offline Gymnasium-compatible wrapper
+  (`reset(seed=...)`, `step(action)`, `legal_actions()`,
+  `sanitize_observation()`) aligned with `arena-sim` 0.83.0 and
+  `scripts/victris_offline_harness.py`, enforcing untrusted opponent shout
+  stripping, strict `DEV_SEEDS` (`0..999`) versus `HELDOUT_SEEDS`
+  (`10000..10999`) disjointness refusal, and a hard `<1000.0ms` tick-budget guard.
+- `scripts/experiments/experiment_9272_v789_victris_epo_trainer.py`: standalone
+  experiment CLI executing Branch (a) live `arena_sim` DEV training and single
+  `HELDOUT_SEEDS` evaluation when `arena_sim` is installed, or Branch (b)
+  offline trainer and Gymnasium qualification (`victris_trainer_ready_score=1`,
+  `arena_sim_installed=false`, `heldout_matches_played=0`,
+  `scientific_effect_measured=false`, `verdict_class="null"`,
+  `honest_verdict="complete_null_victris_epo_trainer_qualified_no_arena_sim"`,
+  `exposure_scope="synthetic_tactical_fixture_not_arena_sim"`) when `arena_sim`
+  is absent. Declare `no_model_load`, `MODEL_SPECS=[]`,
+  `current_llm_invocations=0`, and `generated_tokens=0`.
+
+#### SCENARIO-VICTRIS-9272-V789: Four-module EPO composite Gibbs training convergence, sub-5ms latency, and dual-branch execution
+
+Training the four-module EPO composite Gibbs scorer via deterministic
+L2-regularized pairwise Bradley-Terry / NCE contrastive energy loss strictly
+reduces `pairwise_nce_loss` and `synthetic_or_dev_pairwise_brier` across epochs
+while recording `grad_inf_norm` and `theta_sha256` in
+`training_convergence_rows`. All archive versions verify median and maximum tick
+latency `<5.0ms` (`within_5ms_target=true`) and `<1000.0ms`
+(`within_1000ms_budget=true`). Under Branch (a) (`arena_sim` installed), the
+runner collects `DEV_SEEDS` trajectory pairs against `ts-starter` and `random`,
+trains the composite EPO scorer, records archive versions, and evaluates the
+Exp9258 baseline versus the EPO-trained bot strictly once on `HELDOUT_SEEDS` with
+Wilson 95 percent intervals. Under Branch (b) (`arena_sim` absent), the runner
+qualifies the trainer, Gymnasium adapter, preference-pair calibration/ranking
+controls, shout isolation, sub-5ms latency, and seed-split enforcement with
+`victris_trainer_ready_score=1`, `verdict_class="null"`, and
+`honest_verdict="complete_null_victris_epo_trainer_qualified_no_arena_sim"`.
+
+#### SCENARIO-VICTRIS-9272-V789-CONTROLS: Gymnasium adapter refusals, shout isolation, latency budget guard, and private CLI controls
+
+Injecting adversarial prompt-injection or command payloads into opponent shout
+fields produces identical sanitized observations, legal action lists, composite
+energies, and selected turns with zero shout leakage. Any overlap between
+`DEV_SEEDS` and `HELDOUT_SEEDS`, any out-of-split seed passed to
+`VictrisGymAdapter.reset(seed=...)`, any second held-out evaluation call, or any
+tick latency `>=1000.0ms` raises a hard refusal `ValueError`. Private
+outside-checkout CLI execution without `PYTHONPATH` verifies publication,
+date/path refusal, cold replay, and rehashed aggregate-tamper rejection with 100
+percent owned statement coverage and zero exclusions on
+`python/carnot/victris/epo_trainer.py`, `python/carnot/victris/gym_adapter.py`,
+and `scripts/experiments/experiment_9272_v789_victris_epo_trainer.py`.
+
+## Implementation Status (REQ-VICTRIS-9272-V789)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VICTRIS-9272-V789 | Implemented (`python/carnot/victris/epo_trainer.py`, `python/carnot/victris/gym_adapter.py`, `scripts/experiments/experiment_9272_v789_victris_epo_trainer.py`, `results/experiment_9272_v789_victris_epo_trainer.json`) | Implemented (`tests/python/test_victris_epo_trainer_9272.py`) |
