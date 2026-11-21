@@ -22518,3 +22518,12 @@ code |
 | 2026-11-21 06:50 UTC | Exp9270: Qualify scoped lossless byte prefilter wi | OK | 88 passed, 1 warning in 25.26s |
 | 2026-11-21 09:23 UTC | Exp9271: Execute the complete causally corrected v | OK | 94 passed, 1 warning in 61.36s (0:01:01) |
 | 2026-11-21 10:07 UTC | Exp9272: Implement offline Victris Arena EPO compo | OK | 84 passed, 1 warning in 23.52s |
+| 2026-11-21 10:18 UTC | Exp9273: Qualify frozen Qwen forwards and all thre | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9271-forward-qualification.forward_validation_ready_score (actual=0 == expected=1) |
+| 2026-11-21 10:20 UTC | Exp9274: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9273-logit-runtime, exp9273-logit-runtime) |
+| 2026-11-21 10:20 UTC | Exp9275: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9273-logit-runtime, exp9273-logit-runtime) |
+| 2026-11-21 10:20 UTC | Exp9276: Collect complete frozen Qwen logit shard | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9273-logit-runtime, exp9273-logit-runtime) |
+| 2026-11-21 10:20 UTC | Exp9277: Admit the exact full cohort and retain se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9274-logits-a, exp9275-logits-b, exp9276-logits-c) |
+| 2026-11-21 10:20 UTC | Exp9278: Train the five fixed human energy decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9277-logit-admission) |
+| 2026-11-21 10:20 UTC | Exp9279: Measure continuous small-energy learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9277-logit-admission) |
+| 2026-11-21 10:20 UTC | Exp9280: Audit primary gains, entropy, ambiguity, | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9277-logit-admission) |
+| 2026-11-21 10:20 UTC | Exp9281: Measure complete service costs and operat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp9273-logit-runtime) |
