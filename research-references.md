@@ -58159,3 +58159,156 @@ block. Two tasks ran and five skipped at conductor pre-gates:
    isolates the V787 historical root, adds `Exp9258` for the mandatory Victris
    Arena Self-Improvement Floor, and consumes newly qualified `Exp9244` directly
    in `Exp9265` and `Exp9266`.
+
+
+---
+
+## 2026-11-21 V789 Planning Scan (Milestone 2026.11.789)
+
+This scan checked all eight primary arXiv topics and all six secondary channels
+on 2026-11-21 UTC before designing Milestone `2026.11.789` (`Exp9269`–`Exp9282`).
+
+### New primary arXiv and conference findings
+
+- **Scaling Up Thermodynamic AI Models**
+  (Moore et al., Jun 2026, [arXiv:2607.00170](https://arxiv.org/abs/2607.00170)):
+  Introduces backpropagation-based training for deep binary Gibbs networks aimed
+  at thermodynamic hardware, and analyzes inference cost versus autocorrelation
+  time tradeoffs.
+  **Carnot use:** Record as a thermodynamic hardware-scaling lead in `Exp9281`
+  (`complete-cost`); do not reopen the refuted energy-as-generator text path.
+- **Probabilistic Algorithms for Ising Machines from Optimization to Generative AI**
+  (*Nature Reviews Electrical Engineering*, Oct 2026,
+  [arXiv:2610.03972](https://arxiv.org/abs/2610.03972)):
+  Surveys algorithm-hardware co-design across FPGA simulated bifurcation,
+  probabilistic CMOS/spintronic p-bits, and energy-based models.
+  **Carnot use:** Record as a hardware operation-mapping reference in `Exp9281`
+  (`complete-cost`) alongside `KV260` (`k_max <= 5`) and Extropic Z1/XTR-0 leads.
+- **Online Local Learning for Generative Thermodynamic Computing**
+  (Wang et al., Sep 2026, [arXiv:2609.15439](https://arxiv.org/abs/2609.15439)):
+  Uses a reverse-path Onsager-Machlup objective to update local thermodynamic
+  couplings online step-by-step without full trajectory storage.
+  **Carnot use:** Future Tier 1–4 continual-learning hardware lead recorded in
+  `Exp9281`; keep frozen `Exp9132` primary online updates unchanged in `Exp9279`.
+- **Conformal Prediction under Partial Verification**
+  (Yu et al., Oct 2026, [arXiv:2610.10829](https://arxiv.org/abs/2610.10829)):
+  Constructs a partial-verification protocol that preserves exact conformal
+  prediction sets while cutting verification label cost by 15–82%.
+  **Carnot use:** Add a descriptive label-cost-savings slice to `Exp9279` shadow
+  deferral tracking and `Exp9280` multi-lens audit without altering primary
+  `Exp9126`/`Exp9132` thresholds.
+- **Behaviorally Calibrated Reinforcement Learning for Hallucination Mitigation**
+  (Wu et al., ICLR 2026 Workshop on Reliable Autonomy, OpenReview):
+  Replaces test-taking RLVR rewards with behavioral calibration objectives that
+  produce calibrated correctness probabilities and explicit abstention.
+  **Carnot use:** Complements Carnot's Energy-Based Calibrated-Decision Training
+  Floor (`Exp9278` accept/reject/escalate policy) and `Exp9280` descriptive
+  abstention-risk curves; generator weights stay frozen.
+- **Eidoku: A Neuro-Symbolic Verification Gate for LLM Reasoning via Structural
+  Constraint Satisfaction** (Dec 2025 / 2026, arXiv):
+  Evaluates structural violation costs (graph connectivity, feature consistency,
+  logical entailment) via a lightweight System-2 gate to reject high-probability
+  hallucinations.
+  **Carnot use:** Reference comparator for future structured-reasoning domains;
+  open-domain factual verification on `Exp9097` stays separate.
+- **The Energy of Falsehood / DiffuTruth** (FEVER Workshop, Mar 2026):
+  Combines text diffusion likelihood drift with NLI critics to score factual
+  hallucinations via non-equilibrium energy metrics.
+  **Carnot use:** Recorded as a future multi-model semantic-energy comparator
+  after the frozen `unsloth/Qwen3.8-27B-GGUF` forward baseline lands.
+
+### Primary topic coverage and planning decisions
+
+| Topic | Checked primary sources | V789 planning decision |
+|---|---|---|
+| EBM verification and reasoning | [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871); [EPO, 2611.02546](https://arxiv.org/abs/2611.02546); [Eidoku, 2025/2026]; [DiffuTruth, FEVER 2026] | Unblock the frozen Qwen3.8-27B forward comparison (`Exp9270`–`Exp9280`) and train a modular EPO composite Gibbs energy scorer for Victris Arena (`Exp9272`). |
+| Neural constraint satisfaction | [Eidoku]; [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789); [LNS + Neural Constraints, 2603.20801](https://arxiv.org/abs/2603.20801) | Keep open-domain factual verification on `Exp9097` separate from analytical CSP solvers; ARC stays opportunistic. |
+| Ising model applications in ML | [Scaling Up Thermodynamic AI, 2607.00170](https://arxiv.org/abs/2607.00170); [Ising Machines Review, 2610.03972](https://arxiv.org/abs/2610.03972); [1M p-bit FPGA, 2606.25313](https://arxiv.org/abs/2606.25313) | Map measured end-to-end component fractions in `Exp9281` before claiming Ising or thermodynamic acceleration. |
+| Hallucination detection and mitigation | [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671); [Mycelium, 2610.33608](https://arxiv.org/abs/2610.33608); Behaviorally Calibrated RL (ICLR 2026); Enoki (Sep 2026) | Complete frozen Qwen3.8-27B forward collection and five-arm calibrated decisions (`Exp9273`–`Exp9280`); keep `Exp9244` Mycelium provenance slices descriptive. |
+| Kolmogorov-Arnold Networks | [KANELÉ, 2512.12850](https://arxiv.org/abs/2512.12850); [KORE, 2606.23575](https://arxiv.org/abs/2606.23575); [T-KAM, 2507.xxxxx] | Preserve the frozen 57-column cubic B-spline head in `Exp9279`; retain KANELÉ LUT-KAN FPGA as a future hardware lead in `Exp9281`. |
+| Energy-guided and constrained generation | [EBFT, 2603.12248](https://arxiv.org/abs/2603.12248); [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731); [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061) | Defer generation steering until the forward-only verifier beats matched probability and donor controls. |
+| Hardware-accelerated sampling | [Scaling Up Thermodynamic AI, 2607.00170](https://arxiv.org/abs/2607.00170); [Ising Machines Review, 2610.03972](https://arxiv.org/abs/2610.03972); [KANELÉ, 2512.12850](https://arxiv.org/abs/2512.12850); [CRAM, 2611.17309](https://arxiv.org/abs/2611.17309) | Time complete raw-text and durable adaptation services in `Exp9281`; preserve KV260 `k_max <= 5`, PolarFire CPU, and GateMate `0xffffffff` limits. |
+| Continual and online learning | [Partial Verification CP, 2610.10829](https://arxiv.org/abs/2610.10829); [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987); [CA-OCRC, 2611.17059](https://arxiv.org/abs/2611.17059); [Online Local Thermodynamic Learning, 2609.15439](https://arxiv.org/abs/2609.15439) | Run six-arm delayed learning (`Exp9132`) with E2E-020 recovery plus `Exp9225`/`Exp9244` shadow streams and partial-verification label-cost tracking in `Exp9279`/`Exp9280`; train the modular EPO Gibbs energy head for Victris Arena in `Exp9272`. |
+
+### Secondary channels and retrieval limits
+
+- **Semantic Scholar:** Live `/citations` queries on 2026-11-21 UTC returned:
+  - `ARXIV:2507.02092` (EBT): **47** citing records (`next=None`, matching V788;
+    includes `2611.23053` SPICE, `2611.08989` LEF-JEPA, `2611.08977` Energy-Based
+    Reasoners, `2611.02546` EPO, `2610.39073` Certified Access, `2610.39182`,
+    `2610.31889`, `2610.25474`).
+  - `ARXIV:2512.15605` (ARM–EBM): returned an empty citation list on this API
+    call; retain V788's verified count of 11 without inventing a new count.
+- **OpenReview:** Checked ICLR 2026 / Reliable Autonomy entries (*Spilled Energy*,
+  *Semantic Energy*, *Behaviorally Calibrated RL*, *FreqAlign*). No unverified
+  review scores imported.
+- **Hugging Face papers:** Checked 2026 verification entries (*Enoki*, *Mycelium*
+  `2610.33608`, *HalluScoring 2026*). Method claims rely on primary papers.
+- **GitHub:** Checked active verification, Ising, and KAN repositories
+  (`google-research/veriharness`, `eth-sri/llm-verifier-noise`,
+  `iitis/StatisticalVerificationOfIsingEnergies`, `Duchstf/KANELE`,
+  `jdtoscano94/Kurkova_Kolmogorov_Arnold_Networks_KKANs`,
+  `rikhil-amonkar/llm-csp`). No live Trending rank asserted.
+- **Extropic:** Checked `extropic.ai/writing` updates on TSU hardware, `XTR-0`,
+  `Z1`, and U.S. CHIPS R&D LOI. Vendor figures remain projections, not local runs.
+- **Logical Intelligence:** Checked `logicalintelligence.com` Kona EBRM
+  constraint-satisfaction descriptions. No public code or local benchmark exists.
+
+### Local V788 evidence that governs V789
+
+V788 (`2026.11.788`, `Exp9255`–`Exp9268`) shipped exact 14-task contract parity
+and executed **four tasks** (`Exp9255`, `Exp9256`, `Exp9258`, `Exp9268`) while
+ten downstream tasks skipped at declared gates:
+
+1. **`Exp9255` PASSED contract and split-replay qualification:**
+   `results/experiment_9255_v788_contract.json`
+   (`sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef`,
+   `honest_verdict=complete_null_v788_contract`) achieved
+   `contract_ready_score=1`, `replay_authority_ready_score=1`,
+   `source_ready_score=1`, `static_methods_ready_score=1`,
+   `online_methods_ready_score=1`, and `required_checks_passed=true`. All seven
+   consumer shards passed cleanly (`core` 211.9s, `v782` 517.9s, `v783` 483.0s,
+   `v784` 822.4s, `v785` 564.2s, `v786` 280.1s, `v787` 795.1s). Operational
+   improvement for V789: store `validation_scope_manifest` (66 MB) and
+   `validation_obligations` (66 MB) in hashed sidecars under `results/raw/` so
+   the primary contract JSON stays compact instead of 208 MB.
+2. **`Exp9256` PROVED the lossless five-sentinel prefilter and failed on ONE
+   spurious check:** `results/experiment_9256_v788_corpus_prefilter.json`
+   (`sha256:d1ac40d315f6a740c5cb30d853045f6c92ed51d2cebeef14e09b7b945f17481a`,
+   `honest_verdict=complete_disqualified_v788_corpus_prefilter`) visited all
+   **764,150** recursive `results/**/*.json` files (`decoded=19,475`,
+   `safely_negative=744,675`, `malformed=0`, `changed=0`, `unfinished=0`),
+   passed `complete_path_traversal`, `exact_semantic_parity` (0 discrepancies,
+   6/6 mutation controls detected), `stable_candidate_bytes`, 100% owned and
+   modified statement coverage, and **9 of 10** validation commands
+   (`target_module` 1544.2s, `owned_tests` 125.1s, `v782_controls` 419.5s,
+   `direct_consumers` 60.9s, `e2e018_021` 101.5s, `ruff_check`, `ruff_format`,
+   `strict_mypy`, `spec_coverage`). It failed **only** because
+   `v788_corpus_prefilter_runner.py` added `full_python_suite`
+   (`pytest tests/python -q`, ~21,955 unrelated tests) with a 600-second
+   deadline (`exit_code=-9` at 599.87s). It also embedded 724 MB of inline
+   `scan_rows` and `corpus_manifest_reference` into an 875 MB primary JSON.
+   `Exp9270` removes the spurious `full_python_suite` command, keeps all nine
+   affected checks plus 100% owned/modified coverage, avoids redundant per-line
+   coverage tracing over the 764k-file disk walk in `target_module`, and writes
+   `scan_rows` and `corpus_manifest_reference` to hashed sidecars under
+   `results/raw/experiment_9270_v789_corpus_prefilter/`.
+3. **`Exp9258` qualified the Victris Arena harness:**
+   `results/experiment_9258_v788_victris_energy_bot.json`
+   (`sha256:7c66714ad53ba5c88e38a94df68a74ab808f0b1773c3ce1f062d93b927ec5640`,
+   `honest_verdict=complete_blocked_arena_sim_wheel_missing`) achieved
+   `victris_harness_ready_score=1`, `required_checks_passed=true`, 100% owned
+   coverage, sub-1ms tick latency (`max_ms=0.5478`), untrusted-shout isolation,
+   and strict `DEV_SEEDS`/`HELDOUT_SEEDS` disjointness while honestly reporting
+   `arena_sim_installed=false` and `heldout_matches_played=0`. Because the
+   `arena-sim` wheel is still absent in `.venv`, V789 does not repeat `Exp9258`
+   unchanged; `Exp9272` extends `python/carnot/victris/` with a gradient-trained
+   modular EPO composite Gibbs energy trainer (`epo_trainer.py`) and
+   Gymnasium-compatible `arena-sim` adapter (`gym_adapter.py`) that qualifies
+   cleanly offline and runs live `DEV_SEEDS`/`HELDOUT_SEEDS` evaluation
+   automatically if `arena_sim` is present.
+4. **`Exp9268` passed unconditional reconciliation:**
+   `results/experiment_9268_v788_capstone.json`
+   (`sha256:12059727652a55d93a267b186f01cbbb3ed1a043fc79799b67a455aae9eb6d17`,
+   `reconciliation_ready_score=1`, `required_checks_passed=true`,
+   `paper_ready=true`, `unmet_gates=[]`, `current_science_paper_ready=false`).

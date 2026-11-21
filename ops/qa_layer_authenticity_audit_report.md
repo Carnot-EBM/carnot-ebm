@@ -3,109 +3,66 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-20
 
-Scanned 13 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 14 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 13 of 20 unit(s); rotation advances by 13 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 14 of 20 unit(s); rotation advances by 14 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 2 |
-| `MINOR_RISK` | 2 |
-| `REAL_BUG` | 6 |
-| `SILENT_NON_FIRING` | 3 |
-| `CANNOT_DETERMINE` | 0 |
+| `CLEAN` | 1 |
+| `MINOR_RISK` | 0 |
+| `REAL_BUG` | 9 |
+| `SILENT_NON_FIRING` | 2 |
+| `CANNOT_DETERMINE` | 2 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_legitimate_pair` — ("auroc_mean", "auroc_mean_control")` (and `("replicate_1_auroc", "replicate_2_auroc")`, `("prescore_auroc", "postscore_auroc")`, `("replicated_treatment_auroc", "replicated_control_auroc")`, `("initial_loss", "final_val_loss")`) — real-world key pairs where bit-identical values across treatment/control arms, independent replicates, pre/post measurements, or train/validation losses should trigger 
-- `adversarial_verify.py::_is_declared_honest_zero_delta` — 1. Honest zero-delta metric silently unrecognized (returns `False` instead of `True`): `k = "auroc_delta"` (or `"win_rate_delta"`, `"pass_rate_delta"`, `"total_levels_delta"`, `"backward_transfer_delta"`) with `"null_delta_methodology_note"` and `"bare_control_passed": True`, omitted by the hardcoded 8-marker tuple. 2. Unverified or non-zero delta silently exempted (returns `True` instead of `Fals
-- `adversarial_verify.py::check_implausible_perfect` — {"tpr": 1.0, "accuracy": 1.0, "test_acc": 1.0, "false_positive_rate": 0.0, "zero_shot_error": 0.0, "auroc": {"principle": "headline detector AUROC", "value": 1.0}, "n_samples": 1000}` All six implausibly perfect metrics pass silently with zero flags: `tpr` and `accuracy` are skipped because `n_samples=1000` fails `n < 1000` (and would also be skipped at `n=400` if sample size were stored as `n_eva
-- `adversarial_verify.py::check_sign_anomaly` — 1. `{"initial_perplexity": 14.2, "final_perplexity": 38.7}` — standard LLM optimization metric nearly tripling in the wrong direction; matches neither list and silently passes. 2. `{"initial_hit_rate": 0.82, "final_hit_rate": 0.45}` — a hit-style rate explicitly named by the code's own comment ("Rates and hit-style metrics belong here") that was omitted from the tuple and silently passes. 3. `{"in
-- `adversarial_verify.py::_claims_compute_in_own_identity` — json { "honest_verdict": "completed_within_budget", "experiment_summary": "Completed 3-epoch LoRA SFT run updating adapter weights on 4xA100.", "tags": ["lora_finetune", "sft_training_run"], "training_metrics": {"epochs_completed": 3, "train_steps": 1200, "final_train_loss": 0.41} } ``` `"tags"` is a `list` and `"training_metrics"` is a nested `dict`, so `isinstance(value, str)` silently drops bot
-- `adversarial_verify.py::_has_compute_bound_marker` — json { "experiment": "exp_4120_eval_sweep", "model": "DiffusionGemma-9B", "framework": "PyTorch", "runner": "vLLM", "device": "CUDA", "honest_verdict": "eval_sweep_complete", "auroc": 0.941, "duration_s": 0.03 } ``` Because `text = json.dumps(d)` does not fold case, a lowercase `COMPUTE_BOUND_MARKERS` list fails to match `DiffusionGemma-9B`, `PyTorch`, `vLLM`, and `CUDA` (and similarly any capital
-- `adversarial_verify.py::_inference_substrate_text` — A principle-annotated evidence dict for `inference_substrate`, e.g. `{"inference_substrate": {"principle": "Record whether live model inference was invoked", "value": {"executes_models": false, "live_model_invoked": false}}}`. Both the evidence-dict shape (169 corpus artifacts) and the `{"principle": "...", "value": ...}` field wrapper (project-wide CLAUDE.md convention) are real patterns in this 
-- `adversarial_verify.py::_inference_substrate_value_matches` — raw = "aggregation_from_upstream_artifacts—100us floor."` (em-dash U+2014 without spaces, standard LLM prose punctuation) or `raw = "aggregation_from_upstream_artifacts(100us floor)"` or `raw = " aggregation_from_upstream_artifacts; 100us floor."` (leading space plus semicolon) tested against `canonical = "aggregation_from_upstream_artifacts"` — all return `False` despite declaring the exact canon
-- `adversarial_verify.py::_classify_inference_substrate` — {"inference_substrate": "mlx_qwen3_vs_no_llm"}` (or any unlisted/newly-added live model substrate ending in a no-LLM suffix, such as `{"inference_substrate": "gemma4_eval_no_llm"}`, or a negated declaration like `{"inference_substrate": "live_not_no_llm"}`): a live-model experiment that should either classify as `SUBSTRATE_KIND_LIVE_MODEL` or fall back conservatively to `SUBSTRATE_KIND_UNKNOWN`, b
+- `adversarial_verify.py::_claim_evidence_scope` — - `{"scope": null, "provenance_scope": "external", "inference_substrate": "vllm_gemma_4b"}` (or `{"scope": "full_corpus", "provenance_scope": "external", ...}`): `"scope"` being present in `container` shadows `"provenance_scope": "external"`, so the external provenance boundary silently fails to fire. - `{"provenance_scope": "diagnostic", "inference_substrate": "vllm_gemma_4b"}` under a path witho
+- `adversarial_verify.py::_methodology_claims_live_inference` — "Invoked llama.cpp locally on 64 prompts via live inference to measure token latency."` (Also silently missed: a principle-annotated field dict `{"principle": "Record exact compute methodology", "value": "Current task invoked llama.cpp and ran live inference."}`, which hits `if not isinstance(value, str): return False`.)
+- `adversarial_verify.py::_identity_claims_live_inference` — 1. `{"honest_verdict": "Verified via live inference."}` (trailing period fails `(?:$|[_ -])`, silently returns `None`) 2. `{"title": "Gemma-2-9B benchmark (live eval)"}` (surrounding parentheses fail `(?:^|[_ -])` and `(?:$|[_ -])`, silently returns `None`) 3. `{"honest_verdict": "without_mocks_live_inference_succeeded"}` (`without` within 32 chars of `live` triggers `negated_pattern`, silently re
+- `adversarial_verify.py::_typed_invocation_evidence` — 1. Principle-annotated substrate class field: `{"substrate_class": {"principle": "Declares the model execution substrate class.", "value": "model_full_generation"}}` (for the actual `SUBSTRATE_CLASS_FIELD` key and `SUBSTRATE_CLASS_MODEL_FULL_GENERATION` or `SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION` value) — `d.get(SUBSTRATE_CLASS_FIELD)` returns the wrapper dict without calling `_unwrapped_scalar`
+- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — "deterministic_vllm_greedy"` (as well as `"deterministic_llm_temp0"`, `"deterministic_ollama_qwen"`, `"deterministic_openai_api"`, and `"deterministic_eval (live_llm)"`) — realistic live-model substrates using greedy/deterministic decoding that the `live_markers` guard is supposed to reject, yet all silently return `True` and get classified as deterministic non-live work; symmetrically, `"offline_
+- `adversarial_verify.py::_classify_current_task_inference_claim` — json { "experiment_id": "exp_eval_with_baseline_087", "llm_calls": 32, "tokens_generated": 9600, "baseline_comparison": { "experiment_id": "exp_051", "llm_calls": 32, "tokens_generated": 9100 }, "honest_verdict": "live_eval_compared_against_prior_baseline" } ``` With no declared `inference_substrate` (`SUBSTRATE_KIND_UNKNOWN`), `_typed_invocation_evidence(d)` populates `live_evidence` with both a 
+- `adversarial_verify.py::_is_precondition_check_only_blocked` — {"inference_substrate": "precondition_check_only", "honest_verdict": "complete: missing_checkpoint_cannot_run", "duration_s": 0.14, "rows_total": 0, "extraction_results": []}` (as well as verdict delimiter variants like `"complete: blocked on missing checkpoint"` or `"complete: blocked-missing-checkpoint"`). All fall squarely inside the documented contract of `_is_precondition_check_only_blocked`,
+- `adversarial_verify.py::_is_verifier_scoring_only` — {"schema": {"principle": "Historical verifier-only schema for exp2837", "value": "fover_memory_leakage_v3"}}` (and `{"schema": "carnot_experiment_v1", "schema_version": "cross_corpus_verifier_matrix_v1"}`, where `schema` short-circuits `or` and hides `schema_version`).
+- `adversarial_verify.py::_cheap_learned_value_marker` — Exact token omissions cannot be proven without the definition of `CHEAP_LEARNED_VALUE_MARKERS`. However, because the code matches `CHEAP_LEARNED_VALUE_MARKERS` identically against both snake_case dict keys and free-text strings with no separator normalization, any multi-word marker stored in one convention (e.g. snake_case `learned_value` or `linear_probe`) silently misses a real agent's hyphenate
+- `adversarial_verify.py::_has_cheap_learned_value_methodology` — A principle-annotated artifact whose schema fields were populated with null/empty values — e.g. `{"model_specs": {"principle": "value-head model architecture", "value": None}, "random_seed": {"principle": "deterministic RNG seed", "value": None}, "reproducibility_checksum": {"principle": "digest of inputs and weights", "value": ""}}` — or a bare artifact with placeholder values like `{"model_specs
+- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — "duration_s": {"principle": "wall-clock runtime of cached linear value forward pass", "value": 0.35}` on an otherwise valid sub-1s cheap learned-value verifier-scoring artifact -- this descriptor function is supposed to fire and grant the calibrated sub-1s floor, but silently returns `None`.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_legitimate_pair` — **REAL_BUG**
-- `adversarial_verify.py::_is_declared_honest_zero_delta` — **REAL_BUG**
-- `adversarial_verify.py::check_implausible_perfect` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_sign_anomaly` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_claims_compute_in_own_identity` — **REAL_BUG**
-- `adversarial_verify.py::_has_compute_bound_marker` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_inference_substrate_text` — **REAL_BUG**
-- `adversarial_verify.py::_inference_substrate_value_matches` — **REAL_BUG**
-- `adversarial_verify.py::_classify_inference_substrate` — **REAL_BUG**
+- `adversarial_verify.py::_claim_evidence_scope` — **REAL_BUG**
+- `adversarial_verify.py::_methodology_claims_live_inference` — **REAL_BUG**
+- `adversarial_verify.py::_identity_claims_live_inference` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_typed_invocation_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — **REAL_BUG**
+- `adversarial_verify.py::_classify_current_task_inference_claim` — **REAL_BUG**
+- `adversarial_verify.py::_is_precondition_check_only_blocked` — **REAL_BUG**
+- `adversarial_verify.py::_is_verifier_scoring_only` — **REAL_BUG**
+- `adversarial_verify.py::_cheap_learned_value_marker` — **REAL_BUG**
+- `adversarial_verify.py::_has_cheap_learned_value_methodology` — **REAL_BUG**
+- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — **REAL_BUG**
 
 ---
 
-## adversarial_verify.py::_legitimate_pair
+## adversarial_verify.py::_claim_field_name
 
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_legitimate_pair` claims to identify `Pairs where bit-identity is structurally legitimate.` so the `TAUTOLOGY` detector skips only structurally justified identical-value pairs without masking genuine two-distinct-metric coincidences.
-
-## FINDINGS
-1. **Decoupled prefix/suffix bug in `legit_suffixes` causes silent non-firing (Class A, Q2, Q5):** `if k1.startswith(k2) or k2.startswith(k1):` combined with `if k1.endswith(s) or k2.endswith(s):` does not require the longer key to equal the shorter key plus a suffix from `legit_suffixes`. Whenever the shorter key already ends with one of those suffixes (such as `"_mean"`), appending any arbitrary discriminator to the other key (e.g., "auroc_mean" vs "auroc_mean_control" or "auroc_mean_shuffled") triggers `return True`. It also matches arbitrary intervening tokens ("auroc" vs "auroc_shuffled_control_mean") and has no token boundary on the prefix ("acc" vs "accuracy_mean"). All of these silently suppress `TAUTOLOGY` on fabricated or copy-pasted control arms.
-2. **Unanchored substring matching, negation blindness, and single-sided `or` in `repro_markers` (Class A, Q2, Q3, Q5):** `if any(m in kl1 for m in repro_markers) or any(m in kl2 for m in repro_markers):` has three independent defects:
-   - *Substring-boundary bugs (Q2):* `"rescore"` matches inside "prescore_auroc" / "prescored_loss" and `"re_score"` matches inside "pre_score_auroc" (pre-scoring baselines, not re-scores); `"replicat"` matches "replicate_1_auroc" vs "replicate_2_auroc" (independent experimental replicates whose bit-identity indicates a duplicated-seed or copy-paste bug, not a clean-room reproduction).
-   - *Negation/context blindness (Q3):* `"reproduc"` matches "unreproducible_rate" / "non_reproducible_fraction" and `"replicat"` matches "unreplicated_count" / "failed_replication_rate".
-   - *Contradiction of its own claim (Q5):* the comment asserts this `cannot mask a genuine two-distinct-metric coincidence (those have no such marker)`, which is false because (a) two distinct metrics inside a replication study (e.g., "replicated_treatment_auroc" and "replicated_control_auroc") both carry a marker and excuse each other, and (b) because the condition uses `or` with no check that the two keys measure the same metric, any single key matching `repro_markers` excuses bit-identity with any unrelated metric in the artifact (e.g., "independent_rescore_delta" vs "shuffled_control_delta" or "duration_s").
-3. **Unpaired slice-length bug in `paired_prefixes` (Q4, Q5, Class A):** `if (k1.startswith(a) and k2.startswith(b)) or (k1.startswith(b) and k2.startswith(a)):` followed by `if k1[len(a) :] == k2[len(b) :] or k1[len(b) :] == k2[len(a) :]:` tests both slice pairings regardless of which key actually carried which prefix. Because `"initial_"` (8 chars) and `"final_"` (6 chars) differ by 2 characters, and `"baseline_"` (9 chars) and `"best_"` (5 chars) differ by 4 characters, slicing the longer-prefixed key by the shorter prefix length leaves trailing prefix characters attached that collide with an extra qualifier in the other key: "initial_loss" vs "final_val_loss" (both slice to "l_loss") and "baseline_score" vs "best_offline_score" (both slice to "ine_score") falsely `return True`, excusing identity between distinct metrics.
-4. **Over-broad unconditional matching in `same_family_suffixes` (Q5, Class A):** `if k1.endswith(s) and k2.endswith(s):` excuses any two keys sharing one of those suffixes regardless of whether they compare strategies on the same corpus or compare a treatment arm against a shuffled/null control (e.g., "real_accuracy" vs "shuffled_control_accuracy" or "train_pass_rate" vs "test_pass_rate"). Furthermore, `"_cross_family_delta"` does not match the comment's rationale that bounded-rational `correct / n` metrics naturally tie.
-5. **Pattern lists narrower than their concepts (Class B):** Several hardcoded allowlists enumerate narrow samples of broader concepts, risking false-positive quarantine of honest artifacts:
-   - `paired_prefixes` (same metric at two timepoints / before vs after optimization) omits pre_/post_, before_/after_, start_/end_, init_/final_, baseline_/final_.
-   - `same_family_suffixes` (bounded-rational `correct / n` metrics) omits _exact_match, _acc, _win_rate, _hit_rate, _success_rate, _error_rate, _recall, _precision, _f1.
-   - `repro_markers` (independent G2 re-verification fields) omits recomput, reverify, re_verify, reeval, re_eval, recheck.
-   - `{"source_cell_count", "replayed_cell_count"}`, `{"setup_cap_s", "finalization_cap_s"}`, `{"withheld_arm_cap_s", "control_arm_cap_s"}`, and `nested_clock_pair` (`{"duration_s", "measurement_wall_s"}`) hardcode single-experiment field pairs instead of their concepts (lossless replay counts, symmetric phase/arm caps, nested process clocks), omitting plausible equivalents like source_row_count / replayed_row_count, treatment_arm_cap_s / control_arm_cap_s, or total_wall_s / measurement_wall_s.
-6. **Overlap / other audit classes (Q1, C, D, E, F, G):**
-   - *Class C:* No rule is wholly shadowed by another, though `paired_prefixes` overlaps `same_family_suffixes` on accuracy/rate keys (e.g., "initial_accuracy" vs "final_accuracy" would still pass if `paired_prefixes` were deleted).
-   - *Q1, D, E, G:* Not applicable — pure string-pair predicate on `k1` and `k2` with no dict value extraction, filesystem writes, state mutation, or timing measurement.
-   - *Class F:* The terminal `return False` is fail-closed; the silent-non-firing defect comes from the over-broad intermediate `return True` branches rather than the default branch.
-
-## COUNTEREXAMPLE
-All four pairs below are realistic distinct-metric pairs whose bit-identity indicates fabrication or a copy-paste bug, yet `_legitimate_pair` returns `True` (silently disabling TAUTOLOGY):
-- `_legitimate_pair("auroc_mean", "auroc_mean_control")` -> `True` (`k2.startswith(k1)` is `True` and `k1.endswith("_mean")` is `True`)
-- `_legitimate_pair("prescore_auroc", "postscore_auroc")` -> `True` (`"rescore" in "prescore_auroc"` is `True`; same for `("pre_score_auroc", "post_score_auroc")` via `"re_score"`)
-- `_legitimate_pair("replicate_1_auroc", "replicate_2_auroc")` -> `True` (`"replicat" in "replicate_1_auroc"` is `True`)
-- `_legitimate_pair("initial_loss", "final_val_loss")` -> `True` (`"initial_loss"[6:] == "l_loss" == "final_val_loss"[8:]`; likewise `_legitimate_pair("baseline_score", "best_offline_score")` slices both to `"ine_score"`)
-
-## MISSED INPUT
-`("auroc_mean", "auroc_mean_control")` (and `("replicate_1_auroc", "replicate_2_auroc")`, `("prescore_auroc", "postscore_auroc")`, `("replicated_treatment_auroc", "replicated_control_auroc")`, `("initial_loss", "final_val_loss")`) — real-world key pairs where bit-identical values across treatment/control arms, independent replicates, pre/post measurements, or train/validation losses should trigger TAUTOLOGY but are silently excused by `_legitimate_pair` returning `True`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Four separate rules inside `_legitimate_pair` (`legit_suffixes`, `paired_prefixes`, `repro_markers`, and `same_family_suffixes`) contain structural logic or substring-matching bugs that return `True` on unrelated or opposing metrics, silently disabling `TAUTOLOGY` on real fabrication patterns. Fixing just one token or word boundary will not close the remaining bypasses: `legit_suffixes` must require exact suffix attachment, `paired_prefixes` must couple each prefix check to its own slice length, and `repro_markers` must enforce both token boundaries and metric-identity correspondence between the two keys rather than an unconditional single-sided `or`.
-
-
-## adversarial_verify.py::_unwrapped_scalar
-
-**Verdict:** `MINOR_RISK`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-MINOR_RISK
+CLEAN
 
 ## CLAIM
-`_unwrapped_scalar` claims to return the scalar stored inside a principle-annotated field of shape `{"principle": "...", "value": X}`, or to return `v` unchanged otherwise.
+`_claim_field_name` claims to normalize a field name without reading the field's arbitrary value as a claim.
 
 ## FINDINGS
-1. Over-broad dict unwrapping without checking for `"principle"` (questions 1 and 5): `if isinstance(v, dict) and "value" in v:` matches any `dict` that happens to contain a `"value"` key, not only principle-annotated wrappers of the form `{"principle": "...", "value": X}`. If an artifact field holds a non-principle-annotated structured dict containing `"value"` alongside semantic sibling keys (such as a unit or validity flag), `return v.get("value")` silently discards those sibling keys instead of returning `v` unchanged.
-2. No scalar enforcement or recursive unwrapping (questions 1 and 5): Despite the name `_unwrapped_scalar` and docstring claim `The scalar inside a principle-annotated field, or the value unchanged.`, the function performs only a single-level unwrap and returns whatever `v.get("value")` holds without checking that it is a scalar. If `"value"` itself contains a nested wrapper `dict`, a list, or an unparsed numeric string, downstream callers performing arithmetic on the result will still hit the exact failure mode the docstring warns against (`arithmetic on the raw field then raises instead of deciding`).
-3. No issues found for questions 2-4 or classes A-G: there is no free-text substring matching, negation handling, numeric threshold, pattern list, hardcoded filesystem path, state mutation, silent-skip recognizer chain, or pre-work timing measurement.
+none found
 
 ## COUNTEREXAMPLE
-`{"value": 500, "unit": "ms"}` in a duration field (no `"principle"` key): `_unwrapped_scalar` silently strips `"unit"` and returns `500`, allowing a 0.5-second measurement to be interpreted by a seconds-based duration floor as 500 seconds (false negative). Similarly, a nested wrapper `{"principle": "outer", "value": {"principle": "inner", "value": 0.01}}` returns the inner dict rather than the scalar `0.01`.
+none constructed
 
 ## MISSED INPUT
 none found
@@ -114,10 +71,40 @@ none found
 KEEP
 
 ## RATIONALE
-`_unwrapped_scalar` correctly handles bare scalars and standard single-wrapped `{"principle": "...", "value": X}` fields, and has no silent-non-firing defect against the documented convention. Its only risks are edge-case over-unwrapping of arbitrary dicts that carry a `"value"` key without `"principle"`, and passing through non-scalar `"value"` payloads to callers that expect a scalar. Those are minor boundary-hardening concerns rather than an active bug, so keeping the helper (optionally tightening the check to require `"principle"` or handle nested dicts) is appropriate.
+`_claim_field_name` is a single-expression pure identifier normalizer (`re.sub(r"[^a-z0-9]+", "_", str(value).lower()).strip("_")`) with no dict lookups, substring matchers, pattern lists, thresholds, default pass-through branches, file I/O, or timing logic. Because JSON field names are strings rather than principle-annotated dicts, `str(value).lower()` has no field-unwrap bug here, and the implementation matches its docstring exactly. There are no concrete false positives, false negatives, or silent non-firing defects in this helper.
 
 
-## adversarial_verify.py::_is_declared_honest_zero_delta
+## adversarial_verify.py::_claim_path_tokens
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+CANNOT_DETERMINE
+
+## CLAIM
+`_claim_path_tokens` claims to extract the set of whole words from a `path` tuple of segments so that one word such as `resource` is not accidentally matched as a substring like `source`.
+
+## FINDINGS
+1. **Unverifiable normalization in `_claim_field_name` (Questions 2, 5, A, B):** `_claim_path_tokens` delegates all segment normalization to `_claim_field_name(segment)` and then splits strictly on `"_"` via `.split("_")`. Because `_claim_field_name` is not included in this snippet, it is impossible to verify whether it lowercases text, strips array-index suffixes, converts non-underscore separators (hyphens, dots, slashes, spaces) into `"_"`, or splits camelCase boundaries. If `_claim_field_name` does not normalize those forms into lowercase underscore-separated text, `.split("_")` narrows the docstring's whole-word claim to underscore-delimited snake_case only and will silently fail to emit expected words for kebab-case, dotted, slashed, uppercase, or camelCase field names.
+2. **Loss of segment boundaries and negation context (Question 3):** Flattening every `segment` in `path` into a single unordered `set[str]` discards segment ordering, segment provenance, and token adjacency. If a path segment negates a concept (for example, prefixing a word with a negation marker), both the negation token and the target word land in the same flat `set[str]`; whether this causes negation blindness depends on unshown callers.
+3. **Alphanumeric and numeric token edge cases (Questions 2, 4):** The filter `if token and not token.isdigit()` drops pure-digit tokens (appropriate for list indices or numeric suffixes, though it also drops standalone numeric identifiers such as hardware model numbers if a caller ever inspects them) and does not separate digits attached directly to a word without `"_"`.
+4. **Input type assumption (Question 1):** The function performs no dict field lookups and assumes `path: tuple[str, ...]` contains segments accepted by `_claim_field_name(segment)` and returning a `str` supporting `.split("_")`; runtime tolerance for non-string path elements depends on `_claim_field_name`.
+5. **Checks with no issues found (Questions 4, C, D, E, F, G):** No numeric threshold/off-by-one comparison exists; the two clauses in `if token and not token.isdigit()` are non-redundant (`token` removes empty strings produced by leading, trailing, or consecutive underscores, whereas `not token.isdigit()` removes all-digit tokens); and there are no hardcoded paths, file writes/side effects, permissive default branches disabling a check, or pre-work timing measurements.
+
+## COUNTEREXAMPLE
+Cannot be confirmed unconditionally without `_claim_field_name`'s implementation. If `_claim_field_name` does not split camelCase or normalize non-underscore separators to underscores, a realistic artifact path such as `("metrics", "dataSource")` or `("metrics", "data-source")` yields `{"metrics", "datasource"}` or `{"metrics", "data-source"}` rather than `{"metrics", "data", "source"}` (false negative for callers checking `"source"`). Separately, `("not_source_metrics",)` yields `{"not", "source", "metrics"}`, which would false-positive any caller that tests `"source" in _claim_path_tokens(path)` without checking negation tokens.
+
+## MISSED INPUT
+Cannot be confirmed unconditionally without `_claim_field_name`'s implementation. If `_claim_field_name` does not normalize camelCase or non-underscore punctuation to underscores, real-world JSON keys such as `dataSource`, `data-source`, `model.source`, or `eval/source` will fail to emit the whole word `source`.
+
+## RECOMMENDATION
+ADD_TEST_CASE
+
+## RATIONALE
+The visible body of `_claim_path_tokens` is a minimal set comprehension with no side effects, redundant branches, or threshold bugs, but its correctness against the whole-word claim hinges almost entirely on the unshown `_claim_field_name(segment)` helper and how callers consume the returned `set[str]`. Specifically, `.split("_")` will only handle non-underscore separators, casing, or camelCase if `_claim_field_name` normalizes them first. Adding unit tests covering kebab-case, camelCase, dotted/slashed keys, uppercase keys, and negated path segments will verify whether the combined behavior is clean or silently misses whole path words.
+
+
+## adversarial_verify.py::_claim_evidence_scope
 
 **Verdict:** `REAL_BUG`
 
@@ -125,146 +112,45 @@ KEEP
 REAL_BUG
 
 ## CLAIM
-`_is_declared_honest_zero_delta` claims to return `True` for explicit zero deltas documented as measured honest nulls (`True for explicit zero deltas documented as measured honest nulls.`).
+`_claim_evidence_scope` claims to attribute typed evidence to the current task, an upstream source, a diagnostic container, or an unattributed nested location, treating source and diagnostic containers as explicit provenance boundaries while keeping other nested data visible so moving a typed invocation marker deeper cannot make the guard miss it.
 
 ## FINDINGS
-1. **Unwrapped field-extraction assumptions (Q1) across 7 of 8 dictionary reads.** Despite its own comment warning that any field may be wrapped as `{"principle": ..., "value": ...}`, the function only calls `_unwrapped_scalar` on `d.get("level_credit_delta")`. Every other lookup reads raw values:
-   - `d.get("solve_claimed") is False`, `d.get("offline_reproduced") is False`, `d.get("bare_control_passed") is True`, `d.get("positive_control_passed") is True`, and `d.get("false_negative_risk_checked") is True` all evaluate to `False` whenever those booleans are principle-annotated dicts, falsely quarantining honest artifacts.
-   - `"level_credit_delta" in dict(d.get("field_provenance") or {})` inspects only the top-level keys of the raw dict, so a principle-annotated provenance dict fails silently; if `d.get("field_provenance")` is a bare string or non-pair list, `dict(d.get("field_provenance") or {})` raises ValueError or `TypeError` instead of returning `False`.
-   - `if not d.get("null_delta_methodology_note"):` fails open when the field is a principle-annotated dict whose unwrapped value is empty or None, because any non-empty dict is truthy.
-2. **Broken zero check, truncation, null-masking, and crash in `int(_unwrapped_scalar(d.get("level_credit_delta")) or 0) == 0` (Q1, Q4, Q5).**
-   - `or 0` converts a missing, None, empty-string, or `False` value into zero, treating an absent or null field as an explicit zero delta (fails open).
-   - `int` truncates non-zero fractional values strictly between -1 and 1 (such as 0.4 or -0.8) to 0, returning `True` for non-zero deltas.
-   - A stringified float or non-numeric string raises an uncaught ValueError, crashing the guard instead of failing closed.
-3. **General branch never verifies that the delta is actually zero (Q5).** After `if kl == "level_credit_delta":`, the remaining logic inspects only key name `kl` and artifact-level metadata (`d.get("null_delta_methodology_note")` and the three control flags); it never reads the value of `k` in `d`. Contrary to its docstring (`True for explicit zero deltas documented as measured honest nulls.`), the function returns `True` for any matching key even when its value in `d` is non-zero or missing.
-4. **Substring matching without word boundaries on `"actions"` (Q2).** `marker in kl` performs a raw substring check with no word boundaries. `"actions"` matches inside unrelated words that appear in real metric keys (such as interactions, fractions, extractions, transactions, or abstractions), falsely exempting unrelated delta fields.
-5. **Context and negation blindness on `d.get("null_delta_methodology_note")` (Q3).** `if not d.get("null_delta_methodology_note"):` checks only truthiness, not content or per-metric binding. A placeholder or negative string (stating TBD, none, or that the null was not checked) passes as documented, and one artifact-level note exempts every other matching delta key in `d` whether or not that metric's zero delta was explained.
-6. **Hardcoded pattern lists narrower than their concepts (Class A, Class B).**
-   - The 8-entry marker tuple (`"solve_rate"`, `"first_win_rate"`, `"state_coverage"`, `"actions"`, `"live_lift"`, `"forward_transfer"`, `"level_delta"`, `"reproducible_total_levels_delta"`) stands in for the concept of experiment outcome metrics that can legitimately record a measured zero delta. Having `"reproducible_total_levels_delta"` patched beside `"level_delta"` shows it is an ad-hoc sample: it omits standard metrics such as AUROC delta, pass-rate delta, general win-rate delta, plural levels delta, singular action-count delta, backward-transfer delta, and offline-lift delta.
-   - The three control flags (`d.get("bare_control_passed") is True`, `d.get("positive_control_passed") is True`, `d.get("false_negative_risk_checked") is True`) and the single literal key `d.get("null_delta_methodology_note")` likewise sample a few field names rather than the concept of verified control and null-methodology documentation.
-7. **Classes C, D, E, F, G check.** No hardcoded paths (D), file mutations (E), or pre-work metric computations (G) exist in this helper, and no marker in the tuple is a substring of another (C). Its final fallback is `return False` (fail-closed, not Class F's silent pass), though `or 0` and raw dict truthiness in findings 1 and 2 do fail open on missing or empty wrapped values.
+1. **Fallback shadowing and generic-key precedence bug in `container.get("scope", container.get("provenance_scope"))` (Q1 / Class A).** Because Python returns the value of `"scope"` whenever that key exists in `container`, a container with `"scope"` set to None, an empty string, a principle-annotated dict whose unwrapped value is None, a non-string (list or dict), or an unrecognized experiment-domain string silently shadows `"provenance_scope"`. Worse, `"scope"` is a generic field name in experiment artifacts (e.g. evaluation or dataset scope), yet it takes precedence over `"provenance_scope"` and executes before `len(path) == 1`: if a root artifact has a domain `"scope"` field set to `"source"`, `"historical"`, or `"external"` (or a fabricating artifact sets `"scope"` to `"external"` at the root), `if scope in {"cited", "external", "historical", "source", "upstream"}:` immediately hits `return "external"` for every top-level typed evidence field in the artifact, silently exempting it from current-task verification.
 
-## COUNTEREXAMPLE
-1. False positive (honest, principle-annotated artifact rejected):
-`k = "solve_rate_delta"`
-`d = {"solve_rate_delta": 0.0, "null_delta_methodology_note": "Zero lift verified against working baseline.", "bare_control_passed": {"principle": "Control must succeed before accepting a null delta.", "value": True}}`
-Returns `False` because `d.get("bare_control_passed") is True` fails on the principle-annotated dict.
+2. **Missing `"diagnostic"` branch for explicit `scope` / `"provenance_scope"` metadata (Q5 / Class A).** The docstring states that source and diagnostic containers are explicit provenance boundaries, and the function accepts explicit `scope` values for `"external"` and `"current_task"`, but has no `scope` branch that executes `return "diagnostic"`. A container declaring `"provenance_scope"` or `"scope"` as `"diagnostic"` silently misses both `scope` checks and falls through to `return "current_task"` (when `len(path) == 1` or under `_CURRENT_TASK_CONTAINER_TOKENS`) or `return "nested_unattributed"`, unless the path also contains a token in `_DIAGNOSTIC_PROVENANCE_TOKENS`.
 
-2. False negative / silent exemption (undocumented or non-zero delta approved):
-`k = "tool_interactions_delta"`
-`d = {"tool_interactions_delta": 0.0, "null_delta_methodology_note": {"principle": "Document any measured zero delta.", "value": ""}, "bare_control_passed": True}`
-Returns `True`: `"actions"` matches inside `"tool_interactions_delta"`, the empty principle-annotated note dict is truthy, and `d["tool_interactions_delta"]` is never checked. Similarly, `k = "level_credit_delta"` with `d = {"solve_claimed": False, "offline_reproduced": False, "level_credit_delta": 0.5, "field_provenance": {"level_credit_delta": "measured"}}` returns `True` because `int(0.5) == 0`.
+3. **Leaf field names are conflated with container names in `tokens = _claim_path_tokens(path)` and override `len(path) == 1` and explicit `"current_task"` scope (Q2 / Q3 / Q5 / Class A).** The docstring and `_CURRENT_TASK_CONTAINER_TOKENS` specify container-level provenance boundaries, but `tokens` tokenizes the entire `path`, including the leaf field name. Because `if tokens & _DIAGNOSTIC_PROVENANCE_TOKENS:` and `if tokens & _EXTERNAL_PROVENANCE_TOKENS:` run before both `if scope in {"current", "current_run", "current_task", "self", "this_task"}:` and `len(path) == 1`, a top-level field (with no enclosing container at all) or a current-task field whose own leaf name contains a diagnostic or external token (such as a metric for calling an external API or probing a source model) is silently reclassified as `"diagnostic"` or `"external"`—and even an explicit `"provenance_scope"` of `"current_task"` cannot override it. Conversely, `if len(path) == 1 or tokens & _CURRENT_TASK_CONTAINER_TOKENS:` promotes a deeply nested field inside an unattributed container to `"current_task"` whenever its leaf key shares a token with `_CURRENT_TASK_CONTAINER_TOKENS`, violating the docstring's rule that other nested data is not trusted as current-task evidence.
 
-## MISSED INPUT
-1. Honest zero-delta metric silently unrecognized (returns `False` instead of `True`): `k = "auroc_delta"` (or `"win_rate_delta"`, `"pass_rate_delta"`, `"total_levels_delta"`, `"backward_transfer_delta"`) with `"null_delta_methodology_note"` and `"bare_control_passed": True`, omitted by the hardcoded 8-marker tuple.
-2. Unverified or non-zero delta silently exempted (returns `True` instead of `False`): `k = "level_credit_delta"` with `"level_credit_delta": None` or `"level_credit_delta": 0.25`, or any matching delta key when `"null_delta_methodology_note"` is `{"principle": "Explain measured null", "value": ""}` or `"TODO: investigate"`.
+4. **Hardcoded exact-match sets and container names are narrower than their concepts (Q4 / Class A / Class B).** Unlike `path`, `scope` is normalized with `_claim_field_name(scope_raw)` and matched by exact membership against `{"cited", "external", "historical", "source", "upstream"}` (concept: explicit provenance markers for non-current/prior/external evidence) and `{"current", "current_run", "current_task", "self", "this_task"}` (concept: explicit provenance markers for the current run). Exact-set lookup silently misses standard synonyms (prior, previous, baseline, reference, imported, archived; and this_run, local, observed) as well as compound names built from its own words (upstream_source, external_source, historical_run, cited_artifact). Similarly, `if len(path) == 2 and path[0] == "model_invocation_counts":` hardcodes a single un-normalized container name at exact depth 2, silently missing sibling invocation-count containers (such as llm_invocation_counts or api_call_counts) and counts nested deeper under `"model_invocation_counts"` (e.g. grouped by phase or split at depth 3).
 
-## RECOMMENDATION
-NEEDS_REDESIGN
+5. **No ancestor-container scope propagation (Q5).** `_claim_evidence_scope` only inspects the single `container` dict for `"scope"` and `"provenance_scope"`. Unless callers explicitly copy ancestor provenance metadata into every nested child dict, an explicit `"provenance_scope"` of `"external"` on an enclosing source container is lost when evaluating fields inside a sub-dict of that container.
 
-## RATIONALE
-`_is_declared_honest_zero_delta` repeats the exact unwrapped-field defect its own comment documents on seven other lookups (`d.get("solve_claimed") is False`, `d.get("offline_reproduced") is False`, `d.get("field_provenance")`, `d.get("null_delta_methodology_note")`, `d.get("bare_control_passed") is True`, `d.get("positive_control_passed") is True`, and `d.get("false_negative_risk_checked") is True`), causing both false quarantines of principle-annotated honest artifacts and fail-open exemptions on empty wrapped notes. On top of that, `int(_unwrapped_scalar(d.get("level_credit_delta")) or 0) == 0` masks missing values via `or 0`, truncates non-zero fractions to zero, and crashes on decimal strings, while the second branch never inspects the value of `k`, matches `"actions"` inside unrelated words, and relies on an ad-hoc 8-marker allowlist. Patching one line at a time has already failed once here; the predicate needs a unified unwrap-and-validate design that verifies the unwrapped numeric value of `k` is actually zero and binds null documentation to the metric being exempted.
-
-
-## adversarial_verify.py::check_implausible_perfect
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`check_implausible_perfect` claims to `Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0).`
-
-## FINDINGS
-1. **Silent non-firing via default-disable sample-size gate and inverted cap (Class A & Class F):** `n = d.get("n_samples") or d.get("n_adversarial_examples") or 0` followed by `if n > 0 and n < 1000:` silently disables the entire score check whenever neither exact key is present, whenever sample count is stored under another name (e.g., n_examples, n_eval, n_test, n_trials, sample_size, num_samples), whenever the value fails `n = int(n)` and falls into `except (TypeError, ValueError):` setting `n = 0`, or whenever `n` >= 1000. The caller sees zero flags — indistinguishable from a genuinely clean artifact. Worse, the `< 1000` cutoff is statistically inverted relative to `Real classifiers exhibit non-zero error at small N.`: a 1.0 score at `n` = 1 or 2 is plausible yet flagged, while a 1.0 score at `n` = 1000+ is far more implausible yet silently ignored.
-2. **Field extraction assumptions, Principle-Annotated dict blindness, and unhandled crash (Q1):**
-   - `for k, v in d.items():` with `if not _is_finite_number(v):` and `vf = float(v)` assumes every metric is a top-level bare scalar. Principle-Annotated dicts (containing principle and value keys) and nested metrics sub-dicts are silently skipped.
-   - If `d.get("n_samples")` is a Principle-Annotated dict, Python evaluates the non-empty dict as truthy, short-circuits past `d.get("n_adversarial_examples")`, raises `TypeError` in `n = int(n)`, and silently resets `n = 0`, disabling the score check even when a bare `d.get("n_adversarial_examples")` exists.
-   - `d.get("verdict_class") in {"blocked", "disqualified"}` raises an unhandled `TypeError` (unhashable dict in set membership) if `verdict_class` is principle-wrapped, crashing the linter; `d.get("arc_evidence_ready_score") == 0` silently evaluates false when principle-wrapped.
-3. **Unbounded substring matching causing false positives and false negatives (Q2):**
-   - `if any(s in kl for s in perfect_score_fields) and vf == 1.0:` uses bare substring containment with short tokens `"tpr"`, `"f1"`, and `"auc"`. These match inside unrelated engineering and statistics field names such as vram_footprint_gb or postprocess_steps (contains `"tpr"`), bf16_scale or f16_loss_scale (contains `"f1"`), and cauchy_scale (contains `"auc"`), as well as configuration fields like recall_k, mixed_precision, or target_accuracy.
-   - `if any(s in kl for s in perfect_error_fields) and vf == 0.0:` falsely matches unrelated substrings like terrorism_score (contains `"error"`) and lossless_mode or aux_loss_weight (contains `"loss"`).
-   - `if "baseline" not in kl and "zero" not in kl:` uses unanchored substring exclusion, so legitimate evaluation metrics like zero_shot_error or zero_shot_loss match `"zero"` and are silently exempted as baseline markers.
-4. **Negation and context blindness (Q3):**
-   - `if "baseline" not in kl and "zero" not in kl:` cannot distinguish an intentional zero/baseline marker from negated or non-baseline terms: nonzero_error_rate and non_baseline_loss contain `"zero"` and `"baseline"` respectively, silently exempting fabricated 0.0 values.
-   - Neither branch distinguishes observed evaluation scores/errors from hyperparameters, thresholds, or confidence-interval bounds (e.g., aux_loss_weight=0.0, auroc_ci_upper=1.0, recall_k=1).
-5. **Boundary / off-by-one errors (Q4):**
-   - `if n > 0 and n < 1000:` uses strict `< 1000`, silently excluding exact `n` = 1000 (and all larger N), while flagging `n` = 1 and `n` = 2 where exact 1.0 is trivial.
-6. **Docstring vs. implementation mismatch (Q5):**
-   - The docstring claims `Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0).`, yet the docstring's own `TPR/acc=1.0` abbreviation acc is not in `perfect_score_fields` (only `"accuracy"`), so test_acc=1.0 and val_acc=1.0 are missed. The implementation is simultaneously narrower than claimed (top-level bare scalars only, gated on two sample-size keys `< 1000`, incomplete keyword tuples, `"zero"` exempting zero-shot errors) and broader than claimed (unbounded substring hits on non-metric fields and hyperparameters).
-7. **Pattern lists narrower than their concepts (Class B):**
-   - `perfect_score_fields` stands for bounded [0, 1] performance scores where 1.0 is implausibly perfect; it omits acc (val_acc, test_acc), auprc, specificity, sensitivity, tnr, exact_match, solve_rate, hit_rate, win_rate, mcc, and r2_score.
-   - `perfect_error_fields` stands for error, failure, and discrepancy metrics where 0.0 indicates an implausibly perfect result or stub default; it omits fpr, false_positive_rate, fnr, false_negative_rate, mse, rmse, mae, eer, brier_score, wer, cer, failure_rate, hallucination_rate, and singular violation (e.g., violation_rate).
-   - `d.get("n_samples") or d.get("n_adversarial_examples")` stands for evaluation sample size N; it omits n_examples, n_eval, n_test, n_items, n_trials, n_prompts, sample_size, num_samples, and total_samples.
-   - `"baseline"` and `"zero"` stand for intentional zero-reference markers; they omit control, reference, null, and noop while falsely exempting zero-shot and nonzero fields.
-   - The prerequisite-gate exemption is hardcoded solely to `k == "arc_delta_ready_score"` and `{"blocked", "disqualified"}`, omitting other gate-readiness metrics and terminal states such as skipped or aborted.
-8. **Untested / redundant patterns (Class C):**
-   - `"roc_auc"` in `perfect_score_fields` is strictly subsumed by `"auc"` immediately below it because `any(s in kl for s in perfect_score_fields)` checks substring containment and every string containing `"roc_auc"` also contains `"auc"`. Deleting `"roc_auc"` changes behavior on zero inputs; the regression test for the 2026-08-31 audit still passes via `"auc"`.
-   - `and _is_integer_value(vf)` in `if _is_count_field(k) and _is_integer_value(vf):` is decorative or broken because it only executes inside `vf == 0.0` after `vf = float(v)`. If `_is_integer_value` checks numeric integrality, it is tautologically true for 0.0 and deletable; if it checks for an int instance, passing float `vf` makes it always false and disables `_is_count_field(k)` completely.
-9. **Classes D, E, and G:** None found — `check_implausible_perfect` performs no filesystem writes, mutates no tracked paths, and computes no runtime timings or counters.
-
-## COUNTEREXAMPLE
-False positive on an honest PyTorch experiment artifact:
-`{"vram_footprint_gb": 1.0, "bf16_scale": 1.0, "cauchy_scale": 1.0, "aux_loss_weight": 0.0, "n_samples": 400}`
-Every metric/config field triggers `IMPLAUSIBLE_PERFECT`: `vram_footprint_gb` matches `"tpr"` inside `footprint`, `bf16_scale` matches `"f1"` inside `bf16`, `cauchy_scale` matches `"auc"` inside `cauchy`, and `aux_loss_weight` matches `"loss"`. Separately, `{"arc_delta_ready_score": 0, "verdict_class": {"principle": "gate outcome", "value": "blocked"}}` crashes with `TypeError: unhashable type: 'dict'`.
-
-## MISSED INPUT
-`{"tpr": 1.0, "accuracy": 1.0, "test_acc": 1.0, "false_positive_rate": 0.0, "zero_shot_error": 0.0, "auroc": {"principle": "headline detector AUROC", "value": 1.0}, "n_samples": 1000}`
-All six implausibly perfect metrics pass silently with zero flags: `tpr` and `accuracy` are skipped because `n_samples=1000` fails `n < 1000` (and would also be skipped at `n=400` if sample size were stored as `n_eval` or `n_examples`), `test_acc` is absent from `perfect_score_fields`, `false_positive_rate` is absent from `perfect_error_fields`, `zero_shot_error` is exempted by `"zero" not in kl`, and principle-wrapped `auroc` is skipped by `_is_finite_number(v)`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-`check_implausible_perfect` silently fails to fire on realistic fabricated artifacts whenever sample counts are missing, differently named, principle-wrapped, or >= 1000 (`if n > 0 and n < 1000:`), whenever metrics are nested or principle-wrapped (`if not _is_finite_number(v):`), or when standard metrics fall outside its narrow keyword tuples or contain `"zero"`. At the same time, unanchored substring checks trigger false positives on ordinary engineering fields (e.g., `"tpr"` in footprint/postprocess, `"f1"` in bf16, `"auc"` in cauchy), `d.get("verdict_class") in {"blocked", "disqualified"}` crashes on principle-wrapped dicts, and `"roc_auc"` and `and _is_integer_value(vf)` are redundant dead logic. Resolving these defects requires unwrapping and recursing artifact fields, token-boundary metric classification with complete concept coverage, and replacing the default-skip sample-size gate rather than patching individual tokens.
-
-
-## adversarial_verify.py::check_sign_anomaly
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`check_sign_anomaly` claims to `Detect optimization that went the wrong direction.` by comparing paired `"initial_"` and `"final_"` metric values in `d` and appending `SIGN_ANOMALY` entries to `flags`.
-
-## FINDINGS
-1. **Field extraction assumptions (Q1 / Class A):** `init_keys = [k for k in d if k.startswith("initial_") and _is_finite_number(d[k])]`, `if fk not in d or not _is_finite_number(d[fk]):`, `iv = float(d[ik])`, and `fv = float(d[fk])` assume bare top-level numbers in `d`. Any Principle-Annotated Artifact Field (a dict with principle and value entries) fails `_is_finite_number(d[k])` or `_is_finite_number(d[fk])` and is silently skipped even for metrics explicitly in the lists (such as initial and final loss). Nested metric dicts are also never inspected.
-2. **Overlapping polarity flags fire in both directions (Q2 / Q3):** `decrease_expected` and `increase_expected` are computed independently via `m in metric_name.lower()` and dispatched through `if decrease_expected and fv > iv:` followed by `elif increase_expected and fv < iv:`. For any compound metric matching both tuples (such as score_loss in diffusion score matching, reward_loss in RLHF reward-model training, or energy_score), both booleans are True: an increase trips the first branch and a decrease trips the second branch, guaranteeing a false `SIGN_ANOMALY` on any non-zero change including successful minimization.
-3. **Substring matching without word boundaries (Q2):** `m in metric_name.lower()` matches inside unrelated words: `"f1"` matches inside bf16 (e.g., initial_bf16_latency_ms or initial_bf16_memory_mb decreasing triggers a false positive), `"auc"` matches inside cauchy (e.g., initial_cauchy_residual decreasing triggers a false positive), and `"loss"` matches inside lossless (e.g., initial_lossless_compression_ratio increasing triggers a false positive).
-4. **Negation and polarity blindness (Q3):** Unanchored substring matching ignores polarity-inverting qualifiers and lower-is-better scores. Metrics like brier_score and fid_score match `"score"` as `increase_expected`, falsely flagging calibration/quality improvements and silently missing regressions. Likewise, neg_reward matches `"reward"` with inverted polarity, while loss_reduction, error_free_rate, and zero_violation_rate match `"loss"`, `"error"`, or `"violation"` despite being higher-is-better.
-5. **Pattern lists narrower than their concepts (Q5 / Class A / Class B):** The docstring claims to `Detect optimization that went the wrong direction.`, but every hardcoded pattern is only a narrow sample of its concept:
-   - The `"initial_"` / `"final_"` prefix pair stands for before-and-after measurements of an optimized metric, omitting baseline/final, before/after, start/end, pre/post, and trajectory arrays.
-   - `decrease_expected` (`("energy", "loss", "error", "violation", "regret")`) stands for lower-is-better optimization metrics, omitting perplexity, nll, mse, rmse, mae, ece, kl_divergence, residual, cost, penalty, latency, brier_score, failure_rate, and false_positive_rate.
-   - `increase_expected` stands for higher-is-better metrics — its own comment explicitly states `Rates and hit-style metrics belong here` — yet it omits hit_rate itself alongside exact_match, mrr, ndcg, auprc, r2, bleu, rouge, throughput, acceptance_rate, and coverage.
-6. **Default branch disables the check (Class F):** When a numeric `"initial_"` / `"final_"` pair matches neither `decrease_expected` nor `increase_expected`, the `if decrease_expected and fv > iv:` / `elif increase_expected and fv < iv:` block has no fallback branch and appends nothing to `flags`. An unrecognized metric moving violently in the wrong direction produces output indistinguishable from a verified pass.
-7. **Boundaries, redundancy, paths, side effects, and timing (Q4 / Classes C, D, E, G):** Using `fv > iv` and `fv < iv` leaves equal values unflagged, matching the "went the wrong direction" claim with no off-by-one bug. No token in either tuple is a substring of a neighbouring token (`"auc"` is not a substring of `"auroc"`), so no statically shadowed rule is evident in the source (test-suite coverage per token cannot be determined from this function alone). No hardcoded filesystem paths, tracked-state writes, or pre-work timing computations exist in this function.
+6. **Other audited classes (C / D / E / F / G).** No hardcoded absolute write targets (Class D), no tracked-state mutation (Class E), and no pre-work metric computation (Class G). The fallback `return "nested_unattributed"` preserves visibility rather than disabling the check (Class F). Whether `if len(path) == 2 and path[0] == "model_invocation_counts":` is double-covered (Class C) depends on the contents of `_CURRENT_TASK_CONTAINER_TOKENS`, which is not included in the snippet.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "initial_score_loss": 1.42,
-  "final_score_loss": 0.31
+  "scope": "historical",
+  "inference_substrate": "vllm_gemma_4b",
+  "duration_s": 0.002
 }
 ```
-This represents normal, successful minimization of a denoising score-matching loss (`1.42 -> 0.31`). Because `"loss"` sets `decrease_expected = True` and `"score"` sets `increase_expected = True`, `decrease_expected and fv > iv` is `False`, execution falls into `elif increase_expected and fv < iv`, and the linter falsely flags honest training progress with `SIGN_ANOMALY` ("Optimization was supposed to maximize this."). Similarly, `{"initial_brier_score": 0.24, "final_brier_score": 0.11}` and `{"initial_bf16_latency_ms": 48.0, "final_bf16_latency_ms": 21.0}` both trigger false positives on genuine improvements.
+Evaluating `_claim_evidence_scope(("inference_substrate",), artifact)` returns `"external"` instead of `"current_task"`: the root artifact's generic domain field `"scope": "historical"` (e.g. an experiment whose task scope covers historical runs, or an adversarial field added to a fabricated artifact) matches `scope in {"cited", "external", "historical", "source", "upstream"}` before `len(path) == 1`, silently stripping current-task attribution from every top-level typed evidence field in the artifact.
 
 ## MISSED INPUT
-1. `{"initial_perplexity": 14.2, "final_perplexity": 38.7}` — standard LLM optimization metric nearly tripling in the wrong direction; matches neither list and silently passes.
-2. `{"initial_hit_rate": 0.82, "final_hit_rate": 0.45}` — a hit-style rate explicitly named by the code's own comment ("Rates and hit-style metrics belong here") that was omitted from the tuple and silently passes.
-3. `{"initial_loss": {"principle": "track training loss convergence", "value": 0.42}, "final_loss": {"principle": "track training loss convergence", "value": 1.85}}` — valid Principle-Annotated Artifact Field format for a metric that is in the list, silently skipped because `_is_finite_number` rejects the wrapper dict.
-4. `{"initial_brier_score": 0.11, "final_brier_score": 0.34}` — lower-is-better calibration score more than tripling, silently approved because `"score"` classifies it as `increase_expected`.
+- `{"scope": null, "provenance_scope": "external", "inference_substrate": "vllm_gemma_4b"}` (or `{"scope": "full_corpus", "provenance_scope": "external", ...}`): `"scope"` being present in `container` shadows `"provenance_scope": "external"`, so the external provenance boundary silently fails to fire.
+- `{"provenance_scope": "diagnostic", "inference_substrate": "vllm_gemma_4b"}` under a path without a diagnostic path token (e.g. `("results", "inference_substrate")`): misses `"diagnostic"` completely and falls through to `"current_task"`.
+- `{"provenance_scope": "upstream_source"}` or `{"provenance_scope": "prior_run"}` or `{"provenance_scope": "baseline"}`: omitted from the 5-word exact-match external set, so the external provenance boundary silently fails to fire.
+- Top-level field `path = ("external_api_inference_substrate",)` in a root artifact (even with `"provenance_scope": "current_task"`): leaf token `"external"` triggers `_EXTERNAL_PROVENANCE_TOKENS` before `scope` or `len(path) == 1`, silently attributing a top-level current-task claim as `"external"`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`check_sign_anomaly` silently fails to fire on Principle-Annotated Artifact Fields (because `_is_finite_number(d[k])` and `_is_finite_number(d[fk])` reject wrapped dicts without unwrapping), on common optimization metrics omitted from `decrease_expected` and `increase_expected` (including hit-style metrics cited by its own comment), and on every unrecognized `"initial_"` / `"final_"` pair because the `if decrease_expected and fv > iv:` / `elif increase_expected and fv < iv:` chain defaults to a silent pass. At the same time, unanchored substring matching (`m in metric_name.lower()`) plus independent boolean evaluation produces guaranteed false positives on compound names matching both lists, substring collisions like `"f1"` in bf16, and lower-is-better scores matching `"score"`. Fixing this requires unwrapping principle-annotated values, replacing ad-hoc substring matching with token-aware polarity resolution that handles compound names and exceptions, and surfacing unrecognized metric pairs explicitly instead of silently passing them.
+`_claim_evidence_scope` has multiple interacting defects that cannot be resolved by a single token addition: `container.get("scope", container.get("provenance_scope"))` lets a null or domain-valued `"scope"` shadow `"provenance_scope"` and lets a root `"scope"` field override `len(path) == 1`; explicit `"diagnostic"` scope metadata is completely unhandled; `tokens = _claim_path_tokens(path)` conflates leaf keys with container names and lets path tokens override explicit `"current_task"` scope; and both `scope` sets plus `path[0] == "model_invocation_counts"` rely on narrow exact-string matching. It needs to prioritize `"provenance_scope"` over `"scope"` with fallback on null or unrecognized values, separate container path segments from the leaf key, handle `"diagnostic"` scope explicitly, and match provenance scope values by tokens or a concept-complete vocabulary.
 
 
-## adversarial_verify.py::_claims_compute_in_own_identity
+## adversarial_verify.py::_methodology_claims_live_inference
 
 **Verdict:** `REAL_BUG`
 
@@ -272,45 +158,45 @@ NEEDS_REDESIGN
 REAL_BUG
 
 ## CLAIM
-`_claims_compute_in_own_identity` claims to determine whether an artifact states about itself that it ran a training job, while excluding honest `blocked_*` verdicts.
+`_methodology_claims_live_inference` claims to recognize an affirmative live-inference statement in free-prose task methodology while letting common explicit negations win first.
 
 ## FINDINGS
-1. **Substring matching without word boundaries (Q2):** `return any(token in haystack for token in COMPUTE_CLAIM_TOKENS)` uses bare substring containment (`token in haystack`) with no word boundaries or token delimiters. Any token in `COMPUTE_CLAIM_TOKENS` matches inside longer unrelated or negated words (for example, a stem matching inside "untrained", "constraint", or "non-training"). In addition, `haystack = " ".join(parts)` joins distinct fields with a single space, allowing a multi-word token to match spuriously across the boundary between two unrelated fields.
-2. **Negation and context blindness (Q3):** The only exclusion check is `if _is_precondition_check_only_blocked(d):` returning `False`. Any non-blocked artifact (such as an evaluation-only baseline, dry run, diagnostic, or aborted run) whose self-describing text explicitly denies training (for example, "no training job performed" or "eval only without finetuning") bypasses `_is_precondition_check_only_blocked(d)` and triggers `token in haystack`, falsely flagging a denial of compute as a compute claim.
-3. **Field-type assumption silently drops non-string values (Q1, Class A):** `value = _unwrapped_scalar(d.get(key))` delegates principle-wrapper unwrapping to `_unwrapped_scalar` (definition not shown), but `if isinstance(value, str):` silently ignores any key in `SELF_DESCRIBING_FIELDS` whose value is a list of strings, a nested mapping, a boolean, or a number. Calling `d.get(key)` also inspects only top-level keys and never nested sub-objects.
-4. **Docstring vs. implementation mismatch (Q5):** The docstring claims to detect whether the artifact says it ran a training job and states that an honest `blocked_*` verdict is excluded. The implementation is simultaneously broader (any unguarded substring match in `haystack`, including negated mentions and partial-word matches) and narrower (only top-level `str` scalars under `SELF_DESCRIBING_FIELDS` matched against `COMPUTE_CLAIM_TOKENS`). Furthermore, the guard name `_is_precondition_check_only_blocked` narrows exclusion to precondition-check-only blocked cases rather than all honest `blocked_*` verdicts (though its implementation is not shown here).
-5. **Closed pattern lists narrower than their concepts (Class A, Class B):** `SELF_DESCRIBING_FIELDS` stands in for all fields where an artifact states what work it performed, omitting any synonymous top-level or nested key (such as "experiment_summary", "methodology", "run_description", or nested metadata fields) across a large, evolving key space. `COMPUTE_CLAIM_TOKENS` stands in for all ways an artifact can assert that a training job ran, omitting paraphrases, abbreviations, or structured numeric training indicators (such as completed epoch/step counts or training loss fields).
-6. **Empty-haystack silent default (Class F):** When no key in `SELF_DESCRIBING_FIELDS` yields a `str`, `parts` remains empty and the function silently returns `False`. A caller cannot distinguish an artifact that honestly described a non-training run from one whose self-describing fields used unrecognized keys or non-string shapes.
-7. **Other audit classes (Q4, C, D, E, G):** No numeric thresholds or comparisons exist (Q4). No filesystem paths, writes, or state mutations occur (D, E). No runtime metrics are computed here (G). Whether individual entries in `COMPUTE_CLAIM_TOKENS` or `SELF_DESCRIBING_FIELDS` are dead or double-covered cannot be verified without their definitions (C), though raw `token in haystack` structurally shadows any longer token that contains a shorter token in `COMPUTE_CLAIM_TOKENS`.
+1. **Silent non-firing from narrow literal phrase lists (Classes A & B):**
+   - `affirmative` stands in for the concept of an affirmative prose claim that the task ran live model/LLM inference, yet enumerates only 8 rigid substrings (`"current task invoked llama.cpp"`, `"current task invoked the llm"`, `"current task invoked the model"`, `"live llm inference"`, `"live model inference"`, `"llm was invoked"`, `"model was loaded for inference"`, `"ran live inference"`). It silently returns `False` for direct real-world statements that omit the "current task" prefix, say the model (rather than the LLM) was invoked, use another verb ("executed", "performed", "run"), use hyphens (since `.replace("_", " ")` only normalizes underscores), or name any inference runtime other than llama.cpp (e.g., vLLM, Ollama, llama-server, transformers, MLX).
+   - `negated` stands in for the concept of an explicit negation denying live model/LLM inference, yet omits direct negations of its own `affirmative` entries (such as "no live llm inference", "no live model inference", "without live model inference", "never ran live inference", and "did not run live model inference").
+2. **Field extraction assumption and silent drop of structured values (Question 1 & Class F):**
+   - `if not isinstance(value, str):` followed by `return False` assumes `value: object` is always a bare `str`. Any principle-annotated artifact field (a dict wrapping principle and value keys) or list of methodology strings is silently dropped to `False`, conflating an unparsed field shape with an explicit negative.
+3. **Substring matching without word boundaries (Question 2):**
+   - `any(marker in text for marker in negated)` checks raw substrings on `text = " ".join(value.lower().replace("_", " ").split())` with no word boundaries. `"no llm"` matches inside any word ending in "no" followed by "llm" (for example, "nano_llm" normalizes to "nano llm" and triggers `"no llm"`), suppressing a valid affirmative claim in the same string.
+4. **Negation and context blindness in both directions (Questions 3 & 5):**
+   - **False positives:** Explicit negations of the `affirmative` phrases ("never ran live inference", "no live llm inference", "without live model inference", "did not run live model inference") bypass every marker in `negated` and match `"ran live inference"`, `"live llm inference"`, or `"live model inference"`, returning positive evidence in direct contradiction of the docstring.
+   - **False negatives:** `if any(marker in text for marker in negated):` applies globally to the entire string with no sentence or clause scoping. A contrast clause describing an earlier baseline ("baseline had no llm; current task invoked llama.cpp") or a config note ("no_llm_cache") triggers `negated` and overrides a genuine affirmative statement elsewhere in the same field.
+5. **Non-overlapping / decorative negation rules (Class C):**
+   - Five of the seven entries in `negated` (`"did not invoke"`, `"does not invoke"`, `"never invoked"`, `"without invoking"`, `"without model inference"`) do not intersect any entry in `affirmative` on single-clause text. Even the docstring's own example `"did not invoke the model"` already returns `False` if `"did not invoke"` is deleted, because no `affirmative` marker matches it; only `"no llm"` (against `"llm was invoked"`) and `"no model was loaded"` (against `"model was loaded for inference"`) directly intercept single-clause negated forms of an `affirmative` phrase. Tests asserting standalone negative sentences for the other five markers would stay green if those markers were deleted.
+6. **Other audited classes (Questions 4, D, E, G):**
+   - No numeric thresholds (Question 4), hardcoded filesystem write paths (Class D), tracked-state mutations (Class E), or pre-work metric computations (Class G) are present in this function.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "eval_only_untrained_base_model_no_finetuning_performed",
-  "summary": "Zero-shot evaluation of frozen weights; did not run a training job or LoRA SFT."
-}
-```
-This honest evaluation-only artifact is not a `blocked_*` precondition check, so `_is_precondition_check_only_blocked(d)` returns `False`. Its self-describing strings are joined into `haystack`, where `token in haystack` matches training-related tokens (e.g. `"train"`, `"trained"`, `"training"`, `"finetun"`, `"lora"`, `"sft"`) inside `"untrained"`, `"no_finetuning_performed"`, and `"did not run a training job"`, falsely classifying an explicit denial of training as a compute claim.
+False positive (explicit negation misclassified as affirmative live inference):
+`"Dry-run verification only: never ran live inference and performed no live llm inference against any checkpoint."`
+None of the 7 `negated` markers match (`"never invoked"`, `"no llm"`, and `"without model inference"` all fail because of `"ran"` and `"live"`), while `"ran live inference"` and `"live llm inference"` match in `affirmative`, so the function returns `True`.
+
+False negative via word-boundary collision on `"no llm"`:
+`"Ran live inference on nano_llm with llama.cpp."`
+After `.replace("_", " ")`, `"nano_llm"` becomes `"nano llm"`, which contains `"no llm"`, causing the function to return `False`.
 
 ## MISSED INPUT
-```json
-{
-  "honest_verdict": "completed_within_budget",
-  "experiment_summary": "Completed 3-epoch LoRA SFT run updating adapter weights on 4xA100.",
-  "tags": ["lora_finetune", "sft_training_run"],
-  "training_metrics": {"epochs_completed": 3, "train_steps": 1200, "final_train_loss": 0.41}
-}
-```
-`"tags"` is a `list` and `"training_metrics"` is a nested `dict`, so `isinstance(value, str)` silently drops both even if those keys are included in `SELF_DESCRIBING_FIELDS`; `"experiment_summary"` is skipped if absent from `SELF_DESCRIBING_FIELDS`; and `"honest_verdict"` contains no literal training token. The function silently returns `False` on an artifact that explicitly claims a completed training run.
+`"Invoked llama.cpp locally on 64 prompts via live inference to measure token latency."`
+(Also silently missed: a principle-annotated field dict `{"principle": "Record exact compute methodology", "value": "Current task invoked llama.cpp and ran live inference."}`, which hits `if not isinstance(value, str): return False`.)
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A single narrow patch is insufficient because `_claims_compute_in_own_identity` fails in both directions. `token in haystack` produces false positives on partial-word substrings and negated statements in any non-blocked artifact bypassing `_is_precondition_check_only_blocked(d)`, while `if isinstance(value, str):` and closed allowlists (`SELF_DESCRIBING_FIELDS`, `COMPUTE_CLAIM_TOKENS`) silently return `False` on list/nested compute claims, unenumerated keys, and empty `haystack` inputs. The detector should be redesigned with word-boundary and negation-aware matching per field (not across a single joined `haystack`), recursive extraction of non-scalar identity fields, and explicit handling when no recognized self-describing fields are present.
+Point fixes like adding word boundaries or unwrapping `value: object` leave major failures intact: `negated` misses direct negations of its own `affirmative` phrases while globally clobbering multi-clause prose, and the 8-phrase `affirmative` tuple silently misses routine live-inference methodology statements. The function needs to unwrap principle-annotated fields, normalize hyphens/punctuation alongside `.replace("_", " ")`, use word-bounded clause-scoped negation over a broader concept-level matcher, and avoid collapsing unparsed inputs and unrecognized prose into the same `return False` as explicit negations.
 
 
-## adversarial_verify.py::_has_compute_bound_marker
+## adversarial_verify.py::_identity_claims_live_inference
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -318,54 +204,79 @@ A single narrow patch is insufficient because `_claims_compute_in_own_identity` 
 SILENT_NON_FIRING
 
 ## CLAIM
-Determines whether an artifact dictionary `d` is subject to compute-bound duration and methodology rules by checking if it names a model, framework, or runner anywhere in the serialized blob or claims a training run in its own title or verdict (`REQ-VERIFY-6802`).
+`_identity_claims_live_inference` claims to `"""Return an explicit current-task live claim from its title or verdict."""`.
 
 ## FINDINGS
-1. **Silent non-firing from case-sensitive matching (Class A / Question 2):** `text = json.dumps(d)` preserves original capitalization and `if any(m in text for m in COMPUTE_BOUND_MARKERS):` performs a case-sensitive `m in text` check with no case folding. Any model, framework, or runner written in a capitalization that differs from the exact spelling in `COMPUTE_BOUND_MARKERS` (for example, standard capitalized names like PyTorch, CUDA, vLLM, DiffusionGemma, or Llama-3 against a lowercase marker list, or lowercase forms against a mixed-case list) silently fails the marker check. Unless the artifact also claims a training run in its title or verdict so that `_claims_compute_in_own_identity(d)` catches it, non-training compute workloads such as inference or evaluation benchmarks silently fall through as non-compute and bypass all compute-bound duration and methodology checks.
-2. **Pattern list narrower than its concept with a silent-disable fallthrough (Class B / Class F):** `COMPUTE_BOUND_MARKERS` is a static collection standing in for the open-ended concept of any model, framework, or runner that implies compute-bound execution. Any real runner, library, or model family omitted from `COMPUTE_BOUND_MARKERS` (such as sglang, mlx_lm, exllamav2, unsloth, or a newly added model family) misses the first branch; because `_has_compute_bound_marker` is a boolean gate whose fallthrough delegates to `_claims_compute_in_own_identity(d)` (which only covers training-run claims in title or verdict), unrecognized compute substrates silently disable downstream duration and methodology rules and read identically to honest non-compute artifacts.
-3. **Unbounded substring matching over raw JSON (Question 2):** `m in text` scans the entire `json.dumps(d)` output with no word-boundary anchors, matching inside unrelated longer words, file paths, and JSON keys. Short framework or accelerator markers (for example, tpu inside the ubiquitous word output, jax inside ajax, or bert inside liberty/robert) trigger `return True` purely by coincidence, falsely flagging fast non-compute artifacts.
-4. **Negation, context, and principle-annotation blindness (Question 1 / Question 3 / Question 5):** Flattening the entire dict via `text = json.dumps(d)` treats every field identically, including error messages, blocked statuses, comparison notes, and Principle-Annotated field principle prose. An honest CPU-only, analytical, dry-run, or blocked artifact that explicitly states it did not use a model, framework, or runner (or contrasts itself against one in a principle explanation) still satisfies `any(m in text for m in COMPUTE_BOUND_MARKERS)` and triggers `return True`. This exposes a flaw in both the implementation and the docstring's own rule ("names a model, a framework, or a runner anywhere in the blob"): merely naming a tool in a negation or note does not make the artifact subject to compute-bound rules.
-5. **External dependencies not auditable from this excerpt (Question 1 / Class C):** Both `COMPUTE_BOUND_MARKERS` and `_claims_compute_in_own_identity(d)` are defined outside this function, so field-unwrapping behavior inside `_claims_compute_in_own_identity(d)` and per-token redundancy or dead-rule overlap between `COMPUTE_BOUND_MARKERS` and `_claims_compute_in_own_identity(d)` cannot be verified from this snippet alone. No numeric boundary bugs (Question 4), hardcoded absolute write paths (Class D), tracked-state mutations (Class E), or pre-work metric computations (Class G) appear in `_has_compute_bound_marker`.
+1. **Silent non-firing on punctuation-adjacent live claims (Class A, Q2):** `live_pattern = re.compile(r"(?:^|[_ -])live[_ -](?:eval|inference|llm|model)(?:$|[_ -])")` requires both sides of the phrase to be start/end of string or one of `[_ -]`. Any title or verdict where the live claim touches a period, comma, colon, semicolon, parenthesis, quote, or slash fails to match and falls through to `return None` silently.
+2. **Silent non-firing via cross-clause false negation (Class A, Q3):** `negated_pattern = re.compile(r"\b(?:no|not|without)\b.{0,32}\blive\b")` scans `text.replace("_", " ")` across the entire string and allows `.{0,32}` to span commas, semicolons, and clause boundaries. Whenever an artifact negates a different concern within 32 characters before `live` (such as stating no mocks, no cache, or without quantization before stating live inference ran), `not negated_pattern.search(text.replace("_", " "))` evaluates false and suppresses a genuine live claim. Because `negated_pattern` is also checked independently of where `live_pattern.search(text)` matched, a negated mention of `live` elsewhere in the string suppresses a separate positive claim.
+3. **Positive pattern list narrower than its concept (Class B, Class A):** In `live_pattern`, `(?:eval|inference|llm|model)` stands in for the concept of an explicit claim that live model inference or evaluation occurred, and `live[_ -](?:eval|inference|llm|model)` requires strict adjacency with a single separator. It omits plurals and inflections (evals, evaluation, llms, models), intervening qualifiers (live GPU inference, live API inference, live local LLM), and common live-execution nouns (api, run, execution, generation, benchmark, endpoint, call, query, completion), silently falling through to `return None` for all of them.
+4. **False positive on hyphenated or underscored prefix negation (Q2, Q3):** Because `(?:^|[_ -])` matches a hyphen or underscore immediately before `live`, strings with a "non-" or "non_" prefix before `live` match `live_pattern`, while `negated_pattern` only checks `(?:no|not|without)`. Explicit non-live claims are therefore misclassified as claiming live inference.
+5. **False positive on post-positioned negation, narrow negation vocabulary, newlines, and >32-char distance (Q3, Q4, Class B):** `negated_pattern` stands in for the concept of negating or disclaiming live inference, yet only matches `(?:no|not|without)` appearing 0 to 32 non-newline characters strictly before `\blive\b`. Verdicts with negation after the phrase (common in snake_case verdicts such as live inference not attempted or live eval skipped), other negation words (never, zero, disabled, blocked, skipped, mocked, stubbed, offline, avoided, unattempted), a newline between negation and `live`, or more than 32 intervening characters all bypass `negated_pattern` and falsely fire.
+6. **Docstring vs. implementation mismatch (Q5):** `"""Return an explicit current-task live claim from its title or verdict."""` is both narrower than claimed (silently dropping punctuated sentences, morphological/modified/synonym live claims, and claims preceded by unrelated negations) and broader than claimed (returning non-live and post-negated strings as live claims). Field extraction via `value = _unwrapped_scalar(d.get(key))` and `if not isinstance(value, str):` avoids bare-type assumptions on wrapped dicts, and no hardcoded absolute write targets, tracked-state mutations, redundant rules, or pre-work timing metrics appear in this snippet.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "experiment": "exp_4108_analytic_bound",
-  "inference_substrate": "none_symbolic_cpu_only",
-  "honest_verdict": "blocked_no_cuda_gpu_or_vllm_available",
-  "analytic_bound": {
-    "principle": "Pure closed-form check; does not invoke pytorch, transformers, or any LLM runner",
-    "value": 0.412
-  },
-  "output_summary": "exact_match",
-  "duration_s": 0.02
-}
-```
-This honest, non-compute artifact is falsely classified as compute-bound (`return True`): `json.dumps(d)` serializes the negated verdict (`blocked_no_cuda_gpu_or_vllm_available`), the principle prose naming frameworks that were explicitly avoided, and even the key `output_summary` (which contains the substring `tpu`), triggering `m in text` with no negation awareness or word boundaries.
+1. False positive (prefix negation): `{"honest_verdict": "non_live_inference_baseline"}` or `{"title": "Non-live eval of cached logits"}` — matches `live_pattern` via the `_`/`-` before `live`, and misses `negated_pattern` because `non` is absent from `(?:no|not|without)`.
+2. False positive (post-positioned negation): `{"honest_verdict": "live_inference_not_attempted_missing_api_key"}` or `{"honest_verdict": "live_eval_skipped_dry_run"}` — matches `live_pattern`, and misses `negated_pattern` because the negation appears after `live`.
+3. False negative (cross-clause negation): `{"honest_verdict": "without_mock_fallback_live_inference_passed"}` or `{"honest_verdict": "no cache; live eval completed"}` — matches `live_pattern`, then is suppressed by `negated_pattern` because `without`/`no` sits within 32 characters before `live`.
 
 ## MISSED INPUT
-```json
-{
-  "experiment": "exp_4120_eval_sweep",
-  "model": "DiffusionGemma-9B",
-  "framework": "PyTorch",
-  "runner": "vLLM",
-  "device": "CUDA",
-  "honest_verdict": "eval_sweep_complete",
-  "auroc": 0.941,
-  "duration_s": 0.03
-}
-```
-Because `text = json.dumps(d)` does not fold case, a lowercase `COMPUTE_BOUND_MARKERS` list fails to match `DiffusionGemma-9B`, `PyTorch`, `vLLM`, and `CUDA` (and similarly any capitalization variant not literally duplicated in `COMPUTE_BOUND_MARKERS`, or an unlisted runner such as `"runner": "sglang"` or `"runner": "mlx_lm"`, misses the first branch). Because `experiment` and `honest_verdict` (`eval_sweep_complete`) do not claim a training run, `_claims_compute_in_own_identity(d)` does not catch it either, silently bypassing compute-bound duration and methodology verification on a 0.03s claimed GPU evaluation run.
+1. `{"honest_verdict": "Verified via live inference."}` (trailing period fails `(?:$|[_ -])`, silently returns `None`)
+2. `{"title": "Gemma-2-9B benchmark (live eval)"}` (surrounding parentheses fail `(?:^|[_ -])` and `(?:$|[_ -])`, silently returns `None`)
+3. `{"honest_verdict": "without_mocks_live_inference_succeeded"}` (`without` within 32 chars of `live` triggers `negated_pattern`, silently returns `None`)
+4. `{"title": "Live GPU inference on 500 prompts"}` or `{"honest_verdict": "live_evaluation_completed"}` (intervening modifier `GPU` and morphological variant `evaluation` fail `live_pattern`, silently returns `None`)
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`_has_compute_bound_marker` pairs case-sensitive, boundary-free, context-blind `m in text` matching over raw `json.dumps(d)` with a closed `COMPUTE_BOUND_MARKERS` list whose unrecognized fallthrough silently disables downstream compute-bound rules. Adding word boundaries or individual tokens alone will not fix capitalized model and framework names silently slipping past the check, negated or principle-annotated non-compute artifacts falsely triggering `return True`, or unrecognized substrates quietly reading as non-compute. The gate should be redesigned to inspect structured execution and substrate fields with principle-dict unwrapping, case folding, word boundaries, and negation awareness, and to surface unrecognized substrates explicitly instead of silently passing them through.
+`live_pattern` silently returns `None` on routine real-world titles and verdicts containing punctuation, plurals, intervening modifiers, or live-execution nouns outside `(?:eval|inference|llm|model)`, while `negated_pattern` silently suppresses genuine live claims preceded by unrelated negations within `.{0,32}` and falsely flags non-live and post-negated verdicts. Patching one delimiter or token will not fix both the silent false negatives and the clause-blind negation bugs; the matcher needs a redesign with punctuation-aware boundaries, broader concept coverage, and clause-scoped pre/post negation handling.
 
 
-## adversarial_verify.py::_inference_substrate_text
+## adversarial_verify.py::_typed_invocation_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`_typed_invocation_evidence` claims to collect typed live, no-invocation, and cited invocation evidence at every depth of an artifact dictionary while reading only field names with invocation meaning and never promoting labels, commands, paths, hashes, or row text from string content alone.
+
+## FINDINGS
+1. **Unwrapped top-level field read disables generation checks (Q1 / Class A / Class F).** While `visit` unwraps principle-annotated dicts via `_unwrapped_scalar(nested)`, the return statement reads `d.get(SUBSTRATE_CLASS_FIELD)` directly and tests membership in `(SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION, SUBSTRATE_CLASS_MODEL_FULL_GENERATION)`. When that field uses the project's principle-annotated dict shape (a dict containing a principle string and a value entry), `d.get(SUBSTRATE_CLASS_FIELD)` returns a `dict`, membership evaluates to False, and `requires_generation` is silently disabled in `conflicting_absences` with no signal distinguishing a wrapped or unrecognized substrate class from a genuine non-generation run.
+2. **Immediate-parent lookup drops `"invoked"` inside lists and principle-wrapped containers (Q1 / Class A).** For `key == "invoked"`, the function computes `parent = _claim_field_name(path[-1]) if path else ""` and checks `token in parent for token in ("generation", "inference", "llm", "model")`. Because list recursion appends stringified indices via `visit(nested, (*path, str(index)))` and dict recursion descends through `"value"` inside principle-annotated wrapper objects, `path[-1]` becomes a numeric index (e.g. "0") or `"value"` rather than the enclosing semantic section name. Unlike the GPU branch (`_claim_path_tokens(next_path)`), this branch checks only `path[-1]`, silently dropping `"invoked"` booleans in lists of call records or principle-wrapped containers.
+3. **Unanchored substring matching and negation blindness on `parent` (Q2 / Q3).** `token in parent for token in ("generation", "inference", "llm", "model")` uses raw substring matching with no word boundaries and no negation awareness. Unrelated parent keys containing those substrings — such as regex_fullmatch (matches `"llm"`), cache_regeneration or fixture_generation (matches `"generation"`), pricing_model or data_model (matches `"model"`), and statistical_inference (matches `"inference"`) — are falsely promoted to `signal = "invocation_boolean"`. Negated parents such as non_llm_baseline, no_model_fallback, or without_generation also match and invert meaning: a True flag on a non-LLM fallback becomes `live` evidence, while a False flag on a no-LLM fallback becomes `negative` absence evidence.
+4. **Hardcoded pattern lists are narrower than their concepts (Class B / Class A).**
+   - `("generation", "inference", "llm", "model")` stands in for parent sections representing live AI/model execution where a child `"invoked"` boolean indicates whether the substrate ran; it omits embedding / embeddings, completion / completions, chat, substrate, backend, provider, endpoint, sampler, judge, encoder, decoder, diffusion, ollama, gemini, claude, and openai, silently dropping `"invoked"` evidence under any of those sections.
+   - `"gpu"` in `"gpu" in _claim_path_tokens(next_path)` stands in for hardware-accelerator telemetry path tokens for `_GPU_MODEL_EVIDENCE_FIELDS`; it omits cuda, mps, tpu, rocm, metal, mlx, vram, and accelerator, silently dropping receipts nested under those names.
+   - `{"field_principles", "required_artifact_fields"}` in `if key in {"field_principles", "required_artifact_fields"}:` stands in for non-evidence schema, principle, and metadata blocks that should be skipped during traversal; it omits siblings such as principles, schema, artifact_schema, field_definitions, optional_artifact_fields, and audit_metadata.
+5. **Numeric boundary conflates negative sentinels with absence, and strict bool check drops non-bool representations (Q4 / Q1).** In `_INVOCATION_COUNT_FIELDS`, `_LIVE_DURATION_FIELDS`, and `_GPU_MODEL_EVIDENCE_FIELDS`, `float(scalar) > 0.0` treats `0.0` as `negative` absence evidence, but also classifies negative sentinels (e.g. -1 meaning unavailable/unmeasured) as `negative` absence evidence rather than ignoring them; conversely, any tiny positive constant floor (such as 0.0001) on `_LIVE_DURATION_FIELDS` passes `float(scalar) > 0.0` as `live` evidence. In `_INVOCATION_BOOLEAN_FIELDS`, `isinstance(scalar, bool)` silently drops integer 0/1 or string boolean values (`positive` stays `None`).
+6. **Implementation diverges from docstring claims (Q5).** The docstring claims to collect live, no-invocation, and cited evidence at every depth, but: (a) the second returned list is filtered by `conflicting_absences` rather than returning all `negative` evidence; (b) `_identity_claims_live_inference(d)` and `d.get(SUBSTRATE_CLASS_FIELD)` inspect only top-level `d`, not nested sub-experiments; (c) `_METHODOLOGY_FIELDS` only ever sets `positive = True` and never records negative methodology statements; and (d) `scope == "external"` appends both positive and negative rows via `external.append(row)` without storing polarity.
+7. **Other audit classes (C / D / E / G).** No branch is provably deletable/redundant within this function alone without inspecting the external field-set definitions (Class C). The function performs no filesystem writes or path computation (Classes D and E) and computes no runtime measurements itself (Class G).
+
+## COUNTEREXAMPLE
+```json
+{
+  "non_llm_baseline": {"invoked": true},
+  "regex_fullmatch": {"invoked": true},
+  "cache_regeneration": {"invoked": false}
+}
+```
+All three falsely match `key == "invoked"` because `"llm"` is a substring of `"non_llm_baseline"` and `"regex_fullmatch"`, and `"generation"` is a substring of `"cache_regeneration"`. The first two are falsely promoted into `live` `invocation_boolean` evidence (turning a non-LLM baseline and a regex matcher into live LLM invocation claims), and the third is falsely recorded as `negative` no-invocation evidence.
+
+## MISSED INPUT
+1. Principle-annotated substrate class field: `{"substrate_class": {"principle": "Declares the model execution substrate class.", "value": "model_full_generation"}}` (for the actual `SUBSTRATE_CLASS_FIELD` key and `SUBSTRATE_CLASS_MODEL_FULL_GENERATION` or `SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION` value) — `d.get(SUBSTRATE_CLASS_FIELD)` returns the wrapper dict without calling `_unwrapped_scalar`, silently passing `requires_generation=False` to `conflicting_absences`.
+2. Nested or unlisted `"invoked"` admissions: `{"llm_calls": [{"invoked": false}]}`, `{"model_inference": {"principle": "Whether live inference ran.", "value": {"invoked": false}}}`, and `{"embedding": {"invoked": false}}` — `parent` resolves to `"0"`, `"value"`, and `"embedding"` respectively, matching none of `("generation", "inference", "llm", "model")`, so all three no-invocation admissions are silently dropped.
+3. Non-`"gpu"` accelerator telemetry: `{"cuda_telemetry": {"gpu_memory_mb": 4096}}` (or any `_GPU_MODEL_EVIDENCE_FIELDS` key under `"mps"`, `"tpu"`, `"vram"`, or `"accelerator"` without the literal token `"gpu"` in the path tokens) — silently skipped.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+`_typed_invocation_evidence` silently fails to fire on valid Carnot artifacts in multiple ways: `d.get(SUBSTRATE_CLASS_FIELD)` omits `_unwrapped_scalar`, `path[-1]` drops `"invoked"` flags nested inside lists or `"value"` wrappers, and hardcoded token sets (`("generation", "inference", "llm", "model")`, `"gpu"`, and `{"field_principles", "required_artifact_fields"}`) miss real substrate, accelerator, and metadata names. At the same time, unanchored substring matching in `token in parent for token in ("generation", "inference", "llm", "model")` causes false positives and polarity inversions on unrelated or negated parent keys. Because field unwrapping, ancestor-token resolution, word-boundary/negation filtering, and concept-level matching all need to be fixed together, a targeted redesign is required rather than a single local patch.
+
+
+## adversarial_verify.py::_substrate_declares_deterministic_non_live
 
 **Verdict:** `REAL_BUG`
 
@@ -373,158 +284,214 @@ NEEDS_REDESIGN
 REAL_BUG
 
 ## CLAIM
-`_inference_substrate_text` claims to return the top-level declared `inference_substrate` as a stripped `str`, unwrapping principle-annotated `{"value": "...", "principle": "..."}` dicts while treating non-declaration evidence dicts as missing (`""`) so they are not stringified and judged like substrate names.
+`_substrate_declares_deterministic_non_live` claims to recognize the declared deterministic-work concept without a name allowlist and identify substrates that declare deterministic non-live work.
 
 ## FINDINGS
-1. **Field extraction assumption — unguarded stringification of non-string values (Q1, Q5):** `value = d.get("inference_substrate")` followed by `if isinstance(value, dict):` and `value = value.get("value")` unwraps at most one `dict` layer and then unconditionally executes `return str(value or "").strip()` without checking that `value` is a `str`. Consequently:
-   - **Principle-annotated evidence dict (reproduces the exact bug the docstring claims to eliminate):** If an artifact wraps an evidence `dict` (keys such as `executes_models`, `live_model_invoked`) inside the project's principle-annotated envelope (`{"value": "...", "principle": "..."}`), `value.get("value")` returns the inner evidence `dict`, and `str(value or "").strip()` stringifies it into a Python repr like `"{'executes_models': ...}"` instead of returning `""`. This directly violates the docstring's guarantee that evidence dicts are treated as missing so the marker scan and missing-declaration path apply.
-   - **Nested or non-principle dicts containing `"value"`:** Any `dict` whose `"value"` entry is itself a `dict` (such as a doubly-wrapped principle field or an evidence `dict` wrapped in a principle annotation) or a non-empty list is stringified into a Python repr. Likewise, a non-principle evidence `dict` that happens to include a `"value"` key has that entry extracted and stringified as if it were a substrate declaration.
-   - **List, boolean, and numeric values:** If `inference_substrate` (bare or unwrapped from `"value"`) is a non-empty list, `str(value or "").strip()` returns a Python list repr string rather than rejecting or normalizing it. Because `value or ""` relies on Python truthiness, falsy non-string scalars (boolean false, zero) silently collapse to `""`, whereas truthy non-string scalars (boolean true, nonzero numbers) stringify into non-empty strings.
-2. **Silent non-firing of the missing-declaration fallback on principle-annotated evidence dicts (Class A, Class B):** Checking only a single `if isinstance(value, dict):` and reading `value.get("value")` treats the presence of a `"value"` key as sufficient proof of a string substrate declaration, which is narrower than the concept of separating a scalar string declaration from structured evidence or container payloads. When an evidence `dict` is principle-annotated, `_inference_substrate_text` returns a non-empty Python repr string instead of `""`, so downstream callers bypass the missing-declaration path and marker scan and instead evaluate the stringified dict repr (which can also expose negated boolean keys like `live_model_invoked` paired with false to substring matchers).
-3. **No issues found for Q2, Q3, Q4, C, D, E, F, G:** This helper performs no substring or regex matching, no numeric threshold comparisons, no filesystem writes or state mutation, no timing measurements, and its `if isinstance(value, dict):` branch is non-redundant.
+1. **Negation blindness on `"deterministic"` (Q3):** `if "deterministic" not in token.split("_"):` checks only whether `"deterministic"` appears as an underscore-delimited segment, ignoring preceding negation markers such as non or not. Any substrate explicitly declaring non-deterministic work splits to include `"deterministic"` and passes this guard, returning True whenever none of `live_markers` appears.
+2. **Unanchored substring matching and negation blindness on `live_markers` (Q2, Q3):** `return not any(marker in token for marker in live_markers)` uses raw substring `marker in token` with no token-boundary check and no negation awareness. A substrate that literally describes non-live deterministic work using phrases like non-live LLM, non-live model, no llama_cpp, or no gguf contains `"live_llm"`, `"live_model"`, `"llama_cpp"`, or `"gguf"` as a substring and is falsely rejected with `False` — breaking on inputs that mirror the function's own name `_substrate_declares_deterministic_non_live`.
+3. **Open-world denylist narrower than its concept / silent non-firing (Class A, B, F):** `live_markers = ("live_llm", "live_model", "llama_cpp", "gguf")` stands in for the concept of "a substrate executing live model or LLM inference", omitting most real live inference backends and phrasings (such as vllm, ollama, transformers, pytorch, mlx, sglang, openai, anthropic, gemini, api, live inference, or bare llm without a live prefix). Because `return not any(marker in token for marker in live_markers)` defaults to True whenever no denylist entry matches, any live-model substrate using deterministic/greedy decoding outside those four strings silently bypasses the exclusion and is misclassified as deterministic non-live work (a fabrication-detection false negative).
+4. **Docstring/implementation mismatch via single-word allowlist (Q5, Class A, B):** The docstring claims `Recognize the declared deterministic-work concept without a name allowlist.`, yet the positive gate requires the exact underscore-separated word `"deterministic"` in `token.split("_")`. Real deterministic non-live substrates using other terms (such as pure python, analytical solver, symbolic verifier, offline fixture replay, synthetic oracle, cached replay, or inflected forms like deterministically) silently return `False`.
+5. **Leading-token truncation strips trailing live qualifiers (Class A):** `token = _claim_field_name(_substrate_leading_token(raw))` evaluates only the leading token of `raw`. If a substrate string declares a live backend after the leading token (for example after whitespace or inside parentheses), `live_markers` never inspects it and the function silently returns True for a live substrate.
+6. **Input-shape reliance on callers/helpers (Q1):** The signature assumes `raw: str` and passes `raw` directly into `_substrate_leading_token(raw)` without visible unwrapping for Principle-Annotated field dicts or missing values; safe handling of wrapped fields cannot be verified here. (Q4 and Classes C, D, E, G: no numeric threshold, no mutually redundant member among the four disjoint strings in `live_markers`, no filesystem path or write, and no pre-work timing metric.)
+
+## COUNTEREXAMPLE
+Two realistic artifact fragments fail in opposite directions:
+- False positive: `{"inference_substrate": "non_deterministic_sampling_eval"}` — `"deterministic"` is in `token.split("_")` and none of `live_markers` matches, so the function returns `True` for an explicitly non-deterministic substrate.
+- False negative: `{"inference_substrate": "deterministic_non_live_llm"}` (or `"deterministic_non_live_model"`) — `"live_llm"` / `"live_model"` matches as a substring inside `non_live_llm` / `non_live_model`, so the function returns `False` on an honest deterministic non-live substrate.
+
+## MISSED INPUT
+`"deterministic_vllm_greedy"` (as well as `"deterministic_llm_temp0"`, `"deterministic_ollama_qwen"`, `"deterministic_openai_api"`, and `"deterministic_eval (live_llm)"`) — realistic live-model substrates using greedy/deterministic decoding that the `live_markers` guard is supposed to reject, yet all silently return `True` and get classified as deterministic non-live work; symmetrically, `"offline_fixture_replay"` and `"pure_python_analytical"` are real deterministic-work substrates silently missed (`False`) because they lack the literal token `"deterministic"`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Both predicates in `_substrate_declares_deterministic_non_live` are broken on realistic inputs: `token.split("_")` accepts negated tokens while `marker in token` rejects negated live terms, and the four-string `live_markers` denylist silently routes any unrecognized live backend paired with `"deterministic"` to non-live. Merely adding tokens to `live_markers` cannot resolve negation blindness, unanchored substring matching, or truncation of trailing qualifiers by `_substrate_leading_token(raw)`. The recognizer needs a redesign that inspects the full normalized substrate text, handles negation and token boundaries explicitly, and requires positive evidence of non-live deterministic work instead of assuming unrecognized backends are non-live.
+
+
+## adversarial_verify.py::_classify_current_task_inference_claim
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Classify whether an artifact claims live inference from attributable current-task provenance, where explicit substrate claims lead, typed evidence confirms or contradicts them, and whole-blob model strings only keep otherwise unknown artifacts conservative.
+
+## FINDINGS
+1. **Silent non-firing of live classification on mixed current-task and nested evidence (Class A / logic error):** In `elif live_evidence:`, the guard `elif any(row["scope"] == "nested_unattributed" for row in live_evidence):` uses `any` rather than checking whether all entries lack current-task provenance. If `live_evidence` contains both a current-task attributable invocation entry and a `"nested_unattributed"` entry (e.g., an artifact without an explicit substrate that both ran live inference and embeds a prior-run baseline), the function fails to classify it as `CLAIM_STATE_LIVE` (`"typed_current_task_invocation_evidence"`) and instead downgrades it to `CLAIM_STATE_AMBIGUOUS` with the false reason `"nested_invocation_without_current_task_provenance"`.
+
+2. **False contradiction on non-live / aggregation artifacts with nested unattributed evidence (Q3 / Q5):** In `elif substrate["kind"] in {SUBSTRATE_KIND_AGGREGATION, SUBSTRATE_KIND_NO_LLM} or deterministic:`, the branch `if live_evidence:` never excludes entries where `row["scope"] == "nested_unattributed"`. An honest `SUBSTRATE_KIND_AGGREGATION`, `SUBSTRATE_KIND_NO_LLM`, or `deterministic` artifact that summarizes nested prior experiment records carries `"nested_unattributed"` entries in `live_evidence` and is falsely classified as `CLAIM_STATE_CONTRADICTORY` (`"non_live_claim_with_invocation_evidence"`), directly violating the docstring's requirement to classify from attributable current-task provenance.
+
+3. **False contradiction between `negative_evidence` and unattributed nested `live_evidence` (Q3 / Q5):** Inside `elif live_evidence:`, `if negative_evidence:` runs before `elif any(row["scope"] == "nested_unattributed" for row in live_evidence):`. An artifact with `SUBSTRATE_KIND_UNKNOWN`, current-task `negative_evidence`, and only `"nested_unattributed"` entries in `live_evidence` is misclassified as `CLAIM_STATE_CONTRADICTORY` (`"conflicting_typed_invocation_evidence"`) even though no current-task invocation evidence exists to conflict with `negative_evidence`.
+
+4. **Denylist narrower than its provenance concept (Class B):** `row["scope"] == "nested_unattributed"` stands in for the concept of invocation evidence lacking current-task provenance, but matches only that single literal string instead of positively verifying current-task attribution. Any other non-current-task scope value present in `live_evidence` (such as a prior-run, baseline, or inherited scope tag) falls through to `else:` inside `elif live_evidence:` and is silently promoted to `CLAIM_STATE_LIVE` (`"typed_current_task_invocation_evidence"`). Similarly, `{SUBSTRATE_KIND_AGGREGATION, SUBSTRATE_KIND_NO_LLM}` enumerates specific non-live substrate constants (requiring a separate `or deterministic` bolt-on) rather than checking a non-live classification property, so any newly introduced non-live substrate kind falls through to `CLAIM_STATE_AMBIGUOUS`.
+
+5. **Branch precedence diverges from docstring and can mask contradictions (Q5 / Class A):** The docstring states that explicit substrate claims lead and typed evidence can confirm or contradict them, yet `if _is_precondition_check_only_blocked(d):` executes first and unconditionally returns `CLAIM_STATE_BLOCKED` (`"precondition_check_only"`) without checking `substrate["kind"] == SUBSTRATE_KIND_LIVE_MODEL` or `live_evidence`; unless `_is_precondition_check_only_blocked(d)` itself excludes artifacts with live claims or invocations, contradictory blocked-marked artifacts silently exit as `CLAIM_STATE_BLOCKED`. Likewise, `elif substrate["kind"] == SUBSTRATE_KIND_LIVE_MODEL:` runs before `deterministic` is ever checked, so a hybrid declared substrate where both `substrate["kind"] == SUBSTRATE_KIND_LIVE_MODEL` and `deterministic` are true silently classifies as `CLAIM_STATE_LIVE` instead of `CLAIM_STATE_CONTRADICTORY`.
+
+6. **Other audit classes (Q1, Q2, Q4, C–G):** Raw artifact field extraction, substring matching, and numeric thresholds are delegated to `_classify_inference_substrate(d)`, `_typed_invocation_evidence(d)`, `_has_compute_bound_marker(d)`, `_substrate_declares_deterministic_non_live(raw)`, and `_is_precondition_check_only_blocked(d)`. Within this function itself, `substrate["declared_value"]`, `substrate["kind"]`, `substrate["source"]`, and `row["scope"]` assume well-formed internal dicts; there are no free-text substring checks or numeric comparisons; no branch is dead or double-covered (though `external_evidence` is unpacked and only forwarded without affecting `state` or `reason`); there are no hardcoded paths, file writes, or pre-work metric evaluations (Classes D, E, G); and the terminal `else:` returns `CLAIM_STATE_AMBIGUOUS` rather than a silent pass (Class F).
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "inference_substrate": {
-    "principle": "Record execution substrate evidence for auditability",
-    "value": {
-      "executes_models": false,
-      "live_model_invoked": false
+  "experiment_id": "exp_summary_aggregation_042",
+  "inference_substrate": "aggregation_of_prior_runs",
+  "source_runs": [
+    {
+      "experiment_id": "exp_039",
+      "model": "qwen3-8b",
+      "llm_calls": 64,
+      "tokens_generated": 18420
     }
-  }
+  ],
+  "honest_verdict": "aggregated_prior_auroc_no_new_inference"
 }
 ```
-`_inference_substrate_text(d)` unwraps `"value"` once and returns `"{'executes_models': False, 'live_model_invoked': False}"` instead of `""`. Downstream code sees a non-empty string rather than a missing declaration and evaluates a Python dict repr (which even contains `live_model_invoked` despite its value being `False`) as a substrate name. A list-valued field such as `{"inference_substrate": ["ollama", "embedding"]}` is likewise mis-extracted as `"['ollama', 'embedding']"`.
+`_classify_inference_substrate(d)` classifies this as `SUBSTRATE_KIND_AGGREGATION`, while `_typed_invocation_evidence(d)` extracts the nested `source_runs[0]` invocation counters into `live_evidence` with `row["scope"] == "nested_unattributed"`. Because the `SUBSTRATE_KIND_AGGREGATION` branch checks `if live_evidence:` without filtering out `"nested_unattributed"` rows, this honest aggregation artifact is falsely quarantined as `CLAIM_STATE_CONTRADICTORY` (`"non_live_claim_with_invocation_evidence"`) instead of `CLAIM_STATE_NON_LIVE`.
 
 ## MISSED INPUT
-A principle-annotated evidence dict for `inference_substrate`, e.g. `{"inference_substrate": {"principle": "Record whether live model inference was invoked", "value": {"executes_models": false, "live_model_invoked": false}}}`. Both the evidence-dict shape (169 corpus artifacts) and the `{"principle": "...", "value": ...}` field wrapper (project-wide CLAUDE.md convention) are real patterns in this repository; combining them causes `_inference_substrate_text` to return a non-empty Python dict repr instead of `""`, so the missing-declaration path and marker scan silently fail to fire.
+```json
+{
+  "experiment_id": "exp_eval_with_baseline_087",
+  "llm_calls": 32,
+  "tokens_generated": 9600,
+  "baseline_comparison": {
+    "experiment_id": "exp_051",
+    "llm_calls": 32,
+    "tokens_generated": 9100
+  },
+  "honest_verdict": "live_eval_compared_against_prior_baseline"
+}
+```
+With no declared `inference_substrate` (`SUBSTRATE_KIND_UNKNOWN`), `_typed_invocation_evidence(d)` populates `live_evidence` with both a current-task attributable row (top-level `llm_calls`/`tokens_generated`) and a `"nested_unattributed"` row (`baseline_comparison`). Per the docstring, attributable current-task provenance is present and should fire `CLAIM_STATE_LIVE` (`"typed_current_task_invocation_evidence"`), but `any(row["scope"] == "nested_unattributed" for row in live_evidence)` triggers and silently downgrades it to `CLAIM_STATE_AMBIGUOUS` (`"nested_invocation_without_current_task_provenance"`).
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function mixes current-task attributable records and `"nested_unattributed"` records in `live_evidence` but only checks `row["scope"] == "nested_unattributed"` in one branch, and does so with `any` instead of verifying whether any current-task attributable entry exists. That creates both false positives (`CLAIM_STATE_CONTRADICTORY` on honest `SUBSTRATE_KIND_AGGREGATION` or `negative_evidence` artifacts embedding prior runs) and silent non-firing of `CLAIM_STATE_LIVE` when current-task evidence coexists with a nested record. `live_evidence` should be partitioned up front using positive current-task attribution rather than a single-string denylist, and branch precedence for `_is_precondition_check_only_blocked(d)` and `deterministic` should be reconciled with the docstring.
+
+
+## adversarial_verify.py::_strip_verdict_terminal_prefix
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+CANNOT_DETERMINE
+
+## CLAIM
+`_strip_verdict_terminal_prefix` claims to remove a leading terminal-prefix marker (mirroring `research_conductor.py:_verdict_is_untrustworthy`) and any following whitespace from `verdict` so downstream checks like `blocked_` recognition see the same content regardless of prefixing.
+
+## FINDINGS
+1. **Uninspectable external pattern list (Classes A, B, C; Q2, Q5):** The function's entire matching behavior depends on `_VERDICT_TERMINAL_PREFIXES`, which is not included in the provided snippet, nor are `CLAUDE.md` or `research_conductor.py:_verdict_is_untrustworthy`. Without inspecting `_VERDICT_TERMINAL_PREFIXES`, it is impossible to verify whether its entries are complete, non-redundant, lowercase, ordered longest-first, or delimiter-terminated.
+2. **Mirrored-list drift hazard (Class B / silent non-firing):** The docstring explicitly states that this helper mirrors `research_conductor.py:_verdict_is_untrustworthy`'s own terminal-prefix list instead of importing a single shared definition. Any prefix added to `research_conductor.py:_verdict_is_untrustworthy` without a matching edit to `_VERDICT_TERMINAL_PREFIXES` will silently fall through to `return stripped`, leaving the prefix attached and breaking downstream `blocked_` recognition.
+3. **Unguarded prefix matching assumptions (Q2, silent non-firing):** `if lowered.startswith(prefix):` compares `lowered` against `prefix` without lowercasing `prefix` and without enforcing a word or delimiter boundary after `prefix`. Any uppercase character in `_VERDICT_TERMINAL_PREFIXES` will silently never match; any entry lacking a trailing delimiter will cause `return stripped[len(prefix) :].lstrip()` to slice into the middle of an unrelated leading word; and any shorter prefix listed before a longer overlapping prefix will return early and leave residual delimiter characters behind.
+4. **Single-pass stripping and bare-string input assumption (Q1, Q5):** Because the loop exits on the first hit (`return stripped[len(prefix) :].lstrip()`), stacked terminal prefixes are only stripped once. Additionally, `stripped = verdict.strip()` assumes `verdict` is a bare string rather than a missing value or a principle-annotated wrapper dict (this is a private helper typed `verdict: str`, so callers must unwrap first, and a wrong type fails loudly rather than silently).
+5. **Classes D, E, F, G not triggered by the visible logic:** This is a pure string helper with no filesystem paths (Class D), no state mutation (Class E), and no timing or metric calculation (Class G). Falling through to `return stripped` is necessary for legitimately unprefixed verdicts rather than a check-disabling default (Class F), though it makes an unrecognized prefix indistinguishable from an unprefixed string downstream.
+
+## COUNTEREXAMPLE
+none constructed -- _VERDICT_TERMINAL_PREFIXES is not included in the provided snippet, so no specific verdict string can be proven to falsely slice mid-word or falsely fail to strip without inspecting the actual prefix list.
+
+## MISSED INPUT
+none found -- _VERDICT_TERMINAL_PREFIXES, CLAUDE.md, and research_conductor.py:_verdict_is_untrustworthy are not included in the provided snippet, so no specific omitted real-world terminal prefix can be confirmed without inspecting those definitions.
+
+## RECOMMENDATION
+ADD_TEST_CASE
+
+## RATIONALE
+This function is a six-line loop over `_VERDICT_TERMINAL_PREFIXES`, which is omitted from the snippet along with `research_conductor.py:_verdict_is_untrustworthy`, so its actual boundary safety, casing, ordering, and concept coverage cannot be verified here. The visible code relies on unenforced invariants in `_VERDICT_TERMINAL_PREFIXES` (lowercase entries, delimiter termination, longest-first ordering, and manual parity with `research_conductor.py:_verdict_is_untrustworthy`) while silently falling through to `return stripped` on any mismatch. Auditing `_VERDICT_TERMINAL_PREFIXES` and adding parity, casing, and boundary tests (or replacing the mirror with a single shared constant) is required before this helper can be signed off as clean.
+
+
+## adversarial_verify.py::_is_precondition_check_only_blocked
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+`_is_precondition_check_only_blocked` claims to return `True` when an artifact stopped before invoking the compute substrate, recognizing either an explicit `precondition_check_only` declaration on `inference_substrate` or a `blocked_`-prefixed `honest_verdict` (with or without a leading terminal-prefix marker like `complete:` or `success:`).
+
+## FINDINGS
+1. **Docstring vs. implementation mismatch and silent non-firing on Form 1 (Q5, Class A, Class B):** The docstring explicitly states it recognizes two forms (either is sufficient): the explicit `precondition_check_only` substrate declaration OR a `blocked_`-prefixed `honest_verdict`. The 3-line body (`verdict = str(_unwrapped_scalar(d.get("honest_verdict")) or "")`, `stripped = _strip_verdict_terminal_prefix(verdict).lower()`, `return stripped.startswith("blocked_") or stripped.startswith("blocked:")`) never reads `inference_substrate` and never checks for `precondition_check_only`. Any artifact declaring `precondition_check_only` without also prefixing `honest_verdict` with `blocked_` or `blocked:` silently evaluates to False, triggering a false `DURATION_TOO_SHORT` flag on honest precondition-only runs.
+2. **Negation/context blindness and unverified exemption bypass (Q2, Q3, Q5):** The docstring justifies trusting `blocked_*` verdicts as admissions of zero compute work (citing `duration_s=0.14`, `extraction_results=[]`, `rows_total=0`), yet the implementation checks nothing except `stripped.startswith("blocked_")` or `stripped.startswith("blocked:")`. It cannot distinguish an honest pre-launch block from (a) a negated block statement (reporting that a precondition block was not hit and the full run executed), (b) a completed experiment whose verdict starts with a metric or outcome name using that prefix (such as a guardrail/safety evaluation reporting a blocked rate or blocked attack count), or (c) a fabricated artifact that prepends `blocked_` or `blocked:` to `honest_verdict` while still emitting claimed metrics and rows. In all three cases, returning `True` silently disables `DURATION_TOO_SHORT`.
+3. **Pattern list narrower than the blocked-verdict concept (Q2, Class B):** Even within `honest_verdict`, checking only `stripped.startswith("blocked_")` and `stripped.startswith("blocked:")` misses space-delimited, hyphen-delimited, or bare blocked verdicts, as well as non-`blocked_` precondition-failure verdicts paired with `precondition_check_only`.
+4. **Field extraction edge cases (Q1):** `verdict = str(_unwrapped_scalar(d.get("honest_verdict")) or "")` delegates unwrapping of `honest_verdict` to `_unwrapped_scalar` and falls back via `or ""` for missing/falsy values, handling principle-annotated scalars properly. However, if `_unwrapped_scalar` passes through a non-scalar container (list or non-principle dict), calling str on it silently yields a Python repr that never matches; also, leading whitespace is only handled if `_strip_verdict_terminal_prefix` strips it.
+5. **Undocumented branch / likely untested pattern (Class C):** `stripped.startswith("blocked_")` and `stripped.startswith("blocked:")` are disjoint prefixes, so neither double-covers the other, but `stripped.startswith("blocked:")` is completely omitted from the docstring (which documents only `blocked_` and `blocked_*`) and is therefore a candidate for an untested branch.
+6. **Remaining classes (Q4, Class D, Class E, Class F, Class G):** No numeric thresholds or off-by-one comparisons (Q4), no hardcoded absolute paths or filesystem writes (Class D, Class E), no default-to-skip fallthrough when unrecognized since unrecognized inputs return False rather than exempting the artifact (Class F), and no pre-work metric computation (Class G).
+
+## COUNTEREXAMPLE
+1. False negative of this predicate (causes false-positive `DURATION_TOO_SHORT` quarantine on an honest precondition-only artifact):
+`{"inference_substrate": "precondition_check_only", "honest_verdict": "complete: precondition_unmet_missing_checkpoint", "duration_s": 0.12, "rows_total": 0, "extraction_results": []}`
+`_is_precondition_check_only_blocked` returns `False` because `inference_substrate` is never checked.
+
+2. False positive of this predicate (silently suppresses `DURATION_TOO_SHORT` on a claimed or fabricated run):
+`{"inference_substrate": "local_vllm_gpu", "honest_verdict": "complete: blocked_rate_0.84_across_500_adversarial_prompts", "duration_s": 0.05, "rows_total": 500, "auroc": 0.93}`
+(or negation: `{"inference_substrate": "local_vllm_gpu", "honest_verdict": "complete: blocked_check_passed_full_eval_completed", "duration_s": 0.05, "rows_total": 500}`)
+After stripping `complete:`, the verdict starts with `"blocked_"`, so the function returns `True` and exempts an artifact claiming 500 evaluated rows in 0.05s.
+
+## MISSED INPUT
+`{"inference_substrate": "precondition_check_only", "honest_verdict": "complete: missing_checkpoint_cannot_run", "duration_s": 0.14, "rows_total": 0, "extraction_results": []}` (as well as verdict delimiter variants like `"complete: blocked on missing checkpoint"` or `"complete: blocked-missing-checkpoint"`). All fall squarely inside the documented contract of `_is_precondition_check_only_blocked`, yet the function returns `False` on every one of them.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+`_is_precondition_check_only_blocked` breaks its own contract in both directions: it omits the documented `precondition_check_only` check on `inference_substrate` entirely, while simultaneously trusting `stripped.startswith("blocked_")` or `stripped.startswith("blocked:")` with zero negation checks and zero verification that no compute work or results were produced. Because returning `True` disables `DURATION_TOO_SHORT`, the function should be redesigned to implement the unwrapped `inference_substrate` check, tighten `blocked_` matching against metric/negation verdicts, and verify zero-work consistency before granting an exemption.
+
+
+## adversarial_verify.py::_is_verifier_scoring_only
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+`_is_verifier_scoring_only` claims to return `True` if the artifact declares it scored verifiers against cached candidate triples without invoking LLM inference, via either an explicit `inference_substrate` sentinel (`verifier_ensemble_against_cached_candidates`) or a historical verifier-only schema prefix.
+
+## FINDINGS
+1. **Field-shape assumption / missing Principle-Annotated field unwrap (Question 1, Class A):** `schema = str(d.get("schema") or d.get("schema_version") or "")` coerces the raw dict value with `str` without unwrapping a Principle-Annotated dict (principle/value mapping). When `schema` or `schema_version` is wrapped as a Principle-Annotated dict, `str` produces a Python dict repr starting with an opening brace, so `schema.startswith(p)` always fails and `_is_verifier_scoring_only` silently misses even the historical schemas explicitly named in its docstring (`fover_memory_leakage_v3`, `cross_corpus_verifier_matrix`). Honest verifier-scoring artifacts with vestigial GGUF / CUDA markers are then falsely subjected to the LLM model-loading + inference duration floor.
+2. **Short-circuiting drops `schema_version` whenever `schema` is truthy (Question 1, Class A):** In `schema = str(d.get("schema") or d.get("schema_version") or "")`, `or` short-circuits on any truthy `d.get("schema")` before testing `VERIFIER_SCORING_SCHEMA_PREFIXES`. If an artifact carries a generic or non-matching `schema` string (or a Principle-Annotated dict whose unwrapped value is empty) alongside a matching `schema_version`, `d.get("schema_version")` is never checked.
+3. **Unconditional schema-prefix fallback overrides explicit `inference_substrate` and lacks boundary/exclusion guards (Questions 2, 3, 5):** The docstring states Mode 2 covers historical artifacts authored before the explicit-field discipline shipped, yet when `_inference_substrate_matches(d, VERIFIER_SCORING_SUBSTRATE)` does not match, the function falls through unconditionally to `return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)` without checking that `inference_substrate` is absent. A newer or fabricated artifact that explicitly declares an LLM-invoking `inference_substrate` still gets `True`—bypassing the LLM inference duration floor—if its `schema` begins with any prefix in `VERIFIER_SCORING_SCHEMA_PREFIXES`. Because `schema.startswith(p)` enforces no token boundary or LLM-suffix exclusion, any derived schema extending a prefix in `VERIFIER_SCORING_SCHEMA_PREFIXES` for a live-LLM run is also misclassified as verifier-scoring-only.
+4. **External constants/helpers outside this slice (Class B, Class C):** `VERIFIER_SCORING_SCHEMA_PREFIXES` stands in for all pre-discipline verifier-only schemas and `VERIFIER_SCORING_SUBSTRATE` stands in for explicit cached-candidate verifier-scoring declarations; because neither constant nor `_inference_substrate_matches` is shown in the snippet, their internal unwrap behavior and corpus completeness cannot be verified here. No numeric boundary comparisons (Question 4), hardcoded absolute paths (Class D), tracked-state mutations (Class E), or pre-work metric computations (Class G) are present in this function.
+
+## COUNTEREXAMPLE
+False negative of `_is_verifier_scoring_only` (falsely quarantines an honest historical verifier-scoring artifact):
+```json
+{
+  "schema": {
+    "principle": "Identifies the historical exp2837 cached-candidate verifier scoring artifact",
+    "value": "fover_memory_leakage_v3"
+  },
+  "model_path": "models/qwen.gguf",
+  "duration_s": 0.42
+}
+```
+`str(d.get("schema") ...)` becomes `"{'principle': 'Identifies the historical exp2837 cached-candidate verifier scoring artifact', 'value': 'fover_memory_leakage_v3'}"`, which does not start with `"fover_memory_leakage_v3"`, so the function returns `False`.
+
+Converse false positive of `_is_verifier_scoring_only` (exempts a claimed LLM run from the LLM duration floor):
+```json
+{
+  "inference_substrate": "local_gguf_llama_cpp",
+  "schema": "cross_corpus_verifier_matrix_with_live_llm_v4",
+  "duration_s": 0.05
+}
+```
+Mode 1 fails because `inference_substrate` is an LLM substrate, but Mode 2 runs unconditionally and `schema.startswith("cross_corpus_verifier_matrix")` returns `True`.
+
+## MISSED INPUT
+`{"schema": {"principle": "Historical verifier-only schema for exp2837", "value": "fover_memory_leakage_v3"}}` (and `{"schema": "carnot_experiment_v1", "schema_version": "cross_corpus_verifier_matrix_v1"}`, where `schema` short-circuits `or` and hides `schema_version`).
 
 ## RECOMMENDATION
 ADD_FIELD_UNWRAP
 
 ## RATIONALE
-`_inference_substrate_text` attempts to avoid stringifying evidence dicts solely via a single `value = value.get("value")` lookup, without verifying that the resulting `value` is actually a `str`. Because `return str(value or "").strip()` still coerces any non-empty nested `dict`, list, or truthy non-string into a Python repr, a principle-annotated evidence `dict` (or a list-valued field) silently bypasses the missing-declaration path and reproduces the exact stringification bug the docstring was written to eliminate. Unwrapping principle-annotated envelopes safely and returning `""` whenever the final `value` is not a `str` closes this defect cleanly.
+`schema = str(d.get("schema") or d.get("schema_version") or "")` directly stringifies raw field values without unwrapping Principle-Annotated dicts, causing `_is_verifier_scoring_only` to silently fail on wrapped `schema` or `schema_version` fields that belong to `VERIFIER_SCORING_SCHEMA_PREFIXES`. In addition, the `or` expression discards `schema_version` whenever `schema` is any truthy non-matching value, and Mode 2 fires unconditionally even when `inference_substrate` explicitly declares a non-verifier substrate. Both `schema` and `schema_version` should be unwrapped and checked independently, and Mode 2 should only apply when `inference_substrate` is absent with boundary-aware prefix matching.
 
 
-## adversarial_verify.py::_inference_substrate_value_matches
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_inference_substrate_value_matches` claims to return True when a raw substrate string declares a canonical substrate value (either exact match or leading value followed by a human principle/floor note separated by `--` or any separator punctuation), while keeping longer different enum names from matching.
-
-## FINDINGS
-1. **Single hyphen in separator set breaks enum boundary and overrides `--` parsing (Question 2 & Question 5):** `return raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}` treats a single `"-"` as a separator, even though the comment specifies `--` and claims the boundary check keeps a longer different enum (such as `<canonical>_v2`) from matching. Because `"-"` is a standard identifier joiner in kebab-case and compound substrate names, any longer hyphenated enum starting with `canonical` falsely matches. Worse, even when an input explicitly uses `"--"` to separate a distinct hyphenated enum from its note, `prefix = raw.split("--", 1)[0].strip()` correctly rejects it in `if prefix == canonical:`, and execution then falls through to `if raw.startswith(canonical):`, where `"-"` overrides the rejection and returns True.
-2. **Separator allowlist is narrower than its stated concept and omits leading-whitespace normalization (Class A & Class B):** The comment states the function tolerates a note appended with ANY separator (standing in for the concept of any non-identifier delimiter after the leading substrate token), yet the code hardcodes the 6-character set `{" ", "-", ";", ",", ":", "."}`. It silently fails to match real-world annotations using other non-identifier delimiters such as an em-dash or en-dash without spaces, an opening parenthesis without a preceding space, a tab or newline, or a pipe/slash. In addition, `.strip()` is applied only in `prefix = raw.split("--", 1)[0].strip()` and not before `raw.startswith(canonical)`, so a string with leading whitespace matches when followed by `"--"` or nothing, but silently returns False when followed by `";"` or `":"` or `","` or `"."`.
-3. **Negation and compound-workload blindness (Question 3):** Because `prefix = raw.split("--", 1)[0].strip()` and `raw.startswith(canonical)` inspect only the leading token and discard all trailing text after `" "`, `"--"`, `";"`, `","`, `":"`, or `"."`, a substrate field that negates the leading value or declares a multi-step compound workload (for example, naming a cheap leading substrate followed by a note that a live expensive workload also ran, or that the cheap path was bypassed) still returns True for the cheap `canonical` value, risking silent assignment of an overly low duration floor.
-4. **Redundant and double-covered branches (Class C):** Three pieces of logic are deletable without breaking standard tests. First, `if raw == canonical:` is completely double-covered by `prefix = raw.split("--", 1)[0].strip()` and `if prefix == canonical:` for any `canonical` value without `"--"` or surrounding whitespace. Second, the entire `prefix = raw.split("--", 1)[0].strip()` / `if prefix == canonical:` block is double-covered by `raw.startswith(canonical)` with `" "` and `"-"` for the docstring's own `value -- why this floor applies` format and even the spaceless double-hyphen form; deleting it only affects inputs with leading/trailing whitespace or a tab/newline before `"--"`. Third, deleting `"-"` from `{" ", "-", ";", ",", ":", "."}` still passes space-padded dashes (via `" "`) and double hyphens (via `raw.split("--", 1)[0].strip()`), proving `"-"` serves no documented separator purpose and exists only as the hyphenated-enum bug in Finding 1.
-5. **Type and normalization assumptions at the boundary (Question 1 & Question 4):** There is no dict field lookup in `_inference_substrate_value_matches` itself, so it assumes callers have already unwrapped any principle-annotated dict wrapper and normalized casing into `raw: str`; passing an unwrapped dict directly raises AttributeError on `raw.split("--", 1)[0].strip()`, and passing a stringified dict or differently cased string silently returns False. On Question 4, the slice `raw[len(canonical) : len(canonical) + 1]` has no off-by-one error for non-empty `canonical`, though an empty `canonical` would falsely match any `raw` starting with one of the six characters in `{" ", "-", ";", ",", ":", "."}`.
-6. **Classes D, E, F, G:** None found in this function itself — it is a pure string predicate with no file paths or writes (Classes D, E) and no metric timing (Class G). Its terminal `return False` is expected for a boolean matcher, though any false negative from Finding 2 feeds into a caller's recognizer chain where an unmatched substrate can fall through to no duration floor (Class F at the caller level).
-
-## COUNTEREXAMPLE
-False positive on a distinct hyphenated enum (even with an explicit `--` separator):
-`raw = "local_gpu-v2 -- 30s floor"`, `canonical = "local_gpu"`.
-`prefix` evaluates to `"local_gpu-v2"` (correctly not equal to `"local_gpu"`), yet execution falls through to `raw.startswith("local_gpu")`, sees `"-"` in `{" ", "-", ";", ",", ":", "."}`, and returns `True`. The same false match hits compound/negated strings such as `raw = "aggregation_from_upstream_artifacts + live_gpu_inference"` matched against `canonical = "aggregation_from_upstream_artifacts"` (returns `True`, assigning a 100us floor to a workload that also ran live GPU inference).
-
-## MISSED INPUT
-`raw = "aggregation_from_upstream_artifacts—100us floor."` (em-dash U+2014 without spaces, standard LLM prose punctuation) or `raw = "aggregation_from_upstream_artifacts(100us floor)"` or `raw = " aggregation_from_upstream_artifacts; 100us floor."` (leading space plus semicolon) tested against `canonical = "aggregation_from_upstream_artifacts"` — all return `False` despite declaring the exact canonical leading token with an appended principle/floor note, causing an annotated substrate to miss its recognizer and either false-flag an honest artifact or fall through unverified.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-Including single `"-"` in `{" ", "-", ";", ",", ":", "."}` breaks the enum-boundary guarantee stated in the comment and even overrides `prefix = raw.split("--", 1)[0].strip()` when a hyphenated enum precedes `"--"`, while the hardcoded 6-character allowlist and unstripped `raw.startswith(canonical)` check silently miss valid non-identifier separators (em-dash, parenthesis, tab/newline, or leading whitespace with `";"`). Replacing the three overlapping checks with a single stripped identifier-boundary check — rejecting alphanumerics, `_`, and single `"-"` after `canonical`, while explicitly accepting `"--"`, any whitespace, or non-identifier punctuation — fixes the false match, closes the separator gap, and eliminates the redundant branches.
-
-
-## adversarial_verify.py::_match_declared_substrate
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-`_match_declared_substrate` claims to return the allowlisted substrate value from `candidates` matched by the top-level declaration `raw`, or `None` if none matches.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-`_match_declared_substrate` is a minimal linear-search wrapper that iterates `candidates`, delegates predicate evaluation to `_inference_substrate_value_matches(raw, canonical)`, and returns the first matching `canonical` or executes `return None`. It contains no dict field extraction, substring or regex matching, hardcoded pattern lists, numeric thresholds, filesystem writes, or timing logic of its own, and its implementation matches its docstring and `str | None` return contract. Any matching, allowlist-completeness, input-unwrapping, or `None`-handling defects would live in `_inference_substrate_value_matches` or in callers rather than in this function.
-
-
-## adversarial_verify.py::_substrate_leading_token
-
-**Verdict:** `MINOR_RISK`
-
-## VERDICT
-MINOR_RISK
-
-## CLAIM
-`_substrate_leading_token` claims to strip trailing human notes (such as `<value> -- why this floor applies`) from a substrate declaration so only the leading declared value is matched, while safely returning `""` on non-string malformed inputs instead of crashing.
-
-## FINDINGS
-1. **Unbounded `"--"` split truncates identifiers and flag-prefixed values (Questions 2 & 5).** The docstring specifies the note format `<value> -- why this floor applies` with spaces around the double-dash, but `token = raw.split("--", 1)[0].strip()` splits on bare `"--"` with no whitespace or token boundary. Any substrate string containing `"--"` inside an identifier (such as a HuggingFace Hub local cache slug or a double-hyphen compound token) is silently truncated mid-token before downstream recognizers inspect it, and any value starting with `"--"` is wiped out to `""`.
-2. **Non-string guard conflates unwrapped principle-annotated fields and structured declarations with an empty string (Question 1 & Class F).** Although the docstring states `callers unwrap principle-annotated fields` and that `if not isinstance(raw, str):` followed by `return ""` ensures `a malformed declaration is unrecognized rather than a crash in the linter`, accepting `raw: object` and returning `""` makes an unwrapped principle-annotated mapping (if any caller forgets to unwrap), a multi-substrate list, or a structured mapping indistinguishable from an absent or empty string. If a caller treats `""` as no substrate declared rather than unrecognized, those declarations silently bypass floor enforcement.
-3. **External separator list `_SUBSTRATE_NOTE_SEPARATORS` cannot be audited from this snippet (Question 2, Class B, Class C).** Because `for sep in _SUBSTRATE_NOTE_SEPARATORS:` and `token = token.split(sep, 1)[0]` depend on `_SUBSTRATE_NOTE_SEPARATORS` defined outside this function, it cannot be verified here whether the list omits common trailing-note delimiters (such as Unicode em-dash, en-dash, parentheticals, semicolons, colons, or newlines), whether any entry lacks whitespace boundaries and truncates valid substrate names (such as colons in model tags or slashes in repo identifiers), or whether `"--"` is redundantly duplicated in `_SUBSTRATE_NOTE_SEPARATORS`.
-
-## COUNTEREXAMPLE
-- `"models--google--gemma-2-2b-it"` (standard HuggingFace cache directory identifier) -> truncated by `raw.split("--", 1)[0]` to `"models"`, stripping the model identity so downstream LLM substrate recognizers fail to recognize it.
-- `"pytorch_cpu--embedding_only"` -> truncated to `"pytorch_cpu"`, dropping the workload qualifier; similarly `"cpu_eval--ollama_gemma3"` -> truncated to `"cpu_eval"`, hiding the LLM substrate.
-- `{"principle": "Declared inference substrate for duration floor", "value": "ollama_gemma3"}` (unwrapped principle-annotated field) or `["ollama_gemma3", "cpu_eval"]` (list-valued substrate) -> silently returns `""` instead of `"ollama_gemma3"` or signaling a non-string declaration.
-
-## MISSED INPUT
-- `"models--google--gemma-2-2b-it"` and `"cpu_eval--ollama_gemma3"`: real-world substrate values whose model tokens are silently stripped off by the unbounded `"--"` split, preventing downstream LLM floor recognizers from firing on them.
-- `{"principle": "Declared inference substrate", "value": "ollama_gemma3"}` (if passed by a caller without prior unwrapping) or `["ollama_gemma3", "cpu_eval"]`: silently reduced to `""` rather than extracted or distinguished from a missing declaration.
-- Whether trailing notes using alternate delimiters (such as `"ollama_gemma3 — local run"` with an em-dash) are missed cannot be confirmed without seeing `_SUBSTRATE_NOTE_SEPARATORS`.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-The primary defect directly visible in the implementation is that `raw.split("--", 1)[0]` lacks whitespace boundaries around `"--"`, causing valid identifiers or compound tokens containing `"--"` to be silently truncated before downstream substrate recognition. In addition, `if not isinstance(raw, str):` with `return ""` collapses unwrapped principle-annotated mappings and non-string declarations into the same empty-string sentinel as an absent field, while `_SUBSTRATE_NOTE_SEPARATORS` remains outside the snippet and should also be audited for boundary safety and delimiter completeness. Tightening the `"--"` delimiter to require whitespace boundaries (and verifying or unwrapping principle-annotated inputs defensively) eliminates the false truncation without breaking legitimate trailing notes.
-
-
-## adversarial_verify.py::_emit_no_llm_by_name_warning
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-Append a `SUBSTRATE_NO_LLM_BY_NAME` warning `Flag` to `flags` whenever `duration_floor_for_artifact(d)` assigns the no-LLM duration floor via the `"no_llm_declared_by_name"` name-shape match, keeping unreviewed name-shape matches auditable.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-`_emit_no_llm_by_name_warning` does no raw field extraction from `d`, no substring or free-text matching, no numeric threshold checks, and no filesystem I/O; it delegates substrate extraction to `_inference_substrate_text(d)` and floor classification to `duration_floor_for_artifact(d)`. Its guard `floor is None or floor.get("reason") != "no_llm_declared_by_name"` safely handles missing floors and restricts emission to the exact internal reason code matching its name and docstring, rather than silently disabling a check it owns. Any substrate misclassification or field-unwrapping bug would live inside `duration_floor_for_artifact(d)` or `_inference_substrate_text(d)`, not in this emitter.
-
-
-## adversarial_verify.py::_classify_inference_substrate
+## adversarial_verify.py::_cheap_learned_value_marker
 
 **Verdict:** `REAL_BUG`
 
@@ -532,23 +499,106 @@ KEEP
 REAL_BUG
 
 ## CLAIM
-`Classify substrate from explicit top-level provenance only.` via `_classify_inference_substrate`, returning `SUBSTRATE_KIND_UNKNOWN` on missing, malformed, or unknown declarations so callers fall back to the legacy compute-marker scan.
+`_cheap_learned_value_marker` claims to return a cheap learned-value, CNN, or linear marker found in real (non-metadata) fields of `value`, or `None` if none is present.
 
 ## FINDINGS
-1. **Fail-open allowlist precedence (Q2, Q5, Class A):** In `for kind, candidates in (`, `SUBSTRATE_KIND_AGGREGATION` (`AGGREGATION_SUBSTRATE_ALIASES`) and `SUBSTRATE_KIND_NO_LLM` (`NO_LLM_SUBSTRATE_ALIASES`) are checked before `SUBSTRATE_KIND_LIVE_MODEL` (`LIVE_MODEL_SUBSTRATE_ALIASES`), returning on the first non-`None` result from `_match_declared_substrate(raw, candidates)`. This inverts the fail-closed invariant asserted in the comment below (`A live-model alias` / `therefore still wins, so this can never pull a declared live run off its floor.`): if `_match_declared_substrate` matches substrings, tokens, or prefixes, a compound declaration mentioning both a live model and an aggregation or no-LLM component matches the floor-waiving category first and never reaches `LIVE_MODEL_SUBSTRATE_ALIASES`.
-2. **Suffix fallback undermines both the docstring and comment safety claim (Q3, Q5, Class A):** `if _declares_no_llm_by_name(raw):` intercepts declarations that miss every allowlist and returns `SUBSTRATE_KIND_NO_LLM` (`"source": "no_llm_name_suffix"`) instead of falling through to `SUBSTRATE_KIND_UNKNOWN`. The comment's claim that `this can never pull a declared live run off its floor.` fails for any live run whose declaration is not already matched by `LIVE_MODEL_SUBSTRATE_ALIASES` — such as a newly introduced model, a live-vs-no-LLM comparison name, a negated phrase, or an adversarial self-declared name ending in a no-LLM suffix — pulling it off the conservative legacy compute-marker fallback documented in the docstring.
-3. **Missing vs. malformed conflation (Q1, Q5):** The docstring distinguishes missing, malformed, or unknown declarations, but `if not raw:` collapses every falsy return from `_inference_substrate_text(d)` (empty string, non-string, or an unhandled principle-annotated dict) into `"source": "missing_top_level_inference_substrate"`. While `"kind"` remains `SUBSTRATE_KIND_UNKNOWN`, downstream diagnostics inspecting `"source"` cannot distinguish a malformed field from an absent one.
-4. **Externalized extraction, matching, alias lists, and caller fallback (Q1, Q2, Q3, Class B, Class C, Class F):** Field unwrapping in `_inference_substrate_text`, boundary and negation semantics in `_match_declared_substrate` and `_declares_no_llm_by_name`, taxonomy/alias completeness across `AGGREGATION_SUBSTRATE_ALIASES`, `NO_LLM_SUBSTRATE_ALIASES`, and `LIVE_MODEL_SUBSTRATE_ALIASES` (including whether non-generation workloads such as embedding-only calls are represented), redundant patterns, and whether callers actually enforce a floor on `SUBSTRATE_KIND_UNKNOWN` cannot be verified from this function alone. Classes D, E, and G do not apply (no file paths, writes, or timing metrics).
+1. **Key-name matching ignores falsy or negating values (context blindness).** In the `isinstance(value, dict)` branch, `if marker in key_text:` immediately executes `return marker` before `nested` is ever inspected. Any dict key containing a marker whose value is false, null, zero, empty, or an explicit negation (such as a disabled boolean flag or a zero count) unconditionally triggers a false positive for every entry in `CHEAP_LEARNED_VALUE_MARKERS`.
+2. **Unanchored substring matching without word boundaries or separator normalization.** Both `if marker in key_text:` and `if marker in text:` perform bare substring checks with no word-boundary enforcement and no normalization of underscores, hyphens, or whitespace. A short token in `CHEAP_LEARNED_VALUE_MARKERS` falsely matches inside unrelated or opposite words (such as a linear token matching inside nonlinear, bilinear, or sublinear), while a multi-word token stored with one separator (for example underscores) silently fails to match the same phrase written with spaces or hyphens (silent non-firing).
+3. **Negation and baseline-comparison blindness in free text.** `elif isinstance(value, str):` scans every reachable string via `if marker in text:` without distinguishing whether the text asserts use of a cheap model, explicitly disclaims using one, or mentions one only as a comparison baseline. Honest verdicts, rationales, and ablation notes that deny or outperform a cheap model falsely trigger `return marker`.
+4. **Principle-annotated field dicts are not unwrapped, and the metadata denylist is narrower than its concept (Class B).** The function does not unwrap principle-annotated field objects (dicts pairing a principle explanation with a value) and instead relies solely on `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` to approximate "real fields" from the docstring. Against a corpus of roughly 31,510 distinct top-level keys, a hardcoded denylist omits metadata, principle, caveat, correction-note, and baseline-comparison keys, causing commentary to be scanned as real fields; moreover, `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` is case-sensitive even though `key_text = str(key).lower()` lowercases on the very next line.
+5. **Silent non-firing on unrecognized vocabulary, delimiter variants, and non-list sequences (Class A / Class B / Class F).** Because `CHEAP_LEARNED_VALUE_MARKERS` is defined outside this snippet, exact omitted tokens cannot be verified from this excerpt alone, but any cheap learned-value/CNN/linear model expressed via an unlisted synonym, a multi-word delimiter variant (space or hyphen vs underscore) absent from `CHEAP_LEARNED_VALUE_MARKERS`, or a non-list sequence (only `isinstance(value, list)` is traversed) silently falls through to `return None` — indistinguishable to callers from an artifact genuinely free of cheap learned-value markers.
+6. **Checks with no issues found.** No numeric boundary/off-by-one errors (no numeric comparisons), no hardcoded absolute write targets (Class D), no filesystem or tracked-state side effects (Class E), and no pre-work metric computations (Class G). Redundant-pattern verification (Class C) cannot be completed without the definitions of `CHEAP_LEARNED_VALUE_MARKERS` and `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS`.
 
 ## COUNTEREXAMPLE
-A realistic artifact comparing a live model against a no-LLM baseline: `{"inference_substrate": "mlx_qwen3_vs_no_llm"}` (or, if `_match_declared_substrate` uses prefix matching, `{"inference_substrate": "no_llm_vs_mlx_qwen3"}`, or a live run plus aggregation `{"inference_substrate": "vllm_live_with_aggregation"}`). Under exact matching, `"mlx_qwen3_vs_no_llm"` misses `LIVE_MODEL_SUBSTRATE_ALIASES` and hits `_declares_no_llm_by_name(raw)`, returning `SUBSTRATE_KIND_NO_LLM` (`"source": "no_llm_name_suffix"`). Under substring or token matching, it hits `NO_LLM_SUBSTRATE_ALIASES` before `LIVE_MODEL_SUBSTRATE_ALIASES` is even checked and still returns `SUBSTRATE_KIND_NO_LLM`. Either way, a live-model run is misclassified as no-LLM and pulled off its duration floor.
+```json
+{
+  "use_cnn": false,
+  "use_linear_probe": false,
+  "learned_value_head_enabled": false,
+  "activation": {
+    "principle": "Use non-linear transformer activation; not a cheap linear or cnn surrogate",
+    "value": "nonlinear_silu"
+  },
+  "honest_verdict": "verified_full_llm_no_cnn_or_learned_value_shortcut_outperforms_linear_probe_baseline"
+}
+```
+Regardless of whether `CHEAP_LEARNED_VALUE_MARKERS` uses bare tokens (`"cnn"`, `"linear"`) or snake_case tokens (`"linear_probe"`, `"learned_value"`), `_cheap_learned_value_marker` immediately returns a marker on the `"use_*"` / `"*_enabled"` keys without inspecting their `false` values, and even without those keys would still match the negated verdict, the `"principle"` commentary (unless `"principle"` is in `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS`), or `"linear"` inside `"nonlinear_silu"`.
 
 ## MISSED INPUT
-`{"inference_substrate": "mlx_qwen3_vs_no_llm"}` (or any unlisted/newly-added live model substrate ending in a no-LLM suffix, such as `{"inference_substrate": "gemma4_eval_no_llm"}`, or a negated declaration like `{"inference_substrate": "live_not_no_llm"}`): a live-model experiment that should either classify as `SUBSTRATE_KIND_LIVE_MODEL` or fall back conservatively to `SUBSTRATE_KIND_UNKNOWN`, but is silently reclassified as `SUBSTRATE_KIND_NO_LLM` and exempted from the live-model duration floor.
+Exact token omissions cannot be proven without the definition of `CHEAP_LEARNED_VALUE_MARKERS`. However, because the code matches `CHEAP_LEARNED_VALUE_MARKERS` identically against both snake_case dict keys and free-text strings with no separator normalization, any multi-word marker stored in one convention (e.g. snake_case `learned_value` or `linear_probe`) silently misses a real agent's hyphenated or space-separated phrasing such as `{"model_type": "2-layer ConvNet with ridge-regression learned-value head"}` or `{"surrogate": "logistic-regression linear-probe scorer"}`, and any cheap surrogate synonym absent from `CHEAP_LEARNED_VALUE_MARKERS` (e.g. `{"value_model": "xgboost_regressor"}`) silently returns `None`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`_classify_inference_substrate` fails open in two places: it checks `SUBSTRATE_KIND_AGGREGATION` and `SUBSTRATE_KIND_NO_LLM` before `SUBSTRATE_KIND_LIVE_MODEL`, and it lets `_declares_no_llm_by_name(raw)` assign `SUBSTRATE_KIND_NO_LLM` to unrecognized strings rather than falling back to `SUBSTRATE_KIND_UNKNOWN`. Both contradict the function's own stated guarantee that a live-model declaration cannot be pulled off its floor, enabling composite, unlisted, or suffix-padded live runs to bypass live-model duration checks. The classifier should evaluate `SUBSTRATE_KIND_LIVE_MODEL` first (or treat multi-kind matches as `SUBSTRATE_KIND_UNKNOWN`) and require explicit allowlist membership instead of a self-declared suffix fallback to waive a duration floor.
+`_cheap_learned_value_marker` relies on unanchored substring scans (`if marker in key_text:` and `if marker in text:`) over every non-denylisted key and string in `value`, immediately returning `marker` on key-name hits before inspecting `nested` and without unwrapping principle-annotated fields or checking negation/context. Simply adding word boundaries or unwrapping fields would leave the falsy-key bug, negation and baseline-comparison false positives, separator-variant false negatives, and incomplete `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` denylist intact. It should be redesigned to inspect explicit architecture/substrate fields (after unwrapping principle-annotated dicts), ignore falsy or disabled flags, normalize separators, and apply boundary- and negation-aware matching.
+
+
+## adversarial_verify.py::_has_cheap_learned_value_methodology
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+The function `_has_cheap_learned_value_methodology` claims to return `True` when a fast cached value-head run carries auditable methodology (`"""True when a fast cached value-head run carries auditable methodology."""`).
+
+## FINDINGS
+1. **Field extraction assumptions (unwrapped Principle-Annotated Artifact Fields):** Every field lookup operates directly on the raw value returned from `d` without unwrapping a principle-annotated wrapper dict:
+   - `bool(d.get("model_specs"))`: a non-empty wrapper dict always evaluates to `True` under `bool`, even when the wrapped value is empty or `None`.
+   - `d.get("random_seed") is not None or d.get("seed") is not None`: a wrapper dict is never `None`, so `is not None` evaluates to `True` even when the wrapped seed value is `None`.
+   - `bool(d.get("reproducibility_checksum"))`: a non-empty wrapper dict evaluates to `True` under `bool`, even when the wrapped checksum value is empty or `None`.
+2. **Missing type and content validation on bare values:** Even without principle wrappers, `d.get("random_seed") is not None or d.get("seed") is not None` accepts an empty string, empty container, or placeholder string because none of those are `None`. Similarly, `bool(d.get("model_specs"))` and `bool(d.get("reproducibility_checksum"))` treat whitespace-only strings, sentinel strings indicating absence (e.g., none, N/A, or TBD), or arbitrary truthy types as valid methodology evidence.
+3. **Docstring/implementation mismatch and narrow key enumeration:** The docstring states `True when a fast cached value-head run carries auditable methodology.`, yet the implementation neither verifies that `d` is a cached value-head run nor validates the substance of any field. Conversely, its fixed top-level key set (`"model_specs"`, `"random_seed"`, `"seed"`, `"reproducibility_checksum"`) is narrower than the concept of auditable methodology: an honest multi-seed run recording a plural seeds list, or recording model specifications or a reproducibility digest under a different key name (such as a config hash or SHA-256 field), is rejected.
+4. **Other audit classes:** No substring/regex matching without boundaries (question 2), no numeric threshold comparisons (question 4), no structurally redundant/shadowed branches (class C), no hardcoded absolute write targets or tracked-state mutations (classes D and E), no silent None-returning fallback branch (class F), and no pre-work metric computation (class G).
+
+## COUNTEREXAMPLE
+```json
+{
+  "model_specs": {"principle": "Documents the cached value-head architecture", "value": {}},
+  "random_seed": {"principle": "RNG seed for deterministic replay", "value": null},
+  "reproducibility_checksum": {"principle": "SHA-256 of cached features and config", "value": ""}
+}
+```
+All three underlying values are empty or `null`, so the artifact carries no auditable methodology, yet `_has_cheap_learned_value_methodology` returns `True` because each principle-annotated wrapper dict is non-empty and not `None`.
+
+## MISSED INPUT
+A principle-annotated artifact whose schema fields were populated with null/empty values — e.g. `{"model_specs": {"principle": "value-head model architecture", "value": None}, "random_seed": {"principle": "deterministic RNG seed", "value": None}, "reproducibility_checksum": {"principle": "digest of inputs and weights", "value": ""}}` — or a bare artifact with placeholder values like `{"model_specs": "none", "seed": "", "reproducibility_checksum": "not_computed"}`. Both lack auditable methodology and should fail this check (`False`), yet both return `True` and silently pass. In the opposite direction, a real multi-seed run using `"seeds": [0, 1, 2]` instead of `"seed"` or `"random_seed"` is falsely rejected.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+All four lookups (`d.get("model_specs")`, `d.get("random_seed")`, `d.get("seed")`, and `d.get("reproducibility_checksum")`) test the raw field object with `bool` or `is not None` instead of unwrapping principle-annotated field dicts first. Because any principle-annotated wrapper dict is non-empty and not `None`, an artifact whose actual values are empty or `None` silently passes `_has_cheap_learned_value_methodology` as `True`. Unwrapping principle-annotated fields before validating non-emptiness and expected value types (such as rejecting empty strings or absence sentinels) fixes the core bypass directly.
+
+
+## adversarial_verify.py::_cheap_learned_value_floor_descriptor
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+`_cheap_learned_value_floor_descriptor` claims to return the calibrated sub-1s floor descriptor (`CHEAP_LEARNED_VALUE_MIN_DURATION_S`) for method-bearing cheap learned-value/CNN/linear verifier-scoring artifacts whose duration is below `VERIFIER_SCORING_MIN_DURATION_S`.
+
+## FINDINGS
+1. Field-extraction assumption without principle-annotation unwrapping (Q1 / Class A): `duration = d.get("duration_s")` reads `"duration_s"` raw and passes it directly to `_is_finite_number(duration)` and `float(duration) < VERIFIER_SCORING_MIN_DURATION_S`. Under the project's Principle-Annotated Artifact Fields convention, `"duration_s"` may be a principle/value wrapper dict rather than a bare number. When `_is_finite_number(duration)` rejects that dict, the function silently executes `return None`, causing an honest sub-1s cheap learned-value artifact to miss the calibrated floor and fall back to the stricter `VERIFIER_SCORING_MIN_DURATION_S` floor (a false positive). Even if `_is_finite_number(duration)` unwrapped the dict, `float(duration)` would immediately crash with a TypeError on the unwrapped dict.
+2. Hardcoded replay-field list decoupled from validation (Class B / Q5): the returned `"methodology_fields"` list hardcodes `"model_specs"`, `"random_seed"`, and `"reproducibility_checksum"` rather than reporting the fields actually verified by `_has_cheap_learned_value_methodology(d)`. As a stand-in for the concept "the methodology fields needed for replay", this fixed three-key list omits other replay-critical fields (such as checkpoint or dataset identifiers, hyperparameters, or git commit) and will silently drift if `_has_cheap_learned_value_methodology(d)` ever accepts synonyms or additional fields.
+3. Other audit classes checked with no defects in this function body: no free-text substring or regex matching (Q2) or negation-blind text scans (Q3) appear directly here; `float(duration) < VERIFIER_SCORING_MIN_DURATION_S` matches the docstring's "below the existing 1s verifier floor" strictly (Q4); there are no hardcoded absolute paths (Class D), no filesystem writes or state mutations (Class E), no fail-open default branch (Class F -- here `return None` declines a relaxed sub-1s exception rather than disabling checking), and no pre-work timing calculation (Class G). Note that `_is_verifier_scoring_only(d)`, `_is_finite_number(duration)`, `_cheap_learned_value_marker(d)`, and `_has_cheap_learned_value_methodology(d)` are not provided and cannot be audited here.
+
+## COUNTEREXAMPLE
+{"inference_substrate": "verifier_scoring_only", "duration_s": {"principle": "wall-clock runtime of cached learned-value forward pass", "value": 0.35}, "scoring_method": "cached_learned_value_cnn_forward_pass", "model_specs": {"arch": "cnn_v2", "checkpoint": "ckpts/val_v2.pt"}, "random_seed": 42, "reproducibility_checksum": "sha256:9f86d081884c7d659a2feaa0c55ad015"}
+
+This honest sub-1s cheap learned-value artifact satisfies the verifier-scoring, cached learned-value marker, and methodology requirements, but `d.get("duration_s")` yields the principle-annotated dict so `_is_finite_number(duration)` returns False (or `float(duration)` raises TypeError), returning `None` and falsely quarantining it under the 1s generic verifier floor.
+
+## MISSED INPUT
+`"duration_s": {"principle": "wall-clock runtime of cached linear value forward pass", "value": 0.35}` on an otherwise valid sub-1s cheap learned-value verifier-scoring artifact -- this descriptor function is supposed to fire and grant the calibrated sub-1s floor, but silently returns `None`.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+`duration = d.get("duration_s")` followed directly by `_is_finite_number(duration)` and `float(duration) < VERIFIER_SCORING_MIN_DURATION_S` assumes `"duration_s"` is always a bare numeric scalar and breaks on the project's documented principle/value field wrapper. Honest sub-1s cheap learned-value artifacts that annotate `"duration_s"` silently get `None` and are falsely flagged against `VERIFIER_SCORING_MIN_DURATION_S`. Unwrapping `"duration_s"` before calling `_is_finite_number(duration)` and `float(duration)` fixes the defect directly.
 

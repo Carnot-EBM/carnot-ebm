@@ -14,177 +14,6 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | CLAIM_SUPPORTED | 1 |
 | NO_CLAIM | 7 |
 
-## experiment_9221_v784_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-This artifact is a milestone capstone aggregation and gate-block receipt (`honest_verdict = "complete_blocked_declared_gate"` per the pre-pass) rather than a comparative scientific claim. Because no method superiority, generalization, or scientific effect is claimed, there is no scientific hypothesis to refute; the artifact lacks executed scientific predictions, live model invocations, comparative CES measurements, hardware probes, and independent held-out evaluation. Its administrative accounting would only be refuted if retained upstream artifacts actually passed their declared gates (e.g., `exp9208-contract` having `contract_ready_score == 1` and `replay_authority_ready_score == 1`) or if executed scientific runs were misreported as skipped/unstarted.
-
-## WAS THAT CHECKED
-Yes, at the administrative receipt level. Declared gate operands and upstream SHA-256 custody checks are explicitly logged in `declared_gate_rows`, `corpus_scan_summary.evidence.gate_check_summary`, and `confirmed_branch_results[0].gate_check_summary`, showing why downstream branches were blocked (`exp9208-contract` observed `0` against expected `1` on `contract_ready_score` and `replay_authority_ready_score`, and `exp9209-corpus-prefilter` had `corpus_scan_ready_score` missing). Every scientific or comparative branch (`ces_summary`, `collection_partition`, `cost_summary`, `corpus_scan_summary`) is explicitly reported as unmeasured, unstarted, or blocked, the only qualified branch (`Exp9211`) is an explicit `null` with `no_model_load`, and the historical `arc_summary` control is explicitly marked `disqualified` with `value_added: false`. Note that the provided JSON excerpt is truncated inside `field_principles`, so trailing top-level keys (such as `outcome_rows`, `gate_failure_rows`, and the top-level `honest_verdict` field itself) are absent from the excerpt, though the mechanical pre-pass reports `honest_verdict = "complete_blocked_declared_gate"`.
-
-## EVIDENCE
-- `"activation_authorized": false`
-- `"current_science_paper_ready": false`
-- `"external_publication_authorized": false`
-- `"MODEL_SPECS": []`
-- `"current_llm_invocations": 0`
-- `"effective_independent_groups": 0`
-- `"independent_generalization_score": 0`
-- `"scientific_success_inferred": false`
-- `"executed": 3`
-- `"skipped": 11`
-- `"attempted_scientific_answers": 0`
-- `"execution_only": true`
-- `"unstarted": 3963`
-- `"status": "blocked"`
-- `"status": "unmeasured"`
-- `"verdict_class": "disqualified"`
-- `"value_added": false`
-- `"verdict_class": "null"`
-- `"fourteen terminal administrative outcomes"`
-- `"unmeasured human science, secondary CES and two label sensitivity branches"`
-- `"LPHB is exposed development; no independent human evaluation or generalization. Historical graph access and source authority remain blocked."`
-- `"Hashed primitive denominators bind accounting; administrative readiness grants no new scientific claim."`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9222_v785_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-This is an administrative contract, protocol-binding, and receipt-replay scaffolding artifact (`honest_verdict = "complete_blocked_v785_contract"` in the pre-pass notes) that explicitly disclaims any scientific, generalization, or comparative method claim. There is no comparative headline claim to refute. Even treating its administrative status as a receipt claim, it would only be contradicted if the underlying validation checks and per-unit rows contradicted the recorded blocked outcome (for example, if it claimed readiness or scientific benefit despite failed checks, or if the missing/truncated `rows`, `validation_receipts`, `required_checks_passed`, and elided `gate_check_summary` entries showed zero failures while reporting `failed_count: 5` and `contract_ready_score: 0`).
-
-## WAS THAT CHECKED
-No comparative or scientific claim was tested because none is made: no model was loaded or invoked (`current_llm_invocations: 0`, `generated_tokens: 0`, `effective_independent_groups: 0`), and all publication/activation flags are `false`. On the administrative receipt side, the visible portion of the artifact records three passing pytest shards under `consumer_shard_rows` (`passed: true`, `exit_code: 0`) and three passing SHA-256 `contract_input` checks in `gate_check_summary`, while reporting `attempted_count: 5`, `completed_count: 0`, `failed_count: 5`, `censored_count: 9`, and `contract_ready_score: 0`. Note that the artifact snippet is truncated inside `historical_model_provenance` (and elides 1,625 entries in `gate_check_summary`), so the downstream `rows`, `validation_receipts`, `required_checks_passed`, and `honest_verdict` fields are not present in the artifact text to audit which five checks failed; however, the pre-pass notes confirm `honest_verdict = "complete_blocked_v785_contract"`, `verifier_is_oracle = false`, and `inference_substrate = "cpu_cached_authority_and_receipt_replay"`.
-
-## EVIDENCE
-- `"experiment_id": 9222`, `"track": "infrastructure"`, `"title": "Exp9222: Qualify partitioned consumer replay and bind fourteen V785 tasks"`
-- `"claim_scope"` -> `"scope": "Administrative contract and original methods only; no measured human benefit or ARC solve. Cannot close GAP-ORACLE-DISTINCT or GAP-DETECTOR-AUROC-4208."`
-- `"claim_scope"` -> `"allowed_claims"`: `"administrative task binding"`, `"authenticated original human and method authority"`, `"frozen secondary label sensitivity protocol"`
-- `"claim_scope"` -> `"independent_generalization_score": 0`, `"exposure_scope": "Original LPHB900 answers/300 qids remain exposed development"`
-- `"acceptance_gates"` -> `"scientific_benefit"` -> `"condition": "unmeasured; fixtures and historical receipts grant no independent benefit"`
-- `"contract_ready_score": 0`, `"attempted_count": 5`, `"completed_count": 0`, `"failed_count": 5`, `"censored_count": 9`, `"excluded_count": 0`
-- `"MODEL_SPECS": []`, `"current_llm_invocations": 0`, `"generated_tokens": 0`, `"effective_independent_groups": 0`
-- `"activation_authorized": false`, `"current_science_paper_ready": false`, `"external_publication_authorized": false`
-- `"consumer_shard_rows"` -> `"shard_name": "direct_consumers_core"`, `"shard_name": "direct_consumers_v782_v783"`, `"shard_name": "direct_consumers_v784"` (all `"passed": true`, `"exit_code": 0`)
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9223_corpus_prefilter.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-This is a conductor pre-gate receipt recording that the experiment never ran because an upstream prerequisite gate failed; it makes no experimental or comparative claim about the lossless byte prefilter. The receipt's own status report would be refuted only if all entries in `gates_evaluated` had `passed: true` while still reporting a block, if the `failed_*` fields contradicted `gates_evaluated`, or if a positive completion verdict were emitted despite the failed gate.
-
-## WAS THAT CHECKED
-Yes, for receipt consistency: `gates_evaluated` lists both upstream checks, showing `contract_ready_score` failed (`actual: 0` vs `expected: 1`, `passed: false`) while `replay_authority_ready_score` passed (`actual: 1` vs `expected: 1`, `passed: true`), which matches `gate_check_summary`, `blocked_diagnostic_contract`, and `honest_verdict`. No experimental evaluation occurred (`duration_s: 0.0`), so there are no corpus-walk rows, prefilter measurements, or baselines to audit.
-
-## EVIDENCE
-- `"schema": "blocked_gate_check_v1"`
-- `"status": "blocked"`
-- `"honest_verdict": "blocked_gate_check_failed"`
-- `"blocked_at_layer": "conductor_pre_gate"`
-- `"duration_s": 0.0`
-- `"gate_check_summary": "gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp9222-contract.contract_ready_score (actual=0 == expected=1)"`
-- `"artifact_field": "contract_ready_score"`, `"expected": 1`, `"actual": 0`, `"passed": false`
-- `"artifact_field": "replay_authority_ready_score"`, `"expected": 1`, `"actual": 1`, `"passed": true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9225_v785_selective_deferral_protocol.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because this is a protocol-freeze, custody, and method-qualification receipt artifact making no comparative empirical claim, there is no scientific effect claim to refute. Its narrower readiness and integrity assertions would be refuted if upstream custody hashes mismatched, if `estimator_control_rows` showed Horvitz-Thompson IPW expectation diverging from `true_fixture_risk` for `alpha > 0` or claiming identifiability at `alpha = 0`, if `spline_control_rows` violated partition-of-unity or read labels, if stream audit-mask rows had failures/exclusions/censoring, or if owned validation/coverage checks failed. Any empirical claim of deferral gain, verifier benefit, or generalization would require actual model runs and held-out outcome evaluation against serious baselines, which this artifact lacks and explicitly disclaims.
-
-## WAS THAT CHECKED
-Yes for protocol readiness and mathematical controls; no empirical evaluation was run or claimed. Upstream custody was checked in `gate_check_summary`, estimator unbiasedness and `alpha = 0` unidentifiability were checked on synthetic fixtures in `estimator_control_rows`, label-free B-spline invariants were checked in `spline_control_rows`, pre-outcome stream audit draws were checked across all 150 units in `rows`, and owned code checks/coverage were verified in `validation_receipts` and `owned_statement_coverage` (with unrelated repository-wide test failure transparently segregated in `repository_health`). Model loading, verifier benefit, learning effects, and out-of-sample generalization were not checked because the artifact explicitly scopes them out.
-
-## EVIDENCE
-- `honest_verdict`: `"complete_null_v785_selective_deferral_protocol"`
-- `scientific_effect_measured`: `false`
-- `independent_generalization_score`: `0`
-- `MODEL_SPECS`: `[]`, `current_llm_invocations`: `0`, `model_invocation_status`: `"not_requested_empty_model_specs"`, `inference_substrate_class`: `"no_model_load"`
-- `claim_scope` -> `scope`: `"Selective-deferral feedback masks, inverse-propensity estimators and label-free cubic B-spline support-density diagnostics only; no LLM load, verifier benefit, learning effect or independent generalization."`
-- `acceptance_gates` -> `selective_deferral_method` -> `principle`: `"Audited-deferral masks and inverse-propensity controls qualify a counterfactual method, not primary learning gain."`
-- `rows`: single arm `arm`: `"selective_deferral_stream_mask"`, `metric`: `"audit_draw_u"`, `completed_count`: `150`, `failed_count`: `0`, `censored_count`: `0`, `excluded_count`: `0`
-- `estimator_control_rows`: all 5 controls have `passed`: `true`, with `exact_ipw_brier_expectation`: `0.14500000000000002` matching `true_fixture_risk`: `0.14500000000000002` for `alpha`: `0.1` and `0.25`, and `identifiability_status`: `"unidentifiable"` at `alpha`: `0.0`
-- `spline_control_rows`: all 4 controls have `labels_read`: `false`, `max_partition_of_unity_error`: `1.1102230246251565e-16`, `passed`: `true`
-- `selective_deferral_ready_score`: `1`, `spline_support_diagnostic_ready_score`: `1`, `required_checks_passed`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_9240_v786_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because this artifact is an administrative milestone capstone and gate-accounting receipt (`complete_blocked_declared_gate`) that explicitly disclaims any new scientific, comparative, generalization, activation, or publication claim, there is no comparative scientific claim to refute. Its administrative accounting would only be contradicted if its own rows showed a promoted positive scientific/generalization verdict despite blocked gates, if upstream declared-gate artifacts (`contract_ready_score`, `replay_authority_ready_score`, `corpus_scan_ready_score`) had actually existed and passed while being reported as missing/blocked, or if the truncated tail of the artifact (fields listed in `field_principles` after `forward_qualification_summary`, such as `task_outcome_rows`, `gate_failure_rows`, `unmet_gates`, and `reconciliation_ready_score`) asserted a positive claim not visible in the provided excerpt.
-
-## WAS THAT CHECKED
-Yes, for all visible gate-accounting and branch-status sections: `current_milestone_accounting`, `declared_gate_rows`, `corpus_scan_summary`, `forward_qualification_summary`, `conformal_risk_summary`, `ces_summary`, `collection_partition`, `cost_summary`, `arc_summary`, and `claim_scope` consistently record missing upstream artifacts, scheduler skips, zero executed scientific predictions, disqualified historical offline ARC controls with zero value added, and no confirmed branch results. No comparative scientific hypothesis test was run because upstream prerequisites were blocked, and the truncated tail fields after `forward_qualification_summary` (`task_outcome_rows`, `gate_failure_rows`, `unmet_gates`, `reconciliation_ready_score`) could not be inspected from this excerpt.
-
-## EVIDENCE
-- `"honest_verdict": "complete_blocked_declared_gate"`
-- `"confirmed_branch_results": []`
-- `"activation_authorized": false`
-- `"current_science_paper_ready": false`
-- `"external_publication_authorized": false`
-- `"independent_generalization_score": 0`
-- `"current_llm_invocations": 0`
-- `"executed": 1`, `"skipped": 13`, `"scientific_success_inferred": false`
-- `"attempted_scientific_answers": 0`, `"execution_deficit_answers": 900`
-- `"attempted": 0`, `"completed": 0`, `"unstarted": 3963`
-- `"fourteen terminal V786 administrative outcomes"`
-- `"unmeasured human science, secondary CES, and descriptive ambiguity/deferral/spline-support/conformal branches"`
-- `"Hashed primitive denominators bind accounting; administrative readiness grants no new scientific claim."`
-- `"Exact retained operands and executed receipts support accounting; absent science stays blocked"`
-- `"operand_status": "missing_file"`, `"passed": false`
-- `"status": "unmeasured"`
-- `"verdict_class": "disqualified"`, `"value_added": false`
-
-## RECOMMENDATION
-KEEP
-
 ## experiment_9241_v787_contract.json
 
 **NO_CLAIM**
@@ -196,18 +25,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific or methodological claim to refute: this is an infrastructure/contract-binding and receipt-replay scaffolding artifact that explicitly disclaims any measured scientific benefit or generalization and reports a blocked administrative outcome (`complete_blocked_v787_contract`, `contract_ready_score: 0`). The only thing that could contradict this administrative receipt would be if the underlying per-item `rows` or `validation_receipts` showed all 14 contract objects and gates passing despite the blocked status, or if the artifact claimed readiness without actually running its contract and replay checks.
+There is no comparative or scientific headline claim in this artifact to refute. It is an infrastructure contract-binding and receipt-replay scaffolding artifact (`honest_verdict = "complete_blocked_v787_contract"`) that runs zero model invocations, explicitly disclaims scientific benefit and independent generalization, and records a blocked contract gate (`contract_ready_score: 0`, `completed_count: 0`, `failed_count: 7`, `censored_count: 7`). If it were misread as claiming a passing 14-task contract binding or any empirical method gain, that would be refuted by `contract_ready_score: 0`, `completed_count: 0`, `failed_count: 7`, and the absence of any empirical method comparison or generalization measurement. Note also that the provided artifact text is truncated inside `historical_input_roots`, omitting later fields such as `rows`, `replay_authority_ready_score`, and `validation_receipts`.
 
 ## WAS THAT CHECKED
-No comparative evaluation was run, because none is claimed: no model was loaded, zero LLM invocations occurred, and zero independent scientific groups were evaluated. On the administrative scaffolding side, six consumer test shards (`consumer_shard_rows`) and SHA256 contract-input checks (`gate_check_summary`, with 1645 entries elided) were executed, and the contract readiness score was evaluated to `0` (`attempted_count: 7`, `failed_count: 7`, `censored_count: 7`, `completed_count: 0`, with only 7 entries in `full_task_objects` against the 14-object contract condition). Because the artifact excerpt is truncated mid-`historical_input_roots`, the artifact's `rows`, `validation_receipts`, `required_checks_passed`, and top-level `honest_verdict` fields are not visible in the excerpt (the pre-pass notes supply `honest_verdict = "complete_blocked_v787_contract"`).
+Not applicable for a comparative scientific claim, as none is made. For the administrative scaffolding itself, the artifact checked contract input hashes (`gate_check_summary`) and six split consumer test shards (`consumer_shard_rows`, all passing with exit code 0), and recorded its own blocked contract status (`contract_ready_score: 0`, `completed_count: 0`, `failed_count: 7`, `activation_authorized: false`, `current_science_paper_ready: false`); fields after `historical_input_roots` (including `rows`, `validation_receipts`, and `replay_authority_ready_score`) are absent from the truncated excerpt.
 
 ## EVIDENCE
 - `"track": "infrastructure"`
-- `"inference_substrate_class": "no_model_load"`
+- `"title": "Exp9241: Qualify split V782-V786 consumer replay and bind fourteen V787 tasks"`
+- `"scope": "Administrative contract and original methods only; no measured human benefit or ARC solve. Cannot close GAP-ORACLE-DISTINCT or GAP-DETECTOR-AUROC-4208."`
+- `"condition": "unmeasured; fixtures and historical receipts grant no independent benefit"`
 - `"MODEL_SPECS": []`
 - `"current_llm_invocations": 0`
+- `"generated_tokens": 0`
 - `"effective_independent_groups": 0`
 - `"independent_generalization_score": 0`
+- `"exposure_scope": "exposed_development"`
 - `"contract_ready_score": 0`
 - `"attempted_count": 7`
 - `"completed_count": 0`
@@ -216,8 +49,6 @@ No comparative evaluation was run, because none is claimed: no model was loaded,
 - `"activation_authorized": false`
 - `"current_science_paper_ready": false`
 - `"external_publication_authorized": false`
-- `"scope": "Administrative contract and original methods only; no measured human benefit or ARC solve. Cannot close GAP-ORACLE-DISTINCT or GAP-DETECTOR-AUROC-4208."`
-- `"condition": "unmeasured; fixtures and historical receipts grant no independent benefit"`
 
 ## RECOMMENDATION
 KEEP
@@ -233,10 +64,10 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This artifact is a pre-gate blocking receipt and makes no experimental or comparative claim about qualifying a lossless byte prefilter. Its blocking record would only be contradicted if one or both evaluated upstream gates had `passed: true` (i.e., `actual` equal to `expected` value `1`) while still reporting a blocked gate failure, or if the artifact reported executed prefilter measurements contradicting a `blocked` status.
+This is a blocked-gate receipt artifact rather than an experimental result: Exp9242 ("Qualify a lossless byte prefilter for the complete corpus walk") never executed, so it makes no empirical or comparative claim about a prefilter. Treating the receipt itself as a factual status record, it would be refuted if the entries in `gates_evaluated` showed `passed: true` or `actual: 1` while `status` reported `"blocked"`, or if the artifact asserted any positive qualification outcome despite `duration_s: 0.0` and `blocked_at_layer: "conductor_pre_gate"`. Because the experiment did not run, there are no experimental rows, comparators, or prefilter metrics to evaluate.
 
 ## WAS THAT CHECKED
-Yes, for the gate-receipt itself: `gates_evaluated` lists both checked upstream gates (`contract_ready_score` and `replay_authority_ready_score` on `exp9241-contract`), each showing `actual: 0`, `expected: 1`, and `passed: false`, which is consistent with `gate_check_summary`, `blocked_diagnostic_contract`, `duration_s: 0.0`, and `status: "blocked"`. No experimental evaluation, corpus walk, or comparator baseline was run because execution halted at `conductor_pre_gate`.
+Yes, for internal consistency of the gate receipt: `gates_evaluated` lists 2 of 2 upstream gates on `exp9241-contract` (`contract_ready_score` and `replay_authority_ready_score`), both with `expected: 1`, `actual: 0`, and `passed: false`, matching `blocked_reason`, `blocked_diagnostic_contract`, `gate_check_summary`, `status: "blocked"`, and `honest_verdict: "blocked_gate_check_failed"`. No experimental method, baseline comparison, or corpus-walk prefilter qualification was executed or checked in this artifact (`duration_s: 0.0`).
 
 ## EVIDENCE
 - `"schema": "blocked_gate_check_v1"`
@@ -245,6 +76,7 @@ Yes, for the gate-receipt itself: `gates_evaluated` lists both checked upstream 
 - `"honest_verdict": "blocked_gate_check_failed"`
 - `"blocked_at_layer": "conductor_pre_gate"`
 - `"gate_check_summary": "gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp9241-contract.contract_ready_score (actual=0 == expected=1)"`
+- `"upstream": "exp9241-contract"`
 - `"artifact_field": "contract_ready_score"`
 - `"artifact_field": "replay_authority_ready_score"`
 - `"expected": 1`
@@ -256,43 +88,226 @@ KEEP
 
 ## experiment_9244_v787_conformal_risk_protocol.json
 
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Because this is a protocol-sealing, custody, and provenance-ledger receipt with a null headline verdict (`complete_null_v787_conformal_risk_protocol`) and zero model invocations, it makes no empirical comparative claim about verifier benefit, learning gain, or generalization. What would refute its narrower protocol-qualification and accounting receipt would be: (1) any positive empirical or generalization verdict despite loading no models; (2) cluster-valid conformal bounds dropping below 0.95 coverage at rho >= 0.7, failing monotonicity across alpha_risk, or returning a numeric bound at zero accepted qids; (3) randomized proxy-delay IPW showing nonzero exact bias or failing to bracket corrupted feedback for epsilon in [0.0, 0.05]; or (4) missing/excluded responses, invented span labels, model-judge overrides, or failed upstream SHA-256 custody checks in the 900-response ledger. Note that the artifact lacks any empirical multi-arm evaluation on real predictions (intentionally deferred until after protocol sealing), and this excerpt elides 9 of 12 `ca_ocrc_control_rows`, 126 of 129 `gate_check_summary` entries, and 897 of 900 `rows`.
+
+## WAS THAT CHECKED
+Yes, for all protocol-qualification and accounting invariants, and no empirical comparative claim was tested because none is made. Specifically: zero model work and zero generalization are explicitly recorded in `MODEL_SPECS`, `model_invocation_counts`, `claim_scope`, and `honest_verdict`; cluster-valid coverage vs naive i.i.d. sibling coverage is checked in all 8 `coverage_control_rows`; edge behaviors (zero accepted qids, monotone alpha-risk grid, all-errors unity) are checked in `edge_control_rows`; IPW unbiasedness and corrupted-feedback bracketing are checked in `ca_ocrc_control_rows` (3 of 12 shown, 9 elided); complete 900-response / 300-qid provenance accounting across `TRAIN150`, `CAL50`, and `TEST100` is checked in `provenance_summary` and `provenance_ledger_reference`; upstream custody hashes are checked in `gate_check_summary` (3 of 129 shown, 126 elided); and unrelated repository-wide test failure is transparently separated in `repository_health` rather than hidden. The artifact lacks an empirical benchmark against real rival verifiers or models because it is strictly pre-test protocol scaffolding.
+
+## EVIDENCE
+`"honest_verdict": "complete_null_v787_conformal_risk_protocol"`
+`"MODEL_SPECS": []`
+`"current_llm_invocations": 0`
+`"inference_substrate_class": "no_model_load"`
+`"model_invocation_status": "not_requested_empty_model_specs"`
+`"independent_generalization_score": 0`
+`"exposure_scope": "exposed_development_only"`
+`"scope": "Qid-cluster conformal risk bounds, CA-OCRC capacity-constrained delayed-feedback IPW tracking and Mycelium provenance accounting only; no LLM load, verifier benefit, learning effect or independent generalization."`
+`"principle": "Capacity-constrained delayed-feedback IPW tracking qualifies a shadow protocol, not empirical learning gain."`
+`"principle": "Finite-sample cluster-valid risk bounds qualify a descriptive audit method, not primary verifier gain."`
+`"principle": "Complete provenance-typology-granularity accounting must seal before reading TEST predictions."`
+`"conformal_risk_ready_score": 1`, `"ca_ocrc_ready_score": 1`, `"provenance_audit_ready_score": 1`
+`"arm": "mycelium_provenance_conformal_ca_ocrc"`
+`"intended_count": 900`, `"attempted_count": 900`, `"completed_count": 900`, `"excluded_count": 0`, `"failed_count": 0`, `"censored_count": 0`
+`"answer_level_present": 900`, `"span_level_absent": 900`, `"span_level_present": 0`, `"invented_span_labels": 0`, `"model_judge_overrides": 0`
+`"cluster_valid_coverage": 0.999`, `"naive_sibling_coverage": 0.8615`, `"cluster_valid_coverage": 0.975`, `"naive_sibling_coverage": 0.791`
+`"exact_ipw_risk": 0.3`, `"ipw_risk_bias": 0.0`, `"naive_risk": 0.0`, `"naive_risk_bias": -0.3`, `"corrupted_risk_lower": 0.27`, `"corrupted_risk_upper": 0.37`
+`"required_checks_passed": true`, `"passed": false`, `"note": "Unrelated repository-wide suite recorded separately from owned/affected checks"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9255_v788_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is an administrative contract, protocol-binding, and receipt-replay scaffolding artifact rather than a comparative scientific experiment, so it makes no scientific or comparative claim to refute. If its administrative readiness receipt were audited, it would be falsified by any failing consumer replay shard (`exit_code` nonzero or `passed` false), any SHA-256 mismatch in `gate_check_summary`, any failed or excluded task among the 14 bound task objects, or failing coverage/replay checks in the truncated tail of the artifact (such as `owned_statement_coverage`, `replay_authority_ready_score`, `required_checks_passed`, `validation_receipts`, or `rows`).
+
+## WAS THAT CHECKED
+Yes for the visible administrative checks, and not applicable for scientific comparison because no comparative claim is made. In the visible artifact, all seven `consumer_shard_rows` pass with `exit_code: 0` and `passed: true`, the visible `gate_check_summary` hash checks pass (with 1,675 additional entries elided), task counts show 14 attempted / 14 completed / 0 failed / 0 excluded / 0 censored, and the pre-pass confirms `honest_verdict = "complete_null_v788_contract"` with `verifier_is_oracle = false` and no circularity flags. Note that the artifact text is truncated inside `historical_input_roots`, so keys appearing later alphabetically (`owned_statement_coverage`, `replay_authority_ready_score`, `required_checks_passed`, `validation_receipts`, `rows`) are not present in the provided excerpt.
+
+## EVIDENCE
+- `"experiment_id": 9255`
+- `"track": "infrastructure"`
+- `"inference_substrate_class": "no_model_load"`
+- `"MODEL_SPECS": []`
+- `"current_llm_invocations": 0`
+- `"generated_tokens": 0`
+- `"effective_independent_groups": 0`
+- `"independent_generalization_score": 0`
+- `"current_science_paper_ready": false`
+- `"activation_authorized": false`
+- `"external_publication_authorized": false`
+- `"scope": "Administrative contract and original methods only; no measured human benefit or ARC solve. Cannot close GAP-ORACLE-DISTINCT or GAP-DETECTOR-AUROC-4208."`
+- `"allowed_claims"` lists `"administrative task binding"`, `"authenticated original human and method authority"`, and `"frozen secondary label sensitivity protocol"`
+- `"scientific_benefit"` has `"condition": "unmeasured; fixtures and historical receipts grant no independent benefit"`
+- `"contract_ready_score": 1` with `"contract_ready_score": "Exact task equality is independent of scientific availability."`
+- `"attempted_count": 14`, `"completed_count": 14`, `"failed_count": 0`, `"excluded_count": 0`, `"censored_count": 0`
+- All seven entries in `"consumer_shard_rows"` have `"exit_code": 0` and `"passed": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9256_v788_corpus_prefilter.json
+
 **CLAIM_SUPPORTED**
 
 ## VERDICT
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-This protocol-qualification artifact reports an honest null on empirical model, verifier, learning, or generalization effects (`complete_null_v787_conformal_risk_protocol`) while claiming only that its qid-cluster conformal risk bounds (vs. naive i.i.d. sibling bounds), CA-OCRC randomized delayed-feedback IPW tracker (vs. biased drop-on-full tracking), 900-response Mycelium provenance ledger, and upstream custody checks satisfy their pre-specified readiness gates.
+The v788 five-sentinel byte corpus prefilter fails readiness qualification (`complete_disqualified_v788_corpus_prefilter`, `corpus_scan_ready_score = 0`) because required checks and coverage did not pass, while recording completed corpus traversal, candidate-byte stability, and exact semantic parity/mutation controls only.
 
 ## WHAT WOULD REFUTE IT
-The claim would be refuted by any of the following observations in the artifact's own data:
-1. Any assertion of empirical verifier benefit, learning gain, or independent generalization despite zero model loads and exposed `TEST100` label accounting.
-2. In `coverage_control_rows`: `cluster_valid_coverage < 0.95` for `clopper_pearson_cluster` or `betting_e_process_cluster` at `rho >= 0.7`, or `naive_sibling_coverage >= 0.95` at `rho >= 0.7` (showing the simulation failed to stress sibling correlation), or any `passed: false`.
-3. In `edge_control_rows`: finite bounds instead of `null`/`unavailable` at `accepted_qids = 0`, non-monotone slack or admissibility across `alpha_risk` in `[0.05, 0.1, 0.15]`, or upper bounds below `1.0` when all accepted qids are errors.
-4. In `ca_ocrc_control_rows`: non-zero `ipw_risk_bias`, large `mc_ipw_risk_bias`, a `[corrupted_risk_lower, corrupted_risk_upper]` envelope failing to bracket `true_risk`, `debiased_corrupted_ipw_risk != true_risk`, or drop-on-full comparators matching IPW unbiasedness.
-5. In `provenance_summary`, `rows`, or `gate_check_summary`: non-zero `span_level_present`, `invented_span_labels`, `model_judge_overrides`, `failed_count`, `censored_count`, or `excluded_count`; split counts not summing to 900 responses / 300 qids; or failed upstream SHA-256 custody checks.
-6. Unchecked/missing visibility in this excerpt: 9 of 12 `ca_ocrc_control_rows`, 126 of 129 `gate_check_summary` entries, and most of the 900 `rows` are elided or truncated, so any hidden failure in those elided rows would refute the corresponding readiness gate.
+1. The disqualification verdict would be refuted if all four acceptance gates actually passed (`all_required_checks_and_coverage.passed == true` and `required_checks_passed == true`), or conversely if the artifact claimed readiness or generalization despite a failed gate.
+2. The completed-controls sub-claim would be refuted by any classification discrepancy between the prefilter and `original_decoder` (`parity_discrepancies > 0` or `parity_match == false`), any undetected sentinel or Unicode-escape mutation (`mutation_detected == false` or `missed_positive_count == 0`), incomplete corpus traversal (`visited_files < total_files` or `unfinished_files > 0`), or concurrent file mutation (`changed_files > 0` or `candidate_bytes_stable == false`).
+3. Although `verifier_is_oracle` is true, that would only render a positive verifier-value claim circular; here no positive readiness, speedup, or generalization claim is made (and no model was loaded). Full verification of the exact failing test/check inside `all_required_checks_and_coverage` and of timing comparisons is not directly visible because `validation_receipts` and `stratum_cost_comparison` are truncated at the end of the artifact, and the 744,675 `skipped_eof_negative` corpus files were not individually re-decoded by `original_decoder` beyond the frozen parity fixtures, decoded corpus candidates, and sampled cost-model rows.
 
 ## WAS THAT CHECKED
-Yes, across the artifact's own control tables, ledger summaries, and scope declarations:
-- Empirical scope and leakage (Q2/Q3): Explicitly checked and bounded; no LLM is loaded (`MODEL_SPECS` is empty, `current_llm_invocations` is 0), `verifier_is_oracle` is false, and although `TEST100` human-label counts appear in the provenance ledger, the artifact explicitly restricts scope to `exposed_development_only` and sets `independent_generalization_score` to 0 rather than claiming held-out generalization.
-- Conformal risk coverage and edge cases (Q1/Q4): Checked in `coverage_control_rows` (all 8 rows shown across `rho` in `{0.0, 0.7, 0.85, 1.0}` with 2000 trials each) where cluster-valid bounds stay in `[0.975, 1.0]` while the naive i.i.d. sibling comparator drops to `0.791–0.8615` at `rho >= 0.7`, and in `edge_control_rows` (all 3 rows shown), all passing.
-- CA-OCRC delayed-feedback IPW tracking (Q1/Q4): Checked in `ca_ocrc_control_rows` (3 of 12 rows visible, 9 elided) showing exact IPW bias `0.0`, small Monte Carlo bias (`-0.00125` to `+0.00925`), corruption bracketing `[0.27, 0.37]` around `0.3` with exact debiasing `0.3`, against biased `naive_risk` (`0.0`) and `deterministic_ipw_risk` (`0.4–0.5`).
-- Provenance accounting, custody, and row validity (Q5): Checked in `provenance_summary` (exact 900-response / 300-qid reconciliation across `TRAIN150`, `CAL50`, `TEST100` with zero exclusions/failures/censors and zero invented span labels or model-judge overrides), `gate_check_summary` (3 of 129 SHA-256 checks visible, 126 elided), and `owned_statement_coverage` (100% on the 3 owned files). The failing global pytest suite in `repository_health` (`passed: false`, `exit_code: 1`) is explicitly logged and separated from the owned/affected validation gate rather than hidden. Note that this artifact does not inspect elided rows directly in the truncated JSON excerpt, nor does it test any real model predictions (which it explicitly disclaims).
+Yes. This is an honest disqualified/null verdict backed by the artifact's own gate evaluations and control rows:
+- Qualification failure was checked and triggered: `acceptance_gates.all_required_checks_and_coverage` evaluated to `passed: false` and `required_checks_passed` is `false`, setting `honest_verdict` to `"complete_disqualified_v788_corpus_prefilter"`, `corpus_scan_ready_score` to `0`, `independent_generalization_score` to `0`, and restricting `claim_scope.allowed_claims` to recorded failed qualification operands and completed controls under `"exposed_development_only"`. (The specific failing receipt entries in `validation_receipts` and 11 elided `gate_check_summary` entries are not shown due to truncation, though `owned_statement_coverage.rows` also records unexecuted lines in `v755_branch_runner.py`.)
+- Parity and refutability of the controls were genuinely checked: `parity_and_mutation_controls` ran 30 frozen fixtures (`parity_discrepancies: 0`, `semantic_parity_exact: true`) and 6 mutation controls deleting each of the 5 sentinels and the `\u` Unicode-escape fallback, all 6 of which broke parity (`missed_positive_count` of 9, 4, 2, 2, 2, and 1; `all_mutations_detected: true`), proving the parity check could have failed.
+- Completeness, stability, and row accounting were checked: all 764,150 corpus files were visited (`unfinished_files: 0`, `changed_files: 0`, `candidate_bytes_stable: true`, 19,475 decoded, 744,675 `safely_negative`, 289 positive `checked`, 0 `offenders`), and all 41 intended evaluation rows completed with 0 failed, 0 censored, and 0 excluded.
+- Real rival and exposure checks: the prefilter was evaluated directly against `original_decoder` (not a trivial sanity-check baseline), no LLM was invoked (`current_llm_invocations: 0`), and no held-out generalization is claimed.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_v787_conformal_risk_protocol"`
+- `honest_verdict`: `"complete_disqualified_v788_corpus_prefilter"`
+- `corpus_scan_ready_score`: `0`
+- `independent_generalization_score`: `0`
+- `required_checks_passed`: `false`
+- `claim_scope`: `allowed_claims` contains `"Recorded failed qualification operands and completed controls only."`, `exposure_scope` is `"exposed_development_only"`, `independent_generalization_score` is `0`
+- `acceptance_gates`: `all_required_checks_and_coverage` has `passed` = `false`; `complete_path_traversal`, `exact_semantic_parity`, and `stable_candidate_bytes` have `passed` = `true`
+- `parity_and_mutation_controls`: `fixture_count` = `30`, `parity_discrepancies` = `0`, `semantic_parity_exact` = `true`, `all_mutations_detected` = `true`; `mutation_controls` all have `mutation_detected` = `true` with `missed_positive_count` values `9`, `4`, `2`, `2`, `2`, and `1`
+- `corpus_manifest_reference` and `candidate_counts`: `total_files` = `764150`, `visited_files` = `764150`, `unfinished_files` = `0`, `changed_files` = `0`, `candidate_bytes_stable` = `true`, `decoded_count` = `19475`, `safely_negative_eof_count` = `744675`, `checked` = `289`, `offenders` = `[]`
+- `sample_size_budget` and counts: `intended_count` = `41`, `attempted_count` = `41`, `completed_count` = `41`, `failed_count` = `0`, `censored_count` = `0`, `excluded_count` = `0`
+- `current_llm_invocations` = `0`, `model_invocation_status` = `"not_requested_no_model_load"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9257_forward_qualification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a pre-gate receipt artifact recording that Experiment 9257 never ran because an upstream gate failed; it makes no experimental or comparative claim. The only procedural assertion it records—that the pre-gate check failed—would be refuted if `gates_evaluated` reported `passed: true` or `actual == expected`, or if the referenced upstream artifact at `failed_evidence_path` (which is external to this receipt and not included here) actually contained `corpus_scan_ready_score == 1`.
+
+## WAS THAT CHECKED
+Yes, for internal consistency of the receipt: `gates_evaluated` records 1 of 1 gate evaluated with `actual` = `0`, `expected` = `1`, `op` = `"=="`, and `passed` = `false`, which matches `blocked_diagnostic_contract`, `gate_check_summary`, `status`, and `honest_verdict`. No experimental comparison or validation run occurred (`duration_s` is `0.0`), and the external upstream artifact file itself is not present here to cross-check.
+
+## EVIDENCE
+- `"schema": "blocked_gate_check_v1"`
+- `"status": "blocked"`
+- `"duration_s": 0.0`
+- `"honest_verdict": "blocked_gate_check_failed"`
+- `"blocked_at_layer": "conductor_pre_gate"`
+- `"gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp9256-corpus-prefilter.corpus_scan_ready_score (actual=0 == expected=1)"`
+- `"expected": 1`
+- `"actual": 0`
+- `"passed": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9258_v788_victris_energy_bot.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a blocked scaffolding and harness-readiness receipt making no comparative or scientific performance claim (`scientific_effect_measured` is `false`, `verdict_class` is `"blocked"`). Its narrow engineering and blocked-status receipts would be refuted only if the `arena_sim` module or wheel were actually present while reported missing, if any archive candidate violated the sub-10ms tick latency target or 1000ms budget, if shout isolation or `DEV_SEEDS`/`HELDOUT_SEEDS` disjointness failed, if any of the 6 owned validation checks or 100% owned statement coverage failed, or if simulator match outcomes were reported despite the missing wheel. Any future comparative claim that the Gibbs energy bot outperforms `v0_shoot_baseline` or `ts-starter` would require installing the missing `arena_sim-0.83.0.whl` simulator and running the 200 currently censored matches, and would be refuted if the bot tied or lost to `v0_shoot_baseline` or `ts-starter` on held-out seeds.
+
+## WAS THAT CHECKED
+Yes for the scaffolding, latency, site-rules, validation, and missing-simulator receipts: `preconditions_checked` and `gate_check_summary` verified the missing `arena_sim` module/wheel; `tick_latency_rows` measured all 6 candidates over 24 synthetic ticks; `site_rules_checks` verified seed disjointness and shout isolation; and `validation_receipts` and `owned_statement_coverage` verified all 6 owned checks with 100% owned statement coverage. No comparative gameplay evaluation was checked because the environment lacks `arena_sim-0.83.0.whl`, leaving all 200 intended simulator matches censored and all dev/held-out win rates `null`; the 24 synthetic rows (`synthetic_tactical_verification`) are explicitly marked censored for the missing wheel and are not used to assert a scientific effect.
+
+## EVIDENCE
+- `honest_verdict`: `"complete_blocked_arena_sim_wheel_missing"`
+- `verdict_class`: `"blocked"`
+- `scientific_effect_measured`: `false`
+- `inference_substrate_class`: `"blocked_no_run"`
+- `independent_generalization_score`: `0`
+- `victris_harness_ready_score`: `1`
+- `arena_sim_installed`: `false`
+- `heldout_matches_played`: `0`
+- `claim_scope` / `allowed_claims`: `"deterministic sub-10ms GibbsModel-scale state-action energy scorer for Victris Arena"`, `"strict untrusted opponent shout isolation and DEV_SEEDS (0..999) / HELDOUT_SEEDS (10000..10999) disjointness"`, `"honest blocked_arena_sim_wheel_missing report with zero fabricated simulator matches"`
+- `sample_size_budget`: `intended` `200`, `censored` `200`, `attempted` `24`, `completed` `24`
+- `gate_check_summary`: `check` `"arena_sim_module_import"` with `observed` `false` and `passed` `false`; `check` `"arena_sim_wheel_sha256"` with `observed` `"missing_file"` and `passed` `false`
+- `heldout_summary`: `opponent` `"ts-starter"` and `"random"`, both with `n` `0`, `win_rate` `null`, `baseline_win_rate` `null`, `ci95` `null`
+- `archive_versions`: `dev_win_rate` `null`, `dev_ci95` `null` across all 6 candidates
+- `rows`: `condition` `"synthetic_tactical_verification"`, `censor_reason` `"arena_sim_wheel_missing"`
+- `tick_latency_rows`: `max_ms` up to `0.5478`, `within_10ms_target` `true`, `within_1000ms_budget` `true`
+- `site_rules_checks`: `dev_heldout_disjoint` `true`, `opponent_shout_ignored` `true`, `game_repo_modified` `false`, `live_ladder_contacted` `false`
+- `required_checks_passed`: `true`; `owned_statement_coverage` `percent` `100.0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_9268_v788_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is an upstream-aggregation accounting and milestone reconciliation receipt (`complete_blocked_declared_gate` per pre-pass) that explicitly disavows any scientific, comparative, or generalization claim. Its accounting posture would only be falsified if the artifact asserted a positive comparative result, authorized activation, or claimed primary-gate rescue from secondary or blocked branches despite zero attempted scientific answers and failed upstream gates.
+
+## WAS THAT CHECKED
+Yes, across every summary block present in the artifact (note that the JSON payload is truncated inside `cost_summary`, so the top-level `honest_verdict` field is only visible via the pre-pass note `honest_verdict = "complete_blocked_declared_gate"` and `inference_substrate = "aggregation_from_upstream_artifacts"`):
+- **No model execution or generalization claim**: `MODEL_SPECS` is empty, `collection_partition` reports 0 attempted scientific answers and a 900-answer execution deficit, `activation_authorized` is `false`, and `claim_scope` restricts claims to administrative outcomes while setting `independent_generalization_score` to `0` on the exposed LPHB900/300 development panel.
+- **No comparative win or silent baseline failure**: All three `ces_summary` comparators (`mean_entropy`, `max_entropy`, `probability_length_error_probability`) are `unmeasured` with `denominator: 0`, all `conformal_risk_summary` and `ca_ocrc_summary` branches are `blocked` with `denominator: 0` and `primary_gate_rescue: false`, and all `cost_summary` hardware rows shown have `physical_probe_performed: false`.
+- **Failed and disqualified upstream branches reported honestly**: `corpus_scan_summary` is `disqualified` (`corpus_scan_ready_score: 0` due to full-suite timeout), `arc_summary` is `disqualified` with `value_added: false` and `win_reached: false`, and Exp9258's simulator evaluation is explicitly `blocked` on the missing `arena_sim` wheel.
+
+## EVIDENCE
+- `"MODEL_SPECS": []`
+- `"activation_authorized": false`
+- `"attempted_scientific_answers": 0`
+- `"execution_deficit_answers": 900`
+- `"execution_only": true`
 - `"independent_generalization_score": 0`
-- `"exposure_scope": "exposed_development_only"`
-- `"label_exposure_scope": "exposed_development_only"`
-- `"MODEL_SPECS": []`, `"current_llm_invocations": 0`, `"inference_substrate_class": "no_model_load"`
-- `"scope": "Qid-cluster conformal risk bounds, CA-OCRC capacity-constrained delayed-feedback IPW tracking and Mycelium provenance accounting only; no LLM load, verifier benefit, learning effect or independent generalization."`
-- `"conformal_risk_ready_score": 1`, `"ca_ocrc_ready_score": 1`, `"provenance_audit_ready_score": 1`, `"required_checks_passed": true`
-- `coverage_control_rows`: `"trials": 2000`, `"nominal_target": 0.95`, `"rho": 0.7` (`"cluster_valid_coverage": 0.999`, `"cluster_valid_coverage": 1.0`, `"naive_sibling_coverage": 0.8615`), `"rho": 0.85` (`"cluster_valid_coverage": 0.993`, `"cluster_valid_coverage": 1.0`, `"naive_sibling_coverage": 0.85`), `"rho": 1.0` (`"cluster_valid_coverage": 0.975`, `"cluster_valid_coverage": 1.0`, `"naive_sibling_coverage": 0.791`), `"passed": true`
-- `edge_control_rows`: `"control_id": "zero_accepted_qids_unavailable"`, `"status": "unavailable"`, `"clopper_pearson_cluster_upper": null`, `"betting_e_process_cluster_upper": null`; `"control_id": "zero_errors_monotone_alpha_risk_grid"`, `"clopper_pearson_cluster_upper": 0.058155079116972264`, `"betting_e_process_cluster_upper": 0.1099178754885417`; `"control_id": "all_errors_upper_bound_unity"`, `"clopper_pearson_cluster_upper": 1.0`, `"betting_e_process_cluster_upper": 1.0`
-- `ca_ocrc_control_rows`: `"true_risk": 0.3`, `"exact_ipw_risk": 0.3`, `"ipw_risk_bias": 0.0`, `"mc_ipw_risk_bias": 0.008083333333333331`, `"mc_ipw_risk_bias": -0.0012499999999999734`, `"mc_ipw_risk_bias": 0.009250000000000036`, `"naive_risk": 0.0`, `"naive_risk_bias": -0.3`, `"deterministic_ipw_risk": 0.5`, `"deterministic_ipw_risk": 0.4`, `"corrupted_epsilon": 0.05`, `"corrupted_ipw_risk": 0.32`, `"corrupted_risk_lower": 0.27`, `"corrupted_risk_upper": 0.37`, `"debiased_corrupted_ipw_risk": 0.3`, `"passed": true`
-- `provenance_summary` and top-level counts: `"intended_count": 900`, `"attempted_count": 900`, `"completed_count": 900`, `"failed_count": 0`, `"censored_count": 0`, `"excluded_count": 0`, `"effective_independent_groups": 300`, `"answer_level_present": 900`, `"span_level_absent": 900`, `"span_level_present": 0`, `"invented_span_labels": 0`, `"model_judge_overrides": 0`
-- `owned_statement_coverage` and `repository_health`: `"complete": true`, `"percent": 100.0`, `"passed": false`, `"note": "Unrelated repository-wide suite recorded separately from owned/affected checks"`
+- `"exposure_scope": "Original exposed LPHB900/300 development panel"`
+- `"principle": "Frozen conditions establish accounting only; secondary evidence never rescues primary science"`
+- `"unmeasured human science, secondary CES, descriptive ambiguity/deferral/spline-support/conformal/CA-OCRC branches, and blocked Victris simulator matches"`
+- `"corpus_scan_ready_score": 0`
+- `"disqualification_reason": "full_python_suite_timed_out_at_599.87s_exit_minus_9"`
+- `"status": "unmeasured"`
+- `"censor_reason": "missing_reference_and_scientific_predictions"`
+- `"status": "blocked"`
+- `"censor_reason": "missing_frozen_scientific_predictions"`
+- `"primary_gate_rescue": false`
+- `"verdict_class": "disqualified"`
+- `"value_added": false`
+- `"honest_verdict": "complete_blocked_arena_sim_wheel_missing"`
+- `"physical_probe_performed": false`
 
 ## RECOMMENDATION
 KEEP

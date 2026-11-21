@@ -307,3 +307,9 @@ of truth, not this line.)
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_legitimate_pair | REAL_BUG | OPEN | |
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_zero_delta | REAL_BUG | OPEN | |
 | 2026-11-20 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_compute_in_own_identity | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_evidence_scope | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_methodology_claims_live_inference | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_substrate_declares_deterministic_non_live | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_is_precondition_check_only_blocked | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_has_cheap_learned_value_methodology | REAL_BUG | OPEN | |
+| 2026-11-21 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_floor_descriptor | REAL_BUG | OPEN | |

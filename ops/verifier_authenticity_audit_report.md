@@ -7,27 +7,31 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 14 |
-| `HONEST_HEURISTIC` | 1 |
-| `DISHONEST_NAMING` | 0 |
+| `AUTHENTIC` | 11 |
+| `HONEST_HEURISTIC` | 0 |
+| `DISHONEST_NAMING` | 2 |
 | `ADVERSARIAL_GAMING` | 0 |
-| `CANNOT_DETERMINE` | 5 |
+| `CANNOT_DETERMINE` | 7 |
 | `UNKNOWN` | 0 |
 | `OUTRIGHT_FAKE` | 0 |
 
+### FLAGGED — operator action recommended
+- `python/carnot/verify/convergence.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/correlation_aware_weighting_paradox_diagnosis.py` — **DISHONEST_NAMING**
+
 ### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)
 These verdicts were FLAGGED by the LLM reviewer but cited concrete code/path strings that do NOT exist in the source. Auto-downgraded to `CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN was partly unreliable, not that the verifier is fake.
-- `python/carnot/verify/claim_isolation_router_scale.py` — was **ADVERSARIAL_GAMING**; absent evidence: `time.sleep`; `np.random.*`
-- `python/carnot/verify/claim_isolation_uncertainty_router.py` — was **ADVERSARIAL_GAMING**; absent evidence: `np.random.*`
-- `python/carnot/verify/clean_live_sota_verifier_rerun_v9.py` — was **DISHONEST_NAMING**; absent evidence: `time.sleep`; `np.random.*`
-- `python/carnot/verify/code_corpus_verifiers_fire_transfer_v3.py` — was **DISHONEST_NAMING**; absent evidence: `time.sleep`
-- `python/carnot/verify/code_generalization_second_corpus.py` — was **DISHONEST_NAMING**; absent evidence: `time.sleep`; `np.random.*`; `carnot/verify/`; `carnot/verify/`
+- `python/carnot/verify/conformal_ensemble.py` — was **ADVERSARIAL_GAMING**; absent evidence: `count / (n_cal + 1)`; `np.random.*`; `(count + 1) / (n_cal + 1)`
+- `python/carnot/verify/constraint_dependency_graph_repair.py` — was **ADVERSARIAL_GAMING**; absent evidence: `np.random.*`
+- `python/carnot/verify/controlled_invariance_executor_v2.py` — was **DISHONEST_NAMING**; absent evidence: `time.sleep`; `np.random`
+- `python/carnot/verify/cost_instrumented_verification.py` — was **DISHONEST_NAMING**; absent evidence: `0.8/0.1/0.1`
+- `python/carnot/verify/counterexample_certificate_repair_pilot_v2.py` — was **ADVERSARIAL_GAMING**; absent evidence: `np.random`
 
 ---
 
 Scanned 20 verifier file(s) with agy as the hostile reviewer.
 
-## python/carnot/verify/calibrated_memory_trajectory_8211.py
+## python/carnot/verify/concurrency_canary_8227.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -35,12 +39,14 @@ Scanned 20 verifier file(s) with agy as the hostile reviewer.
 AUTHENTIC
 
 ## CLAIMS
-- Module docstring: `"REQ-VERIFY-8211: preserve the qualified numerical method on natural bytes. Small CPU heads change across requests. Historical generator calls remain historical, and exposed development trajectories supply no generalization credit."`
-- `build()` substrate/methodology metadata explicitly disclaims model loading and speed claims: `inference_substrate_class="no_model_load"`, `MODEL_SPECS = []`, `model_invocation_counts=dict(ZERO_INVOCATION_COUNTS)`, `device_speed_claim=False`, and `methodology_note="No model loaded. Frozen V707 CPU fits and original five controls use released labels and unchanged action thresholds. Gaussian overlap is diagnostic only."`
-- Paper reference in `build()` (`support_overlap_method`): `source="https://arxiv.org/abs/2511.12828"`, explicitly bounded by `scope="Diagnostic motivated by activation overlap; no KAN forgetting theorem is transferred to Gaussian heads"` and `formula="exp(-squared_center_distance/(4*sigma^2))"`.
+None regarding academic papers, ML algorithms, or live GPU execution in this file. The docstrings only claim concurrency and durability harness behavior:
+- `"REQ-VERIFY-8227: isolate independent requests while retaining durable identity. Two fixed worker queues prevent simultaneous reuse of a slot. The existing journal remains the authority for issues and terminal responses, including errors."`
+- `"Fsync each issue before queued work, then preserve every original obligation."`
+- `"Real private sockets test queue isolation without assigning model credit."`
+(`MODEL_SPECS` names `"unsloth/Qwen3.8-27B-GGUF"` / `"llama.cpp CUDA"` solely as experiment configuration metadata, while `freeze()` explicitly sets `benchmark_executed_here=False`, `benefit_claim=False`, and `qualify()` sets `model_calls=0` and `verdict_class="circular_positive"`.)
 
 ## IMPLEMENTATION_REALITY
-This module is an experiment execution, provenance, and cold-replay harness (not a standalone LLM-output verifier) that authenticates upstream SHA-256 manifests, runs 20 seeds of CPU head fitting via `calibrated_memory_methods_8180.run` under `os.fsync` causal journals and `slot + 20` delayed label release, tests `os._exit(73)` crash-recovery parity, and computes the exact declared Gaussian overlap diagnostic (`math.exp(-distance / (4 * geometry["sigma"] ** 2))`). It loads no ML models or inference libraries (`numpy` is imported unused), and delegates the underlying numerical fitting to `calibrated_memory_methods_8180` (whose internals are outside this file).
+This module is a concurrent request-acquisition and slot-isolation harness, not a text-scoring verifier: `freeze()` builds deterministic serial/concurrent schedules, `acquire()` journals all issues upfront and dispatches caller-provided `generate(payload, slot)` calls across fixed per-slot worker threads with deadline censoring, cross-talk/slot-identity validation, and monotonic clock checks, and `qualify()` exercises `acquire()` against a real loopback `ThreadingHTTPServer` using a `threading.Barrier(2)` and injected 503 failure plus journal restart/partial-tail checks.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -52,169 +58,10 @@ none
 KEEP
 
 ## RATIONALE
-Every compute, model, and paper claim in the file is strictly bounded and matches the code: it explicitly declares `no_model_load`, zero generalization credit, and diagnostic-only Gaussian overlap without overclaiming the cited arXiv:2511.12828 KAN paper. The implementation performs genuine causal journaling, delayed-label enforcement, crash-restart verification, and full cold `replay()`, with no sleep-padding, score-capping (`max(1e-300, p)` is purely numerical underflow protection for `math.log`), or synthetic random features. Note that this is a trajectory/audit harness rather than a production AUROC ensemble verifier, and the separate module `calibrated_memory_methods_8180` should be audited independently for its numerical fitting claims.
+The implementation faithfully matches its docstrings: it performs genuine multi-threaded slot partitioning, durable journaling via `request_recorder_8213.Journal`, strict response/clock validation, and real loopback HTTP socket testing without any sleep-padding, score-capping, or synthetic feature generation. Although `CONFIG` contains `duration_floor_s=10` and `MODEL_SPECS` references a GGUF/CUDA model, those are inert experiment configuration fields and the module explicitly disclaims model credit (`model_calls=0`, `verdict_class="circular_positive"`, `benchmark_executed_here=False`). It is infrastructure verification code rather than a production AUROC scorer and shows no dishonesty or gaming.
 
 
-## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-- Module docstring: "This is a deterministic pilot, not a production VeriCoT verifier." and "No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
-- `answers_equivalent`: "Return xVerify-style exact equivalence over canonicalized answer families."
-- `premise_records_from_events`: "Map available monitor constraints into simple VeriCoT-style premise records."
-- `solver_certificate_summary`: "Summarize checked-in solver authority without executing a fresh solver."
-
-## IMPLEMENTATION_REALITY
-This is a pure-Python standard-library module (zero ML, model, or solver imports) implementing deterministic answer canonicalization over labels, code verdicts, `Decimal`-normalized numbers, and bounded JSON. Its `build_artifact`/`write_artifact` pipeline replays pre-recorded JSON outputs from experiments 3111, 3126, 3136, and 3137 to check canonical equivalence, ledger consistency, and constraint presence, while explicitly reporting `executes_models: False`, `executes_solvers: False`, and `no_live_llm_inference: True` in `inference_substrate`.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The code accurately delivers what its docstring explicitly scopes: a deterministic, offline artifact-replay pilot with zero model or solver execution, and it openly disclaims being a production VeriCoT verifier (so it is not a production ensemble AUROC component and does not pretend to be one). Two minor hygiene warts are worth fixing without retiring the module: `build_artifact` populates `tests_run` with hardcoded `DEFAULT_TESTS_RUN` command strings even when no tests were executed, `premise_records_from_events` sets `grounded: True` for any non-empty constraint list regardless of constraint status, and `source_replay_deterministic` only checks a JSON round-trip hash rather than re-running replay.
-
-
-## python/carnot/verify/capacity_benefit_audit_8435.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No claims are made about any academic paper, ML model, or compute substrate (`MODEL_SPECS: list[Json] = []`). The docstrings claim only statistical reduction and resampling of logged experiment data: "REQ-VERIFY-8435: reduce exposed histories without claiming independent replication. Sibling answers and random admissions share questions. Averaging them before resampling keeps the question, rather than a repeated prediction, as the unit", plus conditional bootstrap intervals, simultaneous cross-window retention upper bounds, and per-arm missing-data bounds.
-
-## IMPLEMENTATION_REALITY
-The code is an offline statistical audit script for experiment 8435 that aggregates logged trial rows (`rows`, `retention_rows`, `admission_rows`) to the question level, runs fixed-seed 10,000-draw NumPy nonparametric bootstraps for paired Brier/decision-loss contrasts and simultaneous 5-window retention upper bounds, and computes worst-case missing-data bounds, empirical inclusion frequencies, and control degeneracy checks. It does not invoke any model and does not claim to.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none (`np.random.default_rng(SEED)` is used solely for fixed-seed bootstrap resampling of observed question-level contrasts, not synthetic feature generation; `<= 0.01` is a retention degradation threshold, not score-capping.)
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation matches its docstrings accurately, makes no inflated paper, model, or compute claims, and contains no sleep-padding, score-capping, or synthetic-feature gaming. In fact, it enforces strict completeness, missing-data bound, and control-degeneracy checks and explicitly scopes its output as exploratory conditional evidence rather than deployment proof. Because it is an offline experiment-audit utility rather than a per-output verifier, it should be kept in that audit role and not wired into production ensemble AUROC scoring.
-
-
-## python/carnot/verify/capacity_online_learning_8434.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-None regarding papers, neural models, or GPU/live inference. The module docstring makes only scoped systems/numerical claims: "REQ-VERIFY-8434: bounded released feedback changes a historical numeric head. The qualified store owns all durable parameter writes. Evaluator children keep unused public targets and tune labels outside the learner's update inputs."
-
-## IMPLEMENTATION_REALITY
-This module is an online-learning experiment and audit harness that runs a 5-block sealed-prediction and bounded-feedback loop over a numeric head imported from `carnot.verify.sparse_energy_7996`, persisting state through `carnot.verify.block_feedback_state_8433.Store`. It enforces prediction-seal integrity before releasing binary labels via child subprocesses, replays steps deterministically to detect drift (`check_step`), supports crash-recovery testing, and computes read-only Brier scores on a 150-row tune set (`retention`).
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-Every docstring claim is modest, concrete, and directly implemented by the code, with no inflated paper citations, fake model invocations, sleep-padding, score-capping, or synthetic feature generation (`rng.shuffle(targets)` is used solely for the explicit `shuffled_released_feedback` control arm). Note that this file is an online-learning verification harness rather than a standalone production scoring verifier, and its underlying numeric head (`sparse_energy_7996`) and store (`block_feedback_state_8433`) are separate modules that should be audited on their own merits. Within the scope of this source file, there is no dishonesty or gaming.
-
-
-## python/carnot/verify/causal_online_8025.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No claims are made about any paper, neural model, logprobs, or GPU compute. The docstrings make narrow algorithmic and systems claims: `"REQ-SELF-8025: delayed sparse updates preserve the calibrated input geometry. Only released labels enter the optimizer. A lazy multiplier applies global L2 without converting local coefficient writes into a dense parameter update."`, `"Keep the imported affine calibration fixed throughout every trajectory."`, `"The same calibrated BCE gradient and global ridge decay apply to every adaptive arm."`, `"SQLite makes feedback identities unique and commits issue before release."`, and `"Rebuild metrics from SQLite and verify equations using durable checkpoints."` The code explicitly declares `device="cpu"`, `claim="exposed development replay"`, and `benefit_gate="descriptive only; no retention or generalization qualification"`.
-
-## IMPLEMENTATION_REALITY
-This module implements a CPU-only delayed-feedback online sparse logistic-regression replay harness using `numpy`, `scipy.special.expit`, and `carnot.experiment_8008_v694_conditioned_energy_fit.design`, updating only active nonzero basis coordinates while applying exact global L2 decay via a scalar `decay_scale` multiplier and fixed affine calibration. Every prediction, delayed label release, and parameter update is committed to a `PRAGMA synchronous=FULL` SQLite ledger with checkpointed weights, and `reduce()` independently replays the read-only database to verify release ordering, update equations, hashes, and per-arm update budgets.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation matches its docstring claims down to the exact lazy-L2 sparse BCE update algebra, synchronous SQLite durability, and independent replay verification. There are no inflated paper/model/hardware claims, no sleep-padding or score-capping patterns, and no synthetic random feature generation (tie-breaking uses deterministic `canonical_hash`). The module is an experiment replay/update harness rather than a neural inference verifier, and it honestly scopes its output as an `"exposed development replay"` with `seeds_are_independent=False` and unqualified descriptive benefit.
-
-
-## python/carnot/verify/cctu_headroom_audit_6175.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-The docstring makes no claims about any paper, ML model, learned representation, or GPU/live-inference compute substrate. It explicitly claims only: "Exp6175 CCTU headroom audit over the Exp6174 K8 pool", "The audit is deliberately selector-free. It uses exact validators only to evaluate frozen rows after generation, and it emits held results as aggregate qualification fields so later selector work cannot see held row labels." In code, it sets `INFERENCE_SUBSTRATE = "deterministic_exact_tool_trace_headroom_audit"` and `"verifier_is_oracle": True`.
-
-## IMPLEMENTATION_REALITY
-The module loads frozen Exp6174 raw trace and label JSONL artifacts plus Exp6173 preregistration/bank files, verifies SHA-256 hashes and replays `carnot.verify.cctu_item_bank_6173.validate_candidate_trace` on every raw completion to revalidate labels. It then evaluates a calibration-only plurality consensus rule over JSON-normalized tool/answer clusters against exact Oracle@8 using deterministic case-clustered bootstrap CIs, aggregates held metrics without exposing held row labels, and writes a fail-closed conjunctive readiness artifact.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-This file is an honest, deterministic offline headroom-audit and precondition-gating module whose implementation faithfully matches its docstring and declared substrate with zero deceptive paper/model claims and zero adversarial-verify gaming patterns (`random.Random` is used solely for deterministic bootstrap CIs over real case metrics, and `time.perf_counter()` measures actual runtime). Although it lives under `python/carnot/verify/`, it is explicitly a selector-free experiment audit rather than a scoring verifier for the production AUROC ensemble, so it should be kept in its audit role without contributing to ensemble AUROC.
-
-
-## python/carnot/verify/cctu_item_bank_6173.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No paper, learned model, GPU, or live inference is claimed. The module docstring explicitly states: "This module builds a deterministic item bank, not model candidates. The exact validators replay JSON tool traces locally, so correctness labels come from the executable contract rather than from a model's self-report." It further declares `INFERENCE_SUBSTRATE = "deterministic_executable_tool_trace_fixture_and_validators"` and `verifier_is_oracle = True`.
-
-## IMPLEMENTATION_REALITY
-The module deterministically constructs a 120-case synthetic tool-use bank across 8 constraint categories (split 60/60 into calibration and held), implements 6 local deterministic Python tools (`math.aggregate`, `table.filter`, `text.transform`, `list.order`, `list.take`, `policy.abstain`), and validates candidate JSON traces by strict schema checking and local tool replay. It also runs positive, negative, parser-adversarial, and metadata-invariance control checks and serializes SHA-256-hashed preregistration artifacts without invoking any ML framework or model loader.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation faithfully delivers the deterministic item bank and exact local JSON-trace replay oracle described in its docstring, with no hidden proxies, fake model invocations, or adversarial-verify gaming. Note that this is a benchmark-freeze and exact oracle validator for Exp6173 rather than a learned scoring verifier for a production ensemble. Minor implementation defects exist (e.g., `hash_after_build` reuses `hash_before_build` without recomputing hashes, and `step_results[:-1]` omits the `compositional` check from `base_valid`), but none represent deceptive claims or gaming.
-
-
-## python/carnot/verify/claim_isolation_router_scale.py
+## python/carnot/verify/conformal_ensemble.py
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -222,34 +69,62 @@ The implementation faithfully delivers the deterministic item bank and exact loc
 ADVERSARIAL_GAMING
 
 ## CLAIMS
-- Module docstring: "The scale run reuses the Exp 1541 routing policy, but evaluates it only after the Exp 1551 unified contract gate is ready... router savings are measured against a full-context verifier baseline while the deterministic gate remains common to both paths. That means the router can save verifier calls, but it never becomes the authority for accepting hidden SAT, product-line, runtime-contract, or residual-drift failures."
-- `evaluate_scaled_routing`: "SCENARIO-VERIFY-1553: compare routed calls with a full-context baseline."
-- No paper/arXiv citation in docstrings, though the module hardcodes `MODEL_SPECS` (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`) and emits a `live_sota_model_inference_used` artifact claim while `run_experiment` notes it runs "from checked-in predecessor artifacts and source manifests."
+No module or class docstring and no paper, model, or compute-substrate claims. Only two method docstrings exist:
+- `ConformalEnsemble.predict`: `"Predict final anomaly scores (1 - p_combined)."` (with inline comment `# Fisher aggregation: chi2_stat = -2 * sum(ln(p_i))`)
+- `ConformalEnsemble.predict_stouffer`: `"Stouffer's Z-score method."`
 
 ## IMPLEMENTATION_REALITY
-Using only stdlib (`argparse`, `json`, `pathlib`, etc.) with zero model or verifier imports, this module reads checked-in JSON/JSONL files, fabricates one boilerplate string per row as `"claims"`, copies the ground-truth `deterministic_accept` directly into `claim_isolated_accept`, and runs threshold checks over precomputed fields. It then computes `final_accept = unified_contract_gate_ready and deterministic_accept and routed_signal_accept` followed by `false_accept = not deterministic_accept and final_accept`, which is a Boolean contradiction that guarantees `false_accept_rate == 0.0` and `missed_failure_count == 0` on every possible input.
+This is an experiment runner (`experiment_2461_conformal_ensemble_v3`) using `numpy`, `scipy.stats`, `sklearn.linear_model.LogisticRegression`, `HiveEnsembleDetector`, and precomputed JSON score files over 36 manifest entries. `ConformalEnsemble.predict` (Fisher aggregation) is never invoked, `predict_p_values` omits the `+ 1` conformal numerator term (`count / (n_cal + 1)`), and `predict_stouffer` invents an ad-hoc formula `(0.5 - p_values) / sqrt(auroc * (1 - auroc) / n_cal)` instead of inverse-normal quantiles (`norm.isf(p)`).
 
 ## CLAIM_VS_REALITY_GAP
-OUTRIGHT_FAKE
+UNDISCLOSED_PROXY
 
 ## GAMING_PATTERNS
-- No `time.sleep`, score-capping (`0.99`/`0.01`), `np.random.*`, or literal `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` strings, **but severe structural gate-gaming throughout**:
-- **Tautological zero false-accepts**: `false_accept = bool(not deterministic_accept and final_accept)` where `final_accept` already conjoins `deterministic_accept` (`¬A ∧ (B ∧ A ∧ C) ≡ False`), making `validate_artifact`'s `false_accept_rate == 0.0` check impossible to fail.
-- **Hardcoded oracle copying & guaranteed budget reduction**: All four case builders set `claim_isolated_accept = deterministic_accept` and `_case()` emits exactly 1 synthetic claim per row, so `routed_verifier_calls == routed_cases < full_context_cases` guarantees `budget_reduced == True` whenever any case is unrouted.
-- **Live-inference laundering**: `_live_sota_used()` sets `live_sota_model_inference_used = True` by inheriting flags from predecessor JSONs or matching `case["model_hf_id"]` against `MODEL_SPECS` without executing any inference.
-- **Conductor check gaming**: `artifact_from_summary()` forces `honest_verdict` to start with `"complete:"` even when blocked to pass `TERMINAL_VERDICT_PREFIXES`, and `focused_tests_passed` is self-asserted via a `--focused-tests-passed` CLI flag rather than running tests.
+No sleep-padding, `0.99`/`0.01` score-capping, `np.random.*` synthesis, or `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` token references, but the experiment actively games headline AUROC and precondition reporting:
+- Hardcoded AUROC floor: `fisher_auroc_from_v2 = 0.9167` is passed into `best_auroc_v3 = max(stouffer_auroc, logistic_auroc, fisher_auroc_from_v2)` without ever calling `ensemble.predict()`, guaranteeing `best_auroc_v3 >= 0.9167` regardless of actual results.
+- Test-set leakage: verifiers absent from the hardcoded `aurocs_dict` have their `v_aurocs` weights computed via `_binary_auroc(y_eval, X_eval[:, i])` on the same `y_eval` split used to score `stouffer_auroc`.
+- Tautological/performative checks: `preconds["conformal_module_exists"] = True` is hardcoded, `sklearn_importable` is checked in a `try` block after top-level `from sklearn...` imports already succeeded, and `telemetry_manifest_present` is checked only after reading the manifest and running the experiment.
 
 ## RECOMMENDATION
-RETIRE
+REIMPLEMENT_PROPERLY
 
 ## RATIONALE
-This is not a verifier at all; it is an offline artifact generator that rigs every metric it claims to measure through Boolean tautologies, oracle copying, synthetic 1-claim rows, and laundered `live_sota_model_inference_used` flags. Its `0.0` false-accept rate and `budget_reduced` result are mathematically guaranteed by construction rather than empirically tested against any claim-isolated or full-context verifier. It must be retired from `python/carnot/verify/` and excluded from any production ensemble or headline metrics.
+This module must not contribute to headline AUROC numbers: it floors its reported `best_auroc_v3` with a hardcoded `0.9167` from an unexecuted method, leaks evaluation labels into verifier weights, and ships a fabricated formula labeled as Stouffer's Z-score method. Although it genuinely imports `sklearn` and `scipy.stats` and loads real verifier scores, the evaluation harness is statistically invalid and actively masks regressions. Reimplement it with real inverse-normal Stouffer aggregation, `(count + 1) / (n_cal + 1)` conformal p-values, out-of-fold weight estimation, and actual Fisher evaluation with all hardcoded AUROC floors removed.
 
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `ADVERSARIAL_GAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `time.sleep`; `np.random.*`
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `ADVERSARIAL_GAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `count / (n_cal + 1)`; `np.random.*`; `(count + 1) / (n_cal + 1)`
 
 
 
-## python/carnot/verify/claim_isolation_uncertainty_router.py
+## python/carnot/verify/constraint.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+- "Constraint-based verifiable reasoning -- JAX implementation."
+- "JAX's autodiff computes all gradients automatically." / "Auto-derive gradient via jax.grad." / "Batched energy via jax.vmap."
+- "Langevin noise (P6, from EBT paper): When `noise_scale > 0`, Gaussian noise is added each step: `x = x - step * grad + noise_scale * N(0, I)`"
+- "Randomized step size (P11, from EBT paper): When `randomize_step_size=True`, each step uses `step = step_size * (0.5 + uniform(0,1))`"
+
+## IMPLEMENTATION_REALITY
+The module genuinely imports `jax`, `jax.numpy`, and `jax.random` to implement a differentiable constraint-energy framework (`ConstraintTerm`, `BaseConstraint`, `ComposedEnergy`) with real `jax.grad` autodiff, `jax.vmap` batching, per-constraint verification/decomposition, and selective gradient descent (`repair`) including the exact Gaussian noise and uniform step-size randomization formulas documented.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+This is core JAX energy-composition and gradient-repair infrastructure rather than a fake proxy masquerading as a learned model; every compute and algorithmic claim in the docstrings is faithfully implemented with real JAX primitives. It even explicitly discloses its own engineering limitations (such as device-to-host float conversion in `is_satisfied` and non-JIT-ability of the Python control flow in `grad_violated_only`). There are no adversarial-check gaming patterns.
+
+
+## python/carnot/verify/constraint_dependency_graph_repair.py
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -257,61 +132,34 @@ This is not a verifier at all; it is an offline artifact generator that rigs eve
 ADVERSARIAL_GAMING
 
 ## CLAIMS
-- Module docstring makes no paper claim and explicitly disclaims live verification: `"This module does not make those live isolated-claim verifier calls."` and `"The ledger is not headline verifier evidence until a future implementation performs real isolated-claim verification with recorded model/verifier provenance."`
-- However, the docstring still falsely claims it `"copies available full-context and claim-isolated accept booleans"`, and the module defines `MODEL_SPECS` (`"unsloth/Qwen3.6-35B-A3B-GGUF"`, `"unsloth/gemma-4-31B-it-GGUF"`, `"unsloth/gemma-4-26B-A4B-it-GGUF"`) and emits `"live_sota_model_inference_used": True`, `"uncertainty_router_ready": True`, `"error_detection_improved": True`, and `"honest_verdict": "complete: claim-isolation uncertainty router ready with zero false accepts"`.
+- No external paper, neural architecture, or GPU compute is claimed (the docstring states it "stays inside Carnot's deterministic runtime-contract boundary" and only "optionally attaches Exp 1521 local SOTA repair provenance when that artifact exists").
+- Claims to perform "Constraint Dependency Graph root-cause repair ordering" comparing a flat validator order against a CDG order.
+- Claims: "Candidate repair decisions are converted back into Exp 1520 contract-case rows and scored with the same false-accept ledger used by the runtime-contract E2E harness."
+- Artifact schema propagates `"live_sota_model_inference_used"` and `"models_used"` from Exp 1521 into Exp 1522's terminal artifact alongside `"honest_verdict": "complete: CDG root-cause repair ordering metrics computed"`.
 
 ## IMPLEMENTATION_REALITY
-The module imports only `json`, `collections.abc`, `pathlib`, and `typing`, performs zero model or verifier calls, and never even reads `claim_isolation_manifest_path` after checking that it exists. Instead of copying claim-isolated verifier decisions, `_satquest_cases` and `_product_line_cases` substitute the ground-truth oracle label (`deterministic_accept`, identical to `expected_label`) as `claim_isolated_accept` and set `validator_disagreement = (full_accept != deterministic_accept)`, so routing on disagreement tautologically replaces every false accept with the ground-truth answer.
+Pure-Python JSON/JSONL bookkeeping with zero ML/model imports or inference; it constructs a hardcoded 7-node graph that `analyze_root_cause_case` immediately discards (`del graph`), ranks failures using two static tuples offset by one slot, and never evaluates any actual repair output. Instead, `_candidate_repair_validation_row` copies the ground-truth `expected_label` directly into `final_deterministic_accept` before calling `compute_false_accept_ledger`, guaranteeing a zero false-accept rate by construction.
 
 ## CLAIM_VS_REALITY_GAP
 OUTRIGHT_FAKE
 
 ## GAMING_PATTERNS
-- No sleep-padding, score-capping (`min(score, 0.99)`), `np.random.*`, or `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` string patterns.
-- **Oracle label-leakage rigging**: Routing triggers on `full_accept != deterministic_accept` and routed cases output `claim_isolated_accept = deterministic_accept` (`== expected_label`), mathematically guaranteeing `false_accept_rate == 0.0` to pass `validate_artifact`'s `"ready router requires zero false accepts"` gate and manufacture `"error_detection_improved": True`.
-- **Hardcoded test-pass bypass**: `if __name__ == "__main__": run_experiment(focused_tests_passed=True)` stamps `focused_tests_passed=True` without running any tests to satisfy `validate_artifact`'s `"ready router requires focused tests"` assertion.
-- **Terminal-verdict prefix spoofing**: `_artifact_from_summary` prefixes `honest_verdict` with `"complete:"` even for `status="in_progress"` and `status="blocked"` (`"complete: claim-isolation uncertainty router completed with blockers"`) to satisfy `TERMINAL_VERDICT_PREFIXES`.
-- **Inherited live-inference flag**: `run_experiment` sets `live_sota_model_inference_used=True` if upstream artifacts set it or any input row's `model_hf_id` appears in `MODEL_SPECS`, despite this module running zero inference.
+- No sleep-padding, `min`/`max` score-capping, `np.random.*`, or `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` strings, but severe evaluation gaming is present:
+- **Ground-truth label leakage into ledger check**: `_candidate_repair_validation_row` sets `candidate_accept = expected if isinstance(expected, bool) else False` and writes it to `final_deterministic_accept` before scoring with `compute_false_accept_ledger`, manufacturing `false_accept_count == 0`, `false_accept_rate == 0.0`, and `cdg_root_cause_repair_ready == True` without testing any candidate repair.
+- **Tautological rank rigging**: `analyze_root_cause_case` executes `del graph`, selects `root_cause` as the earliest non-`final_accept` category in `CDG_NODE_IDS`, and compares its rank in `CDG_NODE_IDS` against `FLAT_VALIDATOR_ORDER` (the exact same tuple shifted right by 1 via leading `"final_accept"`), mathematically guaranteeing `cdg_efficiency > flat_efficiency` on every non-final failure.
+- **Provenance laundering**: copies `live_sota_model_inference_used` and `models_used` from Exp 1521's JSON artifact into Exp 1522's output while never invoking a model or inspecting any Exp 1521 repair payload (only counting linked rows and listing their mode/model strings).
 
 ## RECOMMENDATION
 RETIRE
 
 ## RATIONALE
-Despite a surface-level `registry_flag` remediation (`HEADLINE_ELIGIBLE = False`, `LIVE_ISOLATED_CLAIM_VERIFICATION = False`), the implementation is not even an honest ledger: it ignores `claim_isolation_manifest_path`, fabricates `claim_isolated_accept` from the ground-truth oracle, and leaks ground-truth disagreement into the router to guarantee zero false accepts. Combined with hardcoded `focused_tests_passed=True` in `__main__` and `"complete:"` verdict spoofing on blocked/in-progress states, this module actively games conductor validation gates and must not exist in `python/carnot/verify/` or contribute to any ensemble or reporting pipeline.
+Although this module makes no fake arXiv or GPU claims, its core verification and benchmark claims are completely fabricated: it deletes the CDG before analysis, rigs a tautological +1 rank advantage for CDG ordering, and cheats the false-accept ledger by copying `expected_label` into `final_deterministic_accept`. It also launders `live_sota_model_inference_used` from an upstream artifact without ever running a model or validating a single candidate repair. It is not a legitimate verifier and must not contribute to any readiness gate, headline metric, or production ensemble.
 
 > **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `ADVERSARIAL_GAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `np.random.*`
 
 
 
-## python/carnot/verify/clean_bounded_prefix_proxy_v2.py
-
-**Verdict:** `HONEST_HEURISTIC`
-
-## VERDICT
-HONEST_HEURISTIC
-
-## CLAIMS
-- "Clean bounded-prefix/EPR proxy artifact for Exp 2858."
-- "A fast local proxy over FoVer-style labeled rows. It uses Carnot's existing bounded-prefix arithmetic false-claim scorer and optional already-recorded top-k telemetry summaries to decide whether exact frontier-bound work is worth implementing later."
-- "It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model. The artifact intentionally keeps live SOTA model provenance out of the schema so a local proxy cannot be mistaken for live inference."
-
-## IMPLEMENTATION_REALITY
-This file is an experiment runner and JSON artifact generator (not a standalone production verifier) that checks local preconditions, samples 100 labeled rows from `data/fover_corpus.jsonl`, scores them via `ArithmeticFalseClaimConstraint` and optional pre-recorded telemetry imported from `carnot.verify.beaver_epr_bounded_probe`, and writes a checksummed report validated against `scripts/adversarial_verify.py`. It makes no live model calls and programmatically enforces `beaver_exact=False`, `exact_beaver_implemented=False`, `live_model_invoked=False`, and the absence of `model_specs`.
-
-## CLAIM_VS_REALITY_GAP
-DISCLOSED_PROXY
-
-## GAMING_PATTERNS
-none (minor defects worth noting: `run_adversarial_verify` fails open with `flag_count: 0` -> `adversarial_verify_passed: True` if `scripts/adversarial_verify.py` is missing, and `duration_s` is measured before `_success_artifact` actually runs scoring, under-reporting runtime rather than sleep-padding it)
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The module is unusually transparent about what it is and is not, explicitly disclaiming exact BEAVER frontier proofs and live model inference in both its docstring and `_validate_artifact` invariants. It should be kept as an honest local proxy experiment harness (though it is not a live-model verifier and should not be conflated with exact BEAVER in headline ensemble metrics), and the imported `beaver_epr_bounded_probe.py` module should be audited separately to verify the underlying scorer and telemetry loader. The fail-open fallback in `run_adversarial_verify` and premature `duration_s` timestamp should still be fixed so artifact metadata stays strictly accurate.
-
-
-## python/carnot/verify/clean_live_sota_verifier_rerun_v10.py
+## python/carnot/verify/constraint_projection_8075.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -319,13 +167,12 @@ The module is unusually transparent about what it is and is not, explicitly disc
 AUTHENTIC
 
 ## CLAIMS
-No paper, arXiv, EBM, GPU, or logprob claims are made. The module docstring claims only:
-- "Build the Exp 3181 clean live SOTA verifier rerun v10 artifact."
-- "The v10 rerun is receipt-gated. It may spend new local SOTA calls only after Exp 3179 proves a full local SOTA receipt and Exp 3180 proves controlled invariance over exact-authority rows."
-- "If either gate is missing or false, this module writes a complete gated-skip artifact for repair gate v4 instead of letting downstream jobs infer state from a missing result."
+- Compute substrate: `"REQ-REPORT-8075: bounded CPU correction of supplied linear constraints."`
+- Scope/method: `"Known labels define these half-spaces. Feasibility says nothing about new labels."`, `"Only 64 active constraints are kept; historical receipts remain in the audit journal."`, and `"Sample eight rows, correct the worst, then validate the complete set."`
+- Paper/model claims: None (makes no claims of citing a paper, running a neural model, or using GPU/LLM inference).
 
 ## IMPLEMENTATION_REALITY
-This module is a pure-Python experiment-gating and artifact-builder harness (not a standalone ensemble verifier) that reads upstream Exp 3178/3179/3180/3167 JSONs, validates receipt hashes and controlled-invariance gates, queries `carnot.inference.sota_models.cached_sota_pair` for mandated GGUF paths, and scores rows returned by a caller-injected `panel_runner` against exact-authority labels. It contains no direct model-inference backend of its own, so if any gate fails or `panel_runner` is `None`, it fails closed by emitting a `gated_skip=True` artifact with `live_call_count=0`, `executes_models=False`, `flagged_adversarial=True`, and `headline_claim_allowed=False`.
+The code implements atomic, SHA-256-verified JSON persistence for up to 64 linear half-space constraints (`Memory`) and a bounded NumPy CPU projection solver (`project`) that iteratively samples up to 8 constraints, projects onto the most violated half-space within box bounds, checks full residuals across all constraints, and falls back to a verified feasible incumbent or initial weight vector if the budget is exhausted. It also accurately logs wall-clock nanoseconds and operation counts (`cpu_calls=1, rust_calls=0, gpu_calls=0`).
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -337,10 +184,149 @@ none
 KEEP
 
 ## RATIONALE
-The implementation matches its docstring's narrow scope as a fail-closed receipt gate and artifact builder rather than disguising heuristics as model inference, and it explicitly blocks headline promotion whenever live panel execution or upstream proofs are absent. It is not a production ensemble verifier and does not contribute AUROC scores on its own. Two minor non-gaming defects should still be cleaned up: `artifact["tests_run"]` defaults to a hardcoded `DEFAULT_TESTS_RUN` tuple without running tests, and the model-pair check (`if not reasons and not models`) allows a single model despite its error message requiring two.
+The implementation matches its restrained docstrings line for line: bounded CPU linear-constraint projection, deterministic replayable persistence of up to 64 constraints, full residual validation, and honest fallback handling. `np.random.default_rng(seed)` is used solely for seeded row sampling in the iterative projection loop rather than fabricating features, and no sleep-padding, score-capping, or check-dodging patterns are present.
 
 
-## python/carnot/verify/clean_live_sota_verifier_rerun_v9.py
+## python/carnot/verify/content_addressed_features_8066.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+No claims about papers, ML models, learned embeddings, or specialized compute substrates. The module docstring explicitly states: "REQ-REPORT-8066: durable public vectors avoid repeated lexical extraction. Only public bytes enter this service. State-dependent probabilities and evaluator labels stay with the caller so a cache hit cannot reuse an old policy decision." Class and method docstrings claim bounded SQLite storage and page memory, length-prefixed SHA-256 keys, integrity verification with recomputation on corruption, and timing/memory accounting.
+
+## IMPLEMENTATION_REALITY
+Implements a SQLite-backed, capacity-bounded (`1..4096`), integrity-checked cache (`FeatureCache`) keyed by length-prefixed SHA-256 hashes of public input fields and SHA-256 digests of the `evidence_features_7980` and `source_alignment` source files and config constants. On a cache miss or corrupted entry, it delegates feature extraction to `carnot.verify.evidence_features_7980.extract(row)`, evicts oldest rows by sequence number, persists the validated 8-element vector with a `canonical_hash` digest, and records nanosecond timing and memory metrics.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation accurately delivers every claim made in its docstrings without invoking non-existent models, papers, or compute substrates, and it explicitly labels the cached computation as "lexical extraction." There are no sleep-padding, score-capping, synthetic-randomness, or audit-evasion patterns. As a caching infrastructure component rather than a standalone scoring verifier, it is clean to keep (while the delegated `evidence_features_7980` and `source_alignment` modules must be audited separately on their own merits).
+
+
+## python/carnot/verify/context_cot_clbench_parametric_shortcut_fixtures_v1.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+- Docstring: `"Build the Exp 3210 Context-CoT/CL-Bench parametric-shortcut fixtures."` and `"This module is intentionally deterministic. The fixture rows are not model outputs; they are small local contexts whose rules contradict common priors, so an exact checker can tell whether an answer followed the prompt context instead of falling back to pretrained knowledge."`
+- Module metadata (`REFERENCE_PAPERS` and `build_artifact`): Cites `"arXiv:2605.25354"` (`Context-CoT`) strictly as `"context-learning and parametric-shortcut anchor"` and `CL-Bench` as `"benchmark motivation for locally contradicted context rows"`, and declares `"inference_substrate": "deterministic_exact_fixture_generation"` with `"optional_llm_smoke": None`. No model inference, learned embeddings, or GPU compute is claimed.
+
+## IMPLEMENTATION_REALITY
+This pure-Python standard-library module (`json`, `pathlib`) generates 30 hardcoded deterministic context-contradiction fixture rows across three families (`symbolic_aliases`, `local_arithmetic_rules`, `context_defined_entity_facts`), evaluates supplied candidate answers using normalized exact-string equality (`check_answer`, `context_following_score`), validates schema invariants, and writes the JSONL/JSON artifacts.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The code accurately delivers what its docstring promises: a deterministic benchmark fixture builder and exact-match checker with no undisclosed proxy, fake inference claims, or adversarial-verify gaming. It is fixture infrastructure rather than a standalone production AUROC verifier (which it explicitly signals via `ready_for_clean_verifier=true` and `inference_substrate="deterministic_exact_fixture_generation"`). The only minor audit nit is artifact metadata boilerplate that defaults `tests_run` to a hardcoded command list and hardcodes `optional_llm_smoke=null` in `honest_verdict`, neither of which constitutes verifier fraud.
+
+
+## python/carnot/verify/context_sufficiency_7854.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+No paper, learned-model, or compute-substrate execution claims are made. The module docstring states: "Freeze four byte-identifiable source views for a later model experiment. REQ-REPORT-7854-V682. Fixture completions check the transport contract only. They do not say whether a source actually supports the answer." Function docstrings claim only to freeze protocol settings ("Keep the future model budget and every visible request setting fixed"), select a control sentence, build a bounded JSON request payload ("Copy selected original sentence bytes into one bounded HTTP request"), parse strict JSON replies, and record all planned arms.
+
+## IMPLEMENTATION_REALITY
+This module is a pure-Python experimental protocol and request/response capture harness that hashes and slices source text into four controlled arms (`full_source`, `witness_only`, `witness_neighbors`, `matched_control`), enforces SHA-256 drift and token-budget checks using an injected `TokenCount` callable, and dispatches chat-completion payloads through a caller-supplied `transport` callable. It performs no local model inference itself and delegates byte-offsetting, hashing, and strict reply parsing to `carnot.verify.source_interventions`.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation matches its stated scope with zero inflation: it never pretends to run local inference or implement a paper's scoring method, and it explicitly warns that fixture runs test only the transport contract. It enforces strict integrity checks (SHA-256 source/answer drift, exact model-ID verification, explicit exclusion/censoring statuses on budget or transport failures) and contains no sleep-padding, score-capping, or fabricated outputs. Its validity as an experiment depends on the real `transport` and `source_interventions` implementations supplied at runtime, which is cleanly and honestly separated.
+
+
+## python/carnot/verify/continuous_direct_learning_8406.py
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+CANNOT_DETERMINE
+
+## CLAIMS
+No paper, LLM, or GPU/compute-substrate claims are made. The only model/system claims in the docstrings are:
+- `"REQ-VERIFY-8406: delayed labels change only the shipped sparse numeric head."`
+- `"Complete per-slot states make timing and semantic evidence independently replayable."`
+- `"Reconstruct every prediction and update from sealed operands, not reported totals."`
+- `"The original store acknowledges whole versions before feedback or process exit."`
+- `"Invalid feedback cannot write; an identical retry returns its saved result."`
+
+## IMPLEMENTATION_REALITY
+This file is not an LLM-output verifier; it is a pure-Python experiment and durability harness (`exp8406`) that replays 96-slot issue/delayed-feedback (`slot > 8`) event logs, optionally tests crash-resume via `os._exit(73)` against `QualifiedStore`, and runs six negative/idempotency control checks. All actual state transitions, head updates, label sealing, and persistence are delegated to three unshown internal modules (`carnot.verify.direct_atomic_state_8376`, `carnot.verify.continuous_local_learning_8348`, and `carnot.reporting.direct_state_qualification_8404`), with no direct ML/model library imports.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The harness faithfully implements its own replay, crash-resume (`os._exit(73)`), latency-measurement (`time.monotonic_ns()`), and negative-control claims with no gaming patterns or inflated paper/GPU claims. However, because it delegates the "shipped sparse numeric head" and durable store entirely to unshown sibling modules (`direct_atomic_state_8376`, `continuous_local_learning_8348`, `direct_state_qualification_8404`) and only checks single-slot `issued_prediction_mutation` rather than inspecting head-only mutation itself, authenticity of the underlying head cannot be determined from this file alone. Regardless, this is an internal qualification driver rather than a scoring verifier and should not contribute to production ensemble AUROC numbers.
+
+
+## python/carnot/verify/continuous_local_learning_8348.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+No paper, LLM, neural model, or hardware/GPU compute substrate claims are made. The docstrings only claim internal numeric-adaptation mechanics:
+- `"REQ-SELF-8348: delayed numeric adaptation preserves issued decisions. The original spline basis and conservative cache invalidation remain shared. Only already released labels can change the small numeric coefficients."`
+- `"One deployed-logit gradient step freezes every nonlocal parameter. Temperature divides the residual before norm clipping. The dense control visits zero coordinates too, but uses exactly the same arithmetic order."`
+- `"Save issued state before release and save each complete update before ack."`
+
+## IMPLEMENTATION_REALITY
+Implements a crash-recoverable delayed-feedback online adaptation harness over five arms (`frozen_spline`, `online_sparse`, `online_dense`, `calibration_only`, `shuffled_due_feedback`) using a 34-parameter spline head from `local_update_isolation_8306`, performing temperature-scaled L2-norm-clipped projected SGD, inverted-index cache invalidation, delayed label-vault release (`clock == slot + 8`), atomic JSON checkpointing/journaling, and numerical/reachability/attribution diagnostics.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module makes no grandiose claims about papers, foundation models, or neural compute, and its code faithfully implements every mathematical and systems invariant described in its docstrings (delayed label barrier, exact projected gradient step, cache invalidation, and checkpoint-journal consistency). Its use of `random.Random(SEED)` is strictly confined to deterministic label shuffling for the `shuffled_due_feedback` negative-control arm, and `min(4.0, max(-4.0, ...))` is coefficient box-projection rather than score capping. Its self-checks even explicitly guard against over-interpretation via `scope="constructed_fit_only_control"`, `verdict_class="circular_positive"`, and `scope="arithmetic_only_not_learning_benefit"`.
+
+
+## python/carnot/verify/controlled_invariance_executor_v2.py
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -348,61 +334,60 @@ The implementation matches its docstring's narrow scope as a fail-closed receipt
 DISHONEST_NAMING
 
 ## CLAIMS
-- Module docstring: "Build the Exp 3167 clean live SOTA verifier rerun v9 artifact."
-- Module docstring: "When those gates are not ready, it writes a complete gated-skip artifact with machine-readable false/zero values..." (implying a live rerun path executes when gates are ready)
-- `build_artifact` docstring: "REQ-VERIFY-3167: build a clean rerun artifact or complete gated skip."
-- `MANDATED_MODEL_POLICY` lists three flagship GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`) and `field_principles` cites `"GPU/model/live inference status"`.
+- Explicitly disclaims model/verifier invocation and paper methods: `"It does not call a model or score a verifier."` and `"Declare that Exp 3180 uses cached evidence and performs no new inference."`
+- Falsely claims real execution of invariance perturbations and authoritative verification: `"This module executes the invariance controls that Exp 3166 only defined."`, `"Every control routes back to exact authority: exact labels, canonical replay, exact-safe replay, solver/test authority, and monitor-ledger consistency."`, and `"controls must be executed, not only described"`.
+- Control docstrings specifically claim active interventions: `"Force answer tokens while preserving exact authority as the only decider."`, `"Remove final-answer artifacts and deny answer-artifact acceptance."`, `"Shuffle trace evidence and require exact-row fingerprints to stay stable."`, `"Strip trace context and reject answer-token-only acceptance shortcuts."`, and `"Strip final answers and ensure trace-only evidence never accepts."`
 
 ## IMPLEMENTATION_REALITY
-Using only Python standard-library JSON/hash/file utilities (zero ML, LLM, HTTP, or Carnot model imports), this module reads upstream experiment JSON files and unconditionally constructs a hardcoded `gated_skip: True` artifact with `live_call_count: 0`, `selected_model_ids: []`, and `0.0` metrics. No live rerun, model loading, or verification logic exists anywhere in the file—even if all upstream preconditions pass, it still skips with `"live execution path unavailable in this environment"`.
+Using only Python stdlib (`json`, `hashlib`, `pathlib`, `time`), the module reads cached upstream experiment JSON files, deduplicates label rows and receipt hashes, and writes a summary JSON artifact. None of the claimed perturbations, replays, solvers, tests, or monitor-ledger checks are ever executed: five of the seven "controls" are no-ops or tautologies (`remove_answer_control` and `trace_only_control` simply return `passed=bool(exact_rows)`, `shuffled_trace_control` never reads or shuffles a trace and asserts the tautology `len(stable_rows) == len(exact_rows)`, `force_answer_control` never forces tokens and hardcodes `forced_values` metadata, and `answer_only_control` logs `shortcut_exposures` without failing on them).
 
 ## CLAIM_VS_REALITY_GAP
 OUTRIGHT_FAKE
 
 ## GAMING_PATTERNS
-No classic score/duration gaming (no `time.sleep` padding, no `0.99`/`0.01` score capping, no `np.random.*` synthetic features, and no `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` references); it explicitly blocks `headline_claim_allowed: False` and `live_call_count: 0`. However, it exhibits status-gate prefix gaming: `SUCCESS_PREFIXES` (`"complete:"`, `"success:"`, `"passed:"`, `"shipped_"`) is enforced in `validate_artifact` alongside unconditionally hardcoded `"clean_live_verifier_rerun_v9_ready": True` and `"flagged_adversarial": False`, forcing an unimplemented skip-only stub to emit `"complete: clean_live_verifier_rerun_v9_ready=true"` even when skipped or missing required sources.
+No sleep-padding (`time.sleep`), score-capping (`0.99`/`0.01`), synthetic `np.random` features, or explicit `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` dodging. However, it exhibits severe gate-gaming and compliance theater: `control_result()` unconditionally hardcodes `"executed": True`, `"load_bearing": True`, and `"can_authorize_acceptance": False`; `remove_answer_control`, `trace_only_control`, and `shuffled_trace_control` return tautological passes (`bool(exact_rows)` and `len(stable_rows) == len(exact_rows)`) with hardcoded `"trace_only_accept_count": 0`; `transcript_hash_control` vacuously passes with zero receipts (`0 == 0`); and `build_artifact()` stamps `DEFAULT_TESTS_RUN` into `artifact["tests_run"]` by default even when no tests were run.
 
 ## RECOMMENDATION
 RETIRE
 
 ## RATIONALE
-Despite living in `python/carnot/verify/clean_live_sota_verifier_rerun_v9.py` and claiming to "build a clean rerun artifact or complete gated skip," this file is neither a verifier nor a live rerun runner—it is an unconditional gated-skip JSON stub with zero inference code. While it honestly zeroes out metrics and blocks headline claims, its misleading name/docstrings and hardcoded `"complete:"` / `ready=True` terminal status exist solely to satisfy automated matrix/conductor completion checks without doing any verification work. It has no place in `python/carnot/verify/` or the production ensemble and should be retired.
+Although the module does not fabricate LLM/paper claims, it is an outright fake control executor masquerading inside `python/carnot/verify/` that stamps `controlled_invariance_passed=True` and `executed=True` using tautological no-ops and fabricated default `tests_run` entries. It performs no actual answer forcing/removal, trace shuffling, replay, or solver checking, making it completely invalid as a downstream gate (`exp3181`, `exp3184`) and unsuitable for any production verifier ensemble or headline AUROC pipeline. Retire this artifact generator from `python/carnot/verify/` and do not allow it to certify invariance compliance.
 
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `time.sleep`; `np.random.*`
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `time.sleep`; `np.random`
 
 
 
-## python/carnot/verify/clean_local_sota_verifier_rerun_v14.py
+## python/carnot/verify/convergence.py
 
-**Verdict:** `AUTHENTIC`
+**Verdict:** `DISHONEST_NAMING`
 
 ## VERDICT
-AUTHENTIC
+DISHONEST_NAMING
 
 ## CLAIMS
-- "Build the Exp 3275 clean local SOTA verifier rerun v14 artifact."
-- "This runner treats the local SOTA model as a verifier whose decision must be checked against exact fixture authority. The model can only say accept, reject, or abstain; the exact fixture decides whether that response is a false accept, false reject, or abstention."
-- "Run llama.cpp locally with full GPU offload requested." (`run_llama_local_verifier`)
-- "Check visible NVIDIA CUDA devices with nvidia-smi." (`default_cuda_probe`)
-- Mandates local GGUF weights (`unsloth/gemma-4-26B-A4B-it-GGUF`, `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`) and makes no paper, arXiv, or theoretical claims.
+- "The key result from the Hybrid EBM paper (arxiv 2604.00277): under certain conditions on the energy function's Jacobian, there exists a computable 'absorbing radius' r such that gradient descent from any point within r of a minimum will converge to that minimum."
+- "Computes a radius r from network parameters such that if the initial repair state is within r of a minimum, repair() is mathematically guaranteed to converge. Moves repair from 'best effort' to 'provably correct.'"
+- "This is conservative but sound — if the certificate says convergence is guaranteed, it IS guaranteed."
+- "converges=True means repair() is mathematically guaranteed to converge from the given starting point to the minimum."
+- "If the energy gradient is L-Lipschitz (bounded Hessian spectral norm), then gradient descent with step size α < 2/L converges from any point within r = α / (2L) of a minimum."
 
 ## IMPLEMENTATION_REALITY
-The module validates upstream experiment receipts and CUDA availability via `nvidia-smi`, builds exact ground-truth rows from a local JSONL fixture, and invokes `llama_cpp.Llama(..., n_gpu_layers=-1)` on a mandated local GGUF model to produce `ACCEPT`/`REJECT`/`ABSTAIN` completions scored against the fixture. When preconditions or thresholds fail, it fails closed by emitting a gated-skip or not-ready JSON artifact with `clean_verifier_rerun_ready=False`.
+The code uses `jax.hessian` and `jnp.linalg.svd` to compute the empirical maximum Hessian spectral norm over a finite list of `x_samples` (never inspecting network parameters), then divides `step_size / (2.0 * lipschitz)` (or returns `inf` if `lipschitz <= 0`). `certify_repair_convergence` ignores `energy_fn` altogether and only checks whether `absorbing_radius - ||x_init - x_min|| > 0`.
 
 ## CLAIM_VS_REALITY_GAP
-NONE
+UNDISCLOSED_PROXY
 
 ## GAMING_PATTERNS
 none
 
 ## RECOMMENDATION
-KEEP
+REIMPLEMENT_PROPERLY
 
 ## RATIONALE
-This is a genuine local `llama.cpp` verifier runner rather than a heuristic stub: it actually loads and runs GGUF weights with GPU offload, enforces exact fixture authority, and contains no sleep-padding, score-capping, or synthetic feature generation. As a minor caveat, the harness has a few auditability flaws that should be tightened—`models_used` records all resolved models even though only `models[0]` is executed, `max_gpu_memory` includes a pre-load VRAM baseline instead of measuring delta GPU allocation, `tests_run` defaults to a hardcoded command list, and `honest_verdict` prefixes gated-skip/not-ready strings with `"complete:"` to satisfy `SUCCESS_PREFIXES`—though none of these fabricate verifier inference or falsify the boolean readiness gates. Note also that this is an experiment artifact runner rather than a standalone ensemble scorer, so it does not directly feed headline AUROC numbers.
+Although this module performs real JAX autodiff rather than regex heuristics, it falsely markets an unsound empirical estimate as a "provably correct" and "conservative but sound" mathematical certificate from network parameters (arXiv:2604.00277): taking the max Hessian norm over finite `x_samples` produces a lower bound on $L$, which overestimates $r$ and invalidates any soundness guarantee. Worse, `compute_absorbing_radius` never enforces its own `step_size < 2/L` condition—so arbitrarily large, divergent step sizes yield arbitrarily large "guaranteed" radii—and wrongly returns `inf` when `lipschitz <= 0` ("Constant gradient — always converges"), while `certify_repair_convergence` never checks local strong convexity or that `x_min` is a minimum. It must not be treated as a formal convergence certificate in production until replaced with a true parameter-derived Lipschitz upper bound and proper mathematical precondition checks.
 
 
-## python/carnot/verify/clean_verifier_abstention_root_cause_v1.py
+## python/carnot/verify/corrected_cross_domain_remeasurement_v4.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -410,25 +395,53 @@ This is a genuine local `llama.cpp` verifier runner rather than a heuristic stub
 AUTHENTIC
 
 ## CLAIMS
-No claims about a paper, ML model, or live GPU inference. The module docstring explicitly disclaims model execution: "The audit is intentionally offline. Exp 3275 already spent GPU time and preserved the rows, prompts, strict parser decisions, and local model outputs. This module explains that evidence without making a new model call, so the next rerun can fix the response contract before spending more GPU time." Similarly, `build_artifact` states: "REQ-VERIFY-3286: explain Exp 3275 abstentions without rerunning a model."
+None in the docstrings regarding a paper, neural model, or compute substrate; the module docstring only states `"Exp 3642 corrected cross-domain verifier remeasurement. Spec: REQ-VERIFY-3642, SCENARIO-VERIFY-3642."` and `build_math_row` explicitly states `"Restate the frozen Exp 2837 math row without rerunning FoVer."` One minor non-docstring metadata contradiction exists in the constant `INFERENCE_SUBSTRATE`, which mentions `"(principle: scores cached corpora + a small NLI checkpoint; not the FoVer LLM)."` directly below `NLI_SUBSTRATE = "disclosed_text_statistical_proxy_token_support_no_gold_or_label_input"`.
 
 ## IMPLEMENTATION_REALITY
-Using only Python standard-library modules (`json`, `hashlib`, `pathlib`, `time`), the code reads saved Exp 3275/3268 JSON artifacts and a JSONL fixture file, joins rows by `fixture_id`, categorizes answerability and leading-token parser abstentions, and writes a validated JSON audit report with SHA-256 hashes and a rerun plan for Exp 3287. It is an offline post-mortem audit utility, not a runtime LLM verifier or scorer.
+This module is an offline experiment-aggregation and evaluation harness rather than a production verifier: it loads cached JSON/JSONL artifacts, restates frozen Exp 2837 math metrics, and delegates scoring of code and factual rows to `code_corpus_verifiers_fire_transfer_v3` and `RetrievalNLIGroundingVerifier`. It computes exact tie-aware AUROC and deterministic multi-seed bootstrap 95% confidence intervals with NumPy, applies headroom (`< 0.95`) and leak-rejection (`< 0.99`) gates, and writes a validated summary JSON artifact.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
 
 ## GAMING_PATTERNS
-None of the adversarial-verify score/timing/synthetic-data gaming patterns (no `time.sleep` padding, no `0.99`/`0.01` score capping, no `np.random` synthetic features, no `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` references). Minor conductor-artifact hygiene issues worth tightening: `honest_verdict()` forces a `"complete:"` prefix ("a conductor-accepted prefix") even when inputs are missing and `abstention_root_cause_identified` is `False`, `abstention_root_cause_audit_ready` is unconditionally `True`, and `"tests_run"` defaults to six hardcoded pytest/coverage commands (`DEFAULT_TESTS_RUN`) without actually executing them.
+none (note: `np.random.default_rng` is used only for bootstrap resampling indices of existing labels/scores, `grounding_point < 0.99` is a leak-failure gate rather than score-capping, and `duration_s` uses `time.perf_counter()` without sleep-padding)
 
 ## RECOMMENDATION
 KEEP
 
 ## RATIONALE
-The module does exactly what its docstring and filename state—an offline root-cause audit of prior Exp 3275 outputs—with zero misleading claims about papers, models, or compute. Because it is a diagnostic artifact builder rather than a scoring verifier, it does not enter the production ensemble or affect AUROC numbers. It should be kept as an audit script (though hardcoding `DEFAULT_TESTS_RUN` and silently returning `{}` on missing input files should be cleaned up to prevent unverified self-attestations).
+The module honestly implements an experiment remeasurement and statistical evaluation harness with no deceptive docstring claims and no adversarial-check gaming, and it explicitly discloses via `NLI_SUBSTRATE` that the delegated factual grounding verifier is a text-statistical proxy. Because it is an evaluation script rather than a verifier class, it does not directly enter the production ensemble, though the stale `"a small NLI checkpoint"` parenthetical in `INFERENCE_SUBSTRATE` should be cleaned up to match `NLI_SUBSTRATE`. Authenticity of the underlying scoring signals still depends on separately auditing the delegated modules (`RetrievalNLIGroundingVerifier` and `code_corpus_verifiers_fire_transfer_v3`), whose implementations are outside this file.
 
 
-## python/carnot/verify/code_corpus_verifiers_fire_transfer_v3.py
+## python/carnot/verify/correlation_aware_weighting_paradox_diagnosis.py
+
+**Verdict:** `DISHONEST_NAMING`
+
+## VERDICT
+DISHONEST_NAMING
+
+## CLAIMS
+- Module docstring: "This module reuses the cached FoVer scores from Exp 3644, then replaces the naive marginal-correlation penalty with a label-conditional dependency graph and signed graph-aware weights. The learned graph is a Chow-Liu tree over the verifier vote columns; the weights solve a graph-sparse Fisher system..."
+- `INFERENCE_SUBSTRATE`: `"verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load)."`
+- `FIELD_PRINCIPLES["ensemble_auroc_dependency_aware_proper"]`: `"The arXiv:1903.05844 learned-dependency-structure weighting -- does proper dependency-awareness recover or beat Carnot's 0.919?"`
+
+## IMPLEMENTATION_REALITY
+This is a pure-NumPy experiment-analysis harness over cached verifier scores from `weaver_peer_comparison_v3` (no LLM or neural model is invoked, matching its cached-substrate claim). However, rather than implementing arXiv:1903.05844's unsupervised sparse-plus-low-rank inverse-covariance structure learning, it fits a supervised 5-fold cross-fitted Fisher linear discriminant (`learned_on_labels: True`) using a label-conditional Gaussian-MI Chow-Liu tree to entrywise-mask the pooled covariance matrix (`pooled * mask`) before solving `pinv(graph_covariance) @ (means[1] - means[0])`.
+
+## CLAIM_VS_REALITY_GAP
+UNDISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+REIMPLEMENT_PROPERLY
+
+## RATIONALE
+While the module docstring accurately describes the Chow-Liu tree and Fisher solve (and honestly discloses cached scores with no LLM load), `FIELD_PRINCIPLES` silently brands the output metric as `"The arXiv:1903.05844 learned-dependency-structure weighting"` without disclosing that arXiv:1903.05844 is an unsupervised precision-matrix structure-learning method whereas this code fits supervised ground-truth labels and masks the covariance matrix instead of the precision matrix. Comparing a label-supervised signed Fisher solver against unsupervised weighting baselines invalidates the Exp 3656 paradox diagnosis, and `diagnose_naive_penalty` further hardcodes `"redundancy_vs_complementarity_confusion": bool(retained_edges)` which is unconditionally `True` for any spanning tree on 2+ verifiers. It must not be credited as arXiv:1903.05844 or contribute to production ensemble claims until properly implemented as unsupervised precision-matrix dependency learning (or stripped of the paper attribution and evaluated strictly as a supervised baseline).
+
+
+## python/carnot/verify/cost_instrumented_verification.py
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -436,66 +449,92 @@ The module does exactly what its docstring and filename state—an offline root-
 DISHONEST_NAMING
 
 ## CLAIMS
-- Module docstring: `"Exp 3641: code corpus verifier firing and FoVer-math transfer."`
-- `score_math_signal` docstring: `"Score a FoVer-math-derived verifier signal on code candidates."`
-- `FIELD_PRINCIPLES["math_signal_code_auroc"]`: `"The transferred FoVer-math verifier signal on code -- the core transfer number."`
-- `FIELD_PRINCIPLES["transfer_delta_vs_literature"]` / `transfer_delta_summary`: `"Signed comparison to the +4-8pt arXiv:2506.00027 anchor"` ("math-trained PRMs transfer to code as well as or better than code-trained PRMs") and `FIELD_PRINCIPLES["hypothesis_supported"]`: `"'transfer' (2506.00027) or 'discriminative_fragility' (2504.16828)"`.
-- `FIELD_PRINCIPLES["execution_verifier_auroc"]`: `"The execution-applicable verifiers' standalone code-error signal + CI."`
-- `INFERENCE_SUBSTRATE` (compute substrate): `"verifier_ensemble_against_cached_candidates (principle: scores the cached code corpus; no LLM load)."`
+- "the LLM path counts real GGUF tokenizer tokens, and the energy path records an estimated CPU forward-pass operation count for the local verifier ensemble."
+- "`run_energy_verifier`: Run the local CPU verifier ensemble and estimate its forward-pass ops."
+- "`run_llm_judge_verifier`: Run a live or injected llama.cpp judge and account for its tokens."
 
 ## IMPLEMENTATION_REALITY
-This is an offline experiment harness (not a standalone production verifier) with no ML/LLM imports (`numpy`, stdlib, and lazy `carnot.verify.*` imports only) that scores cached JSON candidates and outputs a bootstrapped AUROC artifact. For `"FoVer-math"`, `score_math_signal` loads no FoVer model or trained PRM, instead averaging `SemEnergyProbe().score_response_proxy(text)`, `Z3MathVerifier().score(text)`, and `RPRMStepReward().verify_response("", text)` (with an empty prompt); for `"execution_verifier_auroc"`, both execution-named adapters are hardcoded inert and only static `ast.parse` verifiers (`ASTStructureVerifier`, `code_structural_dependency_verifier`) actually score candidates (alongside a pure-Python string-frequency/index-rank `"confidence"` baseline).
+`measure_verification_cost` and `run_llm_judge_verifier` genuinely time execution, compute AUROC, invoke `llama_cpp.Llama`, and count tokens via `llm.tokenize` (though `model_params_for_path` silently defaults any unrecognized model path to 35B parameters). However, `run_energy_verifier` runs no energy-based model and no neural forward pass: it computes a hardcoded `0.8/0.1/0.1` weighted sum over `Tier0rVerifier`, `Tier0uVerifier`, and the known-fake `tier0s_halluguard.Tier0sVerifier.halluguard_ntk_score`, and fabricates `est_flops` with the arbitrary linear formula `(3 * char_count) + (24 * token_count)` over string length and regex word counts.
 
 ## CLAIM_VS_REALITY_GAP
 UNDISCLOSED_PROXY
 
 ## GAMING_PATTERNS
-none (no `time.sleep` padding, no 0.99/0.01 score-capping—`< 0.99` in `null_discipline` is only a baseline-headroom check, `np.random.default_rng` is only used for bootstrap CI resampling, and neither `IMPLAUSIBLE_PERFECT` nor `DURATION_TOO_SHORT` appears; note only the mild smell of `FIELD_PRINCIPLES["duration_s"]: "Plausibility floor."` and injectable `started_s`/`now_s`/`score_overrides` test hooks)
+none
 
 ## RECOMMENDATION
 RENAME_TO_REFLECT_REALITY
 
 ## RATIONALE
-While `INFERENCE_SUBSTRATE` honestly states `"no LLM load"` and `verifier_interface_diagnosis` admits the active code verifiers only run `ast.parse` while the execution adapters are inert, the module still dishonestly packages a local proxy/symbolic average (`score_response_proxy` + Z3 + empty-prompt RPRM) as `"FoVer-math"` to test `arXiv:2506.00027` PRM transfer and reports static AST scores as `execution_verifier_auroc`. It also contains a silent row-misalignment bug whenever `structural_dependency_scores` skips rows without manifest matches before `append_verifier_scores` zips by index. As an offline experiment script built on undisclosed proxies, it must not contribute to production ensemble AUROC numbers or FoVer-math transfer claims unless renamed to reflect its static-AST/heuristic-math reality (or reimplemented with an actual FoVer-trained PRM and real code execution).
+While the timing harness and live `llama.cpp` judge path are authentic, branding a hardcoded blend of tier-0 heuristic verifiers (including the discredited `tier0s_halluguard.halluguard_ntk_score`) as `run_energy_verifier` / "the energy path" is misleading, and billing `(3 * char_count) + (24 * token_count)` as "an estimated CPU forward-pass operation count" (`est_flops`) without disclosure is a fabricated cost metric. Because this path pulls in `tier0s_halluguard` and reports invented FLOPs against an LLM baseline that defaults unknown models to 35B parameters, its numbers must not be used for headline AUROC or cost-efficiency claims until renamed to reflect a tier-0 heuristic ensemble, stripped of `tier0s_halluguard` and fake FLOP accounting, or reimplemented over a real energy model.
 
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `time.sleep`
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `0.8/0.1/0.1`
 
 
 
-## python/carnot/verify/code_generalization_second_corpus.py
+## python/carnot/verify/counterexample_certificate_expansion_v3.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+- Module docstring: `"This builder prepares repair-gate evidence without attempting repair. It joins the small Exp 3170 certificate pilot to the larger exact-row denominator from the controlled-invariance and clean-rerun gate artifacts, then records bounded frontier rows in a BEAVER-inspired shape."`
+- `build_artifact`: `"REQ-VERIFY-3183: materialize repair-readiness evidence without inference."`
+- `inference_substrate`: `"Label the work as exact/cached artifact replay, not live inference."`
+- Makes no claims of live inference, model execution, logprobs, embeddings, GPU compute, or full BEAVER verification—only formatting cached frontier rows into a "BEAVER-inspired shape".
+
+## IMPLEMENTATION_REALITY
+This module is a pure-Python offline JSON artifact aggregator (`hashlib`, `json`, `pathlib`, `time`) that loads prior experiment JSON files (`exp3125`–`exp3182`), joins Exp 3170 pilot certificates onto the largest exact-row denominator, formats bounded `[0.0, 1.0]` frontier records, evaluates fail-closed readiness blockers (including upstream adversarial flags), and writes the resulting JSON artifact with `live_model_calls: 0`. It is not a scoring verifier and does not run models, solvers, or produce AUROC predictions.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none (no sleep-padding, score-capping/perfect-dodging, random feature generation, or adversarial-verify token dodging; minor provenance/correctness flaws exist where `honest_verdict()` hardcodes `counterexample_certificate_expansion_v3_ready=true` even if that field is `False`, `DEFAULT_TESTS_RUN` populates `tests_run` with static command strings without running them, and `depends_on_flagged_live_verifier` is hardcoded to `False` on every record, making that specific blocker check dead code).
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module is an honest offline evidence-aggregation script rather than a fake neural/paper verifier: it explicitly disclaims inference, model execution, and solver execution in both its docstrings and output `inference_substrate` metadata, and it fails `repair_call_ready` closed whenever upstream artifacts are flagged adversarial or incomplete. It does not generate verification scores or pollute production ensemble AUROC numbers. The minor bugs around hardcoded `counterexample_certificate_expansion_v3_ready=true` in `honest_verdict()` and unexecuted `DEFAULT_TESTS_RUN` entries should be fixed, but they are not verifier-fraud or adversarial-verify gaming.
+
+
+## python/carnot/verify/counterexample_certificate_repair_pilot_v2.py
 
 **Verdict:** `CANNOT_DETERMINE`
 
 ## VERDICT
-DISHONEST_NAMING
+ADVERSARIAL_GAMING
 
 ## CLAIMS
-- Module docstring: "Exp 3658: balanced second-corpus code generalization replication."
-- `INFERENCE_SUBSTRATE`: "verifier_ensemble_against_cached_candidates (principle: scores the cached second code corpus; no LLM load)." (Explicitly disclaims LLM loading; makes no arXiv paper, neural model, or GPU claims.)
-- `build_second_labeled_code_corpus` docstring: "Build a balanced HumanEval split using official-check execution labels."
-- `FIELD_PRINCIPLES`: "The transferred FoVer-math signal on the second corpus -- the replication number." and "The execution verifiers' code-error signal on the second corpus + CI."
-- `terminal_verdict`: "complete: code_generalization_replicates_on_balanced_second_corpus_claim_hardened"
+- Compute substrate: `"NO LIVE MODEL INFERENCE — This task is CPU / exact-authority only. No GGUF model is loaded, no llama.cpp subprocess is spawned, no repair runner is invoked. The inference_substrate field records this explicitly. Duration should be sub-second."`
+- Paper/framework reference: `"Records BEAVER-style bounded-frontier fields from exp3125 (bound width, explored mass, viable prefix count) per fixture"` and `"BEAVER (Bounded Exact Accept VErifieR) requires that every accept decision be grounded in a finite explored frontier with a known probability mass and bound width."`
+- Provenance/behavior: `"Reads exact rows from prior experiments that have: A known counterexample or solver certificate"` and `"Scores any prior repair candidates from exp3169 against the certificates (there are none because the gate was blocked, so scored=0)."`
 
 ## IMPLEMENTATION_REALITY
-This file is not a verifier at all, but an offline experiment harness with zero ML/model imports that delegates all actual scoring (`score_execution_verifiers`, `score_math_signal`, `score_confidence_baseline`) to an unshown module (`carnot.verify.code_corpus_verifiers_fire_transfer_v3`) and execution to `execute_humaneval`. Rather than scoring cached LLM candidate solutions, its sole corpus-building path takes canonical HumanEval solutions as positives and fabricates 100% of the error class by AST-inserting `return None` as the first line of the function body (`make_return_none_mutant`).
+This is a pure-Python stdlib (`hashlib`, `json`, `time`, `pathlib`, `dataclasses`) offline JSON artifact packager—not a verifier—with zero model, solver, or repair invocations. It hardcodes 5 static `CertificateRecord` fixtures (completely ignoring the loaded `exp3136_data` parameter and only partially overlaying fields from `exp3111_data` if present), copies summary counts from `exp3125`/`exp3169` JSON files, and writes a pilot JSON artifact.
 
 ## CLAIM_VS_REALITY_GAP
-UNDISCLOSED_PROXY
+NONE
 
 ## GAMING_PATTERNS
-No sleep-padding (`time.sleep`), score-capping (`min(score, 0.99)` / `max(score, 0.01)`), `np.random.*` feature generation, or `IMPLAUSIBLE_PERFECT` / `DURATION_TOO_SHORT` string checks appear in this file. However, `FIELD_PRINCIPLES` references `"duration_s": "Plausibility floor."`, `build_artifact` / `write_artifact` accept `score_overrides` without recording in the output artifact that scores were overridden (plus `started_s`/`now_s` timestamp overrides), and constructing every negative example as a line-1 `return None` dead-code stub creates a trivially separable synthetic benchmark.
+- **Token-dodge against reconciler checks (`_build_verdict`)**: The docstring explicitly cites the checker's matching logic (`"Conductor reconciler substring-matches partial tokens like 'blocked', 'no_improvement', 'marginal' against verdicts. The terminal-prefix discipline requires verdicts start with complete:/success:/passed:/shipped_."`) and deliberately formats `honest_verdict` with a `"complete: ..."` prefix while suppressing the `"blocked"` gate status—even reading `repair_gate_state = exp3169_data.get("gate_state", "blocked")` in `build_artifact` and discarding it as a dead variable.
+- **Unconditional ready/non-empty pass inflation**: `"counterexample_certificate_repair_pilot_v2_ready": True` is hardcoded unconditionally, and the 5 hardcoded fallback records still emit populated `mcs`, `unsat_core`, `exact_row_count=5`, and `counterexample_count=4` even when every upstream JSON artifact is missing (contradicting its own `"MCS for Z3 rows unavailable"` notice).
+- No sleep-padding, score-capping, or `np.random` synthesis found.
 
 ## RECOMMENDATION
 RETIRE
 
 ## RATIONALE
-This module is an experiment harness misplaced in `carnot/verify/` whose actual verifier and "FoVer-math" scoring logic lives in the unshown `exp3641` module, so it cannot contribute to a production ensemble and its underlying verifiers cannot be authenticated from this file. Worse, its top-level docstrings, `INFERENCE_SUBSTRATE`, `second_code_corpus_name` (`"HumanEval-split"`), and `"claim_hardened"` verdict present the run as scoring cached candidates on a balanced second corpus, while hiding the fact that its only code path fabricates all negative examples via `return None` prepends inside a misleadingly named `fallback_status` field. Retire it from `carnot/verify/` and exclude its results from headline claims unless reimplemented against genuine cached LLM candidate errors and audited alongside `exp3641`.
+While this module does not fake a neural model or solver—explicitly setting `executes_models=False`, `executes_solvers=False`, and `no_live_llm_inference=True`—it is an offline experiment-bookkeeping script rather than a verifier and must never contribute to production ensemble or AUROC reporting. Crucially, `_build_verdict` explicitly games the automated Conductor reconciler by dodging `'blocked'`/`'no_improvement'`/`'marginal'` tokens with a forced `"complete:"` prefix while discarding `repair_gate_state`, ignoring `exp3136_data`, and unconditionally asserting `ready=True` from hardcoded fallback rows. It should be retired from `python/carnot/verify/`.
 
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `time.sleep`; `np.random.*`; `carnot/verify/`; `carnot/verify/`
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `ADVERSARIAL_GAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `np.random`
 
 
 
-## python/carnot/verify/code_structural_dependency_verifier.py
+## python/carnot/verify/cuda_failure_cause_8396.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -503,10 +542,15 @@ This module is an experiment harness misplaced in `carnot/verify/` whose actual 
 AUTHENTIC
 
 ## CLAIMS
-No paper, ML model, or GPU/compute-substrate claims are made. The module docstring explicitly limits its scope: "This verifier is intentionally narrow and deterministic. It does not execute candidate code and does not generate code. Instead, it turns MBPP/HumanEval manifest rows into small structural contracts and checks candidate source with the Python AST."
+No paper or ML model claims are made. The docstrings make narrow operational claims about CUDA driver diagnosis and explicitly disclaim model loading:
+- `"REQ-VERIFY-8396: device observations explain only failures the trace supports."`
+- `"Load only the driver; its initialization cannot certify a usable context."` (`initialize`)
+- `"Bind every terminal field to primitives and keep current model calls at zero."` (`build`, paired with `no_model_load=True`, `MODEL_SPECS=[]`, and `inference_substrate_class="no_model_load"`)
+- `"Trace only an owned child under a lease; a correction gets one bounded comparison."` (`diagnose`)
+- `"Recompute readiness from exact child logs so consistently rehashed claims fail."` (`replay`)
 
 ## IMPLEMENTATION_REALITY
-Using only the Python standard library (`ast`, `json`, `hashlib`, `pathlib`, `time`), the module parses MBPP/HumanEval manifest rows into static `CodeStructuralContract` records and runs deterministic `ast.parse`/`ast.walk` checks on candidate source for syntax errors, forbidden imports, missing entry-point functions, parameter signature mismatches, forbidden side-effect calls inside the function, missing value returns, and test prerequisites. It serializes contract metadata and localized violation summaries to JSON with `headline_metric_claim_made: False`.
+This is a CUDA runtime failure-diagnosis and artifact-custody module, not an LLM-output verifier: `initialize()` loads a CUDA driver library via `ctypes.CDLL` to call `cuInit(0)` and inspects `/proc/self/maps`, `/proc/driver/nvidia/version`, and `/dev/nvidia*`, while `diagnose()` acquires a `GpuLease` and runs `prlimit`/`strace`-wrapped child processes to localize `cuInit` error 101 and test bounded corrections. `measure()`, `build()`, and `replay()` verify SHA-256 pinned upstream artifacts, record receipts, and recompute verdicts from raw child logs without loading any ML model.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -518,24 +562,21 @@ none
 KEEP
 
 ## RATIONALE
-The implementation matches its docstring accurately: it claims to be a narrow, deterministic Python AST pre-execution contract checker and delivers exactly that without invoking or pretending to invoke any model or paper method. It contains no sleep-padding, score-capping, random feature generation, or audit-token dodging, and explicitly marks `headline_metric_claim_made` as `False`. It is safe to retain as static structural-metadata tooling.
+The implementation matches its docstrings and metadata: it performs real `ctypes` driver initialization probes, real `strace`-traced subprocess diagnosis under a GPU lease, and cryptographic replay verification, while explicitly recording zero model invocations and zero scientific samples. There are no sleep-padding, score-capping, random-feature, or check-dodging patterns (the unused `import time` and `0.001` fallback for `duration_s` do not game duration checks). As a runtime infrastructure diagnostic rather than a statistical verifier, it makes no claim to score LLM outputs and does not belong in or pollute production AUROC ensembles.
 
 
-## python/carnot/verify/competent_llm_judge.py
+## python/carnot/verify/cuda_failure_runner_8396.py
 
-**Verdict:** `AUTHENTIC`
+**Verdict:** `CANNOT_DETERMINE`
 
 ## VERDICT
-AUTHENTIC
+CANNOT_DETERMINE
 
 ## CLAIMS
-- "Competent process-style LLM judge for Exp 3925."
-- "keeps the useful part of that harness, namely the shared GGUF generator interface, but changes the judge contract to a process-verifier recipe: reason about this one step, then emit a single explicit verdict line."
-- "The returned score is intentionally named `verdict_prob` to match downstream tasks, but it is always the probability that the step is incorrect. Correct steps should therefore score near zero and incorrect steps near one."
-- "Judge one reasoning step through the supplied robust GGUF generator." (No academic paper, token-logprob extraction, or neural-internal signal is claimed; `COMPETENT_PREFER_ORDER` lists target GGUF models `Qwen3.6-35B-A3B`, `gemma-4-31B-it`, and `gemma-4-26B-A4B-it`.)
+No paper or ML model claims; the code explicitly logs `"start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero"`. Compute/runtime claims in docstrings: `"REQ-VERIFY-8396: reuse shipped deadlines, private coverage and publication."`, `"Freeze owned checks once and keep inherited repository health separate."`, and `"Use one entry point for exact initialization, real probes and sealed replay."` (with `--driver-init` defaulting `--library` to `"libcuda.so.1"`).
 
 ## IMPLEMENTATION_REALITY
-The module imports `carnot.verify.gguf_inference.generate`, formats a few-shot ChatML CoT-then-verdict prompt for a single reasoning step, invokes the supplied GGUF generator for live text generation, and parses either JSON probabilities or discrete `CORRECT`/`INCORRECT` verdict lines into `verdict_prob` (`0.1` for correct, `0.9` for incorrect, `0.5` abstention if unparseable). It also provides a 12-item standalone positive-control fixture and an exact pairwise AUROC helper.
+This file is not an LLM-output verifier; it is a 48-line CLI wrapper that filters `scope != "global"` entries from `runtime_evidence_execution_8382.manifest`, appends a pytest file (`tests/python/test_v723_contract_methods_8388.py`) to `typed_runtime_consumers`, and delegates `--driver-init` to `cuda_failure_cause_8396.initialize` or everything else to `runtime_evidence_execution_8382.main` via `unittest.mock.patch`. All actual CUDA initialization, probing, and replay logic resides in those two unprovided modules and cannot be verified from this file.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -547,10 +588,10 @@ none
 KEEP
 
 ## RATIONALE
-The implementation honestly matches its docstring: it runs real LLM inference through `carnot.verify.gguf_inference.generate`, makes no inflated paper or logprob claims, and contains no sleep-padding, score-capping, or random-feature gaming. Two minor engineering flaws should still be cleaned up—`build_judge_prompt` leaks 2 of the 12 `build_separable_fixture` items (`47 + 28 = 75.` and `47 + 28 = 65.`) verbatim as few-shot examples, and it hardcodes ChatML delimiters despite listing Gemma models in `COMPETENT_PREFER_ORDER`—but neither is fraudulent or disqualifying for production use.
+Within this file itself there are no dishonest paper/model claims and no adversarial-check gaming patterns, and it is an operational verification harness rather than a production AUROC ensemble verifier (explicitly loading no models and making zero LLM calls). However, a hostile audit cannot stamp this `AUTHENTIC` because 100% of the claimed `"exact initialization, real probes and sealed replay"` behavior is hidden behind unprovided imports (`cuda_failure_cause_8396` and `runtime_evidence_execution_8382`) wired together with runtime `unittest.mock.patch` monkey-patching. Keep it out of any verifier ensemble and audit `cuda_failure_cause_8396` and `runtime_evidence_execution_8382` directly to verify whether the underlying probes are real.
 
 
-## python/carnot/verify/compiled_sparse_8719.py
+## python/carnot/verify/cuda_primitive_8290.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -558,16 +599,12 @@ The implementation honestly matches its docstring: it runs real LLM inference th
 AUTHENTIC
 
 ## CLAIMS
-No paper or ML model claims. Compute-substrate claims:
-- "REQ-REPORT-8719: compare native integers with the unchanged lifecycle emulator."
-- "Import the exact binary that supplies the opt-in arithmetic entrypoint."
-- "Keep host quantization counters while each composite integer operation runs in Rust."
-- "Leave feature scaling and nonlinear probability transforms on the host."
-- "Admit labels on the host before delegating the sparse and dense writes."
-- "Compare every committed update and persist only acknowledged native state."
+- "REQ-VERIFY-8290: isolate driver, runtime and native calls without neural weights."
+- "Each API result remains a primitive. A failed initialization does not explain its cause, and enumeration does not establish that a context can execute."
+- No academic paper, ML model, or neural inference is claimed; neural weights are explicitly disclaimed.
 
 ## IMPLEMENTATION_REALITY
-This module is a fixed-point parity and durability test harness (not a standalone LLM text verifier) that dynamically loads the compiled Rust extension (`libcarnot_python.so` via `fixed_sparse_8719`) and delegates fixed-point basis, residual, update, serialization, and primitive arithmetic operations to it over JSON while keeping scaling, logit/sigmoid transforms, quantization ingress, and label checks on the Python host. It compares every operation, counter, probability, and serialized checkpoint byte-for-byte against the Python reference emulator (`carnot.verify.spline_precision_8692`) and writes fsynced checkpoints and JSONL audit logs.
+The module actually loads CUDA driver/runtime shared libraries via `ctypes.CDLL`, invokes real C API functions (`cudaRuntimeGetVersion`, `cudaGetDeviceCount`, `cuInit`, `cuDriverGetVersion`, `cuDeviceGetCount`, `cuDeviceGet`, `cuDeviceGetUuid`, `cuCtxCreate_v2`, `cuMemAlloc_v2`, `cuMemcpyHtoD_v2`, `cuMemcpyDtoH_v2`, `cuMemFree_v2`, `cuCtxDestroy_v2`), verifies a 32-byte host-to-device-to-host memory copy, and records every raw integer return code. For the `native` layer, it executes a real subprocess (`<binary> --list-devices`) and records PID, start ticks, exit code, stdio, and SHA-256 digests of the binary and `/proc/self/maps`-resolved shared objects.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -579,37 +616,5 @@ none
 KEEP
 
 ## RATIONALE
-Every docstring claim accurately describes the host/Rust split, parity checks, and durable checkpointing implemented in the file, with no paper name-dropping, fake inference, or adversarial check gaming (the `1e-4` clamp on `raw[0]` is standard domain guarding for `math.log(q / (1 - q))`, not output score capping). This is an internal numeric equivalence harness rather than an ensemble scoring verifier, so it poses no AUROC inflation risk; only the external Rust binary behind `fixed_sparse_8719` remains outside the scope of this Python source review.
-
-
-## python/carnot/verify/complete_request_8174.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No paper or academic method claims are made. The docstrings and metadata claim a live end-to-end request timing and behavioral-equivalence harness over a fixed deployed head and GGUF model:
-- Module docstring: "REQ-VERIFY-8174: each arm owns a new acquisition and durable response. The original source and deployed head stay fixed. Separate generations can change decisions, so timing equivalence must be measured instead of assumed."
-- `acquire`: "Save prompts and outputs separately for every actual full request attempt."
-- `commit_group`: "Score a real batch; Python commits serially and native commits atomically. The response clock is taken after fsync."
-- `live`: "Reuse the qualified worker with this task's lease identity and call schedule."
-- `resume_evidence`: "Recover completed request evidence from the closed lease without new calls."
-- Substrate metadata: `MODEL_SPECS = ["unsloth/Qwen3.8-27B-GGUF"]`, `declared_inference_substrate_class="model_bounded_generation"`, and `inference_substrate="live_llm_inference"` / `inference_mode="live_gpu"` (conditional on `counts["generation_calls_completed"] > 0`), with `claim_scope` explicitly stating "no model quality or learning claim".
-
-## IMPLEMENTATION_REALITY
-This module is an experiment/verification harness (not a standalone AUROC scoring verifier) that executes 48 counterbalanced live LLM requests (`runtime.generate` via `shared_acquisition_8160` and `QwenRuntime.load`), extracts lexical/parsed features, scores batches through `shared.host.old.score`, commits them serially vs. atomically through `shared.host.Store`, and bootstraps paired log-latency ratios. It enforces strict SHA-256 evidence checks, monotonic clock validation, GPU lease journal verification (`validate_journal_document`, `offload_layers`), and fail-closed replay/fixture isolation.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none (Note: `min(1 - 1e-6, max(1e-6, parsed["probability"]))` is logit-domain clamping directly before `math.log(p / (1 - p))` rather than score-capping; `np.random.default_rng` is strictly used to bootstrap empirically measured latency ratios; `duration >= 10` is a fail-closed gate with no `time.sleep`; `unittest.mock.patch` in `live()` wraps `shared_acquisition_8160` to inject task lease ID and a 300s load timeout without stubbing inference; `flagged_adversarial=False` is statically emitted in the result schema rather than dodging checks.)
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation faithfully matches its docstrings and explicitly disclaims any model quality or AUROC claim, operating purely as a cryptographically audited latency and behavioral-equivalence harness. Fixture runs are strictly quarantined (`fixture_mode=True`, `ready=False`, `verdict="circular_positive"`, zero invocation counts), while live runs require `CARNOT_FORCE_LIVE=1`, a verified GPU lease, and 48 independently re-validated completions. There is no dishonesty or adversarial gaming in this file, subject only to the external `shared_acquisition_8160` runtime executing real `QwenRuntime` inference as wired.
+The implementation matches its docstring faithfully: it performs real FFI calls against the CUDA driver/runtime, verifies actual GPU context creation and device memory round-trip execution rather than stopping at device enumeration, and preserves raw return codes and library/binary SHA-256 hashes (which also prevents test fixtures like `libfixture` from masquerading as `libcuda`). No synthetic scores, sleep-padding, or adversarial-check dodging exist in the code. Note that this is a GPU infrastructure/environment probe rather than an LLM-output verifier, so it naturally has no role in AUROC ensemble scoring, but it is entirely authentic for its stated purpose.
 
