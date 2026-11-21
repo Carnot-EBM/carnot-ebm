@@ -24071,3 +24071,4 @@ no milestone was activated and no historical failure or quarantine was cleared.
 - 2026-11-20: Exp9258: Implement offline Victris Arena Gibbs tactical scorer and archive (⚠️ Blocked) — honest_verdict=complete_blocked_arena_sim_wheel_missing; results/experiment_9258_v788_victris_energy_bot.json
 - 2026-11-20: Exp9268: Reconcile fourteen V788 outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9268_v788_capstone.json
 - 2026-11-21: Exp9269: Qualify split V782-V788 consumer replay with compact sidecars and bind fourteen V789 tasks (⚠️ Research Finding) — honest_verdict=complete_null_v789_contract; results/experiment_9269_v789_contract.json
+- 2026-11-21: Exp9270: Qualify scoped lossless byte prefilter with hashed sidecars and zero spurious full-suite timeout (⚠️ Research Finding) — honest_verdict=complete_null_v789_corpus_prefilter; results/experiment_9270_v789_corpus_prefilter.json
