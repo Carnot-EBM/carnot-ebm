@@ -1,0 +1,49 @@
+.........................EE.....................                         [100%]
+==================================== ERRORS ====================================
+_____________ ERROR at setup of test_real_diagnostics_and_refusals _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T074537-3728923-b7159d52'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T074537-3728923-b7159d52'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7f90261075e0>)
+
+tests/python/test_causal_validation_9181.py:185: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9181] before subprocess=freeze_collection
+[exp9181] heartbeat subprocess=freeze_collection pid=3732702
+[exp9181] heartbeat subprocess=freeze_collection pid=3732702
+[exp9181] after subprocess=freeze_collection exit=-9
+_____ ERROR at setup of test_real_verification_receipts_and_full_coverage ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T074537-3728923-b7159d52'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T074537-3728923-b7159d52'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7f90261075e0>)
+
+tests/python/test_causal_validation_9181.py:185: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_causal_validation_9181.py::test_real_diagnostics_and_refusals
+ERROR tests/python/test_causal_validation_9181.py::test_real_verification_receipts_and_full_coverage
+46 passed, 1 warning, 2 errors in 452.10s (0:07:32)

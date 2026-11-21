@@ -1,0 +1,24 @@
+F...                                                                     [100%]
+=================================== FAILURES ===================================
+________________ test_activated_queue_pin_and_prompt_rendering _________________
+
+    def test_activated_queue_pin_and_prompt_rendering():
+        """SCENARIO-REPORT-9166-V781: bind the queue after literal braces are encoded."""
+        text = (e.ROOT / e.DESIGN).read_text()
+        machine = json.loads(
+>           text.split("## Full machine-readable contract", 1)[1]
+            .split("```json", 1)[1]
+            .split("```", 1)[0]
+        )
+E       IndexError: list index out of range
+
+tests/python/test_v781_queue_binding.py:16: IndexError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v781_queue_binding.py::test_activated_queue_pin_and_prompt_rendering
+1 failed, 3 passed, 1 warning in 13.18s

@@ -1,0 +1,107 @@
+FF.FF.                                                                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_fourteen_slots_and_science ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:7c8cff073b0e5e8508efe525977413fc...6': 'sha256:9ae279b1e39d430100172a97290ff532796599688dc8e1d9cf08768460540133'}, 'declared_gate_preconditions': [], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0cfbf91e50>
+
+    def test_fourteen_slots_and_science(work, monkeypatch):
+        """SCENARIO-REPORT-9165-V780: scheduler closure supplies no scientific primary."""
+        monkeypatch.setattr(m.legacy.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        value = m.build(work)
+>       assert all(r["passed"] for r in work["checks"])
+E       assert False
+E        +  where False = all(<generator object test_fourteen_slots_and_science.<locals>.<genexpr> at 0x7f0cf9a253c0>)
+
+tests/python/test_v780_capstone_9165.py:28: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9165] phase=preconditions_before completed=0 pending=0
+[exp9165] phase=producer_bindings completed=0 pending=28
+[exp9165] phase=producer_bindings completed=20 pending=8
+[exp9165] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9165] phase=after_publication_gate completed=1 pending=0
+[exp9165] phase=preconditions_after completed=48 pending=5
+__________________ test_absence_owned_failure_and_task_drift ___________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:7c8cff073b0e5e8508efe525977413fc...6': 'sha256:9ae279b1e39d430100172a97290ff532796599688dc8e1d9cf08768460540133'}, 'declared_gate_preconditions': [], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T083649-3760889-491897dd/test_absence_owned_failure_and0')
+
+    def test_absence_owned_failure_and_task_drift(work, tmp_path):
+        """REQ-REPORT-9165-V780: absent prerequisites block, owned failures disqualify."""
+>       assert m.build(work)["verdict_class"] == "disqualified"
+E       AssertionError: assert 'blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked
+
+tests/python/test_v780_capstone_9165.py:73: AssertionError
+_________________________ test_replay_and_input_tamper _________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:7c8cff073b0e5e8508efe525977413fc...6': 'sha256:9ae279b1e39d430100172a97290ff532796599688dc8e1d9cf08768460540133'}, 'declared_gate_preconditions': [], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T083649-3760889-491897dd/test_replay_and_input_tamper0')
+
+    def test_replay_and_input_tamper(work, tmp_path):
+        """SCENARIO-REPORT-9165-V780: rehashing does not authenticate invented outcomes."""
+        path = tmp_path / "candidate.json"
+        value = m.build(work)
+        atomic_json(path, value)
+        assert m.replay(path)["passed"]
+        for key in ["current_llm_invocations", "reconciliation_ready_score", "science_decisions"]:
+            changed = deepcopy(value)
+            changed[key] = 1
+            changed["reproducibility_checksum"] = m.checksum(changed)
+            atomic_json(path, changed)
+            assert not m.replay(path)["passed"]
+        altered = deepcopy(work)
+        ref = next(iter(altered["operands"].values()))
+        ref["sha256"] = "sha256:changed"
+        source = tmp_path / "tampered_work.json"
+        atomic_json(source, altered)
+        changed = dict(value, work_reference=m.reference(source))
+        changed["reproducibility_checksum"] = m.checksum(changed)
+        atomic_json(path, changed)
+        assert not m.replay(path)["passed"]
+        changed = deepcopy(work)
+        changed["values"]["prior:9151"]["value"]["human_label_rows"][0]["a1_error_count"] += 1
+>       with pytest.raises(ValueError, match="human_rows"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v780_capstone_9165.py:121: Failed
+______________________ test_repository_health_is_separate ______________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:7c8cff073b0e5e8508efe525977413fc...6': 'sha256:9ae279b1e39d430100172a97290ff532796599688dc8e1d9cf08768460540133'}, 'declared_gate_preconditions': [], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T083649-3760889-491897dd/test_repository_health_is_sepa0')
+
+    def test_repository_health_is_separate(work, tmp_path):
+        """REQ-REPORT-9165-V780: broad health is visible without replacing owned checks."""
+        path = tmp_path / "health.json"
+        atomic_json(path, dict(passed=False, timed_out=True, exit_code=-9))
+        changed = dict(work, repository_health_references=[m.reference(path)])
+        value = m.build(changed)
+        assert value["repository_health"]["timed_out"]
+        assert not value["repository_health"]["passed"]
+        assert value["repository_health"]["exit_code"] == -9
+        assert not value["repository_health"]["affects_owned_readiness"]
+>       assert value["verdict_class"] == "disqualified"
+E       AssertionError: assert 'blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked
+
+tests/python/test_v780_capstone_9165.py:135: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v780_capstone_9165.py::test_fourteen_slots_and_science
+FAILED tests/python/test_v780_capstone_9165.py::test_absence_owned_failure_and_task_drift
+FAILED tests/python/test_v780_capstone_9165.py::test_replay_and_input_tamper
+FAILED tests/python/test_v780_capstone_9165.py::test_repository_health_is_separate
+4 failed, 2 passed, 1 warning in 124.64s (0:02:04)

@@ -1,0 +1,165 @@
+FF..F.FFF.                                                               [100%]
+=================================== FAILURES ===================================
+_______________________ test_fourteen_terminal_outcomes ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f372ce80620>
+
+    def test_fourteen_terminal_outcomes(work, monkeypatch):
+        """SCENARIO-REPORT-9179-V781: administrative readiness retains disqualified science."""
+        monkeypatch.setattr(m.legacy.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        value = m.build(work)
+>       assert all(r["passed"] for r in work["checks"])
+E       assert False
+E        +  where False = all(<generator object test_fourteen_terminal_outcomes.<locals>.<genexpr> at 0x7f372ce7b850>)
+
+tests/python/test_v781_capstone_9179.py:28: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9179] phase=preconditions_before completed=0 pending=0
+[exp9179] phase=producer_bindings completed=0 pending=57
+[exp9179] phase=before_publication_gate completed=0 pending=1
+[exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+[exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+[exp9179] phase=after_publication_gate completed=1 pending=0
+[exp9179] phase=preconditions_after completed=65 pending=7
+________________________ test_missing_and_owned_failure ________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_missing_and_owned_failure0')
+
+    def test_missing_and_owned_failure(work, tmp_path):
+        """REQ-REPORT-9179-V781: unavailable evidence blocks; owned failures disqualify."""
+>       assert m.build(work)["verdict_class"] == "disqualified"
+E       AssertionError: assert 'blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked
+
+tests/python/test_v781_capstone_9179.py:81: AssertionError
+____________________________ test_private_real_cli _____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_private_real_cli0')
+
+    def test_private_real_cli(work, tmp_path):
+        """SCENARIO-REPORT-9179-V781: E2E-018/021 exercise the real foreign CLI."""
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        argv = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        if env.get("COVERAGE_RCFILE"):
+            argv[1:2] = ["-m", "coverage", "run"]
+    
+        def call(*args):
+            print("[test9179] child_before", args, flush=True)
+            result = subprocess.run(
+                [*argv, *args], cwd=tmp_path, env=env, capture_output=True, timeout=180
+            )
+            print("[test9179] child_after", result.returncode, flush=True)
+            return result
+    
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (m.NAME + ".json")
+        result = call("--from-work", str(source), "--output", str(output))
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert call("--cold-replay", str(output)).returncode == 0
+        assert call("--date", "20261116").returncode == 2
+        assert call("--from-work", str(source)).returncode == 2
+        changed = json.loads(output.read_bytes())
+>       changed["two_bound_rows"][0]["absolute_metric"] = 1
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'two_bound_rows'
+
+tests/python/test_v781_capstone_9179.py:152: KeyError
+----------------------------- Captured stdout call -----------------------------
+[test9179] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_private_real_cli0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_private_real_cli0/experiment_9179_v781_capstone.json')
+[test9179] child_after 0
+[test9179] child_before ('--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_private_real_cli0/experiment_9179_v781_capstone.json')
+[test9179] child_after 0
+[test9179] child_before ('--date', '20261116')
+[test9179] child_after 2
+[test9179] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_private_real_cli0/work.json')
+[test9179] child_after 2
+____________________________ test_owned_main_paths _____________________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3727752f00>
+
+    def test_owned_main_paths(work, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-9179-V781: orchestration enforces affected validation and deadlines."""
+    
+        def collect(raw, *_):
+            changed = deepcopy(work)
+            changed["raw"] = str(raw)
+            return changed
+    
+        monkeypatch.setattr(m, "collect", collect)
+        monkeypatch.setattr(m.legacy, "validate", lambda _: dict(receipts=[], coverage={}))
+        monkeypatch.setattr(m.runner, "terminal", lambda *_: dict(passed=True, receipts=[]))
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: True)
+        monkeypatch.setattr(m.legacy, "verify_measured", lambda *_: True)
+        output = tmp_path / (m.NAME + ".json")
+        assert m.main(["--output", str(output)]) == 0
+        monkeypatch.setattr(m.runner, "receipts_pass", lambda _: False)
+>       assert m.main(["--output", str(output)]) == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <function main at 0x7f37302762a0>(['--output', '/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0/experiment_9179_v781_capstone.json'])
+E        +    where <function main at 0x7f37302762a0> = m.main
+
+tests/python/test_v781_capstone_9179.py:201: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9179] phase=owned_validation_before completed=0 pending=0
+[exp9179] phase=owned_validation_after completed=0 pending=0
+[exp9179] phase=complete completed=14 pending=0
+{"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0/experiment_9179_v781_capstone.json", "primary_sha256": "sha256:517345b33ed7779553245102fab53def07a3f9167ad37423095c8a5dcdf32b58", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0/raw/experiment_9179_v781_capstone/validators/517345b33ed7779553245102fab53def07a3f9167ad37423095c8a5dcdf32b58.json"}
+[exp9179] phase=owned_validation_before completed=0 pending=0
+[exp9179] phase=owned_validation_after completed=0 pending=0
+[exp9179] phase=complete completed=14 pending=0
+{"primary_path": "/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0/experiment_9179_v781_capstone.json", "primary_sha256": "sha256:1844963ab9ba4a5c6ef8224df587604228d364bdb9812e453c6a9ef1343ea4db", "sidecar_path": "/var/tmp/pytest-carnot-ianblenke/20261121T084135-3766595-72b61c60/test_owned_main_paths0/raw/experiment_9179_v781_capstone/validators/1844963ab9ba4a5c6ef8224df587604228d364bdb9812e453c6a9ef1343ea4db.json"}
+______________________ test_exact_retirement_is_installed ______________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+
+    def test_exact_retirement_is_installed(work):
+        """REQ-REPORT-9179-V781: exact scheduler recurrence retires only unchanged scope."""
+        value = m.build(work)
+        rows = [r for r in value["retirement_recommendations"] if r["condition_met"]]
+>       assert len(rows) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/python/test_v781_capstone_9179.py:209: AssertionError
+____________________ test_row_aggregates_cannot_be_invented ____________________
+
+work = {'checks': [{'artifact_field': 'sha256', 'check': 'source_bytes', 'expected': 'sha256:a0e721c8b7eaaf50f220d746d9868b58...'sha256': 'sha256:d7605fbea4a71e90d0aa0d1d0c81f04c38cd98b338c3ea8684e28d229afd68c0'}, 'ended_ns': 550622753584858, ...}
+
+    def test_row_aggregates_cannot_be_invented(work):
+        """SCENARIO-REPORT-9179-V781: service counts and donor fractions come from rows."""
+        for field in ["cost_summary", "donor_changed_label_fraction"]:
+            changed = deepcopy(work)
+            prior = changed["values"]["prior:9165"]["value"]
+            if field == "cost_summary":
+                prior[field]["scientific_request_counts"]["completed"] = 1
+            else:
+                prior[field] += 0.1
+>           with pytest.raises(ValueError, match="cost_aggregate|donor_aggregate"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v781_capstone_9179.py:226: Failed
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v781_capstone_9179.py::test_fourteen_terminal_outcomes
+FAILED tests/python/test_v781_capstone_9179.py::test_missing_and_owned_failure
+FAILED tests/python/test_v781_capstone_9179.py::test_private_real_cli - KeyEr...
+FAILED tests/python/test_v781_capstone_9179.py::test_owned_main_paths - Asser...
+FAILED tests/python/test_v781_capstone_9179.py::test_exact_retirement_is_installed
+FAILED tests/python/test_v781_capstone_9179.py::test_row_aggregates_cannot_be_invented
+6 failed, 4 passed, 1 warning in 184.85s (0:03:04)

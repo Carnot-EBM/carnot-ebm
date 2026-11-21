@@ -1,0 +1,63 @@
+FF.F....                                                                 [100%]
+=================================== FAILURES ===================================
+___________________________ test_original_authority ____________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084147-3767020-abd2ab80/contract91660/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+
+    def test_original_authority(work):
+        """REQ-REPORT-9166-V781: reuse complete source/method authority without new science."""
+        i = work["inspection"]
+>       assert all(r["passed"] for r in i["checks"]), [r for r in i["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'full_task_objects', 'check': 'authority', 'expected': '14 exact ordered objects', 'observed': 'li...f90a8e7b3bfe953448515f9a', 'observed': 'sha256:4348b28ecb3adc28c39d2406bf3a59e2a1fdcfbc6c922accdefc8f011788391f', ...}]
+E       assert False
+E        +  where False = all(<generator object test_original_authority.<locals>.<genexpr> at 0x7f73f4ffb2a0>)
+
+tests/python/test_v781_contract_9166.py:26: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9166] phase=resources_before
+[exp9166] phase=resources_after
+[exp9166] phase=authenticate_inputs_before
+__________________________ test_mutations_and_absence __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084147-3767020-abd2ab80/test_mutations_and_absence0')
+
+    def test_mutations_and_absence(tmp_path):
+        """SCENARIO-REPORT-9166-V781: prompt, metadata, gates, order and count all bind."""
+        for name in [e.DESIGN, e.ACTIVE]:
+            p = tmp_path / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes((e.ROOT / name).read_bytes())
+>       assert e.authority(tmp_path)["ready"]
+E       assert False
+
+tests/python/test_v781_contract_9166.py:60: AssertionError
+________________________ test_build_readiness_and_block ________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084147-3767020-abd2ab80/contract91660/c...(-1, -1), 'memory_limit': (34359738368, -1), 'numpy_import': '2.5.1', ...}, 'resource': 'CPU and import limits'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084147-3767020-abd2ab80/test_build_readiness_and_block0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f73f5f86990>
+
+    def test_build_readiness_and_block(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9166-V781: administrative success never promotes censored science."""
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        before = deepcopy(work)
+        v = c.build(work, {})
+        assert work == before
+>       assert v["experiment_id"] == 9166 and v["verdict_class"] == "null"
+E       AssertionError: assert (9166 == 9166 and 'blocked' == 'null'
+E         
+E         - null
+E         + blocked)
+
+tests/python/test_v781_contract_9166.py:114: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v781_contract_9166.py::test_original_authority - Ass...
+FAILED tests/python/test_v781_contract_9166.py::test_mutations_and_absence - ...
+FAILED tests/python/test_v781_contract_9166.py::test_build_readiness_and_block
+3 failed, 5 passed, 1 warning in 51.72s

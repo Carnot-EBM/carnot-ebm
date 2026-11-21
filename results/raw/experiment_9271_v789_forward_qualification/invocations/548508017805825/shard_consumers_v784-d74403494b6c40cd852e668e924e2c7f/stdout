@@ -1,0 +1,46 @@
+...F....................                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_private_cli_and_interleaved_replays ___________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T081409-3744359-e034a0ce/contract92080/c...84 kB', 'MemAvailable:   74421360 kB'], 'private_free_disk_bytes': 1033952256000}, 'resource': 'host_resources'}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081409-3744359-e034a0ce/test_private_cli_and_interleav0')
+
+    def test_private_cli_and_interleaved_replays(work, tmp_path):
+        """SCENARIO-REPORT-9208-V784: E2E-018/021 real private publication and tamper."""
+        source = tmp_path / "work.json"
+        atomic_json(source, work)
+        output = tmp_path / (e.NAME + ".json")
+        result = child_cli(tmp_path, "--from-work", str(source), "--output", str(output))
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp9208] phase=start_no_model_load
+E         [exp9208] phase=publication_before
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=waiting_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp9208] phase=refused:candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...05] phase=after_subprocess_strict_rows completed=1 pending=0\n[exp9208] phase=refused:candidate_rejected\n', stderr='').returncode
+
+tests/python/test_v784_contract_9208.py:109: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[test9208] child_before ('--from-work', '/var/tmp/pytest-carnot-ianblenke/20261121T081409-3744359-e034a0ce/test_private_cli_and_interleav0/work.json', '--output', '/var/tmp/pytest-carnot-ianblenke/20261121T081409-3744359-e034a0ce/test_private_cli_and_interleav0/experiment_9208_v784_contract.json')
+[test9208] child_after 1
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v784_contract_9208.py::test_private_cli_and_interleaved_replays
+1 failed, 23 passed, 1 warning in 1330.63s (0:22:10)

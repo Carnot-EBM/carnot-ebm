@@ -1,0 +1,40 @@
+..F.....F.............                                                   [100%]
+=================================== FAILURES ===================================
+__________________ test_authentic_contract_and_compact_tables __________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T082940-3754639-ced4bd51/contract92690/c...48 kB', 'MemAvailable:   82832656 kB'], 'private_free_disk_bytes': 1027214397440}, 'resource': 'host_resources'}], ...}
+
+    def test_authentic_contract_and_compact_tables(work):
+        """SCENARIO-REPORT-9269-V789: eight shards and fourteen complete ordered objects."""
+        inspected = work["inspection"]
+>       assert inspected["contract"]["ready"], [r for r in inspected["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'exp9270-corpus-prefilter.collisions', 'check': 'id_availability', 'expected': [], 'observed': ['results/experiment_9270_v789_corpus_prefilter.json'], ...}]
+E       assert False
+
+tests/python/test_v789_contract_9269.py:46: AssertionError
+_____________________ test_all_qualified_scores_from_rows ______________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T082940-3754639-ced4bd51/contract92690/c...48 kB', 'MemAvailable:   82832656 kB'], 'private_free_disk_bytes': 1027214397440}, 'resource': 'host_resources'}], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0a0277f7a0>
+
+    def test_all_qualified_scores_from_rows(work, monkeypatch):
+        """REQ-REPORT-9269-V789: administrative readiness cannot claim generalization."""
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        value = c.build(
+            work, dict(owned_statement_coverage=dict(files=[dict(path=p) for p in e.OWNED]))
+        )
+        assert value["required_checks_passed"]
+>       assert value["contract_ready_score"] == value["replay_authority_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_v789_contract_9269.py:229: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v789_contract_9269.py::test_authentic_contract_and_compact_tables
+FAILED tests/python/test_v789_contract_9269.py::test_all_qualified_scores_from_rows
+2 failed, 20 passed, 1 warning in 896.34s (0:14:56)

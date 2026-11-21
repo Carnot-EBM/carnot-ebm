@@ -1,0 +1,114 @@
+FFF..FF.                                                                 [100%]
+=================================== FAILURES ===================================
+_________________________ test_authority_and_partition _________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520/c...tic_protocol': {}, ...}, 'raw': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520', ...}
+
+    def test_authority_and_partition(work):
+        """REQ-REPORT-9152-V780: scheduling, source and methods have independent gates."""
+        i = work["inspection"]
+>       assert all(r["passed"] for r in i["checks"]), [r for r in i["checks"] if not r["passed"]]
+E       AssertionError: [{'artifact_field': 'full_task_objects', 'check': 'authority', 'expected': '14 exact ordered objects', 'observed': 'list index out of range', ...}]
+E       assert False
+E        +  where False = all(<generator object test_authority_and_partition.<locals>.<genexpr> at 0x7f8c1a45a190>)
+
+tests/python/test_v780_contract_9152.py:26: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9152] phase=resources_before
+[exp9152] phase=resources_after
+[exp9152] phase=authenticate_inputs_before
+___________________________ test_authority_mutations ___________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/test_authority_mutations0')
+
+    def test_authority_mutations(tmp_path):
+        """SCENARIO-REPORT-9152-V780: prompt, metadata, order and gates all bind bytes."""
+        for name in [e.DESIGN, e.ACTIVE]:
+            p = tmp_path / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes((e.ROOT / name).read_bytes())
+>       assert e.authority(tmp_path)["ready"]
+E       assert False
+
+tests/python/test_v780_contract_9152.py:62: AssertionError
+____________________________ test_missing_and_zero _____________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520/c...tic_protocol': {}, ...}, 'raw': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520', ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/test_missing_and_zero0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8c1a51a5a0>
+
+    def test_missing_and_zero(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9152-V780: missing operands and zero must never share a verdict operand."""
+        absent = c.measure(tmp_path / "absent", tmp_path / "raw", "20261116")
+        value = c.build(absent, {})
+        assert value["verdict_class"] == "blocked" and value["censored_count"] == 14
+        assert value["inference_substrate_class"] == "blocked_no_run"
+        assert [r["unit_id"] for r in value["rows"]] == [f"exp{n}" for n in range(9152, 9166)]
+        for observed in ["missing_file", "missing_field", 0, False, 1]:
+            assert e.check(tmp_path, "score", 1, observed, "gate")["passed"] == (
+                type(observed) is int and observed == 1
+            )
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        changed = deepcopy(work)
+        changed["inspection"]["source_ready"] = False
+        value = c.build(changed, {})
+>       assert value["contract_ready_score"] == 1 and value["source_ready_score"] == 0
+E       assert (0 == 1)
+
+tests/python/test_v780_contract_9152.py:95: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9152] phase=resources_before
+[exp9152] phase=resources_after
+[exp9152] phase=authenticate_inputs_before
+____________________________ test_adapter_lifecycle ____________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520/c...tic_protocol': {}, ...}, 'raw': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520', ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/test_adapter_lifecycle0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8c1c1713a0>
+
+    def test_adapter_lifecycle(work, tmp_path, monkeypatch):
+        """REQ-REPORT-9152-V780: reused publication validates the new producer identity."""
+        monkeypatch.setattr(c.legacy, "receipts_pass", lambda *_: True)
+        value = c.build(work, {})
+>       assert value["verdict_class"] == "null"
+E       AssertionError: assert 'blocked' == 'null'
+E         
+E         - null
+E         + blocked
+
+tests/python/test_v780_contract_9152.py:173: AssertionError
+_____________________________ test_sidecar_tamper ______________________________
+
+work = {'current_work_reference': {'path': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520/c...tic_protocol': {}, ...}, 'raw': '/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/contract91520', ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T084103-3765751-9cbccde4/test_sidecar_tamper0')
+
+    def test_sidecar_tamper(work, tmp_path):
+        """SCENARIO-REPORT-9152-V780: freshly rehashed roster bytes cannot invent population."""
+        changed = deepcopy(work)
+        changed["raw"] = str(tmp_path)
+        path = tmp_path / "forged_roster.json"
+        c.atomic_json(path, dict(qids=["invented"]))
+        changed["v780_protocol_references"]["shard_c_roster_reference"] = e.ref(path)
+        c.atomic_json(tmp_path / "work.json", changed)
+        output = tmp_path / (e.NAME + ".json")
+        c.atomic_json(output, c.build(changed, {}))
+>       with pytest.raises(ValueError, match="protocol_sidecar_drift"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v780_contract_9152.py:192: Failed
+----------------------------- Captured stdout call -----------------------------
+[exp9152] phase=authenticate_inputs_before
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v780_contract_9152.py::test_authority_and_partition
+FAILED tests/python/test_v780_contract_9152.py::test_authority_mutations - as...
+FAILED tests/python/test_v780_contract_9152.py::test_missing_and_zero - asser...
+FAILED tests/python/test_v780_contract_9152.py::test_adapter_lifecycle - Asse...
+FAILED tests/python/test_v780_contract_9152.py::test_sidecar_tamper - Failed:...
+5 failed, 3 passed, 1 warning in 53.13s

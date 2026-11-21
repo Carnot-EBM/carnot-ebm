@@ -117706,3 +117706,93 @@ all original assertions; owned fixture and private CLI runs SHALL retain coverag
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-9270-V789 | Implemented (`python/carnot/reporting/v788_corpus_prefilter.py`, `python/carnot/reporting/v789_corpus_prefilter_runner.py`, `scripts/experiments/experiment_9270_v789_corpus_prefilter.py`, `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`, `results/experiment_9270_v789_corpus_prefilter.json`) | Implemented (`tests/python/test_v789_corpus_prefilter_9270.py`, `tests/python/test_v788_corpus_prefilter_9256.py`) |
+
+### REQ-REPORT-9271-V789: Complete causally corrected V789 validation union with per-shard coverage and hashed sidecars
+
+Exp9271 SHALL authenticate `results/experiment_9270_v789_corpus_prefilter.json`
+(`sha256:2c13ec623618640f04468164f27cb315fca3aba06c8d2ad888919e19130e6831`,
+`corpus_scan_ready_score==1`, `required_checks_passed==True`) and its hashed
+sidecars (`corpus_manifest_reference` and `scan_rows_sidecar_reference`),
+`results/experiment_9269_v789_contract.json`
+(`sha256:0d0aa11d171cf91085491cf59b6add32b221068d487e110e5b0c1a3009ca4e4e`,
+`contract_ready_score==1`, `replay_authority_ready_score==1`,
+`source_ready_score==1`, `static_methods_ready_score==1`,
+`online_methods_ready_score==1`) and its hashed sidecars
+(`validation_obligations`, `validation_scope_manifest`, `historical_input_roots`),
+and historical/qualified authorities (`Exp9211`, `Exp9225`, `Exp9240`, `Exp9241`,
+`Exp9244`, `Exp9255`, `Exp9256`, `Exp9257`, `Exp9258`, `Exp9268`) before dependent
+execution. It SHALL check host preconditions (imports, CPU, memory, private free
+disk, and required tools) and record `missing_file`, `missing_field`, and observed
+`0` separately in `gate_check_summary`. Missing external inputs or failed gates
+SHALL produce terminal `blocked` (`blocked_no_run`), never `partial`.
+
+Exp9271 SHALL freeze the complete obligation union of all 621 original nodes,
+53 V779 additions (`674` base nodes), and all affected V780–V789 obligations
+(explicitly including `tests/python/test_causal_validation_9181.py`, isolated
+V782–V788 contract and capstone suites, and `Exp9211`, `Exp9225`, `Exp9240`,
+`Exp9241`, `Exp9244`, `Exp9255`, `Exp9256`, `Exp9258`, `Exp9268`, `Exp9269`,
+`Exp9270`, and `Exp9271` controls) before outcomes. Past completions grant zero
+current execution credit and no retired task ID is a dependency.
+
+Exp9271 SHALL execute the complete normal orchestration once under the current
+code revision across non-overlapping whole-module shards with distinct
+`.coverage.<shard>` (`COVERAGE_FILE`) paths and measured `setup`, `call`, and
+`teardown` phase outcomes and durations, plus scoped `ruff_check`, `ruff_format`,
+`strict_mypy`, `spec_coverage`, and outside-checkout private CLI E2E-018/021
+checks without `PYTHONPATH`. It SHALL store large per-node completion and event
+tables in hashed sidecar files under
+`results/raw/experiment_9271_v789_forward_qualification/` so
+`results/experiment_9271_v789_forward_qualification.json` stays strictly below
+10 MB (`10_485_760` bytes). It SHALL emit `forward_validation_ready_score=1` only
+when every node in the complete obligation union completes all three phases
+(`setup`, `call`, `teardown`), every required command passes, and owned statement
+coverage reaches 100 percent with zero exclusions within budget. Declare
+`no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9271-V789: Complete 621+53 plus V780-V789 obligation union execution, per-shard coverage, and compact sidecars
+
+When `results/experiment_9270_v789_corpus_prefilter.json` passes
+`corpus_scan_ready_score==1` and `results/experiment_9269_v789_contract.json`
+passes `contract_ready_score==1` and `replay_authority_ready_score==1`, Exp9271
+freezes the complete union of 621 original nodes, 53 V779 additions, and all
+affected V780–V789 obligations, executes every module once across bounded shards
+preserving whole-module fixture lifetimes with per-shard `.coverage.<shard>` files
+and `setup`/`call`/`teardown` phase clocks, writes full per-node completion rows
+to hashed sidecars under `results/raw/experiment_9271_v789_forward_qualification/`,
+verifies 100 percent owned statement coverage with zero exclusions, and passes
+scoped `ruff_check`, `ruff_format`, `strict_mypy`, `spec_coverage`, and
+outside-checkout private CLI E2E-018/021 checks. When all nodes and checks pass
+within budget, `forward_validation_ready_score` equals `1`.
+
+#### SCENARIO-REPORT-9271-V789-CONTROLS: Compactness guard, missing/failed/censored node rejection, gate operands, and private CLI controls
+
+The primary JSON deliverable
+`results/experiment_9271_v789_forward_qualification.json` remains strictly below
+10 MB (`10_485_760` bytes), with `compact_guard` and cold replay rejecting any
+oversized primary or tampered sidecar hash/count. Any missing, duplicated,
+failed, or censored obligation node or any failed command or incomplete owned
+statement coverage sets `forward_validation_ready_score=0` and
+`required_checks_passed=false`. Missing external inputs or failed upstream gates
+distinguish `missing_file`, `missing_field`, and observed `0` in
+`gate_check_summary` and emit terminal `blocked` (`blocked_no_run`). Private CLI
+publication, refusal, tamper, and cold replay execute outside the checkout
+without `PYTHONPATH` under E2E-018/021.
+
+## Implementation Status (REQ-REPORT-9271-V789)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-9271-V789 | Implemented (`python/carnot/reporting/v789_forward_qualification.py`, `scripts/experiments/experiment_9271_v789_forward_qualification.py`, `results/experiment_9271_v789_forward_qualification.json`) | Implemented (`tests/python/test_v789_forward_qualification_9271.py`) |
+
+#### SCENARIO-REPORT-9271-V789-TERMINAL: Authenticate before execution and retain failures
+
+Before dependent validation, Exp9271 SHALL authenticate the producer sidecars and
+all required gate fields, freeze the invocation roster and revision hashes, and
+check memory and private storage. A failed precondition SHALL bypass execution
+and publish a terminal blocked result with the failed operand. A measured failed
+check SHALL still publish a score-zero terminal result. Readiness SHALL require
+unchanged revision hashes and authenticated same-invocation node events and logs.
+Measurement and verification SHALL use deadlines derived from one invocation
+start; publication SHALL end within the 4800-second cap. Coverage tools SHALL use
+the existing heartbeat supervisor. Historical primaries SHALL remain unchanged.

@@ -1,0 +1,132 @@
+.............................F.F.F....F................................. [ 32%]
+........................................................................ [ 64%]
+........................................................................ [ 96%]
+.........                                                                [100%]
+=================================== FAILURES ===================================
+____________________________ test_measure_and_build ____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081009-3740009-ec37f7f3/test_measure_and_build0')
+
+    def test_measure_and_build(tmp_path):
+        """Current rows and source gates determine readiness without model activity."""
+        from carnot.reporting import arc_mechanic_routing_9178 as m
+    
+        work = m.measure(ROOT, tmp_path / "raw", "20261117")
+        assert all(c["passed"] for c in work["inspection"]["checks"])
+        assert len(work["rows"]) == 124
+>       assert all(r["passed"] for r in work["rows"])
+E       assert False
+E        +  where False = all(<generator object test_measure_and_build.<locals>.<genexpr> at 0x7f747b73a0c0>)
+
+tests/python/test_arc_mechanic_routing_9178.py:124: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9178] phase=preconditions_before
+[exp9178] phase=matrix_before
+[exp9178] phase=matrix_after
+_____________________________ test_replay_refusals _____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081009-3740009-ec37f7f3/test_replay_refusals0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f747b71f9e0>
+
+    def test_replay_refusals(tmp_path, monkeypatch):
+        """Source, primitive and row drift remain refusals even with freshly computed checksums."""
+        from carnot.reporting import arc_mechanic_routing_9178 as m
+    
+        work = m.measure(ROOT, tmp_path / "work", "20261117")
+        monkeypatch.setattr(m, "receipts_pass", lambda *_: True)
+        value = m.build(work, {})
+>       assert value["verdict_class"] == "null" and value["mechanic_routing_ready_score"] == 1
+E       AssertionError: assert ('disqualified' == 'null'
+E         
+E         - null
+E         + disqualified)
+
+tests/python/test_arc_mechanic_routing_9178.py:189: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp9178] phase=preconditions_before
+[exp9178] phase=matrix_before
+[exp9178] phase=matrix_after
+___________________ test_changed_selector_statement_coverage ___________________
+
+    def test_changed_selector_statement_coverage():
+        """REQ-REPORT-9178-V781: every added selector statement is measured without exclusions."""
+        import ast
+        from coverage import Coverage
+    
+        tracer = Coverage.current()
+        if tracer is None:
+            return
+        tree = ast.parse(Path(kit.__file__).read_text())
+        selector = next(
+            n
+            for n in tree.body
+            if isinstance(n, ast.FunctionDef) and n.name == "select_primitive_operators"
+        )
+        guard = next(n for n in selector.body if isinstance(n, ast.If))
+        _, statements, excluded, missing, _ = tracer.analysis2(kit.__file__)
+        owned = [n for n in statements if guard.lineno <= n <= guard.end_lineno]
+>       assert owned and not set(owned).intersection(missing)
+E       assert ([491, 523, 524] and not {491, 523, 524})
+E        +  where {491, 523, 524} = <built-in method intersection of set object at 0x7f747b75c200>([43, 45, 46, 47, 48, 49, ...])
+E        +    where <built-in method intersection of set object at 0x7f747b75c200> = {491, 523, 524}.intersection
+E        +      where {491, 523, 524} = set([491, 523, 524])
+
+tests/python/test_arc_mechanic_routing_9178.py:240: AssertionError
+________________________ test_owned_selector_statements ________________________
+
+    def test_owned_selector_statements():
+        """Only new selector statements enter coverage, with zero exclusions."""
+        import ast
+        from coverage import Coverage
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        tracer = Coverage.current()
+        if tracer is None:
+            return
+        tree = ast.parse(Path(kit.__file__).read_text())
+        selector = next(
+            n
+            for n in tree.body
+            if isinstance(n, ast.FunctionDef) and n.name == "select_primitive_operators"
+        )
+        _, statements, excluded, missing, _ = tracer.analysis2(kit.__file__)
+        nodes = [
+            n
+            for n in ast.walk(selector)
+            if isinstance(n, ast.Assign)
+            and any(
+                isinstance(t, ast.Name) and t.id in {"recognized_mechanic", "specialists", "priority"}
+                for t in n.targets
+            )
+        ]
+        owned = {line for n in nodes for line in statements if n.lineno <= line <= n.end_lineno}
+        guard = next(
+            n
+            for n in selector.body
+            if isinstance(n, ast.If)
+            and isinstance(n.test, ast.Name)
+            and n.test.id == "recognized_mechanic"
+        )
+        owned.update(line for line in statements if guard.lineno <= line <= guard.end_lineno)
+>       assert owned and not owned.intersection(missing) and not owned.intersection(excluded)
+E       assert ({489, 523, 714, 716, 729} and not {489, 523, 714, 716, 729})
+E        +  where {489, 523, 714, 716, 729} = <built-in method intersection of set object at 0x7f74a5a044a0>([43, 45, 46, 47, 48, 49, ...])
+E        +    where <built-in method intersection of set object at 0x7f74a5a044a0> = {489, 523, 714, 716, 729}.intersection
+
+tests/python/test_arc_mechanic_routing_9192.py:152: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['results/experiment_1822_rtl_synth.log']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_measure_and_build
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_replay_refusals
+FAILED tests/python/test_arc_mechanic_routing_9178.py::test_changed_selector_statement_coverage
+FAILED tests/python/test_arc_mechanic_routing_9192.py::test_owned_selector_statements
+4 failed, 221 passed, 2 warnings in 1424.22s (0:23:44)

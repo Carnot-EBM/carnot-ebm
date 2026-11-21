@@ -1,0 +1,44 @@
+......................................................................F. [ 85%]
+......F.....                                                             [100%]
+=================================== FAILURES ===================================
+__________________________ test_authentication_scope ___________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081009-3740008-e7884c24/test_authentication_scope0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f060f3cf0e0>
+
+    def test_authentication_scope(tmp_path: Path, monkeypatch: Any) -> None:
+        work = s.authenticate(s.ROOT, tmp_path / "auth")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object test_authentication_scope.<locals>.<genexpr> at 0x7f060ffcb100>)
+
+tests/python/test_validation_schedule_9153.py:151: AssertionError
+_______________________ test_authenticated_scope_replay ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081009-3740008-e7884c24/test_authenticated_scope_repla0')
+
+    def test_authenticated_scope_replay(tmp_path: Path) -> None:
+        work = s.authenticate(s.ROOT, tmp_path / "auth")
+        value = s.build(work, "20261116", 0, 1)
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+        assert s.replay(path)["passed"]
+>       value["replay_input"]["work"]["additions"].pop()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'additions'
+
+tests/python/test_validation_schedule_9153.py:364: KeyError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['results/experiment_1822_rtl_synth.log']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_validation_schedule_9153.py::test_authentication_scope
+FAILED tests/python/test_validation_schedule_9153.py::test_authenticated_scope_replay
+2 failed, 82 passed, 2 warnings in 155.55s (0:02:35)

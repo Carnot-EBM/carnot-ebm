@@ -1,0 +1,412 @@
+........................................................................ [ 40%]
+........................................................E....EEEE.E..EEE [ 81%]
+EEE......................F......F                                        [100%]
+==================================== ERRORS ====================================
+_______ ERROR at setup of test_original_union_projection_and_quarantine ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+___________ ERROR at setup of test_rehashed_tamper_refused[headline] ___________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+___________ ERROR at setup of test_rehashed_tamper_refused[checksum] ___________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+_____________ ERROR at setup of test_rehashed_tamper_refused[plan] _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+____________ ERROR at setup of test_rehashed_tamper_refused[checks] ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+________________ ERROR at setup of test_normal_main_and_checks _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+____________ ERROR at setup of test_authority_and_projection_drift _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+________________ ERROR at setup of test_replay_receipt_streams _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+_________ ERROR at setup of test_added_nodes_do_not_replace_originals __________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+________ ERROR at setup of test_rejects_replacement_schedule_authority _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+________ ERROR at setup of test_a_feasible_schedule_needs_new_authority ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+___________ ERROR at setup of test_missing_original_source_is_a_gate ___________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def authenticated(tmp_path_factory: Any) -> dict[str, Any]:
+>       return q.authenticate(q.ROOT, tmp_path_factory.mktemp("qualification"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_forward_qualification_9140.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/forward_qualification_9140.py:59: in authenticate
+    r.replay(path)
+python/carnot/reporting/validation_schedule_runner_9139.py:398: in replay
+    s.prior.old.bound(reference)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reference = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py', 'sha256': 'sha256:818f12ad06625bcea1f1279047aefbea8e2944752120730d0a52a9b5fab0a814'}
+
+    def bound(reference: Json) -> Path:
+        """A saved path is usable only while its exact bytes match the authenticated pin."""
+        path = Path(reference["path"])
+        if not reference.get("sha256") or ref(path)["sha256"] != reference["sha256"]:
+>           raise ValueError("reference_drift:" + str(path))
+E           ValueError: reference_drift:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_schedule_9139.py
+
+python/carnot/reporting/forward_evidence_runner_9111.py:71: ValueError
+=================================== FAILURES ===================================
+________________ test_real_authentication_and_historical_drift _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0/test_real_authentication_and_h0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbded8da720>
+
+    def test_real_authentication_and_historical_drift(tmp_path: Path, monkeypatch: Any) -> None:
+        work = s.authenticate(s.ROOT, tmp_path / "auth")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object test_real_authentication_and_historical_drift.<locals>.<genexpr> at 0x7fbde1d6adc0>)
+
+tests/python/test_validation_schedule_9139.py:221: AssertionError
+________________ test_replay_source_reduction_and_control_drift ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0/test_replay_source_reduction_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbde8522ff0>
+
+    def test_replay_source_reduction_and_control_drift(tmp_path: Path, monkeypatch: Any) -> None:
+        from carnot.reporting import validation_schedule_runner_9139 as r
+    
+        work = s.authenticate(s.ROOT, tmp_path / "real")
+        value = r.build(work, "20261116", 0, 1)
+        path = tmp_path / "candidate.json"
+        atomic_json(path, value)
+>       assert r.replay(path)["passed"]
+               ^^^^^^^^^^^^^^
+
+tests/python/test_validation_schedule_9139.py:474: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740006-bd3e8ac0/test_replay_source_reduction_a0/candidate.json')
+
+    def replay(path: Path) -> Json:
+        """Reconstruct claims from bound inputs and refuse even rehashed aggregate edits."""
+        value = json.loads(path.read_bytes())
+        saved = value["replay_input"]
+        work = saved["work"]
+        if value["reproducibility_checksum"] != canonical_hash(saved):
+            raise ValueError("replay_hash")
+        for reference in value["source_references"] + value["code_config_hashes"]:
+            s.prior.old.bound(reference)
+        if "historical" in work:
+            source = next(
+                r for r in work["references"] if Path(r["path"]).name == Path(s.PREVIOUS).name
+            )
+            original = json.loads(s.prior.old.bound(source).read_bytes())
+            historical = original["replay_input"]["work"]
+            if (
+                original != work["historical"]
+                or work.get("schedule") != s.schedule(historical)
+                or work.get("semantic_controls") != historical["original_semantic_controls"]
+                or work.get("count_controls") != historical["adversarial_control_rows"]
+            ):
+>               raise ValueError("schedule_drift")
+E               ValueError: schedule_drift
+
+python/carnot/reporting/validation_schedule_runner_9139.py:411: ValueError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['results/experiment_1822_rtl_synth.log']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_validation_schedule_9139.py::test_real_authentication_and_historical_drift
+FAILED tests/python/test_validation_schedule_9139.py::test_replay_source_reduction_and_control_drift
+ERROR tests/python/test_forward_qualification_9140.py::test_original_union_projection_and_quarantine
+ERROR tests/python/test_forward_qualification_9140.py::test_rehashed_tamper_refused[headline]
+ERROR tests/python/test_forward_qualification_9140.py::test_rehashed_tamper_refused[checksum]
+ERROR tests/python/test_forward_qualification_9140.py::test_rehashed_tamper_refused[plan]
+ERROR tests/python/test_forward_qualification_9140.py::test_rehashed_tamper_refused[checks]
+ERROR tests/python/test_forward_qualification_9140.py::test_normal_main_and_checks
+ERROR tests/python/test_forward_qualification_9140.py::test_authority_and_projection_drift
+ERROR tests/python/test_forward_qualification_9140.py::test_replay_receipt_streams
+ERROR tests/python/test_forward_qualification_9140.py::test_added_nodes_do_not_replace_originals
+ERROR tests/python/test_forward_qualification_9140.py::test_rejects_replacement_schedule_authority
+ERROR tests/python/test_forward_qualification_9140.py::test_a_feasible_schedule_needs_new_authority
+ERROR tests/python/test_forward_qualification_9140.py::test_missing_original_source_is_a_gate
+2 failed, 163 passed, 2 warnings, 12 errors in 998.91s (0:16:38)

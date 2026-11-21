@@ -1,0 +1,53 @@
+.........................EE.....................                         [100%]
+==================================== ERRORS ====================================
+_____________ ERROR at setup of test_real_diagnostics_and_refusals _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740007-b219cb9a'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740007-b219cb9a'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7f6500fecba0>)
+
+tests/python/test_causal_validation_9181.py:185: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp9181] before subprocess=freeze_collection
+[exp9181] heartbeat subprocess=freeze_collection pid=3746383
+[exp9181] heartbeat subprocess=freeze_collection pid=3746383
+[exp9181] after subprocess=freeze_collection exit=-9
+_____ ERROR at setup of test_real_verification_receipts_and_full_coverage ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740007-b219cb9a'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261121T081008-3740007-b219cb9a'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def observed(tmp_path_factory: Any) -> dict[str, Any]:
+        """SCENARIO-REPORT-9181-V782: keep real diagnostic children alive through their fixture."""
+        from carnot.reporting import causal_validation_9181 as r
+    
+        raw = tmp_path_factory.mktemp("v782_diagnostic")
+        work = r.prepare(r.ROOT, raw, "20261117")
+>       assert all(c["passed"] for c in work["checks"])
+E       assert False
+E        +  where False = all(<generator object observed.<locals>.<genexpr> at 0x7f6500fecba0>)
+
+tests/python/test_causal_validation_9181.py:185: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['results/experiment_1822_rtl_synth.log']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_causal_validation_9181.py::test_real_diagnostics_and_refusals
+ERROR tests/python/test_causal_validation_9181.py::test_real_verification_receipts_and_full_coverage
+46 passed, 2 warnings, 2 errors in 467.79s (0:07:47)

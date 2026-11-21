@@ -1,0 +1,46 @@
+........................................................................ [ 29%]
+.........................F.............................................. [ 58%]
+........................................................................ [ 88%]
+.............................                                            [100%]
+=================================== FAILURES ===================================
+____ test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor _____
+
+    def test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor() -> None:
+        """REQ-VERIFY-7158 classifies deterministic construction as tiny CPU work."""
+    
+        artifact = {
+            "inference_substrate": "exact_source_fixture_construction",
+            "inference_substrate_class": "cpu_exact_solver_or_simulator",
+            "execution_venue": "host",
+            "duration_s": 0.1,
+            "verifier_is_oracle": False,
+            "verdict_class": "positive",
+            "honest_verdict": "complete_positive_counterfactual_fixture_ready_no_verifier_value_claim",
+            "random_seed": 7_158_202_609_09,
+            "reproducibility_checksum": "sha256:fixture",
+            "rows": [{"fixture_id": "eef-example", "condition": "supported"}],
+        }
+        floor = av.duration_floor_for_artifact(artifact)
+>       assert floor == {
+            "substrate": "exact_source_fixture_construction",
+            "min_duration_s": av.DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+            "reason": "deterministic_verifier",
+        }
+E       AssertionError: assert {'min_duratio...or_simulator'} == {'min_duratio...construction'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'substrate': 'cpu_exact_solver_or_simulator'} != {'substrate': 'exact_source_fixture_construction'}
+E         {'reason': 'substrate_class'} != {'reason': 'deterministic_verifier'}
+E         Use -v to get more diff
+
+tests/python/test_adversarial_verify_exact_source_fixture_7158.py:27: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/coverage/inorout.py:513
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/inorout.py:513: CoverageWarning: --include is ignored because --source is set (include-ignored); see https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-include-ignored
+    self.warn("--include is ignored because --source is set", slug="include-ignored")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_adversarial_verify_exact_source_fixture_7158.py::test_req_verify_7158_exact_source_fixture_has_no_model_duration_floor
+1 failed, 244 passed, 1 warning in 68.82s (0:01:08)
