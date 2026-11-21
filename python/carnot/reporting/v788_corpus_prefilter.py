@@ -448,7 +448,7 @@ def scan_corpus(
     max_batch = 256 if use_pool else 1
     batches: list[list[Path]] = []
     for row in manifest_rows:
-        if not batches or len(batches[-1]) >= max_batch or int(row["size_bytes"]) > 65536:
+        if not batches or len(batches[-1]) >= max_batch or int(row["size_bytes"]) > 16777216:
             batches.append([])
         batches[-1].append(Path(row["abs_path"]))
 

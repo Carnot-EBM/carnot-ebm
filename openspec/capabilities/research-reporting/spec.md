@@ -117622,3 +117622,87 @@ publication and cold replay, including for externally blocked candidates.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-9269-V789 | Implemented (`python/carnot/reporting/v789_contract.py`, `python/carnot/reporting/v789_contract_evidence.py`, `python/carnot/reporting/historical_contract_inputs.py`, `scripts/experiments/experiment_9269_v789_contract.py`, `results/experiment_9269_v789_contract.json`) | Implemented (`tests/python/test_v789_contract_9269.py`) |
+
+### REQ-REPORT-9270-V789: Scoped lossless five-sentinel byte prefilter, hashed sidecars, and zero spurious full-suite timeout
+
+Exp9270 SHALL authenticate `results/experiment_9269_v789_contract.json`
+(`sha256:0d0aa11d171cf91085491cf59b6add32b221068d487e110e5b0c1a3009ca4e4e`,
+`contract_ready_score==1` and `replay_authority_ready_score==1`),
+`results/experiment_9256_v788_corpus_prefilter.json`
+(`sha256:d1ac40d315f6a740c5cb30d853045f6c92ed51d2cebeef14e09b7b945f17481a`,
+`corpus_scan_ready_score==0` via streaming compact metadata without copying its
+724 MB inline arrays), `results/experiment_9255_v788_contract.json`
+(`sha256:7c669d5df1331eb5d22211d22bca58db4959b76af6abcaa814ca5de5a5ea24ef`),
+`results/experiment_9181_v782_causal_validation.json`
+(`sha256:dbdb988f3ce372334dc1634309556987d26f05c73739eeae574624ea601d2934`),
+and V787 historical records (`Exp9241` and `Exp9242`) before any corpus scan.
+It SHALL record `missing_file`, `missing_field`, and observed `0` separately in
+`gate_check_summary`, with external absence producing terminal `blocked`
+(`blocked_no_run`), never `partial`.
+
+Exp9270 SHALL reuse the lossless five-sentinel plus JSON Unicode-escape (`\u`)
+streaming byte prefilter in `python/carnot/reporting/v788_corpus_prefilter.py`,
+visiting every recursive `results/**/*.json` path to EOF in bounded chunks with
+overlap `>= max_needle_len - 1` bytes (`72` bytes), routing every file
+containing a recognized ASCII sentinel or `\u` escape through unchanged
+`read_text`/`json.loads` and `_is_arc_live_agent_no_llm` classification, and
+never filtering by path, directory, size, age, schema, or verdict. It SHALL execute
+`target_module` (`tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`)
+without redundant per-line Python coverage tracing over the 764k+ disk walk while
+measuring 100 percent owned and modified statement coverage with zero exclusions
+across `owned_tests`, `v782_controls`, and private outside-checkout CLI checks.
+
+In `python/carnot/reporting/v789_corpus_prefilter_runner.py`, `REQUIRED_CHECKS`
+SHALL exclude the spurious repository-wide `full_python_suite` check and retain
+strictly all nine affected checks: `target_module`, `owned_tests`,
+`v782_controls`, `direct_consumers`, `e2e018_021`, `ruff_check`, `ruff_format`,
+`strict_mypy`, and `spec_coverage`. Exp9270 SHALL write the full per-file
+`scan_rows` and `corpus_manifest_reference` (`ordered_paths`) tables to hashed
+JSONL/JSON sidecar files under `results/raw/experiment_9270_v789_corpus_prefilter/`
+and store compact summary dictionaries, `candidate_counts`, `parity_controls`,
+`cost_model_rows`, and hashed sidecar references (`corpus_manifest_reference`
+and `scan_rows_sidecar_reference`) in `results/experiment_9270_v789_corpus_prefilter.json`
+so the primary JSON stays strictly below 10 MB (`10_485_760` bytes). Declare
+`no_model_load`, `MODEL_SPECS=[]`, `current_llm_invocations=0`, and
+`generated_tokens=0`.
+
+#### SCENARIO-REPORT-9270-V789: Complete path traversal, exact semantic parity, hashed sidecars, and nine passing affected checks
+
+When `results/experiment_9269_v789_contract.json` passes
+`contract_ready_score==1` and `replay_authority_ready_score==1`, Exp9270
+executes the complete recursive `results/**/*.json` walk via `target_module`,
+writes full `ordered_paths` and `scan_rows` to hashed JSON/JSONL sidecars under
+`results/raw/experiment_9270_v789_corpus_prefilter/`, proves exact semantic
+parity across all frozen fixture categories and 6/6 sentinel+Unicode deletion
+mutation controls, records predetermined size-stratum read/decode/classifier
+cost clocks without claiming a full-corpus speedup ratio from censored Exp9181,
+verifies stable candidate bytes (`changed==0`, `unfinished==0`), and runs all
+nine affected checks (`target_module`, `owned_tests`, `v782_controls`,
+`direct_consumers`, `e2e018_021`, `ruff_check`, `ruff_format`, `strict_mypy`,
+`spec_coverage`) plus 100 percent owned and modified statement coverage with
+zero exclusions. When all checks and terminal verification pass within budget,
+`corpus_scan_ready_score` equals `1`.
+
+#### SCENARIO-REPORT-9270-V789-CONTROLS: Primary-JSON compactness guard, scoped REQUIRED_CHECKS exclusion of full_python_suite, sentinel/Unicode mutation controls, and private CLI controls
+
+The primary JSON deliverable `results/experiment_9270_v789_corpus_prefilter.json`
+remains strictly below 10 MB (`10_485_760` bytes), with `compact_guard` and cold
+replay rejecting any oversized primary or tampered/drifted `corpus_manifest_reference`
+or `scan_rows_sidecar_reference` sidecar. `REQUIRED_CHECKS` and `build_scope`
+contain the exact nine affected checks and exclude `full_python_suite`. Deleting
+any of the five ASCII sentinels or disabling the `\u` fallback triggers
+`mutation_detected=true`. Concurrent file mutation (`changed > 0`), unfinished
+traversal (`unfinished > 0`), parity discrepancy, or any failed check sets
+`corpus_scan_ready_score=0`. Private CLI publication, refusal, tamper, and cold
+replay execute outside the checkout without `PYTHONPATH` under E2E-018/021.
+
+## Implementation Status (REQ-REPORT-9270-V789)
+
+Before reducing readiness, reused compact scan references SHALL be checked against
+their current byte hashes and sizes. A changed sidecar SHALL fail before publication.
+The scoped target command SHALL disable inherited coverage startup while keeping
+all original assertions; owned fixture and private CLI runs SHALL retain coverage.
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-9270-V789 | Implemented (`python/carnot/reporting/v788_corpus_prefilter.py`, `python/carnot/reporting/v789_corpus_prefilter_runner.py`, `scripts/experiments/experiment_9270_v789_corpus_prefilter.py`, `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`, `results/experiment_9270_v789_corpus_prefilter.json`) | Implemented (`tests/python/test_v789_corpus_prefilter_9270.py`, `tests/python/test_v788_corpus_prefilter_9256.py`) |
